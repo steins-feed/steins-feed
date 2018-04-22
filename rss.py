@@ -1,33 +1,86 @@
 #!/usr/bin/env python3
 
+import html
 import requests
 from lxml import etree
 
-# Open webpage.
-url = "https://www.theguardian.com/uk/technology/rss"
-#headers = {'User-Agent': "Firefox"}
-#page = requests.get(url, headers=headers)
-page = requests.get(url)
-tree = etree.fromstring(page.content)
-items = tree.xpath("//item")
+def read_guardian():
+    # Open webpage.
+    url = "https://www.theguardian.com/uk/technology/rss"
+    #headers = {'User-Agent': "Firefox"}
+    #page = requests.get(url, headers=headers)
+    page = requests.get(url)
+    tree = etree.fromstring(page.content)
+    items = tree.xpath("//item")
 
-for item_it in items:
-    title = item_it.xpath(".//title")[0].text
-    link = item_it.xpath(".//link")[0].text
-    describe = item_it.xpath(".//description")[0].text
-    creator = item_it.xpath(".//dc:creator", namespaces=tree.nsmap)[0].text
-    date = item_it.xpath(".//dc:date", namespaces=tree.nsmap)[0].text
+    for item_it in items:
+        title = item_it.xpath(".//title")[0].text
+        link = item_it.xpath(".//link")[0].text
+        describe = item_it.xpath(".//description")[0].text
+        creator = item_it.xpath(".//dc:creator", namespaces=tree.nsmap)[0].text
+        date = item_it.xpath(".//dc:date", namespaces=tree.nsmap)[0].text
 
-    # Categories.
-    cats = [cat_it.text for cat_it in item_it.xpath(".//category")]
+        # Categories.
+        cats = [cat_it.text for cat_it in item_it.xpath(".//category")]
 
-    # Print.
-    print("Title: {}".format(title))
-    print("Creator: {}".format(creator))
-    print("Date: {}".format(date))
-    print("Description:")
-    print(describe)
-    print("Link: {}".format(link))
-    print("Categories: {}".format(", ".join(cats)))
+        # Print.
+        print("Title: {}".format(title))
+        print("Creator: {}".format(creator))
+        print("Date: {}".format(date))
+        print("Description:")
+        print(describe)
+        print("Link: {}".format(link))
+        print("Categories: {}".format(", ".join(cats)))
 
-    print(79*"#")
+        print(79*"#")
+
+def clean_rss(s, s_sub):
+    lidx = s.find("<"+s_sub)
+    while lidx != -1:
+        ridx = s.find(">", lidx)
+        s = s.replace(s[lidx:ridx+1], "")
+        lidx = s.find("<"+s_sub)
+    return s
+
+def read_atlantic():
+    # Open webpage.
+    url = "https://www.theatlantic.com/feed/channel/technology/"
+    #headers = {'User-Agent': "Firefox"}
+    #page = requests.get(url, headers=headers)
+    page = requests.get(url)
+    page_content = html.unescape(page.content.decode())
+    ###
+    page_content = clean_rss(page_content, "hr")
+    page_content = clean_rss(page_content, "img")
+    page_content = clean_rss(page_content, "br")
+    page_content = page_content.replace("&raquo;", "")
+    ###
+    page_content = page_content.encode()
+    tree = etree.fromstring(page_content)
+    ns_map = {"ns": "http://www.w3.org/2005/Atom"}
+    items = tree.xpath(".//ns:entry", namespaces=ns_map)
+    print(len(items))
+
+    for item_it in items:
+        title = item_it.xpath(".//ns:title", namespaces=ns_map)[0].text
+        link = item_it.xpath(".//ns:link", namespaces=ns_map)[0].get('href')
+        describe = item_it.xpath(".//ns:summary", namespaces=ns_map)[0].text
+        creator = item_it.xpath(".//ns:name", namespaces=ns_map)[0].text
+        date = item_it.xpath(".//ns:published", namespaces=ns_map)[0].text
+
+        # Categories.
+        cats = ["Technology"]
+
+        # Print.
+        print("Title: {}".format(title))
+        print("Creator: {}".format(creator))
+        print("Date: {}".format(date))
+        print("Description:")
+        print(describe)
+        print("Link: {}".format(link))
+        print("Categories: {}".format(", ".join(cats)))
+
+        print(79*"#")
+
+read_guardian()
+read_atlantic()
