@@ -34,32 +34,15 @@ def read_guardian():
 
         print(79*"#")
 
-def clean_rss(s, s_sub):
-    lidx = s.find("<"+s_sub)
-    while lidx != -1:
-        ridx = s.find(">", lidx)
-        s = s.replace(s[lidx:ridx+1], "")
-        lidx = s.find("<"+s_sub)
-    return s
-
 def read_atlantic():
     # Open webpage.
     url = "https://www.theatlantic.com/feed/channel/technology/"
     #headers = {'User-Agent': "Firefox"}
     #page = requests.get(url, headers=headers)
     page = requests.get(url)
-    page_content = html.unescape(page.content.decode())
-    ###
-    page_content = clean_rss(page_content, "hr")
-    page_content = clean_rss(page_content, "img")
-    page_content = clean_rss(page_content, "br")
-    page_content = page_content.replace("&raquo;", "")
-    ###
-    page_content = page_content.encode()
-    tree = etree.fromstring(page_content)
+    tree = etree.fromstring(page.content)
     ns_map = {"ns": "http://www.w3.org/2005/Atom"}
     items = tree.xpath(".//ns:entry", namespaces=ns_map)
-    print(len(items))
 
     for item_it in items:
         title = item_it.xpath(".//ns:title", namespaces=ns_map)[0].text
