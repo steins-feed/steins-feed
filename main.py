@@ -23,11 +23,11 @@ if not db_exists:
 for feed_it in feeds:
     d = feedparser.parse(feed_it)
     for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=?", (item_it["title"], )).fetchone()[0] == 0:
+        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it["title"], time.strftime("%Y-%m-%d %H:%M:%S", item_it["published_parsed"]))).fetchone()[0] == 0:
             c.execute("INSERT INTO Items (Title, Published, Summary, Link) VALUES (?, ?, ?, ?)", (item_it["title"], time.strftime("%Y-%m-%d %H:%M:%S", item_it["published_parsed"]), item_it["summary"], item_it["link"], ))
 
 # SQLite.
-for row_it in c.execute("SELECT Published FROM Items ORDER BY Published DESC"):
+for row_it in c.execute("SELECT Title, Published FROM Items ORDER BY Published DESC"):
     print(row_it)
 conn.commit()
 conn.close()
