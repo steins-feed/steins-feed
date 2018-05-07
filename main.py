@@ -20,11 +20,15 @@ if not db_exists:
     # TODO Denote source.
     c.execute("CREATE TABLE Items (ItemID INT AUTO_INCREMENT, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Link TEXT NOT NULL, PRIMARY KEY (ItemID))")
 
-for feed_it in feeds:
-    d = feedparser.parse(feed_it)
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it["title"], time.strftime("%Y-%m-%d %H:%M:%S", item_it["published_parsed"]))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Link) VALUES (?, ?, ?, ?)", (item_it["title"], time.strftime("%Y-%m-%d %H:%M:%S", item_it["published_parsed"]), item_it["summary"], item_it["link"], ))
+d = feedparser.parse("https://www.theguardian.com/uk/technology/rss")
+for item_it in d['items']:
+    if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
+        c.execute("INSERT INTO Items (Title, Published, Summary, Link) VALUES (?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], item_it['link'], ))
+
+d = feedparser.parse("https://www.theatlantic.com/feed/channel/technology/")
+for item_it in d['items']:
+    if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
+        c.execute("INSERT INTO Items (Title, Published, Summary, Link) VALUES (?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['content'][1]['value'], item_it['link'], ))
 
 conn.commit()
 conn.close()
@@ -42,7 +46,7 @@ f.write("<title>Stein's Feed</title>\n")
 f.write("</head>\n")
 f.write("<body>\n")
 for row_it in c.execute("SELECT * FROM Items ORDER BY Published DESC"):
-    f.write("<h1><a href=\"{}\">{}</a></h1>\n".format(row_it[4], row_it[1]))
+    f.write("<h2><a href=\"{}\">{}</a></h2>\n".format(row_it[4], row_it[1]))
     f.write("<p>Date: {}</p>".format(row_it[2]))
     f.write("{}".format(row_it[3]))
     f.write("<hr>\n")
