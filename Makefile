@@ -1,3 +1,7 @@
+.PHONY: stein
+stein:
+	python3 main.py
+
 .PHONY: clean
 clean:
 	-rm *.html
