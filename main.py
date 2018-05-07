@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-import os.path
 import feedparser
+import os.path
 import sqlite3
+import time
 
 feeds = []
 feeds.append("https://www.theguardian.com/uk/technology/rss")
@@ -17,16 +18,16 @@ if not db_exists:
     # TODO Check for uniqueness.
     # TODO Table for authors.
     # TODO Table for categories.
-    c.execute("CREATE TABLE Items (ItemID INT AUTO_INCREMENT, Title TEXT NOT NULL, Description MEDIUMTEXT, Link TEXT NOT NULL, PRIMARY KEY (ItemID))")
+    c.execute("CREATE TABLE Items (ItemID INT AUTO_INCREMENT, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Link TEXT NOT NULL, PRIMARY KEY (ItemID))")
 
-# Guardian.
+# Scrape feeds.
 for feed_it in feeds:
     d = feedparser.parse(feed_it)
     for item_it in d['items']:
-        c.execute("INSERT INTO Items (Title, Description, Link) VALUES (?, ?, ?)", (item_it["title"], item_it["description"], item_it["link"]))
+        c.execute("INSERT INTO Items (Title, Published, Summary, Link) VALUES (?, ?, ?, ?)", (item_it["title"], time.strftime("%Y-%m-%d %H:%M:%S", item_it["published_parsed"]), item_it["summary"], item_it["link"]))
 
 # SQLite.
-for row_it in c.execute("SELECT Title FROM Items"):
+for row_it in c.execute("SELECT Published FROM Items ORDER BY Published DESC"):
     print(row_it)
 conn.commit()
 conn.close()
