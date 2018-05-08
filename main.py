@@ -11,8 +11,6 @@ db_exists = os.path.isfile(db_name)
 conn = sqlite3.connect("steins.db")
 c = conn.cursor()
 if not db_exists:
-    # TODO Table for authors.
-    # TODO Table for categories.
     c.execute("CREATE TABLE Items (ItemID INT AUTO_INCREMENT, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, PRIMARY KEY (ItemID))")
 
 # The Guardian.
