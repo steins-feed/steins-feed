@@ -13,7 +13,6 @@ c = conn.cursor()
 if not db_exists:
     # TODO Table for authors.
     # TODO Table for categories.
-    # TODO Denote source.
     c.execute("CREATE TABLE Items (ItemID INT AUTO_INCREMENT, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, PRIMARY KEY (ItemID))")
 
 # The Guardian.
@@ -87,6 +86,12 @@ d = feedparser.parse("https://www.wired.com/feed/rss")
 for item_it in d['items']:
     if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
         c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "WIRED", item_it['link'], ))
+
+# XKCD.
+d = feedparser.parse("https://www.xkcd.com/rss.xml")
+for item_it in d['items']:
+    if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
+        c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "XKCD", item_it['link'], ))
 
 conn.commit()
 conn.close()
