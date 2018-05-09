@@ -1,22 +1,10 @@
 #!/usr/bin/env python3
 
-from steins import *
+import os.path
+import subprocess
 
-#from http.server import HTTPServer, BaseHTTPRequestHandler
-#
-#class SteinsServer(BaseHTTPRequestHandler):
-#    def do_GET(self):
-#        self.send_response(200)
-#        self.send_header("Content-type", "text/html")
-#        self.end_headers()
-
-db_name = "steins.db"
-db_exists = os.path.isfile(db_name)
-conn = sqlite3.connect("steins.db")
-c = conn.cursor()
-if not db_exists:
-    c.execute("CREATE TABLE Items (ItemID INT AUTO_INCREMENT, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, PRIMARY KEY (ItemID))")
-steins_read(c)
-steins_write(c)
-conn.commit()
-conn.close()
+subprocess.Popen(["python3", "steins_server.py"])
+subprocess.Popen(["python3", "steins_feed.py"])
+while not os.path.isfile("steins.html"):
+    pass
+subprocess.run(["xdg-open", "http://localhost:8000/"])
