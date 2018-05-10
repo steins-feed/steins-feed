@@ -104,13 +104,14 @@ def steins_write(c):
     f.write("</html>\n")
     f.close()
 
-db_name = "steins.db"
-db_exists = os.path.isfile(db_name)
-conn = sqlite3.connect("steins.db")
-c = conn.cursor()
-if not db_exists:
-    c.execute("CREATE TABLE Items (ItemID INT AUTO_INCREMENT, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, PRIMARY KEY (ItemID))")
-steins_read(c)
-steins_write(c)
-conn.commit()
-conn.close()
+def steins_update():
+    db_name = "steins.db"
+    db_exists = os.path.isfile(db_name)
+    conn = sqlite3.connect("steins.db")
+    c = conn.cursor()
+    if not db_exists:
+        c.execute("CREATE TABLE Items (ItemID INT AUTO_INCREMENT, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, PRIMARY KEY (ItemID))")
+    steins_read(c)
+    steins_write(c)
+    conn.commit()
+    conn.close()
