@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import multiprocessing as mp
+import os
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from steins_feed import steins_update
@@ -16,7 +17,8 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
         # Write payload.
-        f = open("steins.html", 'r')
+        dir_name = os.path.dirname(os.path.abspath(__file__))
+        f = open(dir_name+os.sep+"steins.html", 'r')
         self.wfile.write(f.read().encode('utf-8'))
         f.close()
 

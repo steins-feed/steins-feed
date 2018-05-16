@@ -87,7 +87,8 @@ def steins_read(c):
 
 # Generate HTML.
 def steins_write(c):
-    f = open("steins.html", 'w')
+    dir_name = os.path.dirname(os.path.abspath(__file__))
+    f = open(dir_name+os.sep+"steins.html", 'w')
     f.write("<!DOCTYPE html>\n")
     f.write("<html>\n")
     f.write("<head>\n")
@@ -105,9 +106,10 @@ def steins_write(c):
     f.close()
 
 def steins_update():
-    db_name = "steins.db"
+    dir_name = os.path.dirname(os.path.abspath(__file__))
+    db_name = dir_name + os.sep + "steins.db"
     db_exists = os.path.isfile(db_name)
-    conn = sqlite3.connect("steins.db")
+    conn = sqlite3.connect(db_name)
     c = conn.cursor()
     if not db_exists:
         c.execute("CREATE TABLE Items (ItemID INT AUTO_INCREMENT, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, PRIMARY KEY (ItemID))")
