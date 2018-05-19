@@ -94,22 +94,39 @@ def steins_read(c):
 # Generate HTML.
 def steins_write(c):
     dir_name = os.path.dirname(os.path.abspath(__file__))
-    f = open(dir_name+os.sep+"steins.html", 'w')
-    f.write("<!DOCTYPE html>\n")
-    f.write("<html>\n")
-    f.write("<head>\n")
-    f.write("<meta charset=\"UTF-8\">")
-    f.write("<title>Stein's Feed</title>\n")
-    f.write("</head>\n")
-    f.write("<body>\n")
+    times = c.execute("SELECT Published FROM Items")
+    dates = sorted(list(set([t_it[0][:10] for t_it in times])), reverse=True)
+    f_list = dict()
+
+    d_cnt = 0
+    for d_it in dates:
+        f = open(dir_name+os.sep+"steins-{}.html".format(d_cnt), 'w')
+
+        f.write("<!DOCTYPE html>\n")
+        f.write("<html>\n")
+        f.write("<head>\n")
+        f.write("<meta charset=\"UTF-8\">")
+        f.write("<title>Stein's Feed</title>\n")
+        f.write("</head>\n")
+        f.write("<body>\n")
+
+        f_list[d_it] = f
+        d_cnt += 1
+
     for row_it in c.execute("SELECT * FROM Items ORDER BY Published DESC"):
+        f = f_list[row_it[2][:10]]
+
         f.write("<h2><a href=\"{}\">{}</a></h2>\n".format(row_it[5], row_it[1]))
         f.write("<p>Source: {}. Published: {}</p>".format(row_it[4], row_it[2]))
         f.write("{}".format(row_it[3]))
         f.write("<hr>\n")
-    f.write("</body>\n")
-    f.write("</html>\n")
-    f.close()
+
+    for d_it in dates:
+        f = f_list[d_it]
+
+        f.write("</body>\n")
+        f.write("</html>\n")
+        f.close()
 
 def steins_update():
     dir_name = os.path.dirname(os.path.abspath(__file__))

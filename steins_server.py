@@ -18,7 +18,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
         # Write payload.
         dir_name = os.path.dirname(os.path.abspath(__file__))
-        f = open(dir_name+os.sep+"steins.html", 'r')
+        f = open(dir_name+os.sep+"steins-0.html", 'r')
         self.wfile.write(f.read().encode('utf-8'))
         f.close()
 
