@@ -1,3 +1,4 @@
 *.db
 *.html
+README.pdf
 __pycache__/

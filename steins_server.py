@@ -27,6 +27,7 @@ def steins_run_child(server):
         server.serve_forever()
     except KeyboardInterrupt:
         server.socket.close()
+        print("Connection closed.")
 
 def steins_run():
     PORT = 8000
@@ -34,6 +35,7 @@ def steins_run():
     while True:
         try:
             server = HTTPServer(('localhost', PORT), SteinsHandler)
+            print("Connection open.")
             break
         except OSError:
             PORT += 2

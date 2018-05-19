@@ -19,6 +19,12 @@ def steins_read(c):
         if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
             c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['content'][1]['value'], "Atlantic Technology", item_it['link'], ))
     
+    # The Atlantic -- Crazy/Genius.
+    d = feedparser.parse("https://feeds.megaphone.fm/crazygenius")
+    for item_it in d['items']:
+        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
+            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['content'][0]['value'], "Atlantic Crazy/Genius", item_it['links'][0]['href'], ))
+
     # WIRED Business.
     d = feedparser.parse("https://www.wired.com/feed/category/business/latest/rss")
     for item_it in d['items']:
