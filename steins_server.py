@@ -9,7 +9,8 @@ from steins_feed import steins_update
 class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         # Generate page.
-        steins_update()
+        if self.path == "/":
+            steins_update()
 
         # Write header.
         self.send_response(200)
@@ -18,7 +19,10 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
         # Write payload.
         dir_name = os.path.dirname(os.path.abspath(__file__))
-        f = open(dir_name+os.sep+"steins-0.html", 'r')
+        if self.path == "/":
+            f = open(dir_name+os.sep+"steins-0.html", 'r')
+        else:
+            f = open(dir_name+self.path, 'r')
         self.wfile.write(f.read().encode('utf-8'))
         f.close()
 

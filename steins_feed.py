@@ -109,6 +109,8 @@ def steins_write(c):
         f.write("<title>Stein's Feed</title>\n")
         f.write("</head>\n")
         f.write("<body>\n")
+        f.write("<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d"))))
+        f.write("<hr>\n")
 
         f_list[d_it] = f
         d_cnt += 1
@@ -121,12 +123,24 @@ def steins_write(c):
         f.write("{}".format(row_it[3]))
         f.write("<hr>\n")
 
+    d_cnt = 0
+    d_len = len(dates)
     for d_it in dates:
         f = f_list[d_it]
 
+        if not d_cnt == 0:
+            f.write("<form action=\"/steins-{}.html\">\n".format(d_cnt-1))
+            f.write("<input type=\"submit\" value=\"Previous\">\n")
+            f.write("</form>\n")
+        if not d_cnt == d_len-1:
+            f.write("<form action=\"/steins-{}.html\">\n".format(d_cnt+1))
+            f.write("<input type=\"submit\" value=\"Next\">\n")
+            f.write("</form>\n")
         f.write("</body>\n")
         f.write("</html>\n")
         f.close()
+
+        d_cnt += 1
 
 def steins_update():
     dir_name = os.path.dirname(os.path.abspath(__file__))
