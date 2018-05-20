@@ -128,14 +128,12 @@ def steins_write(c):
     for d_it in dates:
         f = f_list[d_it]
 
+        f.write("<form>\n")
         if not d_cnt == 0:
-            f.write("<form action=\"/steins-{}.html\">\n".format(d_cnt-1))
-            f.write("<input type=\"submit\" value=\"Previous\">\n")
-            f.write("</form>\n")
+            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Previous\">\n".format(d_cnt-1))
         if not d_cnt == d_len-1:
-            f.write("<form action=\"/steins-{}.html\">\n".format(d_cnt+1))
-            f.write("<input type=\"submit\" value=\"Next\">\n")
-            f.write("</form>\n")
+            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Next\">\n".format(d_cnt+1))
+        f.write("</form>\n")
         f.write("</body>\n")
         f.write("</html>\n")
         f.close()
