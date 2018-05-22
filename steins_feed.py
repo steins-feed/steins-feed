@@ -97,6 +97,12 @@ def steins_read(c):
         if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
             c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "Chalkdust", item_it['link'], ))
 
+    # Gates Notes.
+    d = feedparser.parse("https://www.gatesnotes.com/rss")
+    for item_it in d['items']:
+        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(item_it['published'], "%m/%d/%Y %I:%M:%S %p")))).fetchone()[0] == 0:
+            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(item_it['published'], "%m/%d/%Y %I:%M:%S %p")), item_it['summary'], "Gates Notes", item_it['link'], ))
+
 # Generate HTML.
 def steins_write(c):
     dir_name = os.path.dirname(os.path.abspath(__file__))
