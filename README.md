@@ -17,6 +17,7 @@ Against whom am I competing?
 *   Table for authors.
 *   Table for categories.
 *   Use HTML5 layout.
+*   Translate HTML to PDF.
 
 ## Bugs.
 
