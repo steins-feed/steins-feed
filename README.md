@@ -18,6 +18,11 @@ Against whom am I competing?
 *   Table for categories.
 *   Use HTML5 layout.
 
+## Bugs.
+
+*   What is `favicon.png`?
+*   Close when Firefox closes.
+
 ## Sources
 
 *   Facebook
