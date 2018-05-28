@@ -5,271 +5,52 @@ import os.path
 import sqlite3
 import time
 
+def steins_read_time(item_it):
+    try:
+        item_time = item_it['published_parsed']
+        item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+        return item_time
+    except:
+        pass
+
+    try:
+        item_time = item_it['published']
+        item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
+        item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+        return item_time
+    except:
+        pass
+
+    try:
+        item_time = item_it['updated_parsed']
+        item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+        return item_time
+    except:
+        pass
+
+    try:
+        item_time = item_it['updated']
+        item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
+        item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+        return item_time
+    except:
+        pass
+
+    raise KeyError
+
 # Scrape feeds.
 def steins_read(c):
-    # The Guardian.
-    d = feedparser.parse("https://www.theguardian.com/uk/technology/rss")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "Guardian Technology", item_it['link'], ))
-    
-    # The Atlantic.
-    d = feedparser.parse("https://www.theatlantic.com/feed/channel/technology/")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['content'][1]['value'], "Atlantic Technology", item_it['link'], ))
-    
-    # The Atlantic -- Crazy/Genius.
-    d = feedparser.parse("https://feeds.megaphone.fm/crazygenius")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['content'][0]['value'], "Atlantic Crazy/Genius", item_it['links'][0]['href'], ))
+    for feed_it in c.execute("SELECT * FROM Feeds").fetchall():
+        print(feed_it[1])
+        d = feedparser.parse(feed_it[2])
+        for item_it in d['items']:
+            item_title = item_it['title']
+            item_time = steins_read_time(item_it)
+            item_summary = item_it['summary']
+            item_link = item_it['link']
 
-    # WIRED Business.
-    d = feedparser.parse("https://www.wired.com/feed/category/business/latest/rss")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "WIRED Business", item_it['link'], ))
-    
-    # WIRED Culture.
-    d = feedparser.parse("https://www.wired.com/feed/category/culture/latest/rss")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "WIRED Culture", item_it['link'], ))
-    
-    # WIRED Ideas.
-    d = feedparser.parse("https://www.wired.com/feed/category/ideas/latest/rss")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "WIRED Ideas", item_it['link'], ))
-    
-    # WIRED Science.
-    d = feedparser.parse("https://www.wired.com/feed/category/science/latest/rss")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "WIRED Science", item_it['link'], ))
-    
-    # WIRED Security.
-    d = feedparser.parse("https://www.wired.com/feed/category/security/latest/rss")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "WIRED Security", item_it['link'], ))
-    
-    # WIRED Transportation.
-    d = feedparser.parse("https://www.wired.com/feed/category/transportation/latest/rss")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "WIRED Transportation", item_it['link'], ))
-    
-    # WIRED Backchannel.
-    d = feedparser.parse("https://www.wired.com/feed/category/backchannel/latest/rss")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "WIRED Backchannel", item_it['link'], ))
-    
-    # WIRED Guides.
-    d = feedparser.parse("https://www.wired.com/feed/tag/wired-guide/latest/rss")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "WIRED Guide", item_it['link'], ))
-    
-    ## WIRED Photo.
-    #d = feedparser.parse("https://www.wired.com/feed/category/photo/latest/rss")
-    #for item_it in d['items']:
-    #    if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-    #        c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "WIRED Photo", item_it['link'], ))
-    
-    # WIRED.
-    d = feedparser.parse("https://www.wired.com/feed/rss")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "WIRED", item_it['link'], ))
-    
-    # XKCD.
-    d = feedparser.parse("https://www.xkcd.com/rss.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "XKCD", item_it['link'], ))
-
-    # Chalkdust.
-    d = feedparser.parse("http://chalkdustmagazine.com/feed/")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "Chalkdust", item_it['link'], ))
-
-    # Gates Notes.
-    d = feedparser.parse("https://www.gatesnotes.com/rss")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(item_it['published'], "%m/%d/%Y %I:%M:%S %p")))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(item_it['published'], "%m/%d/%Y %I:%M:%S %p")), item_it['summary'], "Gates Notes", item_it['link'], ))
-
-    # TED Ideas.
-    d = feedparser.parse("https://ideas.ted.com/feed/")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "TED Ideas", item_it['link'], ))
-
-    # Quanta Magazine.
-    d = feedparser.parse("https://api.quantamagazine.org/feed/")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "Quanta Magazine", item_it['link'], ))
-
-    # Scientific American.
-    d = feedparser.parse("http://rss.sciam.com/ScientificAmerican-Global")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "Scientific American", item_it['link'], ))
-
-    # The Register Data Centre.
-    d = feedparser.parse("https://www.theregister.co.uk/data_centre/headlines.atom")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "The Register Data Centre", item_it['link'], ))
-
-    # The Register Software.
-    d = feedparser.parse("https://www.theregister.co.uk/software/headlines.atom")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "The Register Software", item_it['link'], ))
-
-    # The Register Security.
-    d = feedparser.parse("https://www.theregister.co.uk/security/headlines.atom")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "The Register Security", item_it['link'], ))
-
-    # The Register Transformation.
-    d = feedparser.parse("https://www.theregister.co.uk/transformation/headlines.atom")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "The Register Transformation", item_it['link'], ))
-
-    # The Register Devops.
-    d = feedparser.parse("https://www.theregister.co.uk/devops/headlines.atom")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "The Register Devops", item_it['link'], ))
-
-    # The Register Business.
-    d = feedparser.parse("https://www.theregister.co.uk/business/headlines.atom")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "The Register Business", item_it['link'], ))
-
-    # The Register Personal Tech.
-    d = feedparser.parse("https://www.theregister.co.uk/personal_tech/headlines.atom")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "The Register Personal Tech", item_it['link'], ))
-
-    # The Register Science.
-    d = feedparser.parse("https://www.theregister.co.uk/science/headlines.atom")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "The Register Science", item_it['link'], ))
-
-    # The Register Emergent Tech.
-    d = feedparser.parse("https://www.theregister.co.uk/emergent_tech/headlines.atom")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "The Register Emergent Tech", item_it['link'], ))
-
-    # The Register Bootnotes.
-    d = feedparser.parse("https://www.theregister.co.uk/bootnotes/headlines.atom")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "The Register Bootnotes", item_it['link'], ))
-
-    # The Register.
-    d = feedparser.parse("https://www.theregister.co.uk/headlines.atom")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "The Register", item_it['link'], ))
-
-    # Heise Developer.
-    d = feedparser.parse("https://www.heise.de/developer/rss/news-atom.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "Heise Developer", item_it['link'], ))
-
-    # Heise Security.
-    d = feedparser.parse("https://www.heise.de/security/rss/news-atom.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "Heise Security", item_it['link'], ))
-
-    # Heise c't.
-    d = feedparser.parse("https://www.heise.de/ct/rss/artikel-atom.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "Heise c't", item_it['link'], ))
-
-    # Heise Make.
-    d = feedparser.parse("https://www.heise.de/make/rss/hardware-hacks-atom.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "Heise Make", item_it['link'], ))
-
-    # Heise iX.
-    d = feedparser.parse("https://www.heise.de/iX/rss/news-atom.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "Heise iX", item_it['link'], ))
-
-    # Heise Technology Review.
-    d = feedparser.parse("https://www.heise.de/tr/rss/news-atom.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "Heise Technology Review", item_it['link'], ))
-
-    # Heise Telepolis.
-    d = feedparser.parse("https://www.heise.de/tp/rss/news-atom.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "Heise Telepolis", item_it['link'], ))
-
-    # Heise TechStage.
-    d = feedparser.parse("https://www.techstage.de/rss.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "Heise TechStage", item_it['link'], ))
-
-    # Heise.
-    d = feedparser.parse("https://www.heise.de/newsticker/heise-atom.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "Heise", item_it['link'], ))
-
-    # FiveThirtyEight NBA.
-    d = feedparser.parse("https://fivethirtyeight.com/tag/nba/feed/")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "FiveThirtyEight NBA", item_it['link'], ))
-
-    # FiveThirtyEight NBA Playoffs.
-    d = feedparser.parse("https://fivethirtyeight.com/tag/nba-playoffs/feed/")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "FiveThirtyEight NBA Playoffs", item_it['link'], ))
-
-    # FiveThirtyEight Basketball.
-    d = feedparser.parse("https://fivethirtyeight.com/tag/basketball/feed/")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "FiveThirtyEight Basketball", item_it['link'], ))
-
-    # The Ringer NBA.
-    d = feedparser.parse("https://www.theringer.com/rss/nba/index.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "The Ringer NBA", item_it['link'], ))
-
-    # The Ringer NBA Playoffs.
-    d = feedparser.parse("https://www.theringer.com/rss/nba-playoffs/index.xml")
-    for item_it in d['items']:
-        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "The Ringer NBA Playoffs", item_it['link'], ))
+            if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_title, item_time, )).fetchone()[0] == 0:
+                c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))
 
 # Generate HTML.
 def steins_write(c):
@@ -327,7 +108,10 @@ def steins_update():
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     if not db_exists:
+        import steins_manager
+        c.execute("CREATE TABLE Feeds (ItemID INT AUTO_INCREMENT, Title TEXT NOT NULL, Link TEXT NOT NULL, PRIMARY KEY (ItemID))")
         c.execute("CREATE TABLE Items (ItemID INT AUTO_INCREMENT, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, PRIMARY KEY (ItemID))")
+        steins_manager.init_feeds(c)
     steins_read(c)
     steins_write(c)
     conn.commit()
