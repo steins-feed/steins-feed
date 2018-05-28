@@ -241,6 +241,36 @@ def steins_read(c):
         if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']))).fetchone()[0] == 0:
             c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['updated_parsed']), item_it['summary'], "Heise", item_it['link'], ))
 
+    # FiveThirtyEight NBA.
+    d = feedparser.parse("https://fivethirtyeight.com/tag/nba/feed/")
+    for item_it in d['items']:
+        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
+            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "FiveThirtyEight NBA", item_it['link'], ))
+
+    # FiveThirtyEight NBA Playoffs.
+    d = feedparser.parse("https://fivethirtyeight.com/tag/nba-playoffs/feed/")
+    for item_it in d['items']:
+        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
+            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "FiveThirtyEight NBA Playoffs", item_it['link'], ))
+
+    # FiveThirtyEight Basketball.
+    d = feedparser.parse("https://fivethirtyeight.com/tag/basketball/feed/")
+    for item_it in d['items']:
+        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
+            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "FiveThirtyEight Basketball", item_it['link'], ))
+
+    # The Ringer NBA.
+    d = feedparser.parse("https://www.theringer.com/rss/nba/index.xml")
+    for item_it in d['items']:
+        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
+            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "The Ringer NBA", item_it['link'], ))
+
+    # The Ringer NBA Playoffs.
+    d = feedparser.parse("https://www.theringer.com/rss/nba-playoffs/index.xml")
+    for item_it in d['items']:
+        if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']))).fetchone()[0] == 0:
+            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_it['title'], time.strftime("%Y-%m-%d %H:%M:%S", item_it['published_parsed']), item_it['summary'], "The Ringer NBA Playoffs", item_it['link'], ))
+
 # Generate HTML.
 def steins_write(c):
     dir_name = os.path.dirname(os.path.abspath(__file__))

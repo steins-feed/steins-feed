@@ -14,10 +14,14 @@ Against whom am I competing?
 
 ## TODO
 
+1.  Printable HTML.
+2.  Machine learning.
+
 *   Table for authors.
 *   Table for categories.
 *   Use HTML5 layout.
 *   Translate HTML to PDF.
+*   Expand The Guardian and The Atlantic.
 
 ## Bugs.
 
