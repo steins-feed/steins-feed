@@ -7,6 +7,11 @@ readme: README.pdf
 README.pdf: README.md
 	pandoc -o README.pdf README.md
 
+.PHONY: test
+test:
+	make distclean
+	make
+
 .PHONY: clean
 clean:
 	-rm steins-*.html

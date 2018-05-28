@@ -23,6 +23,7 @@ Against whom am I competing?
 *   Translate HTML to PDF.
 *   Expand The Guardian and The Atlantic.
 *   Only check for new posts after last (complete) day.
+*   Use WeasyPrint to export PDF.
 
 ## Bugs.
 
