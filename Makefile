@@ -9,11 +9,11 @@ README.pdf: README.md
 
 .PHONY: clean
 clean:
-	-rm *.html
+	-rm steins-*.html
 	-rm README.pdf
 	-rm -r __pycache__/
 
 .PHONY: distclean
 distclean:
 	make clean
-	-rm *.db
+	-rm steins.db

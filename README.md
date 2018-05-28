@@ -22,6 +22,7 @@ Against whom am I competing?
 *   Use HTML5 layout.
 *   Translate HTML to PDF.
 *   Expand The Guardian and The Atlantic.
+*   Only check for new posts after last (complete) day.
 
 ## Bugs.
 
