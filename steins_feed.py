@@ -82,11 +82,17 @@ def steins_write(c):
         f.write("<h2><a href=\"{}\">{}</a></h2>\n".format(row_it[5], row_it[1]))
         f.write("<p>Source: {}. Published: {}</p>".format(row_it[4], row_it[2]))
         f.write("{}".format(row_it[3]))
-        f.write("<p>\n")
-        f.write("<form>\n")
-        f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/{}\" value=\"Print\">\n".format(row_it[0]))
-        f.write("</form>\n")
-        f.write("</p>\n")
+
+        not_can_print = True
+        not_can_print &= (row_it[4].find("WIRED") == -1)
+        not_can_print &= (row_it[4].find("The Guardian") == -1)
+        not_can_print &= (row_it[4].find("The Atlantic") == -1)
+        if not not_can_print:
+            f.write("<p>\n")
+            f.write("<form>\n")
+            f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/{}\" value=\"Print\">\n".format(row_it[0]))
+            f.write("</form>\n")
+            f.write("</p>\n")
 
         f.write("<hr>\n")
 
