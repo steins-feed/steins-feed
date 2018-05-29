@@ -6,12 +6,45 @@ def add_feed(c, title, link):
 def delete_feed(c, title):
     c.execute("DELETE FROM Feeds WHERE Title='?'", (title, ))
 
+def get_attr_list():
+    f = open("steins_manager.py", 'r')
+    attr_list = []
+    for line in f:
+        idx1 = line.find("def get_")
+        if idx1 == -1:
+            continue
+        idx2 = line.find("(", idx1)
+        if idx2 == -1:
+            continue
+        attr_list.append(line[idx1+8:idx2])
+    f.close()
+    return attr_list
+
 def can_print(source):
-    not_can_print = True
-    not_can_print &= (source.find("WIRED") == -1)
-    not_can_print &= (source.find("The Guardian") == -1)
-    not_can_print &= (source.find("The Atlantic") == -1)
-    return not not_can_print
+    attr_list = get_attr_list()
+    for attr_it in attr_list:
+        if not source.find(attr_it) == -1:
+            return True
+    return False
+
+def get_WIRED(tree):
+    article = tree.xpath("//article")[0]
+    article_body = article.xpath("./div")[0]
+    return article_body
+
+def get_Guardian(tree):
+    article = tree.xpath("//article")[0]
+    article_body = article.xpath(".//div[@itemprop='articleBody']")[0]
+    return article_body
+
+def get_Atlantic(tree):
+    article = tree.xpath("//article")[0]
+    article_sections = article.xpath(".//section")
+    article_body = []
+    for section_it in article_sections:
+        for elem_it in section_it:
+            article_body.append(elem_it)
+    return article_body
 
 def init_feeds(c):
     # The Guardian.

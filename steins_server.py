@@ -4,6 +4,7 @@ import multiprocessing as mp
 import os
 import requests
 import sqlite3
+import steins_manager
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from lxml import html
@@ -45,19 +46,12 @@ class SteinsHandler(BaseHTTPRequestHandler):
         page = requests.get(row[5])
         tree = html.fromstring(page.content)
 
-        if not row[4].find("WIRED") == -1:
-            article = tree.xpath("//article")[0]
-            article_body = article.xpath("./div")[0]
-        if not row[4].find("The Guardian") == -1:
-            article = tree.xpath("//article")[0]
-            article_body = article.xpath(".//div[@itemprop='articleBody']")[0]
-        if not row[4].find("The Atlantic") == -1:
-            article = tree.xpath("//article")[0]
-            article_sections = article.xpath(".//section")
-            article_body = []
-            for section_it in article_sections:
-                for elem_it in section_it:
-                    article_body.append(elem_it)
+        attr_list = steins_manager.get_attr_list()
+        for attr_it in attr_list:
+            if not row[4].find(attr_it) == -1:
+                get_article_body = getattr(steins_manager, "get_{}".format(attr_it))
+                article_body = get_article_body(tree)
+                break
 
         # Write header.
         self.send_response(200)
