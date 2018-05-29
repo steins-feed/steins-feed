@@ -5,6 +5,8 @@ import os
 import sqlite3
 import time
 
+from steins_manager import init_feeds, can_print
+
 def steins_read_time(item_it):
     try:
         item_time = item_it['published_parsed']
@@ -83,11 +85,7 @@ def steins_write(c):
         f.write("<p>Source: {}. Published: {}</p>".format(row_it[4], row_it[2]))
         f.write("{}".format(row_it[3]))
 
-        not_can_print = True
-        not_can_print &= (row_it[4].find("WIRED") == -1)
-        not_can_print &= (row_it[4].find("The Guardian") == -1)
-        not_can_print &= (row_it[4].find("The Atlantic") == -1)
-        if not not_can_print:
+        if can_print(row_it[4]):
             f.write("<p>\n")
             f.write("<form>\n")
             f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/{}\" value=\"Print\">\n".format(row_it[0]))
@@ -118,10 +116,9 @@ def steins_update(db_name):
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     if not db_exists:
-        import steins_manager
         c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL)")
         c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL)")
-        steins_manager.init_feeds(c)
+        init_feeds(c)
     steins_read(c)
     steins_write(c)
     conn.commit()

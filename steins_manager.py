@@ -6,6 +6,13 @@ def add_feed(c, title, link):
 def delete_feed(c, title):
     c.execute("DELETE FROM Feeds WHERE Title='?'", (title, ))
 
+def can_print(source):
+    not_can_print = True
+    not_can_print &= (source.find("WIRED") == -1)
+    not_can_print &= (source.find("The Guardian") == -1)
+    not_can_print &= (source.find("The Atlantic") == -1)
+    return not not_can_print
+
 def init_feeds(c):
     # The Guardian.
     add_feed(c, "The Guardian", "https://www.theguardian.com/uk/technology/rss")

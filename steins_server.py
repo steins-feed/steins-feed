@@ -28,7 +28,11 @@ class SteinsHandler(BaseHTTPRequestHandler):
         if self.path == "/":
             f = open(dir_name+os.sep+"steins-0.html", 'r')
         else:
-            f = open(dir_name+self.path, 'r')
+            try:
+                f = open(dir_name+self.path, 'r')
+            except FileNotFoundError as e:
+                print("'{}' not found.".format(e.filename))
+                return
         self.wfile.write(f.read().encode('utf-8'))
         f.close()
 
@@ -40,6 +44,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Load page.
         page = requests.get(row[5])
         tree = html.fromstring(page.content)
+
         if not row[4].find("WIRED") == -1:
             article = tree.xpath("//article")[0]
             article_body = article.xpath("./div")[0]
