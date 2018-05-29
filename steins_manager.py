@@ -46,6 +46,15 @@ def get_Atlantic(tree):
             article_body.append(elem_it)
     return article_body
 
+def get_Heise(tree):
+    article = tree.xpath("//article")[0]
+    article_body = article.xpath(".//div[@class='article-content']")[0]
+    return article_body
+
+def get_Register(tree):
+    article_body = tree.xpath("//div[@id='body']")[0]
+    return article_body
+
 def init_feeds(c):
     # The Guardian.
     add_feed(c, "The Guardian", "https://www.theguardian.com/uk/technology/rss")
