@@ -58,7 +58,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
         attr_list = steins_manager.get_attr_list()
         for attr_it in attr_list:
-            if not row[4].find(attr_it) == -1:
+            if attr_it in row[4]:
                 get_article_body = getattr(steins_manager, "get_{}".format(attr_it))
                 article_body = get_article_body(tree)
                 break

@@ -26,7 +26,7 @@ def get_attr_list():
 def can_print(source):
     attr_list = get_attr_list()
     for attr_it in attr_list:
-        if not source.find(attr_it) == -1:
+        if attr_it in source:
             return True
     return False
 

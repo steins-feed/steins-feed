@@ -14,20 +14,17 @@ Against whom am I competing?
 
 ## TODO
 
-1.  Printable HTML.
+1.  ~~Printable HTML.~~
 2.  Machine learning.
 
 *   Table for authors.
 *   Table for categories.
 *   Use HTML5 layout.
-*   Translate HTML to PDF.
 *   Expand The Guardian and The Atlantic.
 *   Only check for new posts after last (complete) day.
-*   Use WeasyPrint to export PDF.
 
 ## Bugs.
 
-*   What is `favicon.png`?
 *   Close when Firefox closes.
 
 ## Sources
