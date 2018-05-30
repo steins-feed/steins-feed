@@ -19,6 +19,18 @@ class SteinsHandler(BaseHTTPRequestHandler):
         if self.path == "/":
             steins_update(db_name)
 
+        if self.path == "/favicon.ico":
+            # Write header.
+            self.send_response(200)
+            self.send_header("Content-type", "image/png")
+            self.end_headers()
+
+            dir_name = os.path.dirname(os.path.abspath(__file__))
+            f = open(dir_name+self.path, 'rb')
+            self.wfile.write(f.read())
+            f.close()
+            return
+
         # Write header.
         self.send_response(200)
         self.send_header("Content-type", "text/html")
