@@ -25,7 +25,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.send_header("Content-type", "image/png")
             self.end_headers()
 
-            dir_name = os.path.dirname(os.path.abspath(__file__))
             f = open(dir_name+self.path, 'rb')
             self.wfile.write(f.read())
             f.close()
@@ -37,7 +36,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
         # Write payload.
-        dir_name = os.path.dirname(os.path.abspath(__file__))
         if self.path == "/":
             f = open(dir_name+os.sep+"steins-0.html", 'r')
         else:

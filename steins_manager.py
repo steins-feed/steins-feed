@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import os
+
 def add_feed(c, title, link):
     c.execute("INSERT INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
 
@@ -7,7 +9,8 @@ def delete_feed(c, title):
     c.execute("DELETE FROM Feeds WHERE Title='?'", (title, ))
 
 def get_attr_list():
-    f = open("steins_manager.py", 'r')
+    dir_name = os.path.dirname(os.path.abspath(__file__))
+    f = open(dir_name+os.sep+"steins_manager.py", 'r')
     attr_list = []
     for line in f:
         idx1 = line.find("def get_")
