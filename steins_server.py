@@ -54,7 +54,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
         # Load page.
         page = requests.get(row[5])
-        tree = html.fromstring(page.content)
+        tree = html.fromstring(page.text)
 
         attr_list = steins_manager.get_attr_list()
         for attr_it in attr_list:
