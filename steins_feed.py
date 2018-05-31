@@ -85,12 +85,14 @@ def steins_write(c):
         f.write("<p>Source: {}. Published: {}</p>".format(row_it[4], row_it[2]))
         f.write("{}".format(row_it[3]))
 
+        f.write("<p>\n")
+        f.write("<form>\n")
+        f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/like/{}\" value=\"Like\">\n".format(row_it[0]))
+        f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/dislike/{}\" value=\"Dislike\">\n".format(row_it[0]))
         if can_print(row_it[4]):
-            f.write("<p>\n")
-            f.write("<form>\n")
-            f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/{}\" value=\"Print\">\n".format(row_it[0]))
-            f.write("</form>\n")
-            f.write("</p>\n")
+            f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/print/{}\" value=\"Print\">\n".format(row_it[0]))
+        f.write("</form>\n")
+        f.write("</p>\n")
 
         f.write("<hr>\n")
 
@@ -117,7 +119,7 @@ def steins_update(db_name):
     c = conn.cursor()
     if not db_exists:
         c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL)")
-        c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL)")
+        c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, Like INTEGER DEFAULT 0)")
         init_feeds(c)
     steins_read(c)
     steins_write(c)

@@ -47,11 +47,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write(f.read().encode('utf-8'))
         f.close()
 
-    def do_POST(self):
-        conn = sqlite3.connect(db_name)
-        c = conn.cursor()
-        row = c.execute("SELECT * FROM Items WHERE ItemID=?", (self.path[1:], )).fetchone()
-
+    def print_response(self, row):
         # Load page.
         page = requests.get(row[5])
         tree = html.fromstring(page.text)
@@ -91,6 +87,41 @@ class SteinsHandler(BaseHTTPRequestHandler):
                 self.wfile.write('\n'.encode('utf-8'))
 
         self.wfile.write("</body>\n".encode('utf-8'))
+
+    def do_POST(self):
+        conn = sqlite3.connect(db_name)
+        c = conn.cursor()
+        idx = self.path.find("/", 1)
+        item_id = self.path[idx+1:]
+        row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
+
+        # Like.
+        if "/like" in self.path:
+            if row[6] == 1:
+                c.execute("UPDATE Items SET Like=0 WHERE ItemID=?", (item_id, ))
+                print("UNLIKE: {}.".format(row[1]))
+            else:
+                c.execute("UPDATE Items SET Like=1 WHERE ItemID=?", (item_id, ))
+                print("LIKE: {}.".format(row[1]))
+            self.send_response(204)
+            self.end_headers()
+        # Dislike.
+        elif "/dislike" in self.path:
+            if row[6] == -1:
+                c.execute("UPDATE Items SET Like=0 WHERE ItemID=?", (item_id, ))
+                print("UNLIKE: {}.".format(row[1]))
+            else:
+                c.execute("UPDATE Items SET Like=-1 WHERE ItemID=?", (item_id, ))
+                print("DISLIKE: {}.".format(row[1]))
+            self.send_response(204)
+            self.end_headers()
+        # Print.
+        else:
+            self.print_response(row)
+            print("PRINT: {}.".format(row[1]))
+
+        conn.commit()
+        conn.close()
 
 def steins_run_child(server):
     try:
