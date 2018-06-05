@@ -95,35 +95,35 @@ def init_feeds(c):
     # Scientific American.
     add_feed(c, "Scientific American", "http://rss.sciam.com/ScientificAmerican-Global")
 
-    # The Register.
-    add_feed(c, "The Register Data Centre", "https://www.theregister.co.uk/data_centre/headlines.atom")
-    add_feed(c, "The Register Software", "https://www.theregister.co.uk/software/headlines.atom")
-    add_feed(c, "The Register Security", "https://www.theregister.co.uk/security/headlines.atom")
-    add_feed(c, "The Register Transformation", "https://www.theregister.co.uk/transformation/headlines.atom")
-    add_feed(c, "The Register Devops", "https://www.theregister.co.uk/devops/headlines.atom")
-    add_feed(c, "The Register Business", "https://www.theregister.co.uk/business/headlines.atom")
-    add_feed(c, "The Register Personal Tech", "https://www.theregister.co.uk/personal_tech/headlines.atom")
-    add_feed(c, "The Register Science", "https://www.theregister.co.uk/science/headlines.atom")
-    add_feed(c, "The Register Emergent Tech", "https://www.theregister.co.uk/emergent_tech/headlines.atom")
-    add_feed(c, "The Register Bootnotes", "https://www.theregister.co.uk/bootnotes/headlines.atom")
-    add_feed(c, "The Register", "https://www.theregister.co.uk/headlines.atom")
+    ## The Register.
+    #add_feed(c, "The Register Data Centre", "https://www.theregister.co.uk/data_centre/headlines.atom")
+    #add_feed(c, "The Register Software", "https://www.theregister.co.uk/software/headlines.atom")
+    #add_feed(c, "The Register Security", "https://www.theregister.co.uk/security/headlines.atom")
+    #add_feed(c, "The Register Transformation", "https://www.theregister.co.uk/transformation/headlines.atom")
+    #add_feed(c, "The Register Devops", "https://www.theregister.co.uk/devops/headlines.atom")
+    #add_feed(c, "The Register Business", "https://www.theregister.co.uk/business/headlines.atom")
+    #add_feed(c, "The Register Personal Tech", "https://www.theregister.co.uk/personal_tech/headlines.atom")
+    #add_feed(c, "The Register Science", "https://www.theregister.co.uk/science/headlines.atom")
+    #add_feed(c, "The Register Emergent Tech", "https://www.theregister.co.uk/emergent_tech/headlines.atom")
+    #add_feed(c, "The Register Bootnotes", "https://www.theregister.co.uk/bootnotes/headlines.atom")
+    #add_feed(c, "The Register", "https://www.theregister.co.uk/headlines.atom")
 
-    # Heise.
-    add_feed(c, "Heise Developer", "https://www.heise.de/developer/rss/news-atom.xml")
-    add_feed(c, "Heise Security", "https://www.heise.de/security/rss/news-atom.xml")
-    add_feed(c, "Heise c't", "https://www.heise.de/ct/rss/artikel-atom.xml")
-    add_feed(c, "Heise Make", "https://www.heise.de/make/rss/hardware-hacks-atom.xml")
-    add_feed(c, "Heise iX", "https://www.heise.de/iX/rss/news-atom.xml")
-    add_feed(c, "Heise Technology Review", "https://www.heise.de/tr/rss/news-atom.xml")
-    add_feed(c, "Heise Telepolis", "https://www.heise.de/tp/rss/news-atom.xml")
-    add_feed(c, "Heise TechStage", "https://www.techstage.de/rss.xml")
-    add_feed(c, "Heise", "https://www.heise.de/newsticker/heise-atom.xml")
+    ## Heise.
+    #add_feed(c, "Heise Developer", "https://www.heise.de/developer/rss/news-atom.xml")
+    #add_feed(c, "Heise Security", "https://www.heise.de/security/rss/news-atom.xml")
+    #add_feed(c, "Heise c't", "https://www.heise.de/ct/rss/artikel-atom.xml")
+    #add_feed(c, "Heise Make", "https://www.heise.de/make/rss/hardware-hacks-atom.xml")
+    #add_feed(c, "Heise iX", "https://www.heise.de/iX/rss/news-atom.xml")
+    #add_feed(c, "Heise Technology Review", "https://www.heise.de/tr/rss/news-atom.xml")
+    #add_feed(c, "Heise Telepolis", "https://www.heise.de/tp/rss/news-atom.xml")
+    #add_feed(c, "Heise TechStage", "https://www.techstage.de/rss.xml")
+    #add_feed(c, "Heise", "https://www.heise.de/newsticker/heise-atom.xml")
 
     # FiveThirtyEight.
     add_feed(c, "FiveThirtyEight", "https://fivethirtyeight.com/tag/nba/feed/")
     add_feed(c, "FiveThirtyEight NBA", "https://fivethirtyeight.com/tag/nba-playoffs/feed/")
     add_feed(c, "FiveThirtyEight NBA Playoffs", "https://fivethirtyeight.com/tag/basketball/feed/")
 
-    # The Ringer.
-    add_feed(c, "The Ringer NBA", "https://www.theringer.com/rss/nba/index.xml")
-    add_feed(c, "The Ringer NBA Playoffs", "https://www.theringer.com/rss/nba-playoffs/index.xml")
+    ## The Ringer.
+    #add_feed(c, "The Ringer NBA", "https://www.theringer.com/rss/nba/index.xml")
+    #add_feed(c, "The Ringer NBA Playoffs", "https://www.theringer.com/rss/nba-playoffs/index.xml")
