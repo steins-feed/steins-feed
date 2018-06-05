@@ -2,9 +2,11 @@
 
 import feedparser
 import os
+import requests
 import sqlite3
 import time
 
+from lxml import html
 from steins_manager import init_feeds, can_print
 
 def steins_read_time(item_it):
@@ -45,11 +47,20 @@ def steins_read(c):
     for feed_it in c.execute("SELECT * FROM Feeds").fetchall():
         print(feed_it[1])
         d = feedparser.parse(feed_it[2])
+
         for item_it in d['items']:
             item_title = item_it['title']
             item_time = steins_read_time(item_it)
-            item_summary = item_it['summary']
             item_link = item_it['link']
+
+            # item_summary.
+            if "Atlantic" in feed_it[1]:
+                page = requests.get(item_link)
+                tree = html.fromstring(page.content)
+                nodes = tree.xpath("//p[@itemprop='description']")
+                item_summary = nodes[0].text
+            else:
+                item_summary = item_it['summary']
 
             if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_title, item_time, )).fetchone()[0] == 0:
                 c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))

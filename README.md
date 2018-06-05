@@ -23,6 +23,7 @@ Against whom am I competing?
 *   Expand The Guardian and The Atlantic.
 *   Only check for new posts after last (complete) day.
 *   Rewrite steins-manager as factory.
+*   Include figures.
 
 ## Bugs.
 
