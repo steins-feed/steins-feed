@@ -77,7 +77,12 @@ def init_feeds(c):
     #add_feed(c, "WIRED Photo", "https://www.wired.com/feed/category/photo/latest/rss")
     add_feed(c, "WIRED", "https://www.wired.com/feed/rss")
     
-    # XKCD.
+    # Comics.
+    add_feed(c, "Dilbert", "http://feed.dilbert.com/dilbert/daily_strip?format=xml")
+    add_feed(c, "Existential Comics", "http://existentialcomics.com/rss.xml")
+    add_feed(c, "Good Bear Comics", "https://goodbearcomics.com/feed/")
+    add_feed(c, "Piled Higher and Deeper", "http://phdcomics.com/gradfeed.php")
+    add_feed(c, "Saturday Morning Breakfast Cereal", "https://www.smbc-comics.com/rss.php")
     add_feed(c, "XKCD", "https://www.xkcd.com/rss.xml")
 
     # Chalkdust.
