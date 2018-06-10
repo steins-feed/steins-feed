@@ -73,6 +73,16 @@ def init_feeds(c):
     add_feed(c, "The Guardian Cities", "https://www.theguardian.com/cities/rss")
     #add_feed(c, "The Guardian Obituaries", "https://www.theguardian.com/tone/obituaries/rss")
     
+    # Financial Times.
+    add_feed(c, "Financial Times World", "https://www.ft.com/world?format=rss")
+    #add_feed(c, "Financial Times UK", "https://www.ft.com/world/uk?format=rss")
+    add_feed(c, "Financial Times Companies", "https://www.ft.com/companies?format=rss")
+    add_feed(c, "Financial Times Markets", "https://www.ft.com/markets?format=rss")
+    add_feed(c, "Financial Times Opinion", "https://www.ft.com/opinion?format=rss")
+    add_feed(c, "Financial Times Work & Careers", "https://www.ft.com/work-careers?format=rss")
+    add_feed(c, "Financial Times Life & Arts", "https://www.ft.com/life-arts?format=rss")
+    add_feed(c, "Financial Times", "https://www.ft.com/?format=rss")
+
     # The Atlantic.
     #add_feed(c, "The Atlantic Politics", "https://www.theatlantic.com/feed/channel/politics/")
     add_feed(c, "The Atlantic Culture", "https://www.theatlantic.com/feed/channel/entertainment/")

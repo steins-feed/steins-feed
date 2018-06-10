@@ -65,7 +65,10 @@ def steins_read(c):
                 nodes = tree.xpath("//p[@itemprop='description']")
                 item_summary = nodes[0].text
             else:
-                item_summary = item_it['summary']
+                try:
+                    item_summary = item_it['summary']
+                except KeyError:
+                    item_summary = ""
 
             if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_title, item_time, )).fetchone()[0] == 0:
                 c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))
