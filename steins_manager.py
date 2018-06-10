@@ -4,7 +4,7 @@ import os
 import requests
 import time
 
-from lxml import etree, html
+from lxml import html
 
 class SteinsHandler:
     def read_title(self, item_it):
@@ -52,6 +52,12 @@ class SteinsHandler:
 
         raise KeyError
 
+    def can_print(self):
+        if "get_article_body" in dir(self):
+            return True
+        else:
+            return False
+
 class AtlanticHandler(SteinsHandler):
     def read_summary(self, item_it):
         item_link = self.read_link(item_it)
@@ -67,34 +73,23 @@ class AtlanticHandler(SteinsHandler):
 
         return item_summary
 
-class SteinsFactory:
-    def get_handler(self, title):
-        if "The Atlantic" in title:
-            return AtlanticHandler()
-        else:
-            return SteinsHandler()
+    def get_article_body(self, tree):
+        article = tree.xpath("//article")[0]
+        article_sections = article.xpath(".//section")
 
-def get_attr_list():
-    dir_name = os.path.dirname(os.path.abspath(__file__))
-    f = open(dir_name+os.sep+"steins_manager.py", 'r')
-    attr_list = []
-    for line in f:
-        idx1 = line.find("def get_")
-        if idx1 == -1:
-            continue
-        idx2 = line.find("(", idx1)
-        if idx2 == -1:
-            continue
-        attr_list.append(line[idx1+8:idx2])
-    f.close()
-    return attr_list
+        article_body = []
+        for section_it in article_sections:
+            for elem_it in section_it:
+                can_print = False
+                can_print |= (elem_it.tag == "p")
+                for i in range(6):
+                    can_print |= (elem_it.tag == "h{}".format(i+1))
+                can_print |= (elem_it.tag == "blockquote")
 
-def can_print(source):
-    attr_list = get_attr_list()
-    for attr_it in attr_list:
-        if attr_it in source:
-            return True
-    return False
+                if can_print:
+                    article_body.append(elem_it)
+
+        return article_body
 
 def get_WIRED(tree):
     article = tree.xpath("//article")[0]
@@ -106,15 +101,6 @@ def get_Guardian(tree):
     article_body = article.xpath(".//div[@itemprop='articleBody']")[0]
     return article_body
 
-def get_Atlantic(tree):
-    article = tree.xpath("//article")[0]
-    article_sections = article.xpath(".//section")
-    article_body = []
-    for section_it in article_sections:
-        for elem_it in section_it:
-            article_body.append(elem_it)
-    return article_body
-
 def get_Heise(tree):
     article = tree.xpath("//article")[0]
     article_body = article.xpath(".//div[@class='article-content']")[0]
@@ -124,19 +110,9 @@ def get_Register(tree):
     article_body = tree.xpath("//div[@id='body']")[0]
     return article_body
 
-def add_feed(c, title, link):
-    c.execute("INSERT INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
-
-def delete_feed(c, title):
-    c.execute("DELETE FROM Feeds WHERE Title='?'", (title, ))
-
-def init_feeds(c):
-    f = open("steins_config.xml", 'r')
-    tree = etree.fromstring(f.read())
-    f.close()
-
-    feed_list = tree.xpath("//feed")
-    for feed_it in feed_list:
-        title = feed_it.xpath("./title")[0].text
-        link = feed_it.xpath("./link")[0].text
-        add_feed(c, title, link)
+class SteinsFactory:
+    def get_handler(self, source):
+        if "The Atlantic" in source:
+            return AtlanticHandler()
+        else:
+            return SteinsHandler()

@@ -4,11 +4,11 @@ import multiprocessing as mp
 import os
 import requests
 import sqlite3
-import steins_manager
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from lxml import html
 from steins_feed import steins_update
+from steins_manager import SteinsFactory
 
 dir_name = os.path.dirname(os.path.abspath(__file__))
 db_name = dir_name + os.sep + "steins.db"
@@ -48,16 +48,13 @@ class SteinsHandler(BaseHTTPRequestHandler):
         f.close()
 
     def print_response(self, row):
+        factory = SteinsFactory()
+        handler = factory.get_handler(row[4])
+
         # Load page.
         page = requests.get(row[5])
         tree = html.fromstring(page.text)
-
-        attr_list = steins_manager.get_attr_list()
-        for attr_it in attr_list:
-            if attr_it in row[4]:
-                get_article_body = getattr(steins_manager, "get_{}".format(attr_it))
-                article_body = get_article_body(tree)
-                break
+        article_body = handler.get_article_body(tree)
 
         # Write header.
         self.send_response(200)
@@ -74,18 +71,9 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("<body>\n".encode('utf-8'))
         self.wfile.write("<h1>{}</h1>\n".format(row[1]).encode('utf-8'))
         self.wfile.write("<p>Source: {}. Published: {}</p>".format(row[4], row[2]).encode('utf-8'))
-
         for e_it in article_body:
-            can_print = False
-            can_print |= (e_it.tag == "p")
-            for i in range(6):
-                can_print |= (e_it.tag == "h{}".format(i+1))
-            can_print |= (e_it.tag == "blockquote")
-
-            if can_print:
-                self.wfile.write(html.tostring(e_it))
-                self.wfile.write('\n'.encode('utf-8'))
-
+            self.wfile.write(html.tostring(e_it))
+            self.wfile.write('\n'.encode('utf-8'))
         self.wfile.write("</body>\n".encode('utf-8'))
 
     def do_POST(self):

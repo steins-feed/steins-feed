@@ -6,8 +6,25 @@ import requests
 import sqlite3
 import time
 
-from lxml import html
-from steins_manager import init_feeds, can_print, SteinsFactory
+from lxml import etree, html
+from steins_manager import SteinsFactory
+
+def add_feed(c, title, link):
+    c.execute("INSERT INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
+
+def delete_feed(c, title):
+    c.execute("DELETE FROM Feeds WHERE Title='?'", (title, ))
+
+def init_feeds(c):
+    f = open("steins_config.xml", 'r')
+    tree = etree.fromstring(f.read())
+    f.close()
+
+    feed_list = tree.xpath("//feed")
+    for feed_it in feed_list:
+        title = feed_it.xpath("./title")[0].text
+        link = feed_it.xpath("./link")[0].text
+        add_feed(c, title, link)
 
 # Scrape feeds.
 def steins_read(c):
@@ -29,6 +46,8 @@ def steins_read(c):
 
 # Generate HTML.
 def steins_write(c):
+    factory = SteinsFactory()
+
     dir_name = os.path.dirname(os.path.abspath(__file__))
     times = c.execute("SELECT Published FROM Items")
     times = [t_it[0][:10] for t_it in times]
@@ -70,7 +89,7 @@ def steins_write(c):
         f.write("<form>\n")
         f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/like/{}\" value=\"Like\">\n".format(row_it[0]))
         f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/dislike/{}\" value=\"Dislike\">\n".format(row_it[0]))
-        if can_print(row_it[4]):
+        if factory.get_handler(row_it[4]).can_print():
             f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/print/{}\" value=\"Print\">\n".format(row_it[0]))
         f.write("</form>\n")
         f.write("</p>\n")
