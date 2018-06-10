@@ -7,68 +7,22 @@ import sqlite3
 import time
 
 from lxml import html
-from steins_manager import init_feeds, can_print
-
-def steins_read_time(item_it):
-    try:
-        item_time = item_it['published_parsed']
-        item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
-        return item_time
-    except:
-        pass
-
-    try:
-        item_time = item_it['published']
-        item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
-        item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
-        return item_time
-    except:
-        pass
-
-    try:
-        item_time = item_it['updated_parsed']
-        item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
-        return item_time
-    except:
-        pass
-
-    try:
-        item_time = item_it['updated']
-        item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
-        item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
-        return item_time
-    except:
-        pass
-
-    raise KeyError
+from steins_manager import init_feeds, can_print, SteinsFactory
 
 # Scrape feeds.
 def steins_read(c):
+    factory = SteinsFactory()
+
     for feed_it in c.execute("SELECT * FROM Feeds").fetchall():
         print(feed_it[1])
+        handler = factory.get_handler(feed_it[1])
+
         d = feedparser.parse(feed_it[2])
-
         for item_it in d['items']:
-            item_title = item_it['title']
-            item_time = steins_read_time(item_it)
-            item_link = item_it['link']
-
-            # item_summary.
-            if "Atlantic" in feed_it[1]:
-                if "/video/" in item_link:
-                    continue
-                if "/photo/" in item_link:
-                    continue
-
-                page = requests.get(item_link)
-                tree = html.fromstring(page.content)
-                nodes = tree.xpath("//p[@itemprop='description']")
-                item_summary = nodes[0].text
-            else:
-                try:
-                    item_summary = item_it['summary']
-                except KeyError:
-                    item_summary = ""
+            item_title = handler.read_title(item_it)
+            item_time = handler.read_time(item_it)
+            item_link = handler.read_link(item_it)
+            item_summary = handler.read_summary(item_it)
 
             if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_title, item_time, )).fetchone()[0] == 0:
                 c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))

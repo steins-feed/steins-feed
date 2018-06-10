@@ -1,8 +1,78 @@
 #!/usr/bin/env python3
 
 import os
+import requests
+import time
 
-from lxml import etree
+from lxml import etree, html
+
+class SteinsHandler:
+    def read_title(self, item_it):
+        return item_it['title']
+
+    def read_link(self, item_it):
+        return item_it['link']
+
+    def read_summary(self, item_it):
+        try:
+            return item_it['summary']
+        except KeyError:
+            return ""
+
+    def read_time(self, item_it):
+        try:
+            item_time = item_it['published_parsed']
+            item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+            return item_time
+        except:
+            pass
+
+        try:
+            item_time = item_it['published']
+            item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
+            item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+            return item_time
+        except:
+            pass
+
+        try:
+            item_time = item_it['updated_parsed']
+            item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+            return item_time
+        except:
+            pass
+
+        try:
+            item_time = item_it['updated']
+            item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
+            item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+            return item_time
+        except:
+            pass
+
+        raise KeyError
+
+class AtlanticHandler(SteinsHandler):
+    def read_summary(self, item_it):
+        item_link = self.read_link(item_it)
+        if "/video/" in item_link:
+            return ""
+        if "/photo/" in item_link:
+            return ""
+
+        page = requests.get(item_link)
+        tree = html.fromstring(page.content)
+        nodes = tree.xpath("//p[@itemprop='description']")
+        item_summary = nodes[0].text
+
+        return item_summary
+
+class SteinsFactory:
+    def get_handler(self, title):
+        if "The Atlantic" in title:
+            return AtlanticHandler()
+        else:
+            return SteinsHandler()
 
 def get_attr_list():
     dir_name = os.path.dirname(os.path.abspath(__file__))
