@@ -1,0 +1,351 @@
+<?xml version="1.0"?>
+
+<root>
+    <!-- The Guardian -->
+    <feed>
+        <title>The Guardian Editorial</title>
+        <link>https://www.theguardian.com/profile/editorial/rss</link>
+    </feed>
+    <!--
+    <feed>
+        <title>The Guardian UK News</title>
+        <link>https://www.theguardian.com/uk-news/rss</link>
+    </feed>
+    -->
+    <feed>
+        <title>The Guardian World News</title>
+        <link>https://www.theguardian.com/world/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Economy</title>
+        <link>https://www.theguardian.com/uk/business/rss</link>
+    </feed>
+    <!--
+    <feed>
+        <title>The Guardian UK Politics</title>
+        <link>https://www.theguardian.com/politics/rss</link>
+    </feed>
+    -->
+    <feed>
+        <title>The Guardian Environment</title>
+        <link>https://www.theguardian.com/uk/environment/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Education</title>
+        <link>https://www.theguardian.com/education/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Science</title>
+        <link>https://www.theguardian.com/science/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Technology</title>
+        <link>https://www.theguardian.com/uk/technology/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Global Development</title>
+        <link>https://www.theguardian.com/global-development/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Cities</title>
+        <link>https://www.theguardian.com/cities/rss</link>
+    </feed>
+    <!--
+    <feed>
+        <title>The Guardian Obituaries</title>
+        <link>https://www.theguardian.com/tone/obituaries/rss</link>
+    </feed>
+    -->
+
+    <!-- Financial Times -->
+    <feed>
+        <title>Financial Times World</title>
+        <link>https://www.ft.com/world?format=rss</link>
+    </feed>
+    <!--
+    <feed>
+        <title>Financial Times UK</title>
+        <link>https://www.ft.com/world/uk?format=rss</link>
+    </feed>
+    -->
+    <feed>
+        <title>Financial Times Companies</title>
+        <link>https://www.ft.com/companies?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times Markets</title>
+        <link>https://www.ft.com/markets?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times Opinion</title>
+        <link>https://www.ft.com/opinion?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times Work &amp; Careers</title>
+        <link>https://www.ft.com/work-careers?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times Life &amp; Arts</title>
+        <link>https://www.ft.com/life-arts?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times</title>
+        <link>https://www.ft.com/?format=rss</link>
+    </feed>
+
+    <!-- The Atlantic -->
+    <!--
+    <feed>
+        <title>The Atlantic Politics</title>
+        <link>https://www.theatlantic.com/feed/channel/politics/</link>
+    </feed>
+    -->
+    <feed>
+        <title>The Atlantic Culture</title>
+        <link>https://www.theatlantic.com/feed/channel/entertainment/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Science</title>
+        <link>https://www.theatlantic.com/feed/channel/science/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Technology</title>
+        <link>https://www.theatlantic.com/feed/channel/technology/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Business</title>
+        <link>https://www.theatlantic.com/feed/channel/business/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Health</title>
+        <link>https://www.theatlantic.com/feed/channel/health/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Family</title>
+        <link>https://www.theatlantic.com/feed/channel/family/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Education</title>
+        <link>https://www.theatlantic.com/feed/channel/education/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Global</title>
+        <link>https://www.theatlantic.com/feed/channel/international/</link>
+    </feed>
+    <!--
+    <feed>
+        <title>The Atlantic National</title>
+        <link>https://www.theatlantic.com/feed/channel/national/</link>
+    </feed>
+    -->
+    <feed>
+        <title>The Atlantic</title>
+        <link>https://www.theatlantic.com/feed/best-of/</link>
+    </feed>
+
+    <!-- WIRED -->
+    <feed>
+        <title>WIRED Guides</title>
+        <link>https://www.wired.com/feed/tag/wired-guide/latest/rss</link>
+    </feed>
+    <feed>
+        <title>WIRED Business</title>
+        <link>https://www.wired.com/feed/category/business/latest/rss</link>
+    </feed>
+    <feed>
+        <title>WIRED Culture</title>
+        <link>https://www.wired.com/feed/category/culture/latest/rss</link>
+    </feed>
+    <feed>
+        <title>WIRED Ideas</title>
+        <link>https://www.wired.com/feed/category/ideas/latest/rss</link>
+    </feed>
+    <feed>
+        <title>WIRED Science</title>
+        <link>https://www.wired.com/feed/category/science/latest/rss</link>
+    </feed>
+    <feed>
+        <title>WIRED Security</title>
+        <link>https://www.wired.com/feed/category/security/latest/rss</link>
+    </feed>
+    <feed>
+        <title>WIRED Transportation</title>
+        <link>https://www.wired.com/feed/category/transportation/latest/rss</link>
+    </feed>
+    <feed>
+        <title>WIRED Backchannel</title>
+        <link>https://www.wired.com/feed/category/backchannel/latest/rss</link>
+    </feed>
+    <!--
+    <feed>
+        <title>WIRED Photo</title>
+        <link>https://www.wired.com/feed/category/photo/latest/rss</link>
+    </feed>
+    -->
+    <feed>
+        <title>WIRED</title>
+        <link>https://www.wired.com/feed/rss</link>
+    </feed>
+
+    <!-- Comics -->
+    <feed>
+        <title>Dilbert</title>
+        <link>http://feed.dilbert.com/dilbert/daily_strip?format=xml</link>
+    </feed>
+    <feed>
+        <title>Existential Comics</title>
+        <link>http://existentialcomics.com/rss.xml</link>
+    </feed>
+    <feed>
+        <title>Good Bear Comics</title>
+        <link>https://goodbearcomics.com/feed/</link>
+    </feed>
+    <feed>
+        <title>Piled Higher and Deeper</title>
+        <link>http://phdcomics.com/gradfeed.php</link>
+    </feed>
+    <feed>
+        <title>Saturday Morning Breakfast Cereal</title>
+        <link>https://www.smbc-comics.com/rss.php</link>
+    </feed>
+    <feed>
+        <title>XKCD</title>
+        <link>https://www.xkcd.com/rss.xml</link>
+    </feed>
+
+    <!-- Miscellaneous -->
+    <feed>
+        <title>Chalkdust</title>
+        <link>http://chalkdustmagazine.com/feed/</link>
+    </feed>
+    <feed>
+        <title>Gates Notes</title>
+        <link>https://www.gatesnotes.com/rss</link>
+    </feed>
+    <feed>
+        <title>TED Ideas</title>
+        <link>https://ideas.ted.com/feed/</link>
+    </feed>
+    <feed>
+        <title>Quanta Magazine</title>
+        <link>https://api.quantamagazine.org/feed/</link>
+    </feed>
+    <feed>
+        <title>Scientific American</title>
+        <link>http://rss.sciam.com/ScientificAmerican-Global</link>
+    </feed>
+
+    <!-- The Register -->
+    <!--
+    <feed>
+        <title>The Register Data Centre</title>
+        <link>https://www.theregister.co.uk/data_centre/headlines.atom</link>
+    </feed>
+    <feed>
+        <title>The Register Software</title>
+        <link>https://www.theregister.co.uk/software/headlines.atom</link>
+    </feed>
+    <feed>
+        <title>The Register Security</title>
+        <link>https://www.theregister.co.uk/security/headlines.atom</link>
+    </feed>
+    <feed>
+        <title>The Register Transformation</title>
+        <link>https://www.theregister.co.uk/transformation/headlines.atom</link>
+    </feed>
+    <feed>
+        <title>The Register Devops</title>
+        <link>https://www.theregister.co.uk/devops/headlines.atom</link>
+    </feed>
+    <feed>
+        <title>The Register Business</title>
+        <link>https://www.theregister.co.uk/business/headlines.atom</link>
+    </feed>
+    <feed>
+        <title>The Register Personal Tech</title>
+        <link>https://www.theregister.co.uk/personal_tech/headlines.atom</link>
+    </feed>
+    <feed>
+        <title>The Register Science</title>
+        <link>https://www.theregister.co.uk/science/headlines.atom</link>
+    </feed>
+    <feed>
+        <title>The Register Emergent Tech</title>
+        <link>https://www.theregister.co.uk/emergent_tech/headlines.atom</link>
+    </feed>
+    <feed>
+        <title>The Register Bootnotes</title>
+        <link>https://www.theregister.co.uk/bootnotes/headlines.atom</link>
+    </feed>
+    <feed>
+        <title>The Register</title>
+        <link>https://www.theregister.co.uk/headlines.atom</link>
+    </feed>
+    -->
+
+    <!-- Heise -->
+    <!--
+    <feed>
+        <title>Heise Developer</title>
+        <link>https://www.heise.de/developer/rss/news-atom.xml</link>
+    </feed>
+    <feed>
+        <title>Heise Security</title>
+        <link>https://www.heise.de/security/rss/news-atom.xml</link>
+    </feed>
+    <feed>
+        <title>Heise c't</title>
+        <link>https://www.heise.de/ct/rss/artikel-atom.xml</link>
+    </feed>
+    <feed>
+        <title>Heise Make</title>
+        <link>https://www.heise.de/make/rss/hardware-hacks-atom.xml</link>
+    </feed>
+    <feed>
+        <title>Heise iX</title>
+        <link>https://www.heise.de/iX/rss/news-atom.xml</link>
+    </feed>
+    <feed>
+        <title>Heise Technology Review</title>
+        <link>https://www.heise.de/tr/rss/news-atom.xml</link>
+    </feed>
+    <feed>
+        <title>Heise Telepolis</title>
+        <link>https://www.heise.de/tp/rss/news-atom.xml</link>
+    </feed>
+    <feed>
+        <title>Heise TechStage</title>
+        <link>https://www.techstage.de/rss.xml</link>
+    </feed>
+    <feed>
+        <title>Heise</title>
+        <link>https://www.heise.de/newsticker/heise-atom.xml</link>
+    </feed>
+    -->
+
+    <!-- FiveThirtyEight -->
+    <feed>
+        <title>FiveThirtyEight NBA</title>
+        <link>https://fivethirtyeight.com/tag/nba/feed/</link>
+    </feed>
+    <feed>
+        <title>FiveThirtyEight NBA Playoffs</title>
+        <link>https://fivethirtyeight.com/tag/nba-playoffs/feed/</link>
+    </feed>
+    <feed>
+        <title>FiveThirtyEight Basketball</title>
+        <link>https://fivethirtyeight.com/tag/basketball/feed/</link>
+    </feed>
+
+    <!-- The Ringer -->
+    <!--
+    <feed>
+        <title>The Ringer NBA</title>
+        <link>https://www.theringer.com/rss/nba/index.xml</link>
+    </feed>
+    <feed>
+        <title>The Ringer NBA Playoffs</title>
+        <link>https://www.theringer.com/rss/nba-playoffs/index.xml</link>
+    </feed>
+    -->
+</root>
