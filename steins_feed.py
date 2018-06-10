@@ -55,6 +55,11 @@ def steins_read(c):
 
             # item_summary.
             if "Atlantic" in feed_it[1]:
+                if "/video/" in item_link:
+                    continue
+                if "/photo/" in item_link:
+                    continue
+
                 page = requests.get(item_link)
                 tree = html.fromstring(page.content)
                 nodes = tree.xpath("//p[@itemprop='description']")
@@ -69,12 +74,13 @@ def steins_read(c):
 def steins_write(c):
     dir_name = os.path.dirname(os.path.abspath(__file__))
     times = c.execute("SELECT Published FROM Items")
-    dates = sorted(list(set([t_it[0][:10] for t_it in times])), reverse=True)
-    f_list = dict()
+    times = [t_it[0][:10] for t_it in times]
+    dates = sorted(list(set(times)), reverse=True)
+    f_list = []
 
-    d_cnt = 0
-    for d_it in dates:
-        f = open(dir_name+os.sep+"steins-{}.html".format(d_cnt), 'w')
+    for d_ctr in range(len(dates)):
+        d_it = dates[d_ctr]
+        f = open(dir_name+os.sep+"steins-{}.html".format(d_ctr), 'w')
 
         f.write("<!DOCTYPE html>\n")
         f.write("<html>\n")
@@ -84,13 +90,20 @@ def steins_write(c):
         f.write("</head>\n")
         f.write("<body>\n")
         f.write("<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d"))))
+        f.write("<p>{} articles.</p>\n".format(times.count(d_it)))
+        f.write("<form>\n")
+        if not d_ctr == 0:
+            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Previous\">\n".format(d_ctr-1))
+        if not d_ctr == len(dates)-1:
+            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Next\">\n".format(d_ctr+1))
+        f.write("</form>\n")
         f.write("<hr>\n")
 
-        f_list[d_it] = f
-        d_cnt += 1
+        f_list.append(f)
 
     for row_it in c.execute("SELECT * FROM Items ORDER BY Published DESC"):
-        f = f_list[row_it[2][:10]]
+        f_idx = dates.index(row_it[2][:10])
+        f = f_list[f_idx]
 
         f.write("<h2><a href=\"{}\">{}</a></h2>\n".format(row_it[5], row_it[1]))
         f.write("<p>Source: {}. Published: {}</p>".format(row_it[4], row_it[2]))
@@ -107,22 +120,19 @@ def steins_write(c):
 
         f.write("<hr>\n")
 
-    d_cnt = 0
-    d_len = len(dates)
-    for d_it in dates:
-        f = f_list[d_it]
+    for d_ctr in range(len(dates)):
+        d_it = dates[d_ctr]
+        f = f_list[d_ctr]
 
         f.write("<form>\n")
-        if not d_cnt == 0:
-            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Previous\">\n".format(d_cnt-1))
-        if not d_cnt == d_len-1:
-            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Next\">\n".format(d_cnt+1))
+        if not d_ctr == 0:
+            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Previous\">\n".format(d_ctr-1))
+        if not d_ctr == len(dates)-1:
+            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Next\">\n".format(d_ctr+1))
         f.write("</form>\n")
         f.write("</body>\n")
         f.write("</html>\n")
         f.close()
-
-        d_cnt += 1
 
 def steins_update(db_name):
     db_exists = os.path.isfile(db_name)

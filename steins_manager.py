@@ -60,10 +60,31 @@ def get_Register(tree):
 
 def init_feeds(c):
     # The Guardian.
-    add_feed(c, "The Guardian", "https://www.theguardian.com/uk/technology/rss")
+    add_feed(c, "The Guardian Editorial", "https://www.theguardian.com/profile/editorial/rss")
+    #add_feed(c, "The Guardian UK News", "https://www.theguardian.com/uk-news/rss")
+    add_feed(c, "The Guardian World News", "https://www.theguardian.com/world/rss")
+    add_feed(c, "The Guardian Economy", "https://www.theguardian.com/uk/business/rss")
+    #add_feed(c, "The Guardian UK Politics", "https://www.theguardian.com/politics/rss")
+    add_feed(c, "The Guardian Environment", "https://www.theguardian.com/uk/environment/rss")
+    add_feed(c, "The Guardian Education", "https://www.theguardian.com/education/rss")
+    add_feed(c, "The Guardian Science", "https://www.theguardian.com/science/rss")
+    add_feed(c, "The Guardian Technology", "https://www.theguardian.com/uk/technology/rss")
+    add_feed(c, "The Guardian Global Development", "https://www.theguardian.com/global-development/rss")
+    add_feed(c, "The Guardian Cities", "https://www.theguardian.com/cities/rss")
+    #add_feed(c, "The Guardian Obituaries", "https://www.theguardian.com/tone/obituaries/rss")
     
     # The Atlantic.
-    add_feed(c, "The Atlantic", "https://www.theatlantic.com/feed/channel/technology/")
+    #add_feed(c, "The Atlantic Politics", "https://www.theatlantic.com/feed/channel/politics/")
+    add_feed(c, "The Atlantic Culture", "https://www.theatlantic.com/feed/channel/entertainment/")
+    add_feed(c, "The Atlantic Science", "https://www.theatlantic.com/feed/channel/science/")
+    add_feed(c, "The Atlantic Technology", "https://www.theatlantic.com/feed/channel/technology/")
+    add_feed(c, "The Atlantic Business", "https://www.theatlantic.com/feed/channel/business/")
+    add_feed(c, "The Atlantic Health", "https://www.theatlantic.com/feed/channel/health/")
+    add_feed(c, "The Atlantic Family", "https://www.theatlantic.com/feed/channel/family/")
+    add_feed(c, "The Atlantic Education", "https://www.theatlantic.com/feed/channel/education/")
+    add_feed(c, "The Atlantic Global", "https://www.theatlantic.com/feed/channel/international/")
+    #add_feed(c, "The Atlantic National", "https://www.theatlantic.com/feed/channel/national/")
+    add_feed(c, "The Atlantic", "https://www.theatlantic.com/feed/best-of/")
 
     # WIRED.
     add_feed(c, "WIRED Guides", "https://www.wired.com/feed/tag/wired-guide/latest/rss")
