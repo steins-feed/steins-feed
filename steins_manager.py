@@ -5,8 +5,18 @@ import requests
 import time
 
 from lxml import html
+from selenium import webdriver
+
+# Singleton.
+def get_browser():
+    if not "browser" in globals():
+        global browser = webdriver.Firefox()
+    return browser
 
 class SteinsHandler:
+    def __init__(self):
+        self.signed_in = False
+
     def read_title(self, item_it):
         return item_it['title']
 
@@ -58,6 +68,9 @@ class SteinsHandler:
         else:
             return False
 
+    def sign_in(self):
+        pass
+
 class AtlanticHandler(SteinsHandler):
     def read_summary(self, item_it):
         item_link = self.read_link(item_it)
@@ -73,7 +86,9 @@ class AtlanticHandler(SteinsHandler):
 
         return item_summary
 
-    def get_article_body(self, tree):
+    def get_article_body(self, link):
+        page = requests.get(link)
+        tree = html.fromstring(page.content)
         article = tree.xpath("//article")[0]
         article_sections = article.xpath(".//section")
 
@@ -87,32 +102,125 @@ class AtlanticHandler(SteinsHandler):
                 can_print |= (elem_it.tag == "blockquote")
 
                 if can_print:
-                    article_body.append(elem_it)
+                    article_body.append(html.tostring(elem_it))
 
         return article_body
 
-def get_WIRED(tree):
-    article = tree.xpath("//article")[0]
-    article_body = article.xpath("./div")[0]
-    return article_body
+class WIREDHandler(SteinsHandler):
+    def get_article_body(self, link):
+        page = requests.get(link)
+        tree = html.fromstring(page.content)
+        article = tree.xpath("//article")[0]
+        article_body_temp = article.xpath("./div")[0]
 
-def get_Guardian(tree):
-    article = tree.xpath("//article")[0]
-    article_body = article.xpath(".//div[@itemprop='articleBody']")[0]
-    return article_body
+        article_body = []
+        for elem_it in article_body_temp:
+            can_print = False
+            can_print |= (elem_it.tag == "p")
+            for i in range(6):
+                can_print |= (elem_it.tag == "h{}".format(i+1))
+            can_print |= (elem_it.tag == "blockquote")
 
-def get_Heise(tree):
-    article = tree.xpath("//article")[0]
-    article_body = article.xpath(".//div[@class='article-content']")[0]
-    return article_body
+            if can_print:
+                article_body.append(html.tostring(elem_it))
 
-def get_Register(tree):
-    article_body = tree.xpath("//div[@id='body']")[0]
-    return article_body
+        return article_body
 
-class SteinsFactory:
-    def get_handler(self, source):
-        if "The Atlantic" in source:
-            return AtlanticHandler()
-        else:
-            return SteinsHandler()
+class GuardianHandler(SteinsHandler):
+    def get_article_body(self, link):
+        page = requests.get(link)
+        tree = html.fromstring(page.content)
+        article = tree.xpath("//article")[0]
+        article_body_temp = article.xpath(".//div[@itemprop='articleBody']")[0]
+
+        article_body = []
+        for elem_it in article_body_temp:
+            can_print = False
+            can_print |= (elem_it.tag == "p")
+            for i in range(6):
+                can_print |= (elem_it.tag == "h{}".format(i+1))
+            can_print |= (elem_it.tag == "blockquote")
+
+            if can_print:
+                article_body.append(html.tostring(elem_it))
+
+        return article_body
+
+class FinancialTimesHandler(SteinsHandler):
+    def get_article_body(self, link):
+        page = requests.get(link)
+        tree = html.fromstring(page.content)
+        # DEBUG
+        f = open("foo.html", 'w')
+        f.write(html.tostring(tree, pretty_print=True).decode())
+        f.close()
+        # GUBED
+        article = tree.xpath("//article")[0]
+        article_body_temp = article.xpath(".//div[@data-trackable='articleBody']")[0]
+
+        article_body = []
+        for elem_it in article_body_temp:
+            can_print = False
+            can_print |= (elem_it.tag == "p")
+            for i in range(6):
+                can_print |= (elem_it.tag == "h{}".format(i+1))
+            can_print |= (elem_it.tag == "blockquote")
+
+            if can_print:
+                article_body.append(html.tostring(elem_it))
+
+        return article_body
+
+#class HeiseHandler(SteinsHandler):
+#    def get_article_body(self, tree):
+#        article = tree.xpath("//article")[0]
+#        article_sections = article.xpath(".//div[@class='article-content']")[0]
+#
+#        article_body = []
+#        for section_it in article_sections:
+#            for elem_it in section_it:
+#                can_print = False
+#                can_print |= (elem_it.tag == "p")
+#                for i in range(6):
+#                    can_print |= (elem_it.tag == "h{}".format(i+1))
+#                can_print |= (elem_it.tag == "blockquote")
+#
+#                if can_print:
+#                    article_body.append(elem_it)
+#
+#        return article_body
+
+#class RegisterHandler(SteinsHandler):
+#    def get_article_body(self, tree):
+#        article_sections = tree.xpath("//div[@id='body']")[0]
+#
+#        article_body = []
+#        for section_it in article_sections:
+#            for elem_it in section_it:
+#                can_print = False
+#                can_print |= (elem_it.tag == "p")
+#                for i in range(6):
+#                    can_print |= (elem_it.tag == "h{}".format(i+1))
+#                can_print |= (elem_it.tag == "blockquote")
+#
+#                if can_print:
+#                    article_body.append(elem_it)
+#
+#        return article_body
+
+# Static factory.
+def get_handler(source):
+    if "The Atlantic" in source:
+        return AtlanticHandler()
+    elif "WIRED" in source:
+        return WIREDHandler()
+    elif "The Guardian" in source:
+        return GuardianHandler()
+    elif "Financial Times" in source:
+        return FinancialTimesHandler()
+    #elif "Heise" in source:
+    #    return HeiseHandler()
+    #elif "The Register" in source:
+    #    return RegisterHandler()
+    else:
+        return SteinsHandler()

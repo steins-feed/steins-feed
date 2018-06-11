@@ -22,8 +22,6 @@ Against whom am I competing?
 *   Use HTML5 layout.
 *   Nature, Science, PNAS, Royal Society.
 *   Only check for new posts after last (complete) day.
-*   Make Stein's Feed object-oriented.
-*   Rewrite steins-manager as factory.
 *   Include figures.
 *   Improve UI, e.g. Boolean interface (include/exclude).
 

@@ -6,8 +6,8 @@ import requests
 import sqlite3
 import time
 
-from lxml import etree, html
-from steins_manager import SteinsFactory
+from lxml import etree
+from steins_manager import get_handler
 
 def add_feed(c, title, link):
     c.execute("INSERT INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
@@ -28,11 +28,9 @@ def init_feeds(c):
 
 # Scrape feeds.
 def steins_read(c):
-    factory = SteinsFactory()
-
     for feed_it in c.execute("SELECT * FROM Feeds").fetchall():
         print(feed_it[1])
-        handler = factory.get_handler(feed_it[1])
+        handler = get_handler(feed_it[1])
 
         d = feedparser.parse(feed_it[2])
         for item_it in d['items']:
@@ -46,8 +44,6 @@ def steins_read(c):
 
 # Generate HTML.
 def steins_write(c):
-    factory = SteinsFactory()
-
     dir_name = os.path.dirname(os.path.abspath(__file__))
     times = c.execute("SELECT Published FROM Items")
     times = [t_it[0][:10] for t_it in times]
@@ -89,7 +85,7 @@ def steins_write(c):
         f.write("<form>\n")
         f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/like/{}\" value=\"Like\">\n".format(row_it[0]))
         f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/dislike/{}\" value=\"Dislike\">\n".format(row_it[0]))
-        if factory.get_handler(row_it[4]).can_print():
+        if get_handler(row_it[4]).can_print():
             f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/print/{}\" value=\"Print\">\n".format(row_it[0]))
         f.write("</form>\n")
         f.write("</p>\n")
