@@ -9,8 +9,9 @@ from selenium import webdriver
 
 # Singleton.
 def get_browser():
-    if not "browser" in globals():
-        global browser = webdriver.Firefox()
+    global browser
+    if browser == None:
+        browser = webdriver.Firefox()
     return browser
 
 class SteinsHandler:
@@ -112,6 +113,11 @@ class WIREDHandler(SteinsHandler):
         tree = html.fromstring(page.content)
         article = tree.xpath("//article")[0]
         article_body_temp = article.xpath("./div")[0]
+        if article_body_temp[0].tag == "section":
+            article_body_temp_new = []
+            for section_it in article_body_temp:
+                article_body_temp_new += section_it
+            article_body_temp = article_body_temp_new
 
         article_body = []
         for elem_it in article_body_temp:
@@ -211,16 +217,20 @@ class FinancialTimesHandler(SteinsHandler):
 # Static factory.
 def get_handler(source):
     if "The Atlantic" in source:
-        return AtlanticHandler()
+        handler = AtlanticHandler()
     elif "WIRED" in source:
-        return WIREDHandler()
+        handler = WIREDHandler()
     elif "The Guardian" in source:
-        return GuardianHandler()
+        handler = GuardianHandler()
     elif "Financial Times" in source:
-        return FinancialTimesHandler()
+        handler = FinancialTimesHandler()
     #elif "Heise" in source:
-    #    return HeiseHandler()
+    #    handler = HeiseHandler()
     #elif "The Register" in source:
-    #    return RegisterHandler()
+    #    handler = RegisterHandler()
     else:
-        return SteinsHandler()
+        handler = SteinsHandler()
+
+    if not handler.signed_in:
+        handler.sign_in()
+    return handler
