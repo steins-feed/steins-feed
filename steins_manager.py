@@ -10,7 +10,8 @@ from selenium import webdriver
 # Singleton.
 def get_browser():
     global browser
-    if browser == None:
+    if not "browser" in globals():
+        print("DEBUG: Firefox.")
         browser = webdriver.Firefox()
     return browser
 
@@ -217,13 +218,29 @@ class FinancialTimesHandler(SteinsHandler):
 # Static factory.
 def get_handler(source):
     if "The Atlantic" in source:
-        handler = AtlanticHandler()
+        global atlantic_handler
+        if not "atlantic_handler" in globals():
+            print("DEBUG: AtlanticHandler.")
+            atlantic_handler = AtlanticHandler()
+        handler = atlantic_handler
     elif "WIRED" in source:
-        handler = WIREDHandler()
+        global wired_handler
+        if not "wired_handler" in globals():
+            print("DEBUG: WIREDHandler.")
+            wired_handler = WIREDHandler()
+        handler = wired_handler
     elif "The Guardian" in source:
-        handler = GuardianHandler()
+        global guardian_handler
+        if not "guardian_handler" in globals():
+            print("DEBUG: GuardianHandler.")
+            guardian_handler = GuardianHandler()
+        handler = guardian_handler
     elif "Financial Times" in source:
-        handler = FinancialTimesHandler()
+        global financial_times_handler
+        if not "financial_times_handler" in globals():
+            print("DEBUG: FinancialTimesHandler.")
+            financial_times_handler = FinancialTimesHandler()
+        handler = financial_times_handler
     #elif "Heise" in source:
     #    handler = HeiseHandler()
     #elif "The Register" in source:
