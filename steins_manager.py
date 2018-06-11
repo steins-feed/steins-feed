@@ -4,7 +4,7 @@ import os
 import requests
 import time
 
-from lxml import html
+from lxml import etree, html
 from selenium import webdriver
 
 # Singleton.
@@ -12,7 +12,11 @@ def get_browser():
     global browser
     if not "browser" in globals():
         print("DEBUG: Firefox.")
-        browser = webdriver.Firefox()
+        options = webdriver.firefox.options.Options()
+        options.add_argument('-headless')
+        #browser = webdriver.Firefox()
+        browser = webdriver.Firefox(firefox_options=options)
+        #browser = webdriver.Firefox(executable_path="geckodriver", firefox_options=options)
     return browser
 
 class SteinsHandler:
@@ -155,15 +159,11 @@ class GuardianHandler(SteinsHandler):
 
 class FinancialTimesHandler(SteinsHandler):
     def get_article_body(self, link):
-        page = requests.get(link)
-        tree = html.fromstring(page.content)
-        # DEBUG
-        f = open("foo.html", 'w')
-        f.write(html.tostring(tree, pretty_print=True).decode())
-        f.close()
-        # GUBED
+        browser = get_browser()
+        browser.get(link)
+        tree = html.fromstring(browser.page_source)
         article = tree.xpath("//article")[0]
-        article_body_temp = article.xpath(".//div[@data-trackable='articleBody']")[0]
+        article_body_temp = article.xpath(".//div[@data-trackable='article-body']")[0]
 
         article_body = []
         for elem_it in article_body_temp:
@@ -177,6 +177,29 @@ class FinancialTimesHandler(SteinsHandler):
                 article_body.append(html.tostring(elem_it))
 
         return article_body
+
+    def sign_in(self):
+        f = open("sign_in.xml", 'r')
+        tree = etree.fromstring(f.read())
+        node = tree.xpath("//financial_times")[0]
+        f.close()
+
+        browser = get_browser()
+        browser.get("https://accounts.ft.com/login")
+        email = browser.find_element_by_id("enter-email")
+        email.send_keys(node.xpath("./email")[0].text)
+        button = browser.find_element_by_id("enter-email-next")
+        button.click()
+        button = browser.find_element_by_id("sso-redirect-button")
+        button.click()
+        uid = browser.find_element_by_id("userid")
+        uid.send_keys(node.xpath("./user_id")[0].text)
+        pwd = browser.find_element_by_id("pwd")
+        pwd.send_keys(node.xpath("./password")[0].text)
+        button = browser.find_element_by_name("submit")
+        button.click()
+
+        self.signed_in = True
 
 #class HeiseHandler(SteinsHandler):
 #    def get_article_body(self, tree):
