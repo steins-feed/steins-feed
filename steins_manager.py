@@ -14,8 +14,8 @@ def get_browser():
         options = webdriver.firefox.options.Options()
         options.add_argument('-headless')
         #browser = webdriver.Firefox()
-        browser = webdriver.Firefox(firefox_options=options)
-        #browser = webdriver.Firefox(executable_path="geckodriver", firefox_options=options)
+        #browser = webdriver.Firefox(firefox_options=options)
+        browser = webdriver.Firefox(executable_path="./geckodriver", firefox_options=options)
     return browser
 
 class SteinsHandler:
