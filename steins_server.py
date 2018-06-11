@@ -2,7 +2,6 @@
 
 import multiprocessing as mp
 import os
-import requests
 import sqlite3
 
 from http.server import HTTPServer, BaseHTTPRequestHandler

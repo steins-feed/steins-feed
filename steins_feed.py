@@ -2,7 +2,6 @@
 
 import feedparser
 import os
-import requests
 import sqlite3
 import time
 
