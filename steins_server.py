@@ -16,6 +16,9 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Generate page.
         if self.path == "/":
             steins_update(db_name)
+            self.path += "steins-0.html"
+            self.do_GET()
+            return
 
         if self.path == "/favicon.ico":
             # Write header.
@@ -28,20 +31,20 @@ class SteinsHandler(BaseHTTPRequestHandler):
             f.close()
             return
 
+        if self.path == "/settings":
+            return
+
         # Write header.
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
 
         # Write payload.
-        if self.path == "/":
-            f = open(dir_name+os.sep+"steins-0.html", 'r')
-        else:
-            try:
-                f = open(dir_name+self.path, 'r')
-            except FileNotFoundError as e:
-                print("'{}' not found.".format(e.filename))
-                return
+        try:
+            f = open(dir_name+self.path, 'r')
+        except FileNotFoundError as e:
+            print("'{}' not found.".format(e.filename))
+            return
         self.wfile.write(f.read().encode('utf-8'))
         f.close()
 

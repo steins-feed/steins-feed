@@ -20,8 +20,6 @@ Against whom am I competing?
 *   Table for authors.
 *   Table for categories.
 *   Use HTML5 layout.
-*   Nature, Science, PNAS, Royal Society.
-*   Only check for new posts after last (complete) day.
 *   Include figures.
 *   Improve UI, e.g. Boolean interface (include/exclude).
 

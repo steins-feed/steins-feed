@@ -92,7 +92,6 @@ def steins_write(c):
         f.write("<hr>\n")
 
     for d_ctr in range(len(dates)):
-        d_it = dates[d_ctr]
         f = f_list[d_ctr]
 
         f.write("<form>\n")
@@ -101,6 +100,10 @@ def steins_write(c):
         if not d_ctr == len(dates)-1:
             f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Next\">\n".format(d_ctr+1))
         f.write("</form>\n")
+
+        f.write("<hr>\n")
+        f.write("<p><a href=\"/settings\">Settings</a></p>\n")
+
         f.write("</body>\n")
         f.write("</html>\n")
         f.close()
