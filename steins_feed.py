@@ -27,8 +27,8 @@ def steins_read(c):
 # Generate HTML.
 def steins_write(c):
     dir_name = os.path.dirname(os.path.abspath(__file__))
-    items = c.execute("SELECT * FROM Items").fetchall()
-    times = [it[2][:10] for it in items if not int(c.execute("SELECT * FROM Feeds WHERE Title=?", (it[4], )).fetchone()[3]) == 0]
+    items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1)").fetchall()
+    times = [it[2][:10] for it in items]
     dates = sorted(list(set(times)), reverse=True)
     f_list = []
 
@@ -55,11 +55,7 @@ def steins_write(c):
 
         f_list.append(f)
 
-    for row_it in c.execute("SELECT * FROM Items ORDER BY Published DESC").fetchall():
-        feed_it = c.execute("SELECT * FROM Feeds WHERE Title=?", (row_it[4], )).fetchone()
-        if int(feed_it[3]) == 0:
-            continue
-
+    for row_it in c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall():
         f_idx = dates.index(row_it[2][:10])
         f = f_list[f_idx]
 
