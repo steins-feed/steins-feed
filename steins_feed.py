@@ -10,7 +10,7 @@ from steins_manager import get_handler
 
 # Scrape feeds.
 def steins_read(c):
-    for feed_it in c.execute("SELECT * FROM Feeds").fetchall():
+    for feed_it in c.execute("SELECT * FROM Feeds WHERE DISPLAY=1").fetchall():
         print(feed_it[1])
         handler = get_handler(feed_it[1])
 
@@ -27,8 +27,8 @@ def steins_read(c):
 # Generate HTML.
 def steins_write(c):
     dir_name = os.path.dirname(os.path.abspath(__file__))
-    times = c.execute("SELECT Published FROM Items")
-    times = [t_it[0][:10] for t_it in times]
+    items = c.execute("SELECT * FROM Items").fetchall()
+    times = [it[2][:10] for it in items if not int(c.execute("SELECT * FROM Feeds WHERE Title=?", (it[4], )).fetchone()[3]) == 0]
     dates = sorted(list(set(times)), reverse=True)
     f_list = []
 
@@ -44,7 +44,7 @@ def steins_write(c):
         f.write("</head>\n")
         f.write("<body>\n")
         f.write("<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d"))))
-        f.write("<p>{} articles.</p>\n".format(times.count(d_it)))
+        f.write("<p>{} articles. {} pages.</p>\n".format(times.count(d_it), len(dates)))
         f.write("<form>\n")
         if not d_ctr == 0:
             f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Previous\">\n".format(d_ctr-1))
@@ -55,7 +55,11 @@ def steins_write(c):
 
         f_list.append(f)
 
-    for row_it in c.execute("SELECT * FROM Items ORDER BY Published DESC"):
+    for row_it in c.execute("SELECT * FROM Items ORDER BY Published DESC").fetchall():
+        feed_it = c.execute("SELECT * FROM Feeds WHERE Title=?", (row_it[4], )).fetchone()
+        if int(feed_it[3]) == 0:
+            continue
+
         f_idx = dates.index(row_it[2][:10])
         f = f_list[f_idx]
 
@@ -84,7 +88,6 @@ def steins_write(c):
             f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Next\">\n".format(d_ctr+1))
         f.write("</form>\n")
 
-        f.write("<hr>\n")
         f.write("<p><a href=\"/settings\">Settings</a></p>\n")
 
         f.write("</body>\n")
@@ -96,7 +99,7 @@ def steins_update(db_name):
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     if not db_exists:
-        c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL)")
+        c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Display INTEGER DEFAULT 1)")
         c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, Like INTEGER DEFAULT 0)")
         init_feeds(c)
     steins_read(c)
