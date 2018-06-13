@@ -53,12 +53,12 @@ class SteinsHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         conn = sqlite3.connect(db_name)
         c = conn.cursor()
-        idx = self.path.find("/", 1)
-        item_id = self.path[idx+1:]
-        row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
 
         # Like.
         if "/like" in self.path:
+            idx = self.path.find("/", 1)
+            item_id = self.path[idx+1:]
+            row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
             if row[6] == 1:
                 c.execute("UPDATE Items SET Like=0 WHERE ItemID=?", (item_id, ))
                 print("UNLIKE: {}.".format(row[1]))
@@ -69,6 +69,9 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.end_headers()
         # Dislike.
         elif "/dislike" in self.path:
+            idx = self.path.find("/", 1)
+            item_id = self.path[idx+1:]
+            row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
             if row[6] == -1:
                 c.execute("UPDATE Items SET Like=0 WHERE ItemID=?", (item_id, ))
                 print("UNLIKE: {}.".format(row[1]))
@@ -93,6 +96,22 @@ class SteinsHandler(BaseHTTPRequestHandler):
             conn.commit()
             conn.close()
             self.do_GET()
+            return
+        # Delete feed.
+        elif "/delete-feed" in self.path:
+            query_len = int(self.headers.get('content-length'))
+            query = self.rfile.read(query_len)
+            query_dict = urllib.parse.parse_qs(query)
+
+            item_id = int(query_dict['feed'.encode('utf-8')][0])
+            row = c.execute("SELECT * FROM Feeds WHERE ItemID=?", (item_id, )).fetchone()
+
+            c.execute("DELETE FROM Feeds WHERE ItemID=?", (item_id, ))
+            print("Delete: {}.".format(row[1]))
+
+            conn.commit()
+            conn.close()
+            self.settings_response()
             return
         # Print.
         else:
@@ -144,17 +163,26 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("<title>Settings</title>\n".encode('utf-8'))
         self.wfile.write("</head>\n".encode('utf-8'))
         self.wfile.write("<body>\n".encode('utf-8'))
-        self.wfile.write("<h1>Settings</h1>\n".encode('utf-8'))
-        self.wfile.write("<hr>\n".encode('utf-8'))
-        self.wfile.write("<h2>Display feeds</h2>\n".encode('utf-8'))
+
         self.wfile.write("<form>\n".encode('utf-8'))
         for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
             if feed_it[3] == 0:
                 self.wfile.write("<input type=\"checkbox\" name=\"{}\" value=\"{}\">{}<br>\n".format(feed_it[0], feed_it[1], feed_it[1]).encode('utf-8'))
             else:
                 self.wfile.write("<input type=\"checkbox\" name=\"{}\" value=\"{}\" checked>{}<br>\n".format(feed_it[0], feed_it[1], feed_it[1]).encode('utf-8'))
-        self.wfile.write("<p><input type=\"submit\" formmethod=\"post\" formaction=\"/\" value=\"Save\"></p>\n".encode('utf-8'))
+        self.wfile.write("<p><input type=\"submit\" formmethod=\"post\" formaction=\"/\" value=\"Display feeds\"></p>\n".encode('utf-8'))
         self.wfile.write("</form>\n".encode('utf-8'))
+
+        self.wfile.write("<hr>\n".encode('utf-8'))
+
+        self.wfile.write("<form>\n".encode('utf-8'))
+        self.wfile.write("<p><select name=\"feed\">\n".encode('utf-8'))
+        for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
+            self.wfile.write("<option value=\"{}\">{}</option>\n".format(feed_it[0], feed_it[1]).encode('utf-8'))
+        self.wfile.write("</select></p>\n".encode('utf-8'))
+        self.wfile.write("<p><input type=\"submit\" formmethod=\"post\" formaction=\"/delete-feed\" value=\"Delete feed\"></p>\n".encode('utf-8'))
+        self.wfile.write("</form>\n".encode('utf-8'))
+
         self.wfile.write("</body>\n".encode('utf-8'))
         self.wfile.write("</html>\n".encode('utf-8'))
 
