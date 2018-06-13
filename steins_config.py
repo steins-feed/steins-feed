@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import os
+
 from lxml import etree
 
 def add_feed(c, title, link):
@@ -9,7 +11,8 @@ def delete_feed(c, title):
     c.execute("DELETE FROM Feeds WHERE Title='?'", (title, ))
 
 def init_feeds(c):
-    f = open("steins_config.xml", 'r')
+    dir_name = os.path.dirname(os.path.abspath(__file__))
+    f = open(dir_name+os.sep+"feeds.xml", 'r')
     tree = etree.fromstring(f.read())
     f.close()
 

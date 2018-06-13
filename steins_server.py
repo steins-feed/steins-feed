@@ -33,7 +33,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             return
 
         if self.path == "/settings":
-            self.settings_response(db_name)
+            self.settings_response()
             return
 
         # Write header.
@@ -127,7 +127,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("</body>\n".encode('utf-8'))
         self.wfile.write("</html>\n".encode('utf-8'))
 
-    def settings_response(self, db_name):
+    def settings_response(self):
         conn = sqlite3.connect(db_name)
         c = conn.cursor()
 

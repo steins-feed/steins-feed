@@ -18,10 +18,10 @@ def steins_read(c):
         for item_it in d['items']:
             item_title = handler.read_title(item_it)
             item_time = handler.read_time(item_it)
-            item_link = handler.read_link(item_it)
-            item_summary = handler.read_summary(item_it)
 
             if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_title, item_time, )).fetchone()[0] == 0:
+                item_link = handler.read_link(item_it)
+                item_summary = handler.read_summary(item_it)
                 c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))
 
 # Generate HTML.

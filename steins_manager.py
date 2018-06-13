@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import requests
 import time
 
@@ -178,7 +179,8 @@ class FinancialTimesHandler(SteinsHandler):
         return article_body
 
     def sign_in(self):
-        f = open("sign_in.xml", 'r')
+        dir_name = os.path.dirname(os.path.abspath(__file__))
+        f = open(dir_name + os.sep + "sign_in.xml", 'r')
         tree = etree.fromstring(f.read())
         node = tree.xpath("//financial_times")[0]
         f.close()
