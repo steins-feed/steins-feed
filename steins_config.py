@@ -5,14 +5,18 @@ import os
 from lxml import etree
 
 def add_feed(c, title, link):
-    c.execute("INSERT INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
+    if c.execute("SELECT COUNT(*) FROM Feeds WHERE Title=?", (title, )).fetchone()[0] == 0:
+        c.execute("INSERT INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
+        print("ADD: {} <{}>.".format(title, link))
 
 def delete_feed(c, title):
-    c.execute("DELETE FROM Feeds WHERE Title='?'", (title, ))
+    row = c.execute("SELECT * FROM Feeds WHERE Title=?", (title, )).fetchone()
+    c.execute("DELETE FROM Feeds WHERE Title=?", (title, ))
+    print("DELETE: {} <{}>.".format(row[1], row[2]))
 
-def init_feeds(c):
+def init_feeds(c, filename="feeds.xml"):
     dir_name = os.path.dirname(os.path.abspath(__file__))
-    f = open(dir_name+os.sep+"feeds.xml", 'r')
+    f = open(dir_name+os.sep+filename, 'r')
     tree = etree.fromstring(f.read())
     f.close()
 

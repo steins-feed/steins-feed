@@ -6,6 +6,7 @@ import sqlite3
 import urllib
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from steins_config import *
 from steins_feed import steins_update
 from steins_manager import get_handler
 from xml.sax.saxutils import escape
@@ -106,10 +107,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             title = query_dict['title'.encode('utf-8')][0].decode('utf-8')
             link = query_dict['link'.encode('utf-8')][0].decode('utf-8')
-
-            if c.execute("SELECT COUNT(*) FROM Feeds WHERE Title=?", (title, )).fetchone()[0] == 0:
-                c.execute("INSERT INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
-                print("Add: {} <{}>.".format(title, link))
+            add_feed(c, title, link)
 
             conn.commit()
             conn.close()
@@ -123,9 +121,20 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             item_id = int(query_dict['feed'.encode('utf-8')][0])
             row = c.execute("SELECT * FROM Feeds WHERE ItemID=?", (item_id, )).fetchone()
+            delete_feed(c, row[1])
 
-            c.execute("DELETE FROM Feeds WHERE ItemID=?", (item_id, ))
-            print("Delete: {}.".format(row[1]))
+            conn.commit()
+            conn.close()
+            self.settings_response()
+            return
+        # Load config.
+        elif "/load-config" in self.path:
+            query_len = int(self.headers.get('content-length'))
+            query = self.rfile.read(query_len)
+            query_dict = urllib.parse.parse_qs(query)
+
+            filename = query_dict['file'.encode('utf-8')][0].decode('utf-8')
+            init_feeds(c, filename)
 
             conn.commit()
             conn.close()
@@ -236,6 +245,15 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.wfile.write("<option value=\"{}\">{}</option>\n".format(feed_it[0], feed_it[1]).encode('utf-8'))
         self.wfile.write("</select></p>\n".encode('utf-8'))
         self.wfile.write("<p><input type=\"submit\" formmethod=\"post\" formaction=\"/delete-feed\" value=\"Delete feed\"></p>\n".encode('utf-8'))
+        self.wfile.write("</form>\n".encode('utf-8'))
+
+        self.wfile.write("<hr>\n".encode('utf-8'))
+
+        # Load config.
+        self.wfile.write("<form>\n".encode('utf-8'))
+        self.wfile.write("File:<br>\n".encode('utf-8'))
+        self.wfile.write("<input type=\"text\" name=\"file\"><br><br>\n".encode('utf-8'))
+        self.wfile.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/load-config\" value=\"Load config\">\n".encode('utf-8'))
         self.wfile.write("</form>\n".encode('utf-8'))
 
         self.wfile.write("<hr>\n".encode('utf-8'))
