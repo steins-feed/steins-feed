@@ -97,6 +97,23 @@ class SteinsHandler(BaseHTTPRequestHandler):
             conn.close()
             self.do_GET()
             return
+        # Add feed.
+        elif "/add-feed" in self.path:
+            query_len = int(self.headers.get('content-length'))
+            query = self.rfile.read(query_len)
+            query_dict = urllib.parse.parse_qs(query)
+
+            title = query_dict['title'.encode('utf-8')][0].decode('utf-8')
+            link = query_dict['link'.encode('utf-8')][0].decode('utf-8')
+
+            if c.execute("SELECT COUNT(*) FROM Feeds WHERE Title=?", (title, )).fetchone()[0] == 0:
+                c.execute("INSERT INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
+                print("Add: {} <{}>.".format(title, link))
+
+            conn.commit()
+            conn.close()
+            self.settings_response()
+            return
         # Delete feed.
         elif "/delete-feed" in self.path:
             query_len = int(self.headers.get('content-length'))
@@ -172,6 +189,19 @@ class SteinsHandler(BaseHTTPRequestHandler):
                 self.wfile.write("<input type=\"checkbox\" name=\"{}\" value=\"{}\" checked>{}<br>\n".format(feed_it[0], feed_it[1], feed_it[1]).encode('utf-8'))
         self.wfile.write("<p><input type=\"submit\" formmethod=\"post\" formaction=\"/\" value=\"Display feeds\"></p>\n".encode('utf-8'))
         self.wfile.write("</form>\n".encode('utf-8'))
+
+        self.wfile.write("<hr>\n".encode('utf-8'))
+
+        self.wfile.write("<form>\n".encode('utf-8'))
+        self.wfile.write("Title:<br>\n".encode('utf-8'))
+        self.wfile.write("<input type=\"text\" name=\"title\"><br><br>\n".encode('utf-8'))
+        self.wfile.write("Link:<br>\n".encode('utf-8'))
+        self.wfile.write("<input type=\"text\" name=\"link\"><br><br>\n".encode('utf-8'))
+        self.wfile.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/add-feed\" value=\"Add feed\">\n".encode('utf-8'))
+        self.wfile.write("</form>\n".encode('utf-8'))
+
+        self.wfile.write("</body>\n".encode('utf-8'))
+        self.wfile.write("</html>\n".encode('utf-8'))
 
         self.wfile.write("<hr>\n".encode('utf-8'))
 
