@@ -18,7 +18,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         # Generate page.
         if self.path == "/":
-            steins_update(db_name)
+            #steins_update(db_name)
             self.path += "steins-0.html"
             self.do_GET()
             return
