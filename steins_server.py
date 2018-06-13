@@ -8,6 +8,7 @@ import urllib
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from steins_feed import steins_update
 from steins_manager import get_handler
+from xml.sax.saxutils import escape
 
 dir_name = os.path.dirname(os.path.abspath(__file__))
 db_name = dir_name + os.sep + "steins.db"
@@ -130,6 +131,27 @@ class SteinsHandler(BaseHTTPRequestHandler):
             conn.close()
             self.settings_response()
             return
+        # Export config.
+        elif "/export-config" in self.path:
+            query_len = int(self.headers.get('content-length'))
+            query = self.rfile.read(query_len)
+            query_dict = urllib.parse.parse_qs(query)
+
+            filename = query_dict['file'.encode('utf-8')][0].decode('utf-8')
+            f = open(dir_name+os.sep+filename, 'w')
+            f.write("<?xml version=\"1.0\"?>\n")
+            f.write("\n")
+            f.write("<root>\n")
+            for feed_it in c.execute("SELECT * FROM Feeds").fetchall():
+                f.write("    <feed>\n")
+                f.write("        <title>{}</title>\n".format(escape(feed_it[1])))
+                f.write("        <link>{}</link>\n".format(escape(feed_it[2])))
+                f.write("    </feed>\n")
+            f.write("</root>\n")
+            f.close()
+
+            self.send_response(204)
+            self.end_headers()
         # Print.
         else:
             idx = self.path.find("/", 1)
@@ -184,6 +206,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("</head>\n".encode('utf-8'))
         self.wfile.write("<body>\n".encode('utf-8'))
 
+        # Display feeds.
         self.wfile.write("<form>\n".encode('utf-8'))
         for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
             if feed_it[3] == 0:
@@ -195,6 +218,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
         self.wfile.write("<hr>\n".encode('utf-8'))
 
+        # Add feed.
         self.wfile.write("<form>\n".encode('utf-8'))
         self.wfile.write("Title:<br>\n".encode('utf-8'))
         self.wfile.write("<input type=\"text\" name=\"title\"><br><br>\n".encode('utf-8'))
@@ -203,17 +227,24 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/add-feed\" value=\"Add feed\">\n".encode('utf-8'))
         self.wfile.write("</form>\n".encode('utf-8'))
 
-        self.wfile.write("</body>\n".encode('utf-8'))
-        self.wfile.write("</html>\n".encode('utf-8'))
-
         self.wfile.write("<hr>\n".encode('utf-8'))
 
+        # Delete feed.
         self.wfile.write("<form>\n".encode('utf-8'))
         self.wfile.write("<p><select name=\"feed\">\n".encode('utf-8'))
         for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
             self.wfile.write("<option value=\"{}\">{}</option>\n".format(feed_it[0], feed_it[1]).encode('utf-8'))
         self.wfile.write("</select></p>\n".encode('utf-8'))
         self.wfile.write("<p><input type=\"submit\" formmethod=\"post\" formaction=\"/delete-feed\" value=\"Delete feed\"></p>\n".encode('utf-8'))
+        self.wfile.write("</form>\n".encode('utf-8'))
+
+        self.wfile.write("<hr>\n".encode('utf-8'))
+
+        # Export config.
+        self.wfile.write("<form>\n".encode('utf-8'))
+        self.wfile.write("File:<br>\n".encode('utf-8'))
+        self.wfile.write("<input type=\"text\" name=\"file\"><br><br>\n".encode('utf-8'))
+        self.wfile.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/export-config\" value=\"Export config\">\n".encode('utf-8'))
         self.wfile.write("</form>\n".encode('utf-8'))
 
         self.wfile.write("</body>\n".encode('utf-8'))

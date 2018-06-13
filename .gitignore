@@ -3,3 +3,4 @@ steins.db
 steins-*.html
 README.pdf
 __pycache__/
+*.pyc
