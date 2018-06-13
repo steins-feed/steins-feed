@@ -132,6 +132,9 @@ class SteinsHandler(BaseHTTPRequestHandler):
             return
         # Print.
         else:
+            idx = self.path.find("/", 1)
+            item_id = self.path[idx+1:]
+            row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
             self.print_response(row)
             print("PRINT: {}.".format(row[1]))
 

@@ -12,11 +12,13 @@ def get_browser():
     global browser
     if not "browser" in globals():
         print("DEBUG: Firefox.")
+        dir_name = os.path.dirname(os.path.abspath(__file__))
+        gecko_path = dir_name + os.sep + "geckodriver"
         options = webdriver.firefox.options.Options()
         options.add_argument('-headless')
         #browser = webdriver.Firefox()
         #browser = webdriver.Firefox(firefox_options=options)
-        browser = webdriver.Firefox(executable_path="./geckodriver", firefox_options=options)
+        browser = webdriver.Firefox(executable_path=gecko_path, firefox_options=options)
     return browser
 
 class SteinsHandler:
