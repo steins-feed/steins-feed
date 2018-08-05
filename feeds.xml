@@ -324,6 +324,7 @@
     -->
 
     <!-- FiveThirtyEight -->
+    <!--
     <feed>
         <title>FiveThirtyEight NBA</title>
         <link>https://fivethirtyeight.com/tag/nba/feed/</link>
@@ -336,6 +337,7 @@
         <title>FiveThirtyEight Basketball</title>
         <link>https://fivethirtyeight.com/tag/basketball/feed/</link>
     </feed>
+    -->
 
     <!-- The Ringer -->
     <!--

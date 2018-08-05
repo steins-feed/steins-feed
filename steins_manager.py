@@ -79,38 +79,65 @@ class SteinsHandler:
     def sign_in(self):
         pass
 
+    def get_article_head(self, row):
+        article_head = []
+        article_head.append("<h1>{}</h1>".format(row[1]).encode('utf-8'))
+        article_head.append("<p>{}</p>".format(row[3]).encode('utf-8'))
+        article_head.append("<p>Source: {}. Published: {}</p>".format(row[4], row[2]).encode('utf-8'))
+        return article_head
+
 class AtlanticHandler(SteinsHandler):
-    def read_summary(self, item_it):
-        item_link = self.read_link(item_it)
-        if "/video/" in item_link:
-            return ""
-        if "/photo/" in item_link:
-            return ""
+    #def read_summary(self, item_it):
+    #    item_link = self.read_link(item_it)
+    #    if "/video/" in item_link:
+    #        return ""
+    #    if "/photo/" in item_link:
+    #        return ""
 
-        page = requests.get(item_link)
+    #    page = requests.get(item_link)
+    #    tree = html.fromstring(page.content)
+    #    nodes = tree.xpath("//p[@itemprop='description']")
+    #    item_summary = nodes[0].text
+
+    #    return item_summary
+
+    def get_article_head(self, row):
+        page = requests.get(row[5])
         tree = html.fromstring(page.content)
-        nodes = tree.xpath("//p[@itemprop='description']")
-        item_summary = nodes[0].text
+        article = tree.xpath("//article")[0]
+        article_cover = article.xpath(".//figure[@class='c-lead-media']")[0]
+        article_cover.xpath(".//picture")[0].set("style", "display: block; overflow: hidden;")
+        article_cover.xpath(".//img")[0].set("style", "max-width: 100%; height:auto;")
 
-        return item_summary
+        article_head = []
+        article_head.append("<h1>{}</h1>".format(row[1]).encode('utf-8'))
+        article_head.append("<p>{}</p>".format(row[3]).encode('utf-8'))
+        article_head.append(html.tostring(article_cover))
+        article_head.append("<p>Source: {}. Published: {}</p>".format(row[4], row[2]).encode('utf-8'))
+
+        return article_head
 
     def get_article_body(self, link):
         page = requests.get(link)
         tree = html.fromstring(page.content)
         article = tree.xpath("//article")[0]
-        article_sections = article.xpath(".//section")
+        article_sections = article.xpath(".//section[@itemprop='articleBody']")
 
         article_body = []
         for section_it in article_sections:
             for elem_it in section_it:
                 can_print = False
                 can_print |= (elem_it.tag == "p")
+                can_print |= (elem_it.tag == "figure")
                 for i in range(6):
                     can_print |= (elem_it.tag == "h{}".format(i+1))
                 can_print |= (elem_it.tag == "blockquote")
 
                 if can_print:
-                    article_body.append(html.tostring(elem_it))
+                    elem_str = html.tostring(elem_it).decode()
+                    if elem_it.tag == "figure":
+                        elem_str = elem_str.replace("data-srcset", "srcset")
+                    article_body.append(elem_str.encode())
 
         return article_body
 

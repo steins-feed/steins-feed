@@ -21,7 +21,8 @@ Against whom am I competing?
 *   Table for categories.
 *   Use HTML5 layout.
 *   Include figures.
-*   Improve UI, e.g. Boolean interface (include/exclude).
+*   Put HTML into folder.
+*   Show progress in terminal.
 
 ## Bugs.
 

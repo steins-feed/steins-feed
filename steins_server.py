@@ -175,6 +175,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
     def print_response(self, row):
         # Load page.
         handler = get_handler(row[4])
+        article_head = handler.get_article_head(row)
         article_body = handler.get_article_body(row[5])
 
         # Write header.
@@ -190,8 +191,9 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("<title>{}</title>\n".format(row[1]).encode('utf-8'))
         self.wfile.write("</head>\n".encode('utf-8'))
         self.wfile.write("<body>\n".encode('utf-8'))
-        self.wfile.write("<h1>{}</h1>\n".format(row[1]).encode('utf-8'))
-        self.wfile.write("<p>Source: {}. Published: {}</p>".format(row[4], row[2]).encode('utf-8'))
+        for e_it in article_head:
+            self.wfile.write(e_it + '\n'.encode('utf-8'))
+        self.wfile.write("<hr>\n".encode('utf-8'))
         for e_it in article_body:
             self.wfile.write(e_it + '\n'.encode('utf-8'))
         self.wfile.write("</body>\n".encode('utf-8'))
