@@ -16,8 +16,6 @@ def get_browser():
         gecko_path = dir_name + os.sep + "geckodriver"
         options = webdriver.firefox.options.Options()
         options.add_argument('-headless')
-        #browser = webdriver.Firefox()
-        #browser = webdriver.Firefox(firefox_options=options)
         browser = webdriver.Firefox(executable_path=gecko_path, firefox_options=options)
     return browser
 
@@ -87,23 +85,29 @@ class SteinsHandler:
         return article_head
 
 class AtlanticHandler(SteinsHandler):
-    #def read_summary(self, item_it):
-    #    item_link = self.read_link(item_it)
-    #    if "/video/" in item_link:
-    #        return ""
-    #    if "/photo/" in item_link:
-    #        return ""
+    def read_summary(self, item_it):
+        item_link = self.read_link(item_it)
+        if "/video/" in item_link:
+            return ""
+        if "/photo/" in item_link:
+            return ""
 
-    #    page = requests.get(item_link)
-    #    tree = html.fromstring(page.content)
-    #    nodes = tree.xpath("//p[@itemprop='description']")
-    #    item_summary = nodes[0].text
+        #page = requests.get(item_link)
+        #tree = html.fromstring(page.content)
+        browser = get_browser()
+        browser.get(item_link)
+        tree = html.fromstring(browser.page_source)
+        nodes = tree.xpath("//p[@itemprop='description']")
+        item_summary = nodes[0].text
 
-    #    return item_summary
+        return item_summary
 
     def get_article_head(self, row):
-        page = requests.get(row[5])
-        tree = html.fromstring(page.content)
+        #page = requests.get(row[5])
+        #tree = html.fromstring(page.content)
+        browser = get_browser()
+        browser.get(row[5])
+        tree = html.fromstring(browser.page_source)
         article = tree.xpath("//article")[0]
         article_cover = article.xpath(".//figure[@class='c-lead-media']")[0]
         article_cover.xpath(".//picture")[0].set("style", "display: block; overflow: hidden;")
@@ -118,8 +122,11 @@ class AtlanticHandler(SteinsHandler):
         return article_head
 
     def get_article_body(self, link):
-        page = requests.get(link)
-        tree = html.fromstring(page.content)
+        #page = requests.get(link)
+        #tree = html.fromstring(page.content)
+        browser = get_browser()
+        browser.get(link)
+        tree = html.fromstring(browser.page_source)
         article = tree.xpath("//article")[0]
         article_sections = article.xpath(".//section[@itemprop='articleBody']")
 
@@ -140,6 +147,29 @@ class AtlanticHandler(SteinsHandler):
                     article_body.append(elem_str.encode())
 
         return article_body
+
+    def sign_in(self):
+        dir_name = os.path.dirname(os.path.abspath(__file__))
+        f = open(dir_name + os.sep + "sign_in.xml", 'r')
+        tree = etree.fromstring(f.read())
+        node = tree.xpath("//atlantic")[0]
+        f.close()
+
+        browser = get_browser()
+        browser.get("https://accounts.theatlantic.com/login/")
+        button = browser.find_elements_by_xpath("//button[contains(text(), 'I Agree')]")[0]
+        button.click()
+
+        email = browser.find_element_by_name("login-email")
+        email.send_keys(node.xpath("./email")[0].text)
+        pwd = browser.find_element_by_name("login-password")
+        pwd.send_keys(node.xpath("./password")[0].text)
+        button = browser.find_element_by_name("_submit_login")
+        button.click()
+
+        browser.get("https://www.theatlantic.com/")
+
+        self.signed_in = True
 
 class WIREDHandler(SteinsHandler):
     def get_article_body(self, link):
