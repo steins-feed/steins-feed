@@ -61,7 +61,7 @@ class SteinsHandler:
         raise KeyError
 
     def can_print(self):
-        if "get_article_body" in dir(self):
+        if "get_article_body_list" in dir(self):
             return True
         else:
             return False
@@ -76,18 +76,72 @@ class SteinsHandler:
         article_head = []
         article_head.append("<h1>{}</h1>".format(row[1]).encode('utf-8'))
         article_head.append("<p>{}</p>".format(row[3]).encode('utf-8'))
+        if "get_article_head_cover" in dir(self):
+            article_head_cover = self.get_article_head_cover(row[5])
+            article_head += self.get_figure(article_head_cover)
         article_head.append("<p>Source: {}. Published: {}</p>".format(row[4], row[2]).encode('utf-8'))
         return article_head
 
-class AtlanticHandler(SteinsHandler):
-    def parse(self, feed_link):
-        tree = get_tree_from_session(feed_link)
-        contents = tree.xpath("//content")
-        for content_it in contents:
-            content_it.getparent().remove(content_it)
-        d = feedparser.parse(html.tostring(tree))
-        return d
+    def get_article_body(self, link):
+        article_body = []
+        article_body_list = self.get_article_body_list(link)
 
+        for elem_it in article_body_list:
+            if elem_it.tag == "p":
+                article_body += self.get_paragraph(elem_it)
+            elif elem_it.tag == "figure":
+                article_body += self.get_figure(elem_it)
+            elif elem_it.tag == "blockquote":
+                article_body += self.get_blockquote(elem_it)
+            else:
+                for i in range(6):
+                    if elem_it.tag == "h{}".format(i+1):
+                        article_body += self.get_header(elem_it, i+1)
+
+        return article_body
+
+    def get_text(self, elem_it):
+        text = ""
+        if not elem_it.text == None:
+            text += elem_it.text
+        for it in elem_it:
+            text += html.tostring(it).decode('utf-8')
+        return text
+
+    def get_paragraph(self, elem_it):
+        paragraph = "<p>{}</p>".format(self.get_text(elem_it)).encode('utf-8')
+        return [paragraph]
+
+    def get_header(self, elem_it, i):
+        header = "<h{}>{}</h{}>".format(i, self.get_text(elem_it), i).encode('utf-8')
+        return [header]
+
+    def get_blockquote(self, elem_it):
+        blockquote = "<blockquote>{}</blockquote>".format(self.get_text(elem_it)).encode('utf-8')
+        return [blockquote]
+
+    def get_figure(self, elem_it):
+        figure = []
+        figure.append('<figure style="display: block; overflow: hidden;">'.encode('utf-8'))
+
+        image_it = elem_it.xpath(".//img")[0]
+        if not image_it.get("src") == None:
+            src_it = image_it.get("src")
+        elif not image_it.get("srcset") == None:
+            src_it = image_it.get("srcset")
+        elif not image_it.get("data-srcset") == None:
+            src_it = image_it.get("data-srcset")
+        else:
+            raise ValueError("Image does not exist.")
+        figure.append('<img src="{}" style="max-width: 100%; height:auto;">'.format(src_it).encode('utf-8'))
+
+        figcaption_it = elem_it.xpath(".//figcaption")[0]
+        figure.append('<figcaption>{}</figcaption>'.format(self.get_text(figcaption_it)).encode('utf-8'))
+
+        figure.append('</figure>'.encode('utf-8'))
+        return figure
+
+class AtlanticHandler(SteinsHandler):
     def sign_in(self, filename):
         with open(filename, 'r') as f:
             file_opened = True
@@ -116,43 +170,31 @@ class AtlanticHandler(SteinsHandler):
         fetch_cookies()
         self.signed_in = True
 
-    def get_article_head(self, row):
-        tree = get_tree_from_session(row[5])
+    def parse(self, feed_link):
+        tree = get_tree_from_session(feed_link)
+        contents = tree.xpath("//content")
+        for content_it in contents:
+            content_it.getparent().remove(content_it)
+        d = feedparser.parse(html.tostring(tree))
+        return d
+
+    def get_article_head_cover(self, link):
+        tree = get_tree_from_session(link)
         article = tree.xpath("//article")[0]
         article_cover = article.xpath(".//figure[@class='c-lead-media']")[0]
-        article_cover.xpath(".//picture")[0].set("style", "display: block; overflow: hidden;")
-        article_cover.xpath(".//img")[0].set("style", "max-width: 100%; height:auto;")
+        return article_cover
 
-        article_head = []
-        article_head.append("<h1>{}</h1>".format(row[1]).encode('utf-8'))
-        article_head.append("<p>{}</p>".format(row[3]).encode('utf-8'))
-        article_head.append(html.tostring(article_cover))
-        article_head.append("<p>Source: {}. Published: {}</p>".format(row[4], row[2]).encode('utf-8'))
-
-        return article_head
-
-    def get_article_body(self, link):
+    def get_article_body_list(self, link):
         tree = get_tree_from_session(link)
         article = tree.xpath("//article")[0]
         article_sections = article.xpath(".//section[@itemprop='articleBody']")
 
-        article_body = []
+        article_body_list = []
         for section_it in article_sections:
             for elem_it in section_it:
-                can_print = False
-                can_print |= (elem_it.tag == "p")
-                can_print |= (elem_it.tag == "figure")
-                for i in range(6):
-                    can_print |= (elem_it.tag == "h{}".format(i+1))
-                can_print |= (elem_it.tag == "blockquote")
+                article_body_list.append(elem_it)
 
-                if can_print:
-                    elem_str = html.tostring(elem_it).decode()
-                    if elem_it.tag == "figure":
-                        elem_str = elem_str.replace("data-srcset", "srcset")
-                    article_body.append(elem_str.encode())
-
-        return article_body
+        return article_body_list
 
 class FinancialTimesHandler(SteinsHandler):
     def sign_in(self, filename):

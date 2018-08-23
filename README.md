@@ -17,7 +17,6 @@ Against whom am I competing?
 1.  ~~Printable HTML.~~
 2.  Machine learning.
 
-*   Typeset custom HTML elements.
 *   Do not use 'summary' in `get_article_head()`.
 
 *   Table for authors.
