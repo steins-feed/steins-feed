@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import feedparser
 import os
 import requests
 import time
@@ -68,6 +69,9 @@ class SteinsHandler:
     def sign_in(self, filename):
         pass
 
+    def parse(self, feed_link):
+        return feedparser.parse(feed_link)
+
     def get_article_head(self, row):
         article_head = []
         article_head.append("<h1>{}</h1>".format(row[1]).encode('utf-8'))
@@ -76,6 +80,14 @@ class SteinsHandler:
         return article_head
 
 class AtlanticHandler(SteinsHandler):
+    def parse(self, feed_link):
+        tree = get_tree_from_session(feed_link)
+        contents = tree.xpath("//content")
+        for content_it in contents:
+            content_it.getparent().remove(content_it)
+        d = feedparser.parse(html.tostring(tree))
+        return d
+
     def sign_in(self, filename):
         with open(filename, 'r') as f:
             file_opened = True
@@ -88,7 +100,7 @@ class AtlanticHandler(SteinsHandler):
             return
 
         browser = get_browser()
-        browser.get("https://accounts.theatlantic.com/login/")
+        browser.get("https://accounts.theatlantic.com/login")
         button = browser.find_elements_by_xpath("//button[contains(text(), 'I Agree')]")[0]
         button.click()
 
@@ -103,19 +115,6 @@ class AtlanticHandler(SteinsHandler):
         wait.until(EC.title_contains("Edit Profile"))
         fetch_cookies()
         self.signed_in = True
-
-    #def read_summary(self, item_it):
-    #    item_link = self.read_link(item_it)
-    #    if "/video/" in item_link:
-    #        return ""
-    #    if "/photo/" in item_link:
-    #        return ""
-
-    #    tree = get_tree_from_session(item_link)
-    #    nodes = tree.xpath("//p[@itemprop='description']")
-    #    item_summary = nodes[0].text
-
-    #    return item_summary
 
     def get_article_head(self, row):
         tree = get_tree_from_session(row[5])
@@ -226,6 +225,58 @@ class FinancialTimesHandler(SteinsHandler):
 
         return article_body
 
+class GuardianHandler(SteinsHandler):
+    def sign_in(self, filename):
+        with open(filename, 'r') as f:
+            file_opened = True
+            tree = etree.fromstring(f.read())
+            try:
+                node = tree.xpath("//guardian")[0]
+            except IndexError:
+                return
+        if not file_opened:
+            return
+
+        browser = get_browser()
+        browser.get("https://profile.theguardian.com/signin")
+        email = browser.find_element_by_id("tssf-email")
+        email.send_keys(node.xpath("./email")[0].text)
+        button = browser.find_element_by_id("tssf-submit")
+        button.click()
+        pwd = browser.find_element_by_id("tsse-password")
+        pwd.send_keys(node.xpath("./password")[0].text)
+        button = browser.find_element_by_id("tssf-sign-in")
+        button.click()
+
+        #wait = WebDriverWait(browser, 30)
+        #wait.until(EC.title_contains("Edit Profile"))
+        fetch_cookies()
+        self.signed_in = True
+
+    def get_article_body(self, link):
+        page = requests.get(link)
+        tree = html.fromstring(page.content)
+        article = tree.xpath("//article")[0]
+        article_body_temp = article.xpath(".//div[@itemprop='articleBody']")[0]
+
+        article_body = []
+        for elem_it in article_body_temp:
+            can_print = False
+            can_print |= (elem_it.tag == "p")
+            can_print |= (elem_it.tag == "figure")
+            for i in range(6):
+                can_print |= (elem_it.tag == "h{}".format(i+1))
+            can_print |= (elem_it.tag == "blockquote")
+
+            if can_print:
+                if elem_it.tag == "figure":
+                    elem_it.xpath(".//div")[0].set("style", "")
+                    elem_it.xpath(".//picture")[0].set("style", "display: block; overflow: hidden;")
+                    elem_it.xpath(".//img")[0].set("style", "max-width: 100%; height:auto;")
+                article_body.append(html.tostring(elem_it))
+
+        return article_body
+
 class WIREDHandler(SteinsHandler):
     def get_article_body(self, link):
         page = requests.get(link)
@@ -237,26 +288,6 @@ class WIREDHandler(SteinsHandler):
             for section_it in article_body_temp:
                 article_body_temp_new += section_it
             article_body_temp = article_body_temp_new
-
-        article_body = []
-        for elem_it in article_body_temp:
-            can_print = False
-            can_print |= (elem_it.tag == "p")
-            for i in range(6):
-                can_print |= (elem_it.tag == "h{}".format(i+1))
-            can_print |= (elem_it.tag == "blockquote")
-
-            if can_print:
-                article_body.append(html.tostring(elem_it))
-
-        return article_body
-
-class GuardianHandler(SteinsHandler):
-    def get_article_body(self, link):
-        page = requests.get(link)
-        tree = html.fromstring(page.content)
-        article = tree.xpath("//article")[0]
-        article_body_temp = article.xpath(".//div[@itemprop='articleBody']")[0]
 
         article_body = []
         for elem_it in article_body_temp:
@@ -388,34 +419,34 @@ def get_handler(source):
             print("DEBUG: AtlanticHandler.")
             atlantic_handler = AtlanticHandler()
         handler = atlantic_handler
-    elif "WIRED" in source:
-        global wired_handler
-        if not "wired_handler" in globals():
-            print("DEBUG: WIREDHandler.")
-            wired_handler = WIREDHandler()
-        handler = wired_handler
-    elif "The Guardian" in source:
-        global guardian_handler
-        if not "guardian_handler" in globals():
-            print("DEBUG: GuardianHandler.")
-            guardian_handler = GuardianHandler()
-        handler = guardian_handler
     elif "Financial Times" in source:
         global financial_times_handler
         if not "financial_times_handler" in globals():
             print("DEBUG: FinancialTimesHandler.")
             financial_times_handler = FinancialTimesHandler()
         handler = financial_times_handler
+    elif "The Guardian" in source:
+        global guardian_handler
+        if not "guardian_handler" in globals():
+            print("DEBUG: GuardianHandler.")
+            guardian_handler = GuardianHandler()
+        handler = guardian_handler
+    #elif "Heise" in source:
+    #    handler = HeiseHandler()
     elif "Quanta Magazine" in source:
         global quanta_magazine_handler
         if not "quanta_magazine_handler" in globals():
             print("DEBUG: QuantaMagazineHandler.")
             quanta_magazine_handler = QuantaMagazineHandler()
         handler = quanta_magazine_handler
-    #elif "Heise" in source:
-    #    handler = HeiseHandler()
     #elif "The Register" in source:
     #    handler = RegisterHandler()
+    elif "WIRED" in source:
+        global wired_handler
+        if not "wired_handler" in globals():
+            print("DEBUG: WIREDHandler.")
+            wired_handler = WIREDHandler()
+        handler = wired_handler
     else:
         handler = SteinsHandler()
 

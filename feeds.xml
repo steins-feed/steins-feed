@@ -1,6 +1,92 @@
 <?xml version="1.0"?>
 
 <root>
+    <!-- The Atlantic -->
+    <!--
+    <feed>
+        <title>The Atlantic Politics</title>
+        <link>https://www.theatlantic.com/feed/channel/politics/</link>
+    </feed>
+    -->
+    <feed>
+        <title>The Atlantic Culture</title>
+        <link>https://www.theatlantic.com/feed/channel/entertainment/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Science</title>
+        <link>https://www.theatlantic.com/feed/channel/science/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Technology</title>
+        <link>https://www.theatlantic.com/feed/channel/technology/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Business</title>
+        <link>https://www.theatlantic.com/feed/channel/business/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Health</title>
+        <link>https://www.theatlantic.com/feed/channel/health/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Family</title>
+        <link>https://www.theatlantic.com/feed/channel/family/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Education</title>
+        <link>https://www.theatlantic.com/feed/channel/education/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Global</title>
+        <link>https://www.theatlantic.com/feed/channel/international/</link>
+    </feed>
+    <!--
+    <feed>
+        <title>The Atlantic National</title>
+        <link>https://www.theatlantic.com/feed/channel/national/</link>
+    </feed>
+    -->
+    <feed>
+        <title>The Atlantic</title>
+        <link>https://www.theatlantic.com/feed/best-of/</link>
+    </feed>
+
+    <!-- Financial Times -->
+    <feed>
+        <title>Financial Times World</title>
+        <link>https://www.ft.com/world?format=rss</link>
+    </feed>
+    <!--
+    <feed>
+        <title>Financial Times UK</title>
+        <link>https://www.ft.com/world/uk?format=rss</link>
+    </feed>
+    -->
+    <feed>
+        <title>Financial Times Companies</title>
+        <link>https://www.ft.com/companies?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times Markets</title>
+        <link>https://www.ft.com/markets?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times Opinion</title>
+        <link>https://www.ft.com/opinion?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times Work &amp; Careers</title>
+        <link>https://www.ft.com/work-careers?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times Life &amp; Arts</title>
+        <link>https://www.ft.com/life-arts?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times</title>
+        <link>https://www.ft.com/?format=rss</link>
+    </feed>
+
     <!-- The Guardian -->
     <feed>
         <title>The Guardian Editorial</title>
@@ -56,92 +142,6 @@
         <link>https://www.theguardian.com/tone/obituaries/rss</link>
     </feed>
     -->
-
-    <!-- Financial Times -->
-    <feed>
-        <title>Financial Times World</title>
-        <link>https://www.ft.com/world?format=rss</link>
-    </feed>
-    <!--
-    <feed>
-        <title>Financial Times UK</title>
-        <link>https://www.ft.com/world/uk?format=rss</link>
-    </feed>
-    -->
-    <feed>
-        <title>Financial Times Companies</title>
-        <link>https://www.ft.com/companies?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Markets</title>
-        <link>https://www.ft.com/markets?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Opinion</title>
-        <link>https://www.ft.com/opinion?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Work &amp; Careers</title>
-        <link>https://www.ft.com/work-careers?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Life &amp; Arts</title>
-        <link>https://www.ft.com/life-arts?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times</title>
-        <link>https://www.ft.com/?format=rss</link>
-    </feed>
-
-    <!-- The Atlantic -->
-    <!--
-    <feed>
-        <title>The Atlantic Politics</title>
-        <link>https://www.theatlantic.com/feed/channel/politics/</link>
-    </feed>
-    -->
-    <feed>
-        <title>The Atlantic Culture</title>
-        <link>https://www.theatlantic.com/feed/channel/entertainment/</link>
-    </feed>
-    <feed>
-        <title>The Atlantic Science</title>
-        <link>https://www.theatlantic.com/feed/channel/science/</link>
-    </feed>
-    <feed>
-        <title>The Atlantic Technology</title>
-        <link>https://www.theatlantic.com/feed/channel/technology/</link>
-    </feed>
-    <feed>
-        <title>The Atlantic Business</title>
-        <link>https://www.theatlantic.com/feed/channel/business/</link>
-    </feed>
-    <feed>
-        <title>The Atlantic Health</title>
-        <link>https://www.theatlantic.com/feed/channel/health/</link>
-    </feed>
-    <feed>
-        <title>The Atlantic Family</title>
-        <link>https://www.theatlantic.com/feed/channel/family/</link>
-    </feed>
-    <feed>
-        <title>The Atlantic Education</title>
-        <link>https://www.theatlantic.com/feed/channel/education/</link>
-    </feed>
-    <feed>
-        <title>The Atlantic Global</title>
-        <link>https://www.theatlantic.com/feed/channel/international/</link>
-    </feed>
-    <!--
-    <feed>
-        <title>The Atlantic National</title>
-        <link>https://www.theatlantic.com/feed/channel/national/</link>
-    </feed>
-    -->
-    <feed>
-        <title>The Atlantic</title>
-        <link>https://www.theatlantic.com/feed/best-of/</link>
-    </feed>
 
     <!-- WIRED -->
     <feed>

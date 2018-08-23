@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import feedparser
 import os
 import sqlite3
 import time
@@ -13,8 +12,8 @@ def steins_read(c):
     for feed_it in c.execute("SELECT * FROM Feeds WHERE DISPLAY=1").fetchall():
         print(feed_it[1])
         handler = get_handler(feed_it[1])
+        d = handler.parse(feed_it[2])
 
-        d = feedparser.parse(feed_it[2])
         for item_it in d['items']:
             item_title = handler.read_title(item_it)
             item_time = handler.read_time(item_it)
