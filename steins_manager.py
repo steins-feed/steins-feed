@@ -155,6 +155,77 @@ class AtlanticHandler(SteinsHandler):
 
         return article_body
 
+class FinancialTimesHandler(SteinsHandler):
+    def sign_in(self, filename):
+        with open(filename, 'r') as f:
+            file_opened = True
+            tree = etree.fromstring(f.read())
+            try:
+                node = tree.xpath("//financial_times")[0]
+            except IndexError:
+                return
+        if not file_opened:
+            return
+
+        browser = get_browser()
+        browser.get("https://accounts.ft.com/login")
+        email = browser.find_element_by_id("enter-email")
+        email.send_keys(node.xpath("./email")[0].text)
+        button = browser.find_element_by_id("enter-email-next")
+        button.click()
+        button = browser.find_element_by_id("sso-redirect-button")
+        button.click()
+        uid = browser.find_element_by_id("userid")
+        uid.send_keys(node.xpath("./user_id")[0].text)
+        pwd = browser.find_element_by_id("pwd")
+        pwd.send_keys(node.xpath("./password")[0].text)
+        button = browser.find_element_by_name("submit")
+        button.click()
+
+        wait = WebDriverWait(browser, 30)
+        wait.until(EC.title_contains("Financial Times"))
+        fetch_cookies()
+        self.signed_in = True
+
+    def get_article_head(self, row):
+        tree = get_tree_from_session(row[5])
+        article_cover_temp = tree.xpath("//div[@class='main-image']")[0]
+        article_cover = article_cover_temp.xpath(".//figure")[0]
+        article_cover.set("style", "display: block; overflow: hidden;")
+        article_cover.xpath(".//div")[0].set("style", "")
+        article_cover.xpath(".//img")[0].set("style", "max-width: 100%; height:auto;")
+
+        article_head = []
+        article_head.append("<h1>{}</h1>".format(row[1]).encode('utf-8'))
+        article_head.append("<p>{}</p>".format(row[3]).encode('utf-8'))
+        article_head.append(html.tostring(article_cover))
+        article_head.append("<p>Source: {}. Published: {}</p>".format(row[4], row[2]).encode('utf-8'))
+
+        return article_head
+
+    def get_article_body(self, link):
+        tree = get_tree_from_session(link)
+        article = tree.xpath("//article")[0]
+        article_elements = article.xpath(".//div[contains(@class, 'article__content-body')]")[0]
+
+        article_body = []
+        for elem_it in article_elements:
+            can_print = False
+            can_print |= (elem_it.tag == "p")
+            can_print |= (elem_it.tag == "figure")
+            for i in range(6):
+                can_print |= (elem_it.tag == "h{}".format(i+1))
+            can_print |= (elem_it.tag == "blockquote")
+
+            if can_print:
+                if elem_it.tag == "figure":
+                    elem_it.set("style", "display: block; overflow: hidden;")
+                    elem_it.xpath(".//div")[0].set("style", "")
+                    elem_it.xpath(".//img")[0].set("style", "max-width: 100%; height:auto;")
+                article_body.append(html.tostring(elem_it))
+
+        return article_body
+
 class WIREDHandler(SteinsHandler):
     def get_article_body(self, link):
         page = requests.get(link)
@@ -199,50 +270,6 @@ class GuardianHandler(SteinsHandler):
                 article_body.append(html.tostring(elem_it))
 
         return article_body
-
-class FinancialTimesHandler(SteinsHandler):
-    def get_article_body(self, link):
-        browser = get_browser()
-        browser.get(link)
-        tree = html.fromstring(browser.page_source)
-        article = tree.xpath("//article")[0]
-        article_body_temp = article.xpath(".//div[@data-trackable='article-body']")[0]
-
-        article_body = []
-        for elem_it in article_body_temp:
-            can_print = False
-            can_print |= (elem_it.tag == "p")
-            for i in range(6):
-                can_print |= (elem_it.tag == "h{}".format(i+1))
-            can_print |= (elem_it.tag == "blockquote")
-
-            if can_print:
-                article_body.append(html.tostring(elem_it))
-
-        return article_body
-
-    def sign_in(self, filename):
-        f = open(filename, 'r')
-        tree = etree.fromstring(f.read())
-        node = tree.xpath("//financial_times")[0]
-        f.close()
-
-        browser = get_browser()
-        browser.get("https://accounts.ft.com/login")
-        email = browser.find_element_by_id("enter-email")
-        email.send_keys(node.xpath("./email")[0].text)
-        button = browser.find_element_by_id("enter-email-next")
-        button.click()
-        button = browser.find_element_by_id("sso-redirect-button")
-        button.click()
-        uid = browser.find_element_by_id("userid")
-        uid.send_keys(node.xpath("./user_id")[0].text)
-        pwd = browser.find_element_by_id("pwd")
-        pwd.send_keys(node.xpath("./password")[0].text)
-        button = browser.find_element_by_name("submit")
-        button.click()
-
-        self.signed_in = True
 
 class QuantaMagazineHandler(SteinsHandler):
     def get_article_head(self, row):
