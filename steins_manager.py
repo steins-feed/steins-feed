@@ -6,6 +6,7 @@ import requests
 import time
 
 from lxml import etree, html
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -125,6 +126,10 @@ class SteinsHandler:
         figure = []
         figure.append('<figure style="display: block; overflow: hidden;">'.encode('utf-8'))
 
+        figure.append('<picture>'.encode('utf-8'))
+        source_list = elem_it.xpath(".//source")
+        for source_it in source_list:
+            figure.append(html.tostring(source_it))
         image_it = elem_it.xpath(".//img")[0]
         if not image_it.get("src") == None:
             src_it = image_it.get("src")
@@ -137,6 +142,7 @@ class SteinsHandler:
             figure.append('<img srcset="{}" style="max-width: 100%; height:auto;">'.format(src_it).encode('utf-8'))
         else:
             raise ValueError("Image does not exist.")
+        figure.append('</picture>'.encode('utf-8'))
 
         figcaption_it = elem_it.xpath(".//figcaption")[0]
         figure.append('<figcaption>{}</figcaption>'.format(self.get_text(figcaption_it)).encode('utf-8'))
@@ -267,15 +273,23 @@ class GuardianHandler(SteinsHandler):
         email.send_keys(node.xpath("./email")[0].text)
         button = browser.find_element_by_id("tssf-submit")
         button.click()
+        wait = WebDriverWait(browser, 30)
+        wait.until(EC.element_to_be_clickable((By.ID, "tssf-sign-in")))
         pwd = browser.find_element_by_id("tsse-password")
         pwd.send_keys(node.xpath("./password")[0].text)
         button = browser.find_element_by_id("tssf-sign-in")
         button.click()
 
-        #wait = WebDriverWait(browser, 30)
-        #wait.until(EC.title_contains("Edit Profile"))
         fetch_cookies()
         self.signed_in = True
+
+    def get_article_head_cover(self, link):
+        tree = get_tree_from_session(link)
+        try:
+            article_cover = tree.xpath("//figure[@id='img-1']")[0]
+        except IndexError:
+            article_cover = None
+        return article_cover
 
     def get_article_body_list(self, link):
         tree = get_tree_from_session(link)
