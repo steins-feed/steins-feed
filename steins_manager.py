@@ -5,19 +5,10 @@ import requests
 import time
 
 from lxml import etree, html
-from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-# Singleton.
-def get_browser():
-    global browser
-    if not "browser" in globals():
-        print("DEBUG: Firefox.")
-        dir_name = os.path.dirname(os.path.abspath(__file__))
-        gecko_path = dir_name + os.sep + "geckodriver"
-        options = webdriver.firefox.options.Options()
-        options.add_argument('-headless')
-        browser = webdriver.Firefox(executable_path=gecko_path, firefox_options=options)
-    return browser
+from steins_web import *
 
 class SteinsHandler:
     def __init__(self):
@@ -74,7 +65,7 @@ class SteinsHandler:
         else:
             return False
 
-    def sign_in(self):
+    def sign_in(self, filename):
         pass
 
     def get_article_head(self, row):
@@ -85,29 +76,49 @@ class SteinsHandler:
         return article_head
 
 class AtlanticHandler(SteinsHandler):
-    def read_summary(self, item_it):
-        item_link = self.read_link(item_it)
-        if "/video/" in item_link:
-            return ""
-        if "/photo/" in item_link:
-            return ""
+    def sign_in(self, filename):
+        with open(filename, 'r') as f:
+            file_opened = True
+            tree = etree.fromstring(f.read())
+            try:
+                node = tree.xpath("//atlantic")[0]
+            except IndexError:
+                return
+        if not file_opened:
+            return
 
-        #page = requests.get(item_link)
-        #tree = html.fromstring(page.content)
         browser = get_browser()
-        browser.get(item_link)
-        tree = html.fromstring(browser.page_source)
-        nodes = tree.xpath("//p[@itemprop='description']")
-        item_summary = nodes[0].text
+        browser.get("https://accounts.theatlantic.com/login/")
+        button = browser.find_elements_by_xpath("//button[contains(text(), 'I Agree')]")[0]
+        button.click()
 
-        return item_summary
+        email = browser.find_element_by_name("login-email")
+        email.send_keys(node.xpath("./email")[0].text)
+        pwd = browser.find_element_by_name("login-password")
+        pwd.send_keys(node.xpath("./password")[0].text)
+        button = browser.find_element_by_name("_submit_login")
+        button.click()
+
+        wait = WebDriverWait(browser, 30)
+        wait.until(EC.title_contains("Edit Profile"))
+        fetch_cookies()
+        self.signed_in = True
+
+    #def read_summary(self, item_it):
+    #    item_link = self.read_link(item_it)
+    #    if "/video/" in item_link:
+    #        return ""
+    #    if "/photo/" in item_link:
+    #        return ""
+
+    #    tree = get_tree_from_session(item_link)
+    #    nodes = tree.xpath("//p[@itemprop='description']")
+    #    item_summary = nodes[0].text
+
+    #    return item_summary
 
     def get_article_head(self, row):
-        #page = requests.get(row[5])
-        #tree = html.fromstring(page.content)
-        browser = get_browser()
-        browser.get(row[5])
-        tree = html.fromstring(browser.page_source)
+        tree = get_tree_from_session(row[5])
         article = tree.xpath("//article")[0]
         article_cover = article.xpath(".//figure[@class='c-lead-media']")[0]
         article_cover.xpath(".//picture")[0].set("style", "display: block; overflow: hidden;")
@@ -122,11 +133,7 @@ class AtlanticHandler(SteinsHandler):
         return article_head
 
     def get_article_body(self, link):
-        #page = requests.get(link)
-        #tree = html.fromstring(page.content)
-        browser = get_browser()
-        browser.get(link)
-        tree = html.fromstring(browser.page_source)
+        tree = get_tree_from_session(link)
         article = tree.xpath("//article")[0]
         article_sections = article.xpath(".//section[@itemprop='articleBody']")
 
@@ -147,29 +154,6 @@ class AtlanticHandler(SteinsHandler):
                     article_body.append(elem_str.encode())
 
         return article_body
-
-    def sign_in(self):
-        dir_name = os.path.dirname(os.path.abspath(__file__))
-        f = open(dir_name + os.sep + "sign_in.xml", 'r')
-        tree = etree.fromstring(f.read())
-        node = tree.xpath("//atlantic")[0]
-        f.close()
-
-        browser = get_browser()
-        browser.get("https://accounts.theatlantic.com/login/")
-        button = browser.find_elements_by_xpath("//button[contains(text(), 'I Agree')]")[0]
-        button.click()
-
-        email = browser.find_element_by_name("login-email")
-        email.send_keys(node.xpath("./email")[0].text)
-        pwd = browser.find_element_by_name("login-password")
-        pwd.send_keys(node.xpath("./password")[0].text)
-        button = browser.find_element_by_name("_submit_login")
-        button.click()
-
-        browser.get("https://www.theatlantic.com/")
-
-        self.signed_in = True
 
 class WIREDHandler(SteinsHandler):
     def get_article_body(self, link):
@@ -237,9 +221,8 @@ class FinancialTimesHandler(SteinsHandler):
 
         return article_body
 
-    def sign_in(self):
-        dir_name = os.path.dirname(os.path.abspath(__file__))
-        f = open(dir_name + os.sep + "sign_in.xml", 'r')
+    def sign_in(self, filename):
+        f = open(filename, 'r')
         tree = etree.fromstring(f.read())
         node = tree.xpath("//financial_times")[0]
         f.close()
@@ -409,6 +392,8 @@ def get_handler(source):
     else:
         handler = SteinsHandler()
 
-    if not handler.signed_in:
-        handler.sign_in()
+    dir_name = os.path.dirname(os.path.abspath(__file__))
+    file_name = dir_name + os.sep + "sign_in.xml"
+    if os.path.exists(file_name) and not handler.signed_in:
+        handler.sign_in(file_name)
     return handler

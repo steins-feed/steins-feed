@@ -22,9 +22,6 @@ Against whom am I competing?
 *   Use HTML5 layout.
 *   Put HTML into folder.
 *   Show progress in terminal.
-*   Use Selenium only for sign-in.
-    Export cookies to requests session.
-*   `sign_in()` needs to check whether sign-in data exists in `sign_in.xml`.
 
 ## Bugs.
 
