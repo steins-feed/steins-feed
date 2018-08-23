@@ -78,7 +78,8 @@ class SteinsHandler:
         article_head.append("<p>{}</p>".format(row[3]).encode('utf-8'))
         if "get_article_head_cover" in dir(self):
             article_head_cover = self.get_article_head_cover(row[5])
-            article_head += self.get_figure(article_head_cover)
+            if not article_head_cover == None:
+                article_head += self.get_figure(article_head_cover)
         article_head.append("<p>Source: {}. Published: {}</p>".format(row[4], row[2]).encode('utf-8'))
         return article_head
 
@@ -127,13 +128,15 @@ class SteinsHandler:
         image_it = elem_it.xpath(".//img")[0]
         if not image_it.get("src") == None:
             src_it = image_it.get("src")
+            figure.append('<img src="{}" style="max-width: 100%; height:auto;">'.format(src_it).encode('utf-8'))
         elif not image_it.get("srcset") == None:
             src_it = image_it.get("srcset")
+            figure.append('<img srcset="{}" style="max-width: 100%; height:auto;">'.format(src_it).encode('utf-8'))
         elif not image_it.get("data-srcset") == None:
             src_it = image_it.get("data-srcset")
+            figure.append('<img srcset="{}" style="max-width: 100%; height:auto;">'.format(src_it).encode('utf-8'))
         else:
             raise ValueError("Image does not exist.")
-        figure.append('<img src="{}" style="max-width: 100%; height:auto;">'.format(src_it).encode('utf-8'))
 
         figcaption_it = elem_it.xpath(".//figcaption")[0]
         figure.append('<figcaption>{}</figcaption>'.format(self.get_text(figcaption_it)).encode('utf-8'))
@@ -181,7 +184,10 @@ class AtlanticHandler(SteinsHandler):
     def get_article_head_cover(self, link):
         tree = get_tree_from_session(link)
         article = tree.xpath("//article")[0]
-        article_cover = article.xpath(".//figure[@class='c-lead-media']")[0]
+        try:
+            article_cover = article.xpath(".//figure[@class='c-lead-media']")[0]
+        except IndexError:
+            article_cover = None
         return article_cover
 
     def get_article_body_list(self, link):
@@ -228,44 +234,20 @@ class FinancialTimesHandler(SteinsHandler):
         fetch_cookies()
         self.signed_in = True
 
-    def get_article_head(self, row):
-        tree = get_tree_from_session(row[5])
-        article_cover_temp = tree.xpath("//div[@class='main-image']")[0]
-        article_cover = article_cover_temp.xpath(".//figure")[0]
-        article_cover.set("style", "display: block; overflow: hidden;")
-        article_cover.xpath(".//div")[0].set("style", "")
-        article_cover.xpath(".//img")[0].set("style", "max-width: 100%; height:auto;")
+    def get_article_head_cover(self, link):
+        tree = get_tree_from_session(link)
+        article = tree.xpath("//div[@class='main-image']")[0]
+        try:
+            article_cover = article.xpath(".//figure")[0]
+        except IndexError:
+            article_cover = None
+        return article_cover
 
-        article_head = []
-        article_head.append("<h1>{}</h1>".format(row[1]).encode('utf-8'))
-        article_head.append("<p>{}</p>".format(row[3]).encode('utf-8'))
-        article_head.append(html.tostring(article_cover))
-        article_head.append("<p>Source: {}. Published: {}</p>".format(row[4], row[2]).encode('utf-8'))
-
-        return article_head
-
-    def get_article_body(self, link):
+    def get_article_body_list(self, link):
         tree = get_tree_from_session(link)
         article = tree.xpath("//article")[0]
         article_elements = article.xpath(".//div[contains(@class, 'article__content-body')]")[0]
-
-        article_body = []
-        for elem_it in article_elements:
-            can_print = False
-            can_print |= (elem_it.tag == "p")
-            can_print |= (elem_it.tag == "figure")
-            for i in range(6):
-                can_print |= (elem_it.tag == "h{}".format(i+1))
-            can_print |= (elem_it.tag == "blockquote")
-
-            if can_print:
-                if elem_it.tag == "figure":
-                    elem_it.set("style", "display: block; overflow: hidden;")
-                    elem_it.xpath(".//div")[0].set("style", "")
-                    elem_it.xpath(".//img")[0].set("style", "max-width: 100%; height:auto;")
-                article_body.append(html.tostring(elem_it))
-
-        return article_body
+        return article_elements
 
 class GuardianHandler(SteinsHandler):
     def sign_in(self, filename):
@@ -295,29 +277,11 @@ class GuardianHandler(SteinsHandler):
         fetch_cookies()
         self.signed_in = True
 
-    def get_article_body(self, link):
-        page = requests.get(link)
-        tree = html.fromstring(page.content)
+    def get_article_body_list(self, link):
+        tree = get_tree_from_session(link)
         article = tree.xpath("//article")[0]
-        article_body_temp = article.xpath(".//div[@itemprop='articleBody']")[0]
-
-        article_body = []
-        for elem_it in article_body_temp:
-            can_print = False
-            can_print |= (elem_it.tag == "p")
-            can_print |= (elem_it.tag == "figure")
-            for i in range(6):
-                can_print |= (elem_it.tag == "h{}".format(i+1))
-            can_print |= (elem_it.tag == "blockquote")
-
-            if can_print:
-                if elem_it.tag == "figure":
-                    elem_it.xpath(".//div")[0].set("style", "")
-                    elem_it.xpath(".//picture")[0].set("style", "display: block; overflow: hidden;")
-                    elem_it.xpath(".//img")[0].set("style", "max-width: 100%; height:auto;")
-                article_body.append(html.tostring(elem_it))
-
-        return article_body
+        article_elements = article.xpath(".//div[@itemprop='articleBody']")[0]
+        return article_elements
 
 class WIREDHandler(SteinsHandler):
     def get_article_body(self, link):
