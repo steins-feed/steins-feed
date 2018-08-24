@@ -95,6 +95,12 @@ class SteinsHandler:
                 article_body += self.get_figure(elem_it)
             elif elem_it.tag == "blockquote":
                 article_body += self.get_blockquote(elem_it)
+            elif elem_it.tag == "hr":
+                article_body += self.get_hr()
+            elif elem_it.tag == "ol":
+                article_body += self.get_list(elem_it)
+            elif elem_it.tag == "ul":
+                article_body += self.get_list(elem_it)
             else:
                 for i in range(6):
                     if elem_it.tag == "h{}".format(i+1):
@@ -122,6 +128,17 @@ class SteinsHandler:
         blockquote = "<blockquote>{}</blockquote>".format(self.get_text(elem_it)).encode('utf-8')
         return [blockquote]
 
+    def get_hr(self):
+        return ["<hr>".encode('utf-8')]
+
+    def get_list(self, elem_it):
+        ls = []
+        ls.append("<{}>".format(elem_it.tag).encode('utf-8'))
+        for li_it in elem_it:
+            ls.append(html.tostring(li_it))
+        ls.append("</{}>".format(elem_it.tag).encode('utf-8'))
+        return ls
+
     def get_figure(self, elem_it):
         figure = []
         figure.append('<figure style="display: block; overflow: hidden;">'.encode('utf-8'))
@@ -130,7 +147,12 @@ class SteinsHandler:
         source_list = elem_it.xpath(".//source")
         for source_it in source_list:
             figure.append(html.tostring(source_it))
-        image_it = elem_it.xpath(".//img")[0]
+        try:
+            image_it = elem_it.xpath(".//img")[0]
+        except IndexError:
+            print("Image does not exist.")
+            print(html.tostring(elem_it))
+            return []
         if not image_it.get("src") == None:
             src_it = image_it.get("src")
             figure.append('<img src="{}" style="max-width: 100%; height:auto;">'.format(src_it).encode('utf-8'))
@@ -141,7 +163,9 @@ class SteinsHandler:
             src_it = image_it.get("data-srcset")
             figure.append('<img srcset="{}" style="max-width: 100%; height:auto;">'.format(src_it).encode('utf-8'))
         else:
-            raise ValueError("Image does not exist.")
+            print("Image does not exist.")
+            print(html.tostring(elem_it))
+            return []
         figure.append('</picture>'.encode('utf-8'))
 
         figcaption_it = elem_it.xpath(".//figcaption")[0]
@@ -163,7 +187,7 @@ class AtlanticHandler(SteinsHandler):
             return
 
         browser = get_browser()
-        browser.get("https://accounts.theatlantic.com/login")
+        browser.get("https://accounts.theatlantic.com/login/")
         button = browser.find_elements_by_xpath("//button[contains(text(), 'I Agree')]")[0]
         button.click()
 
@@ -221,7 +245,7 @@ class FinancialTimesHandler(SteinsHandler):
             return
 
         browser = get_browser()
-        browser.get("https://accounts.ft.com/login")
+        browser.get("https://accounts.ft.com/login/")
         email = browser.find_element_by_id("enter-email")
         email.send_keys(node.xpath("./email")[0].text)
         button = browser.find_element_by_id("enter-email-next")
@@ -268,7 +292,7 @@ class GuardianHandler(SteinsHandler):
             return
 
         browser = get_browser()
-        browser.get("https://profile.theguardian.com/signin")
+        browser.get("https://profile.theguardian.com/signin/")
         email = browser.find_element_by_id("tssf-email")
         email.send_keys(node.xpath("./email")[0].text)
         button = browser.find_element_by_id("tssf-submit")
@@ -298,29 +322,49 @@ class GuardianHandler(SteinsHandler):
         return article_elements
 
 class WIREDHandler(SteinsHandler):
-    def get_article_body(self, link):
-        page = requests.get(link)
-        tree = html.fromstring(page.content)
+    def sign_in(self, filename):
+        with open(filename, 'r') as f:
+            file_opened = True
+            tree = etree.fromstring(f.read())
+            try:
+                node = tree.xpath("//wired")[0]
+            except IndexError:
+                return
+        if not file_opened:
+            return
+
+        browser = get_browser()
+        browser.get("https://www.wired.com/account/sign-in/")
+        email = browser.find_element_by_id("email-input")
+        email.send_keys(node.xpath("./email")[0].text)
+        pwd = browser.find_element_by_id("password-input")
+        pwd.send_keys(node.xpath("./password")[0].text)
+        button = browser.find_element_by_xpath("//input[contains(@value, 'Sign In')]")
+        button.click()
+
+        fetch_cookies()
+        self.signed_in = True
+
+    def get_article_head_cover(self, link):
+        tree = get_tree_from_session(link)
+        try:
+            article = tree.xpath("//div[contains(@class, 'article-main-component__lede')]")[0]
+            article_cover = article.xpath(".//figure")[0]
+        except IndexError:
+            article_cover = None
+        return article_cover
+
+    def get_article_body_list(self, link):
+        tree = get_tree_from_session(link)
         article = tree.xpath("//article")[0]
-        article_body_temp = article.xpath("./div")[0]
-        if article_body_temp[0].tag == "section":
-            article_body_temp_new = []
-            for section_it in article_body_temp:
-                article_body_temp_new += section_it
-            article_body_temp = article_body_temp_new
-
-        article_body = []
-        for elem_it in article_body_temp:
-            can_print = False
-            can_print |= (elem_it.tag == "p")
-            for i in range(6):
-                can_print |= (elem_it.tag == "h{}".format(i+1))
-            can_print |= (elem_it.tag == "blockquote")
-
-            if can_print:
-                article_body.append(html.tostring(elem_it))
-
-        return article_body
+        article_body = article.xpath("./div")[0]
+        if article_body[0].tag == "section":
+            article_body_list = []
+            for section_it in article_body:
+                article_body_list += section_it
+        else:
+            article_body_list = article_body
+        return article_body_list
 
 class QuantaMagazineHandler(SteinsHandler):
     def get_article_head(self, row):

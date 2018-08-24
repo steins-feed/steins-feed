@@ -28,6 +28,8 @@ Against whom am I competing?
 ## Bugs.
 
 *   Close when Firefox closes.
+*   Interactive figures (`iframe`).
+*   Lazy figures.
 
 ## Sources
 
