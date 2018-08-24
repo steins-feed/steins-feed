@@ -168,8 +168,11 @@ class SteinsHandler:
             return []
         figure.append('</picture>'.encode('utf-8'))
 
-        figcaption_it = elem_it.xpath(".//figcaption")[0]
-        figure.append('<figcaption>{}</figcaption>'.format(self.get_text(figcaption_it)).encode('utf-8'))
+        try:
+            figcaption_it = elem_it.xpath(".//figcaption")[0]
+            figure.append('<figcaption>{}</figcaption>'.format(self.get_text(figcaption_it)).encode('utf-8'))
+        except IndexError:
+            pass
 
         figure.append('</figure>'.encode('utf-8'))
         return figure
@@ -198,8 +201,8 @@ class AtlanticHandler(SteinsHandler):
         button = browser.find_element_by_name("_submit_login")
         button.click()
 
-        wait = WebDriverWait(browser, 30)
-        wait.until(EC.title_contains("Edit Profile"))
+        #wait = WebDriverWait(browser, 30)
+        #wait.until(EC.title_contains("Edit Profile"))
         fetch_cookies()
         self.signed_in = True
 
@@ -259,8 +262,8 @@ class FinancialTimesHandler(SteinsHandler):
         button = browser.find_element_by_name("submit")
         button.click()
 
-        wait = WebDriverWait(browser, 30)
-        wait.until(EC.title_contains("Financial Times"))
+        #wait = WebDriverWait(browser, 30)
+        #wait.until(EC.title_contains("Financial Times"))
         fetch_cookies()
         self.signed_in = True
 
