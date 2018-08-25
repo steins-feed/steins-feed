@@ -17,8 +17,6 @@ Against whom am I competing?
 1.  ~~Printable HTML.~~
 2.  Machine learning.
 
-*   Do not use 'summary' in `get_article_head()`.
-
 *   Table for authors.
 *   Table for categories.
 *   Use HTML5 layout.
@@ -27,7 +25,6 @@ Against whom am I competing?
 
 ## Bugs.
 
-*   Close when Firefox closes.
 *   Interactive figures (`iframe`).
 *   Lazy figures.
 

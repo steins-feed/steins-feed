@@ -14,6 +14,10 @@ from xml.sax.saxutils import escape
 dir_name = os.path.dirname(os.path.abspath(__file__))
 db_name = dir_name + os.sep + "steins.db"
 
+SERVER = None
+PORT = 8000
+PROCESS = None
+
 class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         # Generate page.
@@ -281,17 +285,25 @@ def steins_run_child(server):
         print("Connection closed.")
 
 def steins_run():
-    PORT = 8000
+    global SERVER
+    global PORT
+    global PROCESS
 
     while True:
         try:
-            server = HTTPServer(('localhost', PORT), SteinsHandler)
+            SERVER = HTTPServer(('localhost', PORT), SteinsHandler)
             print("Connection open.")
             break
         except OSError:
             PORT += 2
 
-    p = mp.Process(target=steins_run_child, args=(server, ))
-    p.start()
+    PROCESS = mp.Process(target=steins_run_child, args=(SERVER, ))
+    PROCESS.start()
 
     return PORT
+
+def steins_halt():
+    #SERVER.shutdown()
+    SERVER.server_close()
+    print("Connection closed.")
+    PROCESS.terminate()

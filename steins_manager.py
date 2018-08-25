@@ -201,8 +201,8 @@ class AtlanticHandler(SteinsHandler):
         button = browser.find_element_by_name("_submit_login")
         button.click()
 
-        #wait = WebDriverWait(browser, 30)
-        #wait.until(EC.title_contains("Edit Profile"))
+        wait = WebDriverWait(browser, 30)
+        wait.until(EC.title_contains("Edit Profile"))
         fetch_cookies()
         self.signed_in = True
 
@@ -262,8 +262,8 @@ class FinancialTimesHandler(SteinsHandler):
         button = browser.find_element_by_name("submit")
         button.click()
 
-        #wait = WebDriverWait(browser, 30)
-        #wait.until(EC.title_contains("Financial Times"))
+        wait = WebDriverWait(browser, 30)
+        wait.until(EC.title_contains("Financial Times"))
         fetch_cookies()
         self.signed_in = True
 
@@ -307,6 +307,8 @@ class GuardianHandler(SteinsHandler):
         button = browser.find_element_by_id("tssf-sign-in")
         button.click()
 
+        wait = WebDriverWait(browser, 30)
+        wait.until_not(EC.title_contains("Sign in"))
         fetch_cookies()
         self.signed_in = True
 
@@ -345,6 +347,8 @@ class WIREDHandler(SteinsHandler):
         button = browser.find_element_by_xpath("//input[contains(@value, 'Sign In')]")
         button.click()
 
+        wait = WebDriverWait(browser, 30)
+        wait.until_not(EC.title_contains("Sign in"))
         fetch_cookies()
         self.signed_in = True
 

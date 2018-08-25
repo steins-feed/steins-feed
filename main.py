@@ -2,9 +2,10 @@
 
 import os
 import subprocess
+import time
 
 from steins_feed import steins_update
-from steins_server import steins_run
+from steins_server import steins_run, steins_halt
 from steins_web import get_browser
 
 dir_name = os.path.dirname(os.path.abspath(__file__))
@@ -17,3 +18,13 @@ print("PORT: {}.".format(port))
 #subprocess.run(["firefox", "-new-window", "http://localhost:{}/".format(port)])
 browser = get_browser()
 browser.get("http://localhost:{}/".format(port))
+
+browser_open = True
+while browser_open:
+    try:
+        browser.title
+        time.sleep(5)
+    except:
+        browser_open = False
+
+steins_halt()
