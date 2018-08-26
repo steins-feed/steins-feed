@@ -382,77 +382,77 @@ class WIREDHandler(SteinsHandler):
             article_body_list = article_body
         return article_body_list
 
-class QuantaMagazineHandler(SteinsHandler):
-    def get_article_head(self, row):
-        page = requests.get(row[5])
-        tree = html.fromstring(page.text)
-        article = tree.xpath("//div[@id='postBody']")[0]
-        article_cover = article.xpath("./div")[1].xpath(".//figure")[0]
-
-        pic_it = article_cover.xpath(".//picture")[0]
-        pic_it.set("style", "display: block; overflow: hidden;")
-        pic_it.getparent().set("style", "")
-        img_it = pic_it.xpath(".//img")[0]
-        pic_it.remove(img_it)
-        img_it = article_cover.xpath(".//noscript/img")[0]
-        img_it.set("style", "max-width: 100%; height:auto;")
-        pic_it.insert(0, img_it)
-
-        article_head = []
-        article_head.append("<h1>{}</h1>".format(row[1]).encode('utf-8'))
-        article_head.append("<p>{}</p>".format(row[3]).encode('utf-8'))
-        article_head.append(html.tostring(article_cover))
-        article_head.append("<p>Source: {}. Published: {}</p>".format(row[4], row[2]).encode('utf-8'))
-
-        return article_head
-
-    def get_article_body(self, link):
-        page = requests.get(link)
-        tree = html.fromstring(page.text)
-        article = tree.xpath("//div[@id='postBody']")[0]
-        article_sections = article.xpath("./div")[2:]
-
-        article_body = []
-        for section_it in article_sections:
-            if section_it.get('class') == "scale1 mt2":
-                elem_list = section_it.xpath(".//div[contains(@class, 'post__content__section')]")[0][0]
-
-                for elem_it in elem_list:
-                    can_print = False
-                    can_print |= (elem_it.tag == "p")
-                    for i in range(6):
-                        can_print |= (elem_it.tag == "h{}".format(i+1))
-                    can_print |= (elem_it.tag == "blockquote")
-
-                    if can_print:
-                        article_body.append(html.tostring(elem_it))
-
-            if section_it.get('class') == "":
-                elem_list = section_it.xpath(".//figure")
-
-                for elem_it in elem_list:
-                    pic_list = elem_it.xpath(".//picture")
-                    if len(pic_list) == 0:
-                        continue
-
-                    for pic_it in pic_list:
-                        pic_it.set("style", "display: block; overflow: hidden;")
-                        pic_it.getparent().set("style", "")
-
-                        img_it = pic_it.xpath(".//img")[0]
-                        pic_it.remove(img_it)
-
-                        figcap_list = pic_it.xpath(".//figcaption")
-                        for figcap_it in figcap_list:
-                            pic_it.remove(figcap_it)
-
-                        img_it = elem_it.xpath(".//noscript/img")[0]
-                        img_it.set("style", "max-width: 100%; height:auto;")
-                        pic_it.insert(0, img_it)
-
-                    article_body.append(html.tostring(elem_it))
-
-        return article_body
+#class QuantaMagazineHandler(SteinsHandler):
+#    def get_article_head(self, row):
+#        page = requests.get(row[5])
+#        tree = html.fromstring(page.text)
+#        article = tree.xpath("//div[@id='postBody']")[0]
+#        article_cover = article.xpath("./div")[1].xpath(".//figure")[0]
+#
+#        pic_it = article_cover.xpath(".//picture")[0]
+#        pic_it.set("style", "display: block; overflow: hidden;")
+#        pic_it.getparent().set("style", "")
+#        img_it = pic_it.xpath(".//img")[0]
+#        pic_it.remove(img_it)
+#        img_it = article_cover.xpath(".//noscript/img")[0]
+#        img_it.set("style", "max-width: 100%; height:auto;")
+#        pic_it.insert(0, img_it)
+#
+#        article_head = []
+#        article_head.append("<h1>{}</h1>".format(row[1]).encode('utf-8'))
+#        article_head.append("<p>{}</p>".format(row[3]).encode('utf-8'))
+#        article_head.append(html.tostring(article_cover))
+#        article_head.append("<p>Source: {}. Published: {}</p>".format(row[4], row[2]).encode('utf-8'))
+#
+#        return article_head
+#
+#    def get_article_body(self, link):
+#        page = requests.get(link)
+#        tree = html.fromstring(page.text)
+#        article = tree.xpath("//div[@id='postBody']")[0]
+#        article_sections = article.xpath("./div")[2:]
+#
+#        article_body = []
+#        for section_it in article_sections:
+#            if section_it.get('class') == "scale1 mt2":
+#                elem_list = section_it.xpath(".//div[contains(@class, 'post__content__section')]")[0][0]
+#
+#                for elem_it in elem_list:
+#                    can_print = False
+#                    can_print |= (elem_it.tag == "p")
+#                    for i in range(6):
+#                        can_print |= (elem_it.tag == "h{}".format(i+1))
+#                    can_print |= (elem_it.tag == "blockquote")
+#
+#                    if can_print:
+#                        article_body.append(html.tostring(elem_it))
+#
+#            if section_it.get('class') == "":
+#                elem_list = section_it.xpath(".//figure")
+#
+#                for elem_it in elem_list:
+#                    pic_list = elem_it.xpath(".//picture")
+#                    if len(pic_list) == 0:
+#                        continue
+#
+#                    for pic_it in pic_list:
+#                        pic_it.set("style", "display: block; overflow: hidden;")
+#                        pic_it.getparent().set("style", "")
+#
+#                        img_it = pic_it.xpath(".//img")[0]
+#                        pic_it.remove(img_it)
+#
+#                        figcap_list = pic_it.xpath(".//figcaption")
+#                        for figcap_it in figcap_list:
+#                            pic_it.remove(figcap_it)
+#
+#                        img_it = elem_it.xpath(".//noscript/img")[0]
+#                        img_it.set("style", "max-width: 100%; height:auto;")
+#                        pic_it.insert(0, img_it)
+#
+#                    article_body.append(html.tostring(elem_it))
+#
+#        return article_body
 
 #class HeiseHandler(SteinsHandler):
 #    def get_article_body(self, tree):
@@ -513,12 +513,12 @@ def get_handler(source):
         handler = guardian_handler
     #elif "Heise" in source:
     #    handler = HeiseHandler()
-    elif "Quanta Magazine" in source:
-        global quanta_magazine_handler
-        if not "quanta_magazine_handler" in globals():
-            print("DEBUG: QuantaMagazineHandler.")
-            quanta_magazine_handler = QuantaMagazineHandler()
-        handler = quanta_magazine_handler
+    #elif "Quanta Magazine" in source:
+    #    global quanta_magazine_handler
+    #    if not "quanta_magazine_handler" in globals():
+    #        print("DEBUG: QuantaMagazineHandler.")
+    #        quanta_magazine_handler = QuantaMagazineHandler()
+    #    handler = quanta_magazine_handler
     #elif "The Register" in source:
     #    handler = RegisterHandler()
     elif "WIRED" in source:
