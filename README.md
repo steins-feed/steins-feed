@@ -17,10 +17,13 @@ Against whom am I competing?
 1.  ~~Printable HTML.~~
 2.  Machine learning.
 
+*   Write `get_article_head()` with only link as argument.
+*   Write independent printers.
+
 *   Table for authors.
 *   Table for categories.
 *   Use HTML5 layout.
-*   Put HTML into folder.
+*   ~~Put HTML into folder.~~ Eliminate the writing of HTML.
 *   Show progress in terminal.
 
 ## Bugs.

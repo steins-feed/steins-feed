@@ -278,11 +278,15 @@ class FinancialTimesHandler(SteinsHandler):
 
     def get_article_head_cover(self, link):
         tree = get_tree_from_session(link)
-        article = tree.xpath("//div[@class='main-image']")[0]
-        try:
+        article_cover = None
+
+        article = tree.xpath("//div[contains(@class, 'topper ')]")[0]
+        if not len(article.xpath(".//figure")) == 0:
             article_cover = article.xpath(".//figure")[0]
-        except IndexError:
-            article_cover = None
+        article = tree.xpath("//div[@class='main-image']")[0]
+        if not len(article.xpath(".//figure")) == 0:
+            article_cover = article.xpath(".//figure")[0]
+
         return article_cover
 
     def get_article_body_list(self, link):
