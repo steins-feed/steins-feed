@@ -144,9 +144,7 @@ class SteinsHandler:
         figure.append('<figure style="display: block; overflow: hidden;">'.encode('utf-8'))
 
         figure.append('<picture>'.encode('utf-8'))
-        source_list = elem_it.xpath(".//source")
-        for source_it in source_list:
-            figure.append(html.tostring(source_it))
+        figure += self.get_sources(elem_it)
         try:
             image_it = elem_it.xpath(".//img")[0]
         except IndexError:
@@ -175,6 +173,14 @@ class SteinsHandler:
             pass
 
         figure.append('</figure>'.encode('utf-8'))
+        return figure
+
+    def get_sources(self, elem_it):
+        source_list = elem_it.xpath(".//source")
+        figure = []
+        for source_it in source_list:
+            src_it = source_it.get("srcset")
+            figure.append('<source srcset="{}">'.format(src_it).encode('utf-8'))
         return figure
 
 class AtlanticHandler(SteinsHandler):
@@ -217,16 +223,19 @@ class AtlanticHandler(SteinsHandler):
     def get_article_head_cover(self, link):
         tree = get_tree_from_session(link)
         article = tree.xpath("//article")[0]
-        try:
+        article_cover = None
+
+        if not len(article.xpath(".//figure[@class='c-lead-media']")) == 0:
             article_cover = article.xpath(".//figure[@class='c-lead-media']")[0]
-        except IndexError:
-            article_cover = None
+        elif not len(article.xpath(".//figure[contains(@class, 'lead-img')]")) == 0:
+            article_cover = article.xpath(".//figure[contains(@class, 'lead-img')]")[0]
+
         return article_cover
 
     def get_article_body_list(self, link):
         tree = get_tree_from_session(link)
         article = tree.xpath("//article")[0]
-        article_sections = article.xpath(".//section[@itemprop='articleBody']")
+        article_sections = article.xpath(".//section[contains(@id, 'article-section-')]")
 
         article_body_list = []
         for section_it in article_sections:

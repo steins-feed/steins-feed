@@ -27,7 +27,7 @@ def get_session():
 def get_tree_from_session(item_link):
     session = get_session()
     page = session.get(item_link)
-    tree = html.fromstring(page.content)
+    tree = html.fromstring(page.text.encode('utf-16'))
     return tree
 
 def fetch_cookies():
