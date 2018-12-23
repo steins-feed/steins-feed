@@ -52,16 +52,15 @@
     </feed>
 
     <!-- Financial Times -->
+    <!--
     <feed>
         <title>Financial Times World</title>
         <link>https://www.ft.com/world?format=rss</link>
     </feed>
-    <!--
     <feed>
         <title>Financial Times UK</title>
         <link>https://www.ft.com/world/uk?format=rss</link>
     </feed>
-    -->
     <feed>
         <title>Financial Times Companies</title>
         <link>https://www.ft.com/companies?format=rss</link>
@@ -85,6 +84,29 @@
     <feed>
         <title>Financial Times</title>
         <link>https://www.ft.com/?format=rss</link>
+    </feed>
+    -->
+
+    <!-- Financial Times Opinion -->
+    <feed>
+        <title>Financial Times -- The FT View</title>
+        <link>https://www.ft.com/ft-view?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times -- The Big Read</title>
+        <link>https://www.ft.com/world/the-big-read?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times -- Instant Insight</title>
+        <link>https://www.ft.com/instant-insight?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times -- Lex</title>
+        <link>https://www.ft.com/lex?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times -- Alphaville</title>
+        <link>https://ftalphaville.ft.com/rss-feed/</link>
     </feed>
 
     <!-- The Guardian -->
@@ -188,26 +210,32 @@
     </feed>
 
     <!-- Comics -->
+    <!--
     <feed>
         <title>Dilbert</title>
         <link>http://feed.dilbert.com/dilbert/daily_strip?format=xml</link>
     </feed>
+    -->
     <feed>
         <title>Existential Comics</title>
         <link>http://existentialcomics.com/rss.xml</link>
     </feed>
+    <!--
     <feed>
         <title>Good Bear Comics</title>
         <link>https://goodbearcomics.com/feed/</link>
     </feed>
+    -->
     <feed>
         <title>Piled Higher and Deeper</title>
         <link>http://phdcomics.com/gradfeed.php</link>
     </feed>
+    <!--
     <feed>
         <title>Saturday Morning Breakfast Cereal</title>
         <link>https://www.smbc-comics.com/rss.php</link>
     </feed>
+    -->
     <feed>
         <title>XKCD</title>
         <link>https://www.xkcd.com/rss.xml</link>
@@ -337,6 +365,10 @@
         <title>FiveThirtyEight Basketball</title>
         <link>https://fivethirtyeight.com/tag/basketball/feed/</link>
     </feed>
+    <feed>
+        <title>FiveThirtyEight The Lab</title>
+        <link>https://fivethirtyeight.com/tag/the-lab/feed/</link>
+    </feed>
     -->
 
     <!-- The Ringer -->
@@ -350,4 +382,46 @@
         <link>https://www.theringer.com/rss/nba-playoffs/index.xml</link>
     </feed>
     -->
+
+    <!-- Netzpolitik.org -->
+    <feed>
+        <title>Netzpolitik.org Datenschutz</title>
+        <link>https://netzpolitik.org/category/datenschutz/feed</link>
+    </feed>
+    <feed>
+        <title>Netzpolitik.org Überwachung</title>
+        <link>https://netzpolitik.org/category/ueberwachung/feed</link>
+    </feed>
+    <feed>
+        <title>Netzpolitik.org Netze</title>
+        <link>https://netzpolitik.org/category/netze/feed</link>
+    </feed>
+    <feed>
+        <title>Netzpolitik.org Öffentlichkeit</title>
+        <link>https://netzpolitik.org/category/oeffentlichkeit/feed</link>
+    </feed>
+    <feed>
+        <title>Netzpolitik.org Wissen</title>
+        <link>https://netzpolitik.org/category/wissen/feed</link>
+    </feed>
+    <feed>
+        <title>Netzpolitik.org Nutzerrechte</title>
+        <link>https://netzpolitik.org/category/nutzerrechte/feed</link>
+    </feed>
+    <feed>
+        <title>Netzpolitik.org Technologie</title>
+        <link>https://netzpolitik.org/category/technologie/feed</link>
+    </feed>
+    <feed>
+        <title>Netzpolitik.org Kultur</title>
+        <link>https://netzpolitik.org/category/kultur/feed</link>
+    </feed>
+    <feed>
+        <title>Netzpolitik.org Demokratie</title>
+        <link>https://netzpolitik.org/category/demokratie/feed</link>
+    </feed>
+    <feed>
+        <title>Netzpolitik.org</title>
+        <link>https://netzpolitik.org/feed</link>
+    </feed>
 </root>
