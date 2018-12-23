@@ -495,6 +495,16 @@ class WIREDHandler(SteinsHandler):
 #
 #        return article_body
 
+class NetzpolitikHandler(SteinsHandler):
+    def read_summary(self, item_it):
+        idx = item_it['summary'].rfind("</span>")
+        if idx == -1:
+            idx = 0
+        else:
+            idx += 7
+
+        return item_it['summary'][idx:]
+
 # Static factory.
 def get_handler(source):
     if "The Atlantic" in source:
@@ -531,6 +541,12 @@ def get_handler(source):
             print("DEBUG: WIREDHandler.")
             wired_handler = WIREDHandler()
         handler = wired_handler
+    elif "Netzpolitik.org" in source:
+        global netzpolitik_handler
+        if not "netzpolitik_handler" in globals():
+            print("DEBUG: NetzpolitikHandler.")
+            netzpolitik_handler = NetzpolitikHandler()
+        handler = netzpolitik_handler
     else:
         handler = SteinsHandler()
 
