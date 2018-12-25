@@ -424,4 +424,18 @@
         <title>Netzpolitik.org</title>
         <link>https://netzpolitik.org/feed</link>
     </feed>
+
+    <!-- Literature reviews -->
+    <feed>
+        <title>London Review of Books</title>
+        <link>https://cdn.lrb.co.uk/feeds/lrb</link>
+    </feed>
+    <feed>
+        <title>New York Review of Books</title>
+        <link>http://feeds.feedburner.com/nybooks</link>
+    </feed>
+    <feed>
+        <title>The Times Literary Supplement</title>
+        <link>https://www.the-tls.co.uk/home-page/feed/</link>
+    </feed>
 </root>
