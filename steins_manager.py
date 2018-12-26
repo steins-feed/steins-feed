@@ -497,11 +497,12 @@ class WIREDHandler(SteinsHandler):
 
 class NetzpolitikHandler(SteinsHandler):
     def read_summary(self, item_it):
-        idx = item_it['summary'].rfind("</span>")
+        search_str = ">"
+        idx = item_it['summary'].rfind(search_str)
         if idx == -1:
             idx = 0
         else:
-            idx += 7
+            idx += len(search_str)
 
         return item_it['summary'][idx:]
 
