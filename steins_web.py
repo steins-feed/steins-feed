@@ -14,7 +14,17 @@ def get_browser():
         gecko_path = dir_name + os.sep + "geckodriver"
         options = webdriver.firefox.options.Options()
         #options.add_argument('-headless')
-        browser = webdriver.Firefox(executable_path=gecko_path, firefox_options=options)
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference('print.print_footerleft', "")
+        profile.set_preference('print.print_footercenter', "")
+        profile.set_preference('print.print_footerright', "")
+        profile.set_preference('print.print_headerleft', "")
+        profile.set_preference('print.print_headercenter', "")
+        profile.set_preference('print.print_headerright', "")
+        profile.set_preference('reader.content_width', 4)
+        profile.set_preference('reader.font_size', 3)
+        profile.set_preference('reader.line_height', 3)
+        browser = webdriver.Firefox(executable_path=gecko_path, firefox_options=options, firefox_profile=profile)
     return browser
 
 def get_session():
