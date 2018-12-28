@@ -466,4 +466,90 @@
         <title>The New Yorker</title>
         <link>https://www.newyorker.com/feed/everything</link>
     </feed>
+
+    <!-- The Economist -->
+    <!--
+    <feed>
+        <title>The Economist Letters</title>
+        <link>https://www.economist.com/letters/rss.xml</link>
+    </feed>
+    -->
+    <feed>
+        <title>The Economist Leaders</title>
+        <link>https://www.economist.com/leaders/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Briefings</title>
+        <link>https://www.economist.com/briefing/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Special Reports</title>
+        <link>https://www.economist.com/special-report/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Britain</title>
+        <link>https://www.economist.com/britain/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Europe</title>
+        <link>https://www.economist.com/europe/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist United States</title>
+        <link>https://www.economist.com/united-states/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Americas</title>
+        <link>https://www.economist.com/the-americas/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Middle East &amp; Africa</title>
+        <link>https://www.economist.com/middle-east-and-africa/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Asia</title>
+        <link>https://www.economist.com/asia/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist China</title>
+        <link>https://www.economist.com/china/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist International</title>
+        <link>https://www.economist.com/international/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Business</title>
+        <link>https://www.economist.com/business/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Finance &amp; Economics</title>
+        <link>https://www.economist.com/finance-and-economics/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Science &amp; Technology</title>
+        <link>https://www.economist.com/science-and-technology/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Books &amp; Arts</title>
+        <link>https://www.economist.com/books-and-arts/rss.xml</link>
+    </feed>
+    <!--
+    <feed>
+        <title>The Economist Obituaries</title>
+        <link>https://www.economist.com/obituary/rss.xml</link>
+    </feed>
+    -->
+    <feed>
+        <title>The Economist Graphic Detail</title>
+        <link>https://www.economist.com/graphic-detail/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Indicators</title>
+        <link>https://www.economist.com/economic-and-financial-indicators/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist</title>
+        <link>https://www.economist.com/the-world-this-week/rss.xml</link>
+    </feed>
 </root>
