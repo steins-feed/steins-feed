@@ -434,4 +434,38 @@
         <title>The Times Literary Supplement</title>
         <link>https://www.the-tls.co.uk/home-page/feed/</link>
     </feed>
+
+    <!-- The New Yorker -->
+    <feed>
+        <title>The New Yorker News</title>
+        <link>https://www.newyorker.com/feed/news</link>
+    </feed>
+    <feed>
+        <title>The New Yorker Culture</title>
+        <link>https://www.newyorker.com/feed/culture</link>
+    </feed>
+    <feed>
+        <title>The New Yorker Humor</title>
+        <link>https://www.newyorker.com/feed/humor</link>
+    </feed>
+    <feed>
+        <title>The New Yorker Books &amp; Fiction</title>
+        <link>https://www.newyorker.com/feed/books</link>
+    </feed>
+    <feed>
+        <title>The New Yorker Science &amp; Technology</title>
+        <link>https://www.newyorker.com/feed/tech</link>
+    </feed>
+    <feed>
+        <title>The New Yorker Business</title>
+        <link>https://www.newyorker.com/feed/business</link>
+    </feed>
+    <feed>
+        <title>The New Yorker Sporting Scene</title>
+        <link>https://www.newyorker.com/feed/news/sporting-scene</link>
+    </feed>
+    <feed>
+        <title>The New Yorker</title>
+        <link>https://www.newyorker.com/feed/everything</link>
+    </feed>
 </root>
