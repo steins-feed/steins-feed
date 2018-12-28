@@ -18,6 +18,10 @@ def steins_read(c):
             item_title = handler.read_title(item_it)
             item_time = handler.read_time(item_it)
 
+            # Punish cheaters.
+            if time.strptime(item_time, "%Y-%m-%d %H:%M:%S") > time.localtime():
+                continue
+
             if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_title, item_time, )).fetchone()[0] == 0:
                 item_link = handler.read_link(item_it)
                 item_summary = handler.read_summary(item_it)

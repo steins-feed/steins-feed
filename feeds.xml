@@ -206,12 +206,10 @@
     </feed>
 
     <!-- Comics -->
-    <!--
     <feed>
         <title>Dilbert</title>
         <link>http://feed.dilbert.com/dilbert/daily_strip?format=xml</link>
     </feed>
-    -->
     <feed>
         <title>Existential Comics</title>
         <link>http://existentialcomics.com/rss.xml</link>
