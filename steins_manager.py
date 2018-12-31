@@ -414,7 +414,7 @@ class NewYorkerHandler(SteinsHandler):
             file_opened = True
             tree = etree.fromstring(f.read())
             try:
-                node = tree.xpath("//wired")[0]
+                node = tree.xpath("//new_yorker")[0]
             except IndexError:
                 return
         if not file_opened:
