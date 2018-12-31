@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-def get_browser():
+def get_browser(filename='sign_in.xml'):
     global browser
     if not "browser" in globals():
         print("DEBUG: Firefox.")
@@ -32,8 +32,8 @@ def get_browser():
 
         browser = webdriver.Firefox(executable_path=gecko_path, firefox_options=options, firefox_profile=profile)
 
-        filename = dir_name + os.sep + "sign_in.xml"
-        with open(filename, 'r') as f:
+        file_name = dir_name + os.sep + filename
+        with open(file_name, 'r') as f:
             file_opened = True
             tree = etree.fromstring(f.read())
             try:

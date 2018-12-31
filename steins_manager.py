@@ -572,7 +572,7 @@ class WIREDHandler(SteinsHandler):
         return article_body_list
 
 # Static factory.
-def get_handler(source):
+def get_handler(source, filename="sign_in.xml"):
     if "The Atlantic" in source:
         global atlantic_handler
         if not "atlantic_handler" in globals():
@@ -629,7 +629,7 @@ def get_handler(source):
         handler = SteinsHandler()
 
     dir_name = os.path.dirname(os.path.abspath(__file__))
-    file_name = dir_name + os.sep + "sign_in.xml"
+    file_name = dir_name + os.sep + filename
     if os.path.exists(file_name) and not handler.signed_in:
         handler.sign_in(file_name)
     return handler
