@@ -256,6 +256,10 @@
         <title>Scientific American</title>
         <link>http://rss.sciam.com/ScientificAmerican-Global</link>
     </feed>
+    <feed>
+        <title>Factorio</title>
+        <link>https://factorio.com/blog/rss</link>
+    </feed>
 
     <!-- The Register -->
     <!--
