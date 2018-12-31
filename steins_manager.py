@@ -198,6 +198,8 @@ class AtlanticHandler(SteinsHandler):
 
         browser = get_browser()
         browser.get("https://accounts.theatlantic.com/login/")
+        wait = WebDriverWait(browser, 30)
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'I Agree')]")))
         button = browser.find_elements_by_xpath("//button[contains(text(), 'I Agree')]")[0]
         button.click()
 
@@ -244,6 +246,37 @@ class AtlanticHandler(SteinsHandler):
                 article_body_list.append(elem_it)
 
         return article_body_list
+
+class EconomistHandler(SteinsHandler):
+    def sign_in(self, filename):
+        with open(filename, 'r') as f:
+            file_opened = True
+            tree = etree.fromstring(f.read())
+            try:
+                node = tree.xpath("//economist")[0]
+            except IndexError:
+                return
+        if not file_opened:
+            return
+
+        browser = get_browser()
+        browser.get("https://www.economist.com")
+        button = browser.find_element_by_xpath("//a[contains(@href, '/free-email-newsletter-signup?tab=login')]")
+        button.click()
+        button = browser.find_element_by_xpath("//button[contains(text(), 'Log In')]")
+        button.click()
+
+        email = browser.find_element_by_xpath("//input[contains(@placeholder, 'E-mail address')]")
+        email.send_keys(node.xpath("./email")[0].text)
+        pwd = browser.find_element_by_xpath("//input[contains(@placeholder, 'Password')]")
+        pwd.send_keys(node.xpath("./password")[0].text)
+        button = browser.find_element_by_id("submit-login")
+        button.click()
+
+        wait = WebDriverWait(browser, 30)
+        wait.until(EC.title_contains("World News"))
+        fetch_cookies()
+        self.signed_in = True
 
 class FinancialTimesHandler(SteinsHandler):
     def sign_in(self, filename):
@@ -546,6 +579,12 @@ def get_handler(source):
             print("DEBUG: AtlanticHandler.")
             atlantic_handler = AtlanticHandler()
         handler = atlantic_handler
+    elif "Economist" in source:
+        global economist_handler
+        if not "economist_handler" in globals():
+            print("DEBUG: EconomistHandler.")
+            economist_handler = EconomistHandler()
+        handler = economist_handler
     elif "Financial Times" in source:
         global financial_times_handler
         if not "financial_times_handler" in globals():
