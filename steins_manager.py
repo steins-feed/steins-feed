@@ -9,6 +9,7 @@ from lxml import etree, html
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 
 from steins_web import *
 
@@ -256,20 +257,25 @@ class FinancialTimesHandler(SteinsHandler):
         if not file_opened:
             return
 
-        browser = get_browser()
-        browser.get("https://accounts.ft.com/login/")
-        email = browser.find_element_by_id("enter-email")
-        email.send_keys(node.xpath("./email")[0].text)
-        button = browser.find_element_by_id("enter-email-next")
-        button.click()
-        button = browser.find_element_by_id("sso-redirect-button")
-        button.click()
-        uid = browser.find_element_by_id("userid")
-        uid.send_keys(node.xpath("./user_id")[0].text)
-        pwd = browser.find_element_by_id("pwd")
-        pwd.send_keys(node.xpath("./password")[0].text)
-        button = browser.find_element_by_name("submit")
-        button.click()
+        while True:
+            try:
+                browser = get_browser()
+                browser.get("https://accounts.ft.com/login/")
+                email = browser.find_element_by_id("enter-email")
+                email.send_keys(node.xpath("./email")[0].text)
+                button = browser.find_element_by_id("enter-email-next")
+                button.click()
+                button = browser.find_element_by_id("sso-redirect-button")
+                button.click()
+                uid = browser.find_element_by_id("userid")
+                uid.send_keys(node.xpath("./user_id")[0].text)
+                pwd = browser.find_element_by_id("pwd")
+                pwd.send_keys(node.xpath("./password")[0].text)
+                button = browser.find_element_by_name("submit")
+                button.click()
+                break
+            except NoSuchElementException:
+                print("ERROR: FinancialTimesHandler.")
 
         wait = WebDriverWait(browser, 30)
         wait.until(EC.title_contains("Financial Times"))
@@ -339,7 +345,37 @@ class GuardianHandler(SteinsHandler):
         article_elements = article.xpath(".//div[@itemprop='articleBody']")[0]
         return article_elements
 
-class WIREDHandler(SteinsHandler):
+#class HeiseHandler(SteinsHandler):
+#    def get_article_body(self, tree):
+#        article = tree.xpath("//article")[0]
+#        article_sections = article.xpath(".//div[@class='article-content']")[0]
+#
+#        article_body = []
+#        for section_it in article_sections:
+#            for elem_it in section_it:
+#                can_print = False
+#                can_print |= (elem_it.tag == "p")
+#                for i in range(6):
+#                    can_print |= (elem_it.tag == "h{}".format(i+1))
+#                can_print |= (elem_it.tag == "blockquote")
+#
+#                if can_print:
+#                    article_body.append(elem_it)
+#
+#        return article_body
+
+class NetzpolitikHandler(SteinsHandler):
+    def read_summary(self, item_it):
+        search_str = ">"
+        idx = item_it['summary'].rfind(search_str)
+        if idx == -1:
+            idx = 0
+        else:
+            idx += len(search_str)
+
+        return item_it['summary'][idx:]
+
+class NewYorkerHandler(SteinsHandler):
     def sign_in(self, filename):
         with open(filename, 'r') as f:
             file_opened = True
@@ -352,39 +388,18 @@ class WIREDHandler(SteinsHandler):
             return
 
         browser = get_browser()
-        browser.get("https://www.wired.com/account/sign-in/")
-        email = browser.find_element_by_id("email-input")
+        browser.get("https://account.newyorker.com")
+        email = browser.find_element_by_id("username")
         email.send_keys(node.xpath("./email")[0].text)
-        pwd = browser.find_element_by_id("password-input")
+        pwd = browser.find_element_by_id("userpass")
         pwd.send_keys(node.xpath("./password")[0].text)
-        button = browser.find_element_by_xpath("//input[contains(@value, 'Sign In')]")
+        button = browser.find_element_by_id("signIn")
         button.click()
 
         wait = WebDriverWait(browser, 30)
-        wait.until_not(EC.title_contains("Sign in"))
+        wait.until(EC.element_to_be_clickable((By.ID, "profileEdit")))
         fetch_cookies()
         self.signed_in = True
-
-    def get_article_head_cover(self, link):
-        tree = get_tree_from_session(link)
-        try:
-            article = tree.xpath("//div[contains(@class, 'article-main-component__lede')]")[0]
-            article_cover = article.xpath(".//figure")[0]
-        except IndexError:
-            article_cover = None
-        return article_cover
-
-    def get_article_body_list(self, link):
-        tree = get_tree_from_session(link)
-        article = tree.xpath("//article")[0]
-        article_body = article.xpath("./div")[0]
-        if article_body[0].tag == "section":
-            article_body_list = []
-            for section_it in article_body:
-                article_body_list += section_it
-        else:
-            article_body_list = article_body
-        return article_body_list
 
 #class QuantaMagazineHandler(SteinsHandler):
 #    def get_article_head(self, row):
@@ -458,25 +473,6 @@ class WIREDHandler(SteinsHandler):
 #
 #        return article_body
 
-#class HeiseHandler(SteinsHandler):
-#    def get_article_body(self, tree):
-#        article = tree.xpath("//article")[0]
-#        article_sections = article.xpath(".//div[@class='article-content']")[0]
-#
-#        article_body = []
-#        for section_it in article_sections:
-#            for elem_it in section_it:
-#                can_print = False
-#                can_print |= (elem_it.tag == "p")
-#                for i in range(6):
-#                    can_print |= (elem_it.tag == "h{}".format(i+1))
-#                can_print |= (elem_it.tag == "blockquote")
-#
-#                if can_print:
-#                    article_body.append(elem_it)
-#
-#        return article_body
-
 #class RegisterHandler(SteinsHandler):
 #    def get_article_body(self, tree):
 #        article_sections = tree.xpath("//div[@id='body']")[0]
@@ -495,16 +491,52 @@ class WIREDHandler(SteinsHandler):
 #
 #        return article_body
 
-class NetzpolitikHandler(SteinsHandler):
-    def read_summary(self, item_it):
-        search_str = ">"
-        idx = item_it['summary'].rfind(search_str)
-        if idx == -1:
-            idx = 0
-        else:
-            idx += len(search_str)
+class WIREDHandler(SteinsHandler):
+    def sign_in(self, filename):
+        with open(filename, 'r') as f:
+            file_opened = True
+            tree = etree.fromstring(f.read())
+            try:
+                node = tree.xpath("//wired")[0]
+            except IndexError:
+                return
+        if not file_opened:
+            return
 
-        return item_it['summary'][idx:]
+        browser = get_browser()
+        browser.get("https://www.wired.com/account/sign-in/")
+        email = browser.find_element_by_id("email-input")
+        email.send_keys(node.xpath("./email")[0].text)
+        pwd = browser.find_element_by_id("password-input")
+        pwd.send_keys(node.xpath("./password")[0].text)
+        button = browser.find_element_by_xpath("//input[contains(@value, 'Sign In')]")
+        button.click()
+
+        wait = WebDriverWait(browser, 30)
+        wait.until_not(EC.title_contains("Sign in"))
+        fetch_cookies()
+        self.signed_in = True
+
+    def get_article_head_cover(self, link):
+        tree = get_tree_from_session(link)
+        try:
+            article = tree.xpath("//div[contains(@class, 'article-main-component__lede')]")[0]
+            article_cover = article.xpath(".//figure")[0]
+        except IndexError:
+            article_cover = None
+        return article_cover
+
+    def get_article_body_list(self, link):
+        tree = get_tree_from_session(link)
+        article = tree.xpath("//article")[0]
+        article_body = article.xpath("./div")[0]
+        if article_body[0].tag == "section":
+            article_body_list = []
+            for section_it in article_body:
+                article_body_list += section_it
+        else:
+            article_body_list = article_body
+        return article_body_list
 
 # Static factory.
 def get_handler(source):
@@ -528,6 +560,18 @@ def get_handler(source):
         handler = guardian_handler
     #elif "Heise" in source:
     #    handler = HeiseHandler()
+    elif "Netzpolitik.org" in source:
+        global netzpolitik_handler
+        if not "netzpolitik_handler" in globals():
+            print("DEBUG: NetzpolitikHandler.")
+            netzpolitik_handler = NetzpolitikHandler()
+        handler = netzpolitik_handler
+    elif "The New Yorker" in source:
+        global new_yorker_handler
+        if not "new_yorker_handler" in globals():
+            print("DEBUG: NewYorkerHandler.")
+            new_yorker_handler = NewYorkerHandler()
+        handler = new_yorker_handler
     #elif "Quanta Magazine" in source:
     #    global quanta_magazine_handler
     #    if not "quanta_magazine_handler" in globals():
@@ -542,12 +586,6 @@ def get_handler(source):
             print("DEBUG: WIREDHandler.")
             wired_handler = WIREDHandler()
         handler = wired_handler
-    elif "Netzpolitik.org" in source:
-        global netzpolitik_handler
-        if not "netzpolitik_handler" in globals():
-            print("DEBUG: NetzpolitikHandler.")
-            netzpolitik_handler = NetzpolitikHandler()
-        handler = netzpolitik_handler
     else:
         handler = SteinsHandler()
 
