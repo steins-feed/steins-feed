@@ -167,41 +167,10 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.end_headers()
         # Print.
         else:
-            idx = self.path.find("/", 1)
-            item_id = self.path[idx+1:]
-            row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
-            self.print_response(row)
-            print("PRINT: {}.".format(row[1]))
+            print("PRINT deprecated.")
 
         conn.commit()
         conn.close()
-
-    def print_response(self, row):
-        # Load page.
-        handler = get_handler(row[4])
-        article_head = handler.get_article_head(row)
-        article_body = handler.get_article_body(row[5])
-
-        # Write header.
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-
-        # Write payload.
-        self.wfile.write("<!DOCTYPE html>\n".encode('utf-8'))
-        self.wfile.write("<html>\n".encode('utf-8'))
-        self.wfile.write("<head>\n".encode('utf-8'))
-        self.wfile.write("<meta charset=\"UTF-8\">".encode('utf-8'))
-        self.wfile.write("<title>{}</title>\n".format(row[1]).encode('utf-8'))
-        self.wfile.write("</head>\n".encode('utf-8'))
-        self.wfile.write("<body>\n".encode('utf-8'))
-        for e_it in article_head:
-            self.wfile.write(e_it + '\n'.encode('utf-8'))
-        self.wfile.write("<hr>\n".encode('utf-8'))
-        for e_it in article_body:
-            self.wfile.write(e_it + '\n'.encode('utf-8'))
-        self.wfile.write("</body>\n".encode('utf-8'))
-        self.wfile.write("</html>\n".encode('utf-8'))
 
     def settings_response(self):
         conn = sqlite3.connect(db_name)

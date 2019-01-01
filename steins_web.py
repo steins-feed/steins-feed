@@ -43,7 +43,6 @@ def get_browser(filename='sign_in.xml'):
         if not file_opened:
             return
 
-        browser = get_browser()
         browser.get("https://getpocket.com/ff_signin")
         wait = WebDriverWait(browser, 30)
         wait.until(EC.element_to_be_clickable((By.ID, "submit-btn")))

@@ -70,8 +70,6 @@ def steins_write(c):
         f.write("<form>\n")
         f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/like/{}\" value=\"Like\">\n".format(row_it[0]))
         f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/dislike/{}\" value=\"Dislike\">\n".format(row_it[0]))
-        if get_handler(row_it[4]).can_print():
-            f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/print/{}\" value=\"Print\">\n".format(row_it[0]))
         f.write("</form>\n")
         f.write("</p>\n")
 
