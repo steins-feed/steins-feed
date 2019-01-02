@@ -175,24 +175,28 @@
 
     <!-- Financial Times Opinion -->
     <feed>
-        <title>Financial Times -- The FT View</title>
+        <title>Financial Times Opinion -- The FT View</title>
         <link>https://www.ft.com/ft-view?format=rss</link>
     </feed>
     <feed>
-        <title>Financial Times -- The Big Read</title>
+        <title>Financial Times Opinion -- The Big Read</title>
         <link>https://www.ft.com/the-big-read?format=rss</link>
     </feed>
     <feed>
-        <title>Financial Times -- Instant Insight</title>
+        <title>Financial Times Opinion -- Instant Insight</title>
         <link>https://www.ft.com/instant-insight?format=rss</link>
     </feed>
     <feed>
-        <title>Financial Times -- Lex</title>
+        <title>Financial Times Opinion -- Lex</title>
         <link>https://www.ft.com/lex?format=rss</link>
     </feed>
     <feed>
-        <title>Financial Times -- Alphaville</title>
+        <title>Financial Times Opinion -- Alphaville</title>
         <link>https://ftalphaville.ft.com/rss-feed/</link>
+    </feed>
+    <feed>
+        <title>Financial Times Opinion</title>
+        <link>https://www.ft.com/opinion?format=rss</link>
     </feed>
 
     <!-- FiveThirtyEight -->
@@ -266,6 +270,20 @@
         <link>https://www.theguardian.com/tone/obituaries/rss</link>
     </feed>
     -->
+
+    <!-- The Guardian -->
+    <feed>
+        <title>The Guardian Editorial</title>
+        <link>https://www.theguardian.com/profile/editorial/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Editorials</title>
+        <link>https://www.theguardian.com/tone/editorials/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian -- The long read</title>
+        <link>https://www.theguardian.com/news/series/the-long-read/rss</link>
+    </feed>
 
     <!-- Heise -->
     <!--
