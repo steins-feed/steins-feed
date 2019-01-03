@@ -541,8 +541,16 @@
         <link>http://chalkdustmagazine.com/feed/</link>
     </feed>
     <feed>
+        <title>Factorio</title>
+        <link>https://factorio.com/blog/rss</link>
+    </feed>
+    <feed>
         <title>Gates Notes</title>
         <link>https://www.gatesnotes.com/rss</link>
+    </feed>
+    <feed>
+        <title>Manga Stream</title>
+        <link>https://readms.net/rss</link>
     </feed>
     <feed>
         <title>TED Ideas</title>
@@ -555,10 +563,6 @@
     <feed>
         <title>Scientific American</title>
         <link>http://rss.sciam.com/ScientificAmerican-Global</link>
-    </feed>
-    <feed>
-        <title>Factorio</title>
-        <link>https://factorio.com/blog/rss</link>
     </feed>
 
     <!-- Literature reviews -->

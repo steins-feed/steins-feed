@@ -205,6 +205,18 @@ class GuardianHandler(SteinsHandler):
         fetch_cookies()
         self.signed_in = True
 
+class MangaStreamHandler(SteinsHandler):
+    def parse(self, feed_link):
+        tree = get_tree_from_session(feed_link)
+        titles = tree.xpath("//item/title")
+        for title_it in titles:
+            if not "One Piece" in title_it.text:
+                item_it = title_it.getparent()
+                channel_it = item_it.getparent()
+                channel_it.remove(item_it)
+        d = feedparser.parse(html.tostring(tree))
+        return d
+
 class NetzpolitikHandler(SteinsHandler):
     def read_summary(self, item_it):
         search_str = ">"
@@ -294,6 +306,12 @@ def get_handler(source, filename="sign_in.xml"):
             print("DEBUG: GuardianHandler.")
             guardian_handler = GuardianHandler()
         handler = guardian_handler
+    elif "Manga Stream" in source:
+        global manga_stream_handler
+        if not "manga_stream_handler" in globals():
+            print("DEBUG: MangaStreamHandler.")
+            manga_stream_handler = MangaStreamHandler()
+        handler = manga_stream_handler
     elif "Netzpolitik.org" in source:
         global netzpolitik_handler
         if not "netzpolitik_handler" in globals():
