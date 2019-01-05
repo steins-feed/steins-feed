@@ -461,6 +461,52 @@
     </feed>
     -->
 
+    <!-- t3n -->
+    <feed>
+        <title>t3n Digitale Wirtschaft</title>
+        <link>https://t3n.de/tag/digitale-wirtschaft/rss.xml</link>
+    </feed>
+    <feed>
+        <title>t3n Software &amp; Infrastruktur</title>
+        <link>https://t3n.de/tag/software-infrastruktur/rss.xml</link>
+    </feed>
+    <feed>
+        <title>t3n Entwicklung &amp; Design</title>
+        <link>https://t3n.de/tag/entwicklung-design/rss.xml</link>
+    </feed>
+    <feed>
+        <title>t3n Marketing</title>
+        <link>https://t3n.de/tag/marketing/rss.xml</link>
+    </feed>
+    <feed>
+        <title>t3n Gadgets &amp; Lifestyle</title>
+        <link>https://t3n.de/tag/gadgets-lifestyle/rss.xml</link>
+    </feed>
+    <feed>
+        <title>t3n Startups</title>
+        <link>https://t3n.de/tag/startups/rss.xml</link>
+    </feed>
+    <feed>
+        <title>t3n Karriere</title>
+        <link>https://t3n.de/tag/karriere/rss.xml</link>
+    </feed>
+    <feed>
+        <title>t3n E-Commerce</title>
+        <link>https://t3n.de/tag/e-commerce/rss.xml</link>
+    </feed>
+    <feed>
+        <title>t3n Mobilität</title>
+        <link>https://t3n.de/tag/mobilitaet/rss.xml</link>
+    </feed>
+    <feed>
+        <title>t3n Digitale Gesellschaft</title>
+        <link>https://t3n.de/tag/digitale-gesellschaft/rss.xml</link>
+    </feed>
+    <feed>
+        <title>t3n</title>
+        <link>https://t3n.de/rss.xml</link>
+    </feed>
+
     <!-- WIRED -->
     <feed>
         <title>WIRED Guides</title>
