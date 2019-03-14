@@ -25,7 +25,18 @@ class SteinsHandler:
 
     def read_summary(self, item_it):
         try:
-            return item_it['summary']
+            summary = item_it['summary']
+
+            while True:
+                search_str1 = "<img"
+                idx1 = summary.find(search_str1)
+                if idx1 == -1:
+                    break
+                search_str2 = ">"
+                idx2 = summary.find(search_str2, idx1)
+                summary = summary[:idx1] + summary[idx2 + len(search_str2):]
+
+            return summary
         except KeyError:
             return ""
 
@@ -217,17 +228,6 @@ class MangaStreamHandler(SteinsHandler):
         d = feedparser.parse(html.tostring(tree))
         return d
 
-class NetzpolitikHandler(SteinsHandler):
-    def read_summary(self, item_it):
-        search_str = ">"
-        idx = item_it['summary'].rfind(search_str)
-        if idx == -1:
-            idx = 0
-        else:
-            idx += len(search_str)
-
-        return item_it['summary'][idx:]
-
 class NewYorkerHandler(SteinsHandler):
     def sign_in(self, filename):
         with open(filename, 'r') as f:
@@ -312,12 +312,6 @@ def get_handler(source, filename="sign_in.xml"):
             print("DEBUG: MangaStreamHandler.")
             manga_stream_handler = MangaStreamHandler()
         handler = manga_stream_handler
-    elif "Netzpolitik.org" in source:
-        global netzpolitik_handler
-        if not "netzpolitik_handler" in globals():
-            print("DEBUG: NetzpolitikHandler.")
-            netzpolitik_handler = NetzpolitikHandler()
-        handler = netzpolitik_handler
     elif "The New Yorker" in source:
         global new_yorker_handler
         if not "new_yorker_handler" in globals():
