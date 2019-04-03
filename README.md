@@ -3,38 +3,21 @@
 Content aggregator.
 Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 
-How to make it addictive?
+## TODO (major)
 
-*   Natasha Schüll. Addiction by Design.
-*   Nir Eyal. Hooked: Hot to Build Habit-Forming Products.
+1.  Adapt Mozilla Firefox reader view.
+2.  Use machine learning and NLP for ranking.
 
-Against whom am I competing?
-
-*   [Selfoss](https://selfoss.aditu.de/)
-
-## TODO
-
-1.  ~~Printable HTML.~~
-2.  Machine learning.
-
-*   Write `get_article_head()` with only link as argument.
-*   Write independent printers.
+## TODO (minor)
 
 *   Table for authors.
 *   Table for categories.
 *   Use HTML5 layout.
-*   ~~Put HTML into folder.~~ Eliminate the writing of HTML.
-*   Show progress in terminal.
-
-## Bugs.
-
-*   Interactive figures (`iframe`).
-*   Lazy figures.
+*   Return HTML upon request.
 
 ## Sources
 
 *   Facebook
-*   McKinsey Insights
 *   Medium
 *   Onion
 *   Reddit

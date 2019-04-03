@@ -9,7 +9,7 @@ from lxml import etree, html
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 from steins_web import *
 
@@ -94,8 +94,8 @@ class AtlanticHandler(SteinsHandler):
         browser = get_browser()
         browser.get("https://accounts.theatlantic.com/login/")
         wait = WebDriverWait(browser, 30)
-        wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'I Agree')]")))
-        button = browser.find_elements_by_xpath("//button[contains(text(), 'I Agree')]")[0]
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'I Accept')]")))
+        button = browser.find_elements_by_xpath("//button[contains(text(), 'I Accept')]")[0]
         button.click()
 
         email = browser.find_element_by_name("login-email")
