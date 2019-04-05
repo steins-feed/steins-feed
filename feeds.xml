@@ -1,6 +1,32 @@
 <?xml version="1.0"?>
 
 <root>
+    <!-- Aeon.co -->
+    <feed>
+        <title>Aeon.co Philosophy</title>
+        <link>https://aeon.co/philosophy.rss</link>
+    </feed>
+    <feed>
+        <title>Aeon.co Science</title>
+        <link>https://aeon.co/science.rss</link>
+    </feed>
+    <feed>
+        <title>Aeon.co Psychology</title>
+        <link>https://aeon.co/psychology.rss</link>
+    </feed>
+    <feed>
+        <title>Aeon.co Society</title>
+        <link>https://aeon.co/society.rss</link>
+    </feed>
+    <feed>
+        <title>Aeon.co Culture</title>
+        <link>https://aeon.co/culture.rss</link>
+    </feed>
+    <feed>
+        <title>Aeon.co</title>
+        <link>https://aeon.co/feed.rss</link>
+    </feed>
+
     <!-- The Atlantic -->
     <!--
     <feed>
@@ -49,6 +75,32 @@
     <feed>
         <title>The Atlantic</title>
         <link>https://www.theatlantic.com/feed/best-of/</link>
+    </feed>
+
+    <!-- Capital.de -->
+    <feed>
+        <title>Capital.de Geld &amp; Versicherungen</title>
+        <link>https://www.capital.de/thema/geld-versicherungen/feed</link>
+    </feed>
+    <feed>
+        <title>Capital.de Immobilien</title>
+        <link>https://www.capital.de/thema/immobilien/feed</link>
+    </feed>
+    <feed>
+        <title>Capital.de Wirtschaft &amp; Politik</title>
+        <link>https://www.capital.de/thema/wirtschaft-politik/feed</link>
+    </feed>
+    <feed>
+        <title>Capital.de Karriere</title>
+        <link>https://www.capital.de/thema/karriere/feed</link>
+    </feed>
+    <feed>
+        <title>Capital.de Leben</title>
+        <link>https://www.capital.de/thema/leben/feed</link>
+    </feed>
+    <feed>
+        <title>Capital.de</title>
+        <link>https://www.capital.de/feed</link>
     </feed>
 
     <!-- The Economist -->
@@ -325,6 +377,36 @@
     </feed>
     -->
 
+    <!-- MIT Technology Review -->
+    <feed>
+        <title>MIT Technology Review Biomedicine</title>
+        <link>https://www.technologyreview.com/c/biomedicine/rss/</link>
+    </feed>
+    <feed>
+        <title>MIT Technology Review Business</title>
+        <link>https://www.technologyreview.com/c/business/rss/</link>
+    </feed>
+    <feed>
+        <title>MIT Technology Review Computing</title>
+        <link>https://www.technologyreview.com/c/computing/rss/</link>
+    </feed>
+    <feed>
+        <title>MIT Technology Review Energy</title>
+        <link>https://www.technologyreview.com/c/energy/rss/</link>
+    </feed>
+    <feed>
+        <title>MIT Technology Review Mobile</title>
+        <link>https://www.technologyreview.com/c/mobile/rss/</link>
+    </feed>
+    <feed>
+        <title>MIT Technology Review Robotics</title>
+        <link>https://www.technologyreview.com/c/robotics/rss/</link>
+    </feed>
+    <feed>
+        <title>MIT Technology Review</title>
+        <link>https://www.technologyreview.com/stories.rss</link>
+    </feed>
+
     <!-- Netzpolitik.org -->
     <feed>
         <title>Netzpolitik.org Datenschutz</title>
@@ -367,6 +449,48 @@
         <link>https://netzpolitik.org/feed</link>
     </feed>
 
+    <!-- New Scientist -->
+    <feed>
+        <title>New Scientist News</title>
+        <link>https://feeds.newscientist.com/science-news</link>
+    </feed>
+    <feed>
+        <title>New Scientist Features</title>
+        <link>https://feeds.newscientist.com/features</link>
+    </feed>
+    <feed>
+        <title>New Scientist Physics</title>
+        <link>https://feeds.newscientist.com/physics-math</link>
+    </feed>
+    <feed>
+        <title>New Scientist Technology</title>
+        <link>https://feeds.newscientist.com/tech</link>
+    </feed>
+    <feed>
+        <title>New Scientist Space</title>
+        <link>https://feeds.newscientist.com/space</link>
+    </feed>
+    <feed>
+        <title>New Scientist Life</title>
+        <link>https://feeds.newscientist.com/science-life</link>
+    </feed>
+    <feed>
+        <title>New Scientist Earth</title>
+        <link>https://feeds.newscientist.com/environment</link>
+    </feed>
+    <feed>
+        <title>New Scientist Health</title>
+        <link>https://feeds.newscientist.com/health</link>
+    </feed>
+    <feed>
+        <title>New Scientist Humans</title>
+        <link>https://feeds.newscientist.com/humans</link>
+    </feed>
+    <feed>
+        <title>New Scientist</title>
+        <link>https://feeds.newscientist.com</link>
+    </feed>
+
     <!-- The New Yorker -->
     <feed>
         <title>The New Yorker News</title>
@@ -401,6 +525,62 @@
     <feed>
         <title>The New Yorker</title>
         <link>https://www.newyorker.com/feed/everything</link>
+    </feed>
+
+    <!-- Prospect Magazine -->
+    <feed>
+        <title>Prospect Magazine Politics</title>
+        <link>https://www.prospectmagazine.co.uk/category/politics/feed</link>
+    </feed>
+    <feed>
+        <title>Prospect Magazine Economics &amp; Finance</title>
+        <link>https://www.prospectmagazine.co.uk/category/economics-and-finance/feed</link>
+    </feed>
+    <feed>
+        <title>Prospect Magazine World</title>
+        <link>https://www.prospectmagazine.co.uk/category/world/feed</link>
+    </feed>
+    <feed>
+        <title>Prospect Magazine Arts &amp; Books</title>
+        <link>https://www.prospectmagazine.co.uk/category/arts-and-books/feed</link>
+    </feed>
+    <feed>
+        <title>Prospect Magazine Life</title>
+        <link>https://www.prospectmagazine.co.uk/category/life/feed</link>
+    </feed>
+    <feed>
+        <title>Prospect Magazine Science &amp; Technology</title>
+        <link>https://www.prospectmagazine.co.uk/category/science-and-technology/feed</link>
+    </feed>
+    <feed>
+        <title>Prospect Magazine Philosophy</title>
+        <link>https://www.prospectmagazine.co.uk/category/philosophy/feed</link>
+    </feed>
+    <feed>
+        <title>Prospect Magazine</title>
+        <link>https://www.prospectmagazine.co.uk/home/feed</link>
+    </feed>
+
+    <!-- Quillette -->
+    <feed>
+        <title>Quillette Features</title>
+        <link>https://quillette.com/category/features/feed</link>
+    </feed>
+    <feed>
+        <title>Quillette Science &amp; Tech</title>
+        <link>https://quillette.com/category/science-tech/feed</link>
+    </feed>
+    <feed>
+        <title>Quillette Politics</title>
+        <link>https://quillette.com/category/politics/feed</link>
+    </feed>
+    <feed>
+        <title>Quillette Reviews</title>
+        <link>https://quillette.com/category/reviews/feed</link>
+    </feed>
+    <feed>
+        <title>Quillette</title>
+        <link>https://quillette.com/feed</link>
     </feed>
 
     <!-- ReadWrite -->
@@ -501,6 +681,32 @@
     </feed>
     -->
 
+    <!-- Slate -->
+    <feed>
+        <title>Slate News &amp; Politics</title>
+        <link>https://slate.com/feeds/news-and-politics.rss</link>
+    </feed>
+    <feed>
+        <title>Slate Culture</title>
+        <link>https://slate.com/feeds/culture.rss</link>
+    </feed>
+    <feed>
+        <title>Slate Technology</title>
+        <link>https://slate.com/feeds/technology.rss</link>
+    </feed>
+    <feed>
+        <title>Slate Business</title>
+        <link>https://slate.com/feeds/business.rss</link>
+    </feed>
+    <feed>
+        <title>Slate Human Interest</title>
+        <link>https://slate.com/feeds/human-interest.rss</link>
+    </feed>
+    <feed>
+        <title>Slate</title>
+        <link>https://slate.com/feeds/all.rss</link>
+    </feed>
+
     <!-- t3n -->
     <feed>
         <title>t3n Digitale Wirtschaft</title>
@@ -545,6 +751,40 @@
     <feed>
         <title>t3n</title>
         <link>https://t3n.de/rss.xml</link>
+    </feed>
+
+    <!-- The Verge -->
+    <feed>
+        <title>The Verge Tech</title>
+        <link>https://www.theverge.com/rss/tech/index.xml</link>
+    </feed>
+    <feed>
+        <title>The Verge Reviews</title>
+        <link>https://www.theverge.com/rss/reviews/index.xml</link>
+    </feed>
+    <feed>
+        <title>The Verge Science</title>
+        <link>https://www.theverge.com/rss/science/index.xml</link>
+    </feed>
+    <feed>
+        <title>The Verge Creators</title>
+        <link>https://www.theverge.com/rss/creators/index.xml</link>
+    </feed>
+    <feed>
+        <title>The Verge Entertainment</title>
+        <link>https://www.theverge.com/rss/entertainment/index.xml</link>
+    </feed>
+    <feed>
+        <title>The Verge Features</title>
+        <link>https://www.theverge.com/rss/features/index.xml</link>
+    </feed>
+    <feed>
+        <title>The Verge Podcasts</title>
+        <link>https://www.theverge.com/rss/podcasts/index.xml</link>
+    </feed>
+    <feed>
+        <title>The Verge</title>
+        <link>https://www.theverge.com/rss/index.xml</link>
     </feed>
 
     <!-- WIRED -->
@@ -621,6 +861,46 @@
         <link>https://www.xkcd.com/rss.xml</link>
     </feed>
 
+    <!-- Literature reviews -->
+    <feed>
+        <title>London Review of Books</title>
+        <link>https://cdn.lrb.co.uk/feeds/lrb</link>
+    </feed>
+    <feed>
+        <title>New York Review of Books</title>
+        <link>http://feeds.feedburner.com/nybooks</link>
+    </feed>
+    <feed>
+        <title>The Times Literary Supplement</title>
+        <link>https://www.the-tls.co.uk/home-page/feed/</link>
+    </feed>
+
+    <!-- Magazines -->
+    <feed>
+        <title>Edge.org</title>
+        <link>https://www.edge.org/feed</link>
+    </feed>
+    <feed>
+        <title>The Intercept</title>
+        <link>https://theintercept.com/feed/?lang=en</link>
+    </feed>
+    <feed>
+        <title>The New Republic</title>
+        <link>https://www.newrepublic.com/rss.xml</link>
+    </feed>
+    <feed>
+        <title>New Statesman</title>
+        <link>https://www.newstatesman.com/feeds/site_feed.rss</link>
+    </feed>
+    <feed>
+        <title>Quartz.com</title>
+        <link>https://cms.qz.com/feed</link>
+    </feed>
+    <feed>
+        <title>Salon.com</title>
+        <link>https://www.salon.com/feed</link>
+    </feed>
+
     <!-- Miscellaneous -->
     <feed>
         <title>Chalkdust</title>
@@ -656,18 +936,4 @@
         <link>https://ideas.ted.com/feed/</link>
     </feed>
     -->
-
-    <!-- Literature reviews -->
-    <feed>
-        <title>London Review of Books</title>
-        <link>https://cdn.lrb.co.uk/feeds/lrb</link>
-    </feed>
-    <feed>
-        <title>New York Review of Books</title>
-        <link>http://feeds.feedburner.com/nybooks</link>
-    </feed>
-    <feed>
-        <title>The Times Literary Supplement</title>
-        <link>https://www.the-tls.co.uk/home-page/feed/</link>
-    </feed>
 </root>
