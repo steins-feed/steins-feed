@@ -252,7 +252,6 @@
     </feed>
 
     <!-- FiveThirtyEight -->
-    <!--
     <feed>
         <title>FiveThirtyEight NBA</title>
         <link>https://fivethirtyeight.com/tag/nba/feed/</link>
@@ -262,14 +261,17 @@
         <link>https://fivethirtyeight.com/tag/nba-playoffs/feed/</link>
     </feed>
     <feed>
+        <title>FiveThirtyEight College Basketball</title>
+        <link>https://fivethirtyeight.com/tag/college-basketball/feed/</link>
+    </feed>
+    <feed>
+        <title>FiveThirtyEight March Madness</title>
+        <link>https://fivethirtyeight.com/tag/march-madness/feed/</link>
+    </feed>
+    <feed>
         <title>FiveThirtyEight Basketball</title>
         <link>https://fivethirtyeight.com/tag/basketball/feed/</link>
     </feed>
-    <feed>
-        <title>FiveThirtyEight The Lab</title>
-        <link>https://fivethirtyeight.com/tag/the-lab/feed/</link>
-    </feed>
-    -->
 
     <!-- The Guardian -->
     <!--
@@ -670,7 +672,6 @@
     -->
 
     <!-- The Ringer -->
-    <!--
     <feed>
         <title>The Ringer NBA</title>
         <link>https://www.theringer.com/rss/nba/index.xml</link>
@@ -679,7 +680,14 @@
         <title>The Ringer NBA Playoffs</title>
         <link>https://www.theringer.com/rss/nba-playoffs/index.xml</link>
     </feed>
-    -->
+    <feed>
+        <title>The Ringer College Basketball</title>
+        <link>https://www.theringer.com/rss/college-basketball/index.xml</link>
+    </feed>
+    <feed>
+        <title>The Ringer March Madness</title>
+        <link>https://www.theringer.com/rss/march-madness/index.xml</link>
+    </feed>
 
     <!-- Slate -->
     <feed>
@@ -877,6 +885,10 @@
 
     <!-- Magazines -->
     <feed>
+        <title>Chalkdust</title>
+        <link>http://chalkdustmagazine.com/feed/</link>
+    </feed>
+    <feed>
         <title>Edge.org</title>
         <link>https://www.edge.org/feed</link>
     </feed>
@@ -893,6 +905,10 @@
         <link>https://www.newstatesman.com/feeds/site_feed.rss</link>
     </feed>
     <feed>
+        <title>Quanta Magazine</title>
+        <link>https://api.quantamagazine.org/feed/</link>
+    </feed>
+    <feed>
         <title>Quartz.com</title>
         <link>https://cms.qz.com/feed</link>
     </feed>
@@ -900,12 +916,16 @@
         <title>Salon.com</title>
         <link>https://www.salon.com/feed</link>
     </feed>
+    <feed>
+        <title>Scientific American</title>
+        <link>http://rss.sciam.com/ScientificAmerican-Global</link>
+    </feed>
+    <feed>
+        <title>TED Ideas</title>
+        <link>https://ideas.ted.com/feed/</link>
+    </feed>
 
     <!-- Miscellaneous -->
-    <feed>
-        <title>Chalkdust</title>
-        <link>http://chalkdustmagazine.com/feed/</link>
-    </feed>
     <feed>
         <title>Factorio</title>
         <link>https://factorio.com/blog/rss</link>
@@ -922,18 +942,4 @@
         <title>McKinsey Insights</title>
         <link>https://www.mckinsey.com/Insights/rss.aspx</link>
     </feed>
-    <feed>
-        <title>Quanta Magazine</title>
-        <link>https://api.quantamagazine.org/feed/</link>
-    </feed>
-    <!--
-    <feed>
-        <title>Scientific American</title>
-        <link>http://rss.sciam.com/ScientificAmerican-Global</link>
-    </feed>
-    <feed>
-        <title>TED Ideas</title>
-        <link>https://ideas.ted.com/feed/</link>
-    </feed>
-    -->
 </root>
