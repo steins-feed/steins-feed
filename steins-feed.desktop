@@ -2,4 +2,5 @@
 Type=Application
 Name=Stein's Feed
 Icon=/home/hans/Scratch/steins-feed/sf-icon.png
-Exec=python3 /home/hans/Scratch/steins-feed/main.py
+Exec=python3 /home/hans/Scratch/steins-feed/main.py --no-write
+Terminal=true
