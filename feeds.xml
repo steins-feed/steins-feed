@@ -27,6 +27,16 @@
         <link>https://aeon.co/feed.rss</link>
     </feed>
 
+    <!-- Barstool Sports -->
+    <feed>
+        <title>Barstool Sports College Basketball</title>
+        <link>https://cms.barstoolsports.com/topics/college-basketball/feed/</link>
+    </feed>
+    <feed>
+        <title>Barstool Sports NBA</title>
+        <link>https://cms.barstoolsports.com/topics/nba/feed/</link>
+    </feed>
+
     <!-- The Atlantic -->
     <!--
     <feed>
@@ -687,6 +697,16 @@
     <feed>
         <title>The Ringer March Madness</title>
         <link>https://www.theringer.com/rss/march-madness/index.xml</link>
+    </feed>
+
+    <!-- SB Nation -->
+    <feed>
+        <title>SB Nation NBA</title>
+        <link>https://www.sbnation.com/rss/nba/index.xml</link>
+    </feed>
+    <feed>
+        <title>SB Nation College Basketball</title>
+        <link>https://www.sbnation.com/rss/college-basketball/index.xml</link>
     </feed>
 
     <!-- Slate -->

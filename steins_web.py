@@ -2,6 +2,7 @@
 
 import os
 import requests
+import sys
 
 from lxml import etree, html
 from selenium import webdriver
@@ -17,7 +18,8 @@ def get_browser(filename='sign_in.xml'):
         gecko_path = dir_name + os.sep + "geckodriver"
 
         options = webdriver.firefox.options.Options()
-        #options.add_argument('-headless')
+        if "--no-gui" in sys.argv:
+            options.add_argument('-headless')
 
         profile = webdriver.FirefoxProfile()
         profile.set_preference('print.print_footerleft', "")

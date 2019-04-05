@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import sys
 import time
 
 from steins_feed import steins_update
@@ -11,6 +12,9 @@ from steins_web import get_browser
 dir_name = os.path.dirname(os.path.abspath(__file__))
 db_name = dir_name + os.sep + "steins.db"
 steins_update(db_name)
+
+if "--no-gui" in sys.argv:
+    sys.exit()
 
 port = steins_run()
 print("PORT: {}.".format(port))
