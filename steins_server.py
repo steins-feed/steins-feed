@@ -3,6 +3,8 @@
 import multiprocessing as mp
 import os
 import sqlite3
+import sys
+import time
 import urllib
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -23,7 +25,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Generate page.
         if self.path == "/":
             #steins_update(db_name)
-            self.path += "steins-0.html"
+            self.path += "0"
             self.do_GET()
             return
 
@@ -42,19 +44,26 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.settings_response()
             return
 
-        # Write header.
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-
-        # Write payload.
-        try:
-            f = open(dir_name+self.path, 'r')
-        except FileNotFoundError as e:
-            print("'{}' not found.".format(e.filename))
+        if not self.path[1:].isdigit():
             return
-        self.wfile.write(f.read().encode('utf-8'))
-        f.close()
+
+        if "--no-write" in sys.argv:
+            self.page_response(int(self.path[1:]))
+        else:
+            # Write header.
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+
+            # Write payload.
+            file_name = dir_name + os.sep + "steins-{}.html".format(self.path[1:])
+            try:
+                f = open(file_name, 'r')
+            except FileNotFoundError as e:
+                print("'{}' not found.".format(e.filename))
+                return
+            self.wfile.write(f.read().encode('utf-8'))
+            f.close()
 
     def do_POST(self):
         conn = sqlite3.connect(db_name)
@@ -168,6 +177,72 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Print.
         else:
             print("PRINT deprecated.")
+
+        conn.commit()
+        conn.close()
+
+    def page_response(self, page_no):
+        conn = sqlite3.connect(db_name)
+        c = conn.cursor()
+
+        items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
+        times = [it[2][:10] for it in items]
+        dates = sorted(list(set(times)), reverse=True)
+        try:
+            d_it = dates[page_no]
+        except IndexError:
+            return
+
+        # Write header.
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+
+        # Write payload.
+        self.wfile.write("<!DOCTYPE html>\n".encode('utf-8'))
+        self.wfile.write("<html>\n".encode('utf-8'))
+        self.wfile.write("<head>\n".encode('utf-8'))
+        self.wfile.write("<meta charset=\"UTF-8\">".encode('utf-8'))
+        self.wfile.write("<title>Stein's Feed</title>\n".encode('utf-8'))
+        self.wfile.write("</head>\n".encode('utf-8'))
+        self.wfile.write("<body>\n".encode('utf-8'))
+        self.wfile.write("<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d"))).encode('utf-8'))
+        self.wfile.write("<p>{} articles. {} pages.</p>\n".format(times.count(d_it), len(dates)).encode('utf-8'))
+        self.wfile.write("<form>\n".encode('utf-8'))
+        if not page_no == 0:
+            self.wfile.write("<input type=\"submit\" formaction=\"/{}\" value=\"Previous\">\n".format(page_no-1).encode('utf-8'))
+        if not page_no == len(dates)-1:
+            self.wfile.write("<input type=\"submit\" formaction=\"/{}\" value=\"Next\">\n".format(page_no+1).encode('utf-8'))
+        self.wfile.write("</form>\n".encode('utf-8'))
+        self.wfile.write("<hr>\n".encode('utf-8'))
+
+        for item_it in items:
+            if not d_it == item_it[2][:10]:
+                continue
+
+            self.wfile.write("<h2><a href=\"{}\">{}</a></h2>\n".format(item_it[5], item_it[1]).encode('utf-8'))
+            self.wfile.write("<p>Source: {}. Published: {}</p>".format(item_it[4], item_it[2]).encode('utf-8'))
+            self.wfile.write("{}".format(item_it[3]).encode('utf-8'))
+
+            self.wfile.write("<p>\n".encode('utf-8'))
+            self.wfile.write("<form>\n".encode('utf-8'))
+            self.wfile.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/like/{}\" value=\"Like\">\n".format(item_it[0]).encode('utf-8'))
+            self.wfile.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/dislike/{}\" value=\"Dislike\">\n".format(item_it[0]).encode('utf-8'))
+            self.wfile.write("</form>\n".encode('utf-8'))
+            self.wfile.write("</p>\n".encode('utf-8'))
+            self.wfile.write("<hr>\n".encode('utf-8'))
+
+        self.wfile.write("<form>\n".encode('utf-8'))
+        if not page_no == 0:
+            self.wfile.write("<input type=\"submit\" formaction=\"/{}\" value=\"Previous\">\n".format(page_no-1).encode('utf-8'))
+        if not page_no == len(dates)-1:
+            self.wfile.write("<input type=\"submit\" formaction=\"/{}\" value=\"Next\">\n".format(page_no+1).encode('utf-8'))
+        self.wfile.write("</form>\n".encode('utf-8'))
+
+        self.wfile.write("<p><a href=\"/settings\">Settings</a></p>\n".encode('utf-8'))
+
+        self.wfile.write("</body>\n".encode('utf-8'))
+        self.wfile.write("</html>\n".encode('utf-8'))
 
         conn.commit()
         conn.close()

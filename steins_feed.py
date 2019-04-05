@@ -2,6 +2,7 @@
 
 import os
 import sqlite3
+import sys
 import time
 
 from steins_config import init_feeds
@@ -50,9 +51,9 @@ def steins_write(c):
         f.write("<p>{} articles. {} pages.</p>\n".format(times.count(d_it), len(dates)))
         f.write("<form>\n")
         if not d_ctr == 0:
-            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Previous\">\n".format(d_ctr-1))
+            f.write("<input type=\"submit\" formaction=\"/{}\" value=\"Previous\">\n".format(d_ctr-1))
         if not d_ctr == len(dates)-1:
-            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Next\">\n".format(d_ctr+1))
+            f.write("<input type=\"submit\" formaction=\"/{}\" value=\"Next\">\n".format(d_ctr+1))
         f.write("</form>\n")
         f.write("<hr>\n")
 
@@ -80,9 +81,9 @@ def steins_write(c):
 
         f.write("<form>\n")
         if not d_ctr == 0:
-            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Previous\">\n".format(d_ctr-1))
+            f.write("<input type=\"submit\" formaction=\"/{}\" value=\"Previous\">\n".format(d_ctr-1))
         if not d_ctr == len(dates)-1:
-            f.write("<input type=\"submit\" formaction=\"/steins-{}.html\" value=\"Next\">\n".format(d_ctr+1))
+            f.write("<input type=\"submit\" formaction=\"/{}\" value=\"Next\">\n".format(d_ctr+1))
         f.write("</form>\n")
 
         f.write("<p><a href=\"/settings\">Settings</a></p>\n")
@@ -99,7 +100,9 @@ def steins_update(db_name):
         c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Display INTEGER DEFAULT 1)")
         c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, Like INTEGER DEFAULT 0)")
         init_feeds(c)
-    steins_read(c)
-    steins_write(c)
+    if not "--no-read" in sys.argv:
+        steins_read(c)
+    if not "--no-write" in sys.argv:
+        steins_write(c)
     conn.commit()
     conn.close()
