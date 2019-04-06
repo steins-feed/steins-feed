@@ -351,3 +351,60 @@ def steins_halt():
     SERVER.server_close()
     print("Connection closed.")
     PROCESS.terminate()
+
+def page_response_payload(page_no):
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+
+    items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
+    times = [it[2][:10] for it in items]
+    dates = sorted(list(set(times)), reverse=True)
+    try:
+        d_it = dates[page_no]
+    except IndexError:
+        return
+
+    s = ""
+
+    s += "<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
+    s += "<p>{} articles. {} pages.</p>\n".format(times.count(d_it), len(dates))
+    s += "<form>\n"
+    if not page_no == 0:
+        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Previous\">\n".format(page_no-1)
+    if not page_no == len(dates)-1:
+        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Next\">\n".format(page_no+1)
+    s += "</form>\n"
+    s += "<hr>\n"
+
+    for item_it in items:
+        if not d_it == item_it[2][:10]:
+            continue
+
+        s += "<h2><a href=\"{}\">{}</a></h2>\n".format(item_it[5], item_it[1])
+        s += "<p>Source: {}. Published: {}</p>".format(item_it[4], item_it[2])
+        s += "{}".format(item_it[3])
+
+        s += "<p>\n"
+        s += "<form>\n"
+        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/like/{}\" value=\"Like\">\n".format(item_it[0])
+        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/dislike/{}\" value=\"Dislike\">\n".format(item_it[0])
+        s += "</form>\n"
+        s += "</p>\n"
+        s += "<hr>\n"
+
+    s += "<form>\n"
+    if not page_no == 0:
+        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Previous\">\n".format(page_no-1)
+    if not page_no == len(dates)-1:
+        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Next\">\n".format(page_no+1)
+    s += "</form>\n"
+
+    s += "<p><a href=\"/settings\">Settings</a></p>\n"
+
+    conn.commit()
+    conn.close()
+
+    print(s)
+
+if __name__ == "__main__":
+    page_response_payload(int(sys.argv[1]))
