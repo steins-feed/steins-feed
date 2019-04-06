@@ -10,9 +10,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+def have_browser():
+    if "browser" in globals():
+        return True
+    else:
+        return False
+
 def get_browser(filename='sign_in.xml'):
     global browser
-    if not "browser" in globals():
+    if not have_browser():
         print("DEBUG: Firefox.")
         dir_name = os.path.dirname(os.path.abspath(__file__))
         gecko_path = dir_name + os.sep + "geckodriver"
@@ -64,6 +70,11 @@ def get_browser(filename='sign_in.xml'):
         wait.until(EC.title_contains("Pocket: My List"))
 
     return browser
+
+def close_browser():
+    if have_browser():
+        browser = get_browser()
+        browser.quit()
 
 def get_session():
     global session

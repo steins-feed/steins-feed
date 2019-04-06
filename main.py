@@ -7,13 +7,14 @@ import time
 
 from steins_feed import steins_update
 from steins_server import steins_run, steins_halt
-from steins_web import get_browser
+from steins_web import get_browser, close_browser
 
 dir_name = os.path.dirname(os.path.abspath(__file__))
 db_name = dir_name + os.sep + "steins.db"
 steins_update(db_name)
 
 if "--no-gui" in sys.argv:
+    close_browser()
     sys.exit()
 
 port = steins_run()
