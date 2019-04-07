@@ -1,3 +1,13 @@
+<?php
+function foo() {
+	if( $_GET["page"] ) {
+		$page = $_GET["page"];
+	} else {
+		$page = 0;
+	}
+	system('env PYTHONIOENCODING=UTF-8 python3 steins_server.py ' . $page);
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,6 +15,6 @@
 <title>Stein's Feed</title>
 </head>
 <body>
-<?php system('env PYTHONIOENCODING=UTF-8 python3 steins_server.py ' . $_GET["page"]);?>
+<?php foo()?>
 </body>
 </html>
