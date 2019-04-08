@@ -20,7 +20,7 @@ def steins_read(c):
             item_time = handler.read_time(item_it)
 
             # Punish cheaters.
-            if time.strptime(item_time, "%Y-%m-%d %H:%M:%S") > time.localtime():
+            if time.strptime(item_time, "%Y-%m-%d %H:%M:%S") > time.gmtime():
                 continue
 
             if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_title, item_time, )).fetchone()[0] == 0:

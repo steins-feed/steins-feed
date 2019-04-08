@@ -207,7 +207,8 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("</head>\n".encode('utf-8'))
         self.wfile.write("<body>\n".encode('utf-8'))
         self.wfile.write("<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d"))).encode('utf-8'))
-        self.wfile.write("<p>{} articles. {} pages.</p>\n".format(times.count(d_it), len(dates)).encode('utf-8'))
+        last_updated = time.gmtime(os.path.getmtime(db_name))
+        self.wfile.write("<p>{} articles. {} pages. Last updated: {}.</p>\n".format(times.count(d_it), len(dates), time.strftime("%Y/%m/%d %H:%M:%S", last_updated)).encode('utf-8'))
         self.wfile.write("<form>\n".encode('utf-8'))
         if not page_no == 0:
             self.wfile.write("<input type=\"submit\" formaction=\"/{}\" value=\"Previous\">\n".format(page_no-1).encode('utf-8'))
@@ -367,7 +368,8 @@ def page_response_payload(page_no):
     s = ""
 
     s += "<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
-    s += "<p>{} articles. {} pages.</p>\n".format(times.count(d_it), len(dates))
+    last_updated = time.gmtime(os.path.getmtime(db_name))
+    s += "<p>{} articles. {} pages. Last updated: {}.</p>\n".format(times.count(d_it), len(dates), time.strftime("%Y/%m/%d %H:%M:%S", last_updated))
     s += "<form>\n"
     if not page_no == 0:
         s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Previous\">\n".format(page_no-1)
