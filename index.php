@@ -5,6 +5,7 @@ function foo() {
 	} else {
 		$page = 0;
 	}
+	// system('env PYTHONIOENCODING=UTF-8 python3 steins_server.py ' . $page . ' > index.log 2>&1');
 	system('env PYTHONIOENCODING=UTF-8 python3 steins_server.py ' . $page);
 }
 ?>

@@ -9,7 +9,7 @@ import urllib
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from steins_config import *
-from steins_feed import steins_update
+from steins_feed import steins_update, steins_write_payload
 from steins_manager import get_handler
 from xml.sax.saxutils import escape
 
@@ -182,17 +182,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
         conn.close()
 
     def page_response(self, page_no):
-        conn = sqlite3.connect(db_name)
-        c = conn.cursor()
-
-        items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
-        times = [it[2][:10] for it in items]
-        dates = sorted(list(set(times)), reverse=True)
-        try:
-            d_it = dates[page_no]
-        except IndexError:
-            return
-
         # Write header.
         self.send_response(200)
         self.send_header("Content-type", "text/html")
@@ -206,47 +195,9 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("<title>Stein's Feed</title>\n".encode('utf-8'))
         self.wfile.write("</head>\n".encode('utf-8'))
         self.wfile.write("<body>\n".encode('utf-8'))
-        self.wfile.write("<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d"))).encode('utf-8'))
-        last_updated = time.gmtime(os.path.getmtime(db_name))
-        self.wfile.write("<p>{} articles. {} pages. Last updated: {}.</p>\n".format(times.count(d_it), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated)).encode('utf-8'))
-        self.wfile.write("<form>\n".encode('utf-8'))
-        if not page_no == 0:
-            self.wfile.write("<input type=\"submit\" formaction=\"/{}\" value=\"Previous\">\n".format(page_no-1).encode('utf-8'))
-        if not page_no == len(dates)-1:
-            self.wfile.write("<input type=\"submit\" formaction=\"/{}\" value=\"Next\">\n".format(page_no+1).encode('utf-8'))
-        self.wfile.write("</form>\n".encode('utf-8'))
-        self.wfile.write("<hr>\n".encode('utf-8'))
-
-        for item_it in items:
-            if not d_it == item_it[2][:10]:
-                continue
-
-            self.wfile.write("<h2><a href=\"{}\">{}</a></h2>\n".format(item_it[5], item_it[1]).encode('utf-8'))
-            self.wfile.write("<p>Source: {}. Published: {}</p>".format(item_it[4], item_it[2]).encode('utf-8'))
-            self.wfile.write("{}".format(item_it[3]).encode('utf-8'))
-
-            self.wfile.write("<p>\n".encode('utf-8'))
-            self.wfile.write("<form>\n".encode('utf-8'))
-            self.wfile.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/like/{}\" value=\"Like\">\n".format(item_it[0]).encode('utf-8'))
-            self.wfile.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/dislike/{}\" value=\"Dislike\">\n".format(item_it[0]).encode('utf-8'))
-            self.wfile.write("</form>\n".encode('utf-8'))
-            self.wfile.write("</p>\n".encode('utf-8'))
-            self.wfile.write("<hr>\n".encode('utf-8'))
-
-        self.wfile.write("<form>\n".encode('utf-8'))
-        if not page_no == 0:
-            self.wfile.write("<input type=\"submit\" formaction=\"/{}\" value=\"Previous\">\n".format(page_no-1).encode('utf-8'))
-        if not page_no == len(dates)-1:
-            self.wfile.write("<input type=\"submit\" formaction=\"/{}\" value=\"Next\">\n".format(page_no+1).encode('utf-8'))
-        self.wfile.write("</form>\n".encode('utf-8'))
-
-        self.wfile.write("<p><a href=\"/settings\">Settings</a></p>\n".encode('utf-8'))
-
+        self.wfile.write(steins_write_payload(db_name, page_no).encode('utf-8'))
         self.wfile.write("</body>\n".encode('utf-8'))
         self.wfile.write("</html>\n".encode('utf-8'))
-
-        conn.commit()
-        conn.close()
 
     def settings_response(self):
         conn = sqlite3.connect(db_name)
@@ -353,60 +304,6 @@ def steins_halt():
     print("Connection closed.")
     PROCESS.terminate()
 
-def page_response_payload(page_no):
-    conn = sqlite3.connect(db_name)
-    c = conn.cursor()
-
-    items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
-    times = [it[2][:10] for it in items]
-    dates = sorted(list(set(times)), reverse=True)
-    try:
-        d_it = dates[page_no]
-    except IndexError:
-        return
-
-    s = ""
-
-    s += "<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
-    last_updated = time.gmtime(os.path.getmtime(db_name))
-    s += "<p>{} articles. {} pages. Last updated: {}.</p>\n".format(times.count(d_it), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated))
-    s += "<form>\n"
-    if not page_no == 0:
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Previous\">\n".format(page_no-1)
-    if not page_no == len(dates)-1:
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Next\">\n".format(page_no+1)
-    s += "</form>\n"
-    s += "<hr>\n"
-
-    for item_it in items:
-        if not d_it == item_it[2][:10]:
-            continue
-
-        s += "<h2><a href=\"{}\">{}</a></h2>\n".format(item_it[5], item_it[1])
-        s += "<p>Source: {}. Published: {}</p>".format(item_it[4], item_it[2])
-        s += "{}".format(item_it[3])
-
-        s += "<p>\n"
-        s += "<form>\n"
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/like/{}\" value=\"Like\">\n".format(item_it[0])
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/dislike/{}\" value=\"Dislike\">\n".format(item_it[0])
-        s += "</form>\n"
-        s += "</p>\n"
-        s += "<hr>\n"
-
-    s += "<form>\n"
-    if not page_no == 0:
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Previous\">\n".format(page_no-1)
-    if not page_no == len(dates)-1:
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Next\">\n".format(page_no+1)
-    s += "</form>\n"
-
-    s += "<p><a href=\"/settings\">Settings</a></p>\n"
-
-    conn.commit()
-    conn.close()
-
-    print(s)
-
 if __name__ == "__main__":
-    page_response_payload(int(sys.argv[1]))
+    s_payload = steins_write_payload(db_name, int(sys.argv[1]))
+    print(s_payload)

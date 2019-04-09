@@ -43,7 +43,7 @@ class SteinsHandler:
     def read_time(self, item_it):
         try:
             item_time = item_it['published_parsed']
-            item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+            item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
         except:
             pass
@@ -51,14 +51,14 @@ class SteinsHandler:
         try:
             item_time = item_it['published']
             item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
-            item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+            item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
         except:
             pass
 
         try:
             item_time = item_it['updated_parsed']
-            item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+            item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
         except:
             pass
@@ -66,7 +66,7 @@ class SteinsHandler:
         try:
             item_time = item_it['updated']
             item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
-            item_time = time.strftime("%Y-%m-%d %H:%M:%S", item_time)
+            item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
         except:
             pass
