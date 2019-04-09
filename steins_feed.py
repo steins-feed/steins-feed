@@ -9,7 +9,10 @@ from steins_config import init_feeds
 from steins_manager import get_handler
 
 # Scrape feeds.
-def steins_read(c):
+def steins_read(db_name):
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+
     for feed_it in c.execute("SELECT * FROM Feeds WHERE DISPLAY=1").fetchall():
         print(feed_it[1])
         handler = get_handler(feed_it[1])
@@ -27,6 +30,9 @@ def steins_read(c):
                 item_link = handler.read_link(item_it)
                 item_summary = handler.read_summary(item_it)
                 c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))
+
+    conn.commit()
+    conn.close()
 
 # Generate HTML.
 def steins_write_payload(db_name, page_no):
@@ -83,12 +89,11 @@ def steins_write_payload(db_name, page_no):
 
     return s
 
-def steins_write(c):
+def steins_write(db_name):
     dir_name = os.path.dirname(os.path.abspath(__file__))
     items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1)").fetchall()
     times = [it[2][:10] for it in items]
     dates = sorted(list(set(times)), reverse=True)
-    f_list = []
 
     for d_ctr in range(len(dates)):
         d_it = dates[d_ctr]
@@ -101,47 +106,7 @@ def steins_write(c):
         f.write("<title>Stein's Feed</title>\n")
         f.write("</head>\n")
         f.write("<body>\n")
-        f.write("<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d"))))
-        f.write("<p>{} articles. {} pages.</p>\n".format(times.count(d_it), len(dates)))
-        f.write("<form>\n")
-        if not d_ctr == 0:
-            f.write("<input type=\"submit\" formaction=\"/{}\" value=\"Previous\">\n".format(d_ctr-1))
-        if not d_ctr == len(dates)-1:
-            f.write("<input type=\"submit\" formaction=\"/{}\" value=\"Next\">\n".format(d_ctr+1))
-        f.write("</form>\n")
-        f.write("<hr>\n")
-
-        f_list.append(f)
-
-    for row_it in c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall():
-        f_idx = dates.index(row_it[2][:10])
-        f = f_list[f_idx]
-
-        f.write("<h2><a href=\"{}\">{}</a></h2>\n".format(row_it[5], row_it[1]))
-        f.write("<p>Source: {}. Published: {}.</p>".format(row_it[4], row_it[2]))
-        f.write("{}".format(row_it[3]))
-
-        f.write("<p>\n")
-        f.write("<form>\n")
-        f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/like/{}\" value=\"Like\">\n".format(row_it[0]))
-        f.write("<input type=\"submit\" formmethod=\"post\" formaction=\"/dislike/{}\" value=\"Dislike\">\n".format(row_it[0]))
-        f.write("</form>\n")
-        f.write("</p>\n")
-
-        f.write("<hr>\n")
-
-    for d_ctr in range(len(dates)):
-        f = f_list[d_ctr]
-
-        f.write("<form>\n")
-        if not d_ctr == 0:
-            f.write("<input type=\"submit\" formaction=\"/{}\" value=\"Previous\">\n".format(d_ctr-1))
-        if not d_ctr == len(dates)-1:
-            f.write("<input type=\"submit\" formaction=\"/{}\" value=\"Next\">\n".format(d_ctr+1))
-        f.write("</form>\n")
-
-        f.write("<p><a href=\"/settings\">Settings</a></p>\n")
-
+        f.write(steins_write_payload(db_name, d_ctr))
         f.write("</body>\n")
         f.write("</html>\n")
         f.close()
@@ -154,9 +119,10 @@ def steins_update(db_name):
         c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Display INTEGER DEFAULT 1)")
         c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, Like INTEGER DEFAULT 0)")
         init_feeds(c)
-    if not "--no-read" in sys.argv:
-        steins_read(c)
-    if not "--no-write" in sys.argv:
-        steins_write(c)
     conn.commit()
     conn.close()
+
+    if not "--no-read" in sys.argv:
+        steins_read(db_name)
+    if not "--no-write" in sys.argv:
+        steins_write(db_name)
