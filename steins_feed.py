@@ -39,19 +39,18 @@ def steins_write_payload(db_name, page_no):
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
 
-    items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
-    times = [it[2][:10] for it in items]
-    dates = sorted(list(set(times)), reverse=True)
+    dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
     try:
-        d_it = dates[page_no]
+        d_it = dates[page_no][0]
     except IndexError:
         return
+    items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC", (d_it, )).fetchall()
 
     s = ""
 
     s += "<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
     last_updated = time.gmtime(os.path.getmtime(db_name))
-    s += "<p>{} articles. {} pages. Last updated: {}.</p>\n".format(times.count(d_it), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated))
+    s += "<p>{} articles. {} pages. Last updated: {}.</p>\n".format(len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated))
     s += "<form>\n"
     if not page_no == 0:
         s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Previous\">\n".format(page_no-1)
@@ -61,9 +60,6 @@ def steins_write_payload(db_name, page_no):
     s += "<hr>\n"
 
     for item_it in items:
-        if not d_it == item_it[2][:10]:
-            continue
-
         s += "<h2><a href=\"{}\">{}</a></h2>\n".format(item_it[5], item_it[1])
         s += "<p>Source: {}. Published: {}.</p>".format(item_it[4], item_it[2])
         s += "{}".format(item_it[3])
