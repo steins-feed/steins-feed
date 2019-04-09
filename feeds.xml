@@ -27,16 +27,6 @@
         <link>https://aeon.co/feed.rss</link>
     </feed>
 
-    <!-- Barstool Sports -->
-    <feed>
-        <title>Barstool Sports College Basketball</title>
-        <link>https://cms.barstoolsports.com/topics/college-basketball/feed/</link>
-    </feed>
-    <feed>
-        <title>Barstool Sports NBA</title>
-        <link>https://cms.barstoolsports.com/topics/nba/feed/</link>
-    </feed>
-
     <!-- The Atlantic -->
     <!--
     <feed>
@@ -85,6 +75,16 @@
     <feed>
         <title>The Atlantic</title>
         <link>https://www.theatlantic.com/feed/best-of/</link>
+    </feed>
+
+    <!-- Barstool Sports -->
+    <feed>
+        <title>Barstool Sports College Basketball</title>
+        <link>https://cms.barstoolsports.com/topics/college-basketball/feed/</link>
+    </feed>
+    <feed>
+        <title>Barstool Sports NBA</title>
+        <link>https://cms.barstoolsports.com/topics/nba/feed/</link>
     </feed>
 
     <!-- Capital.de -->
@@ -197,6 +197,48 @@
     <feed>
         <title>The Economist</title>
         <link>https://www.economist.com/the-world-this-week/rss.xml</link>
+    </feed>
+
+    <!-- Fast Company -->
+    <feed>
+        <title>Fast Company Co.Design</title>
+        <link>https://www.fastcompany.com/co-design/rss</link>
+    </feed>
+    <feed>
+        <title>Fast Company Tech</title>
+        <link>https://www.fastcompany.com/technology/rss</link>
+    </feed>
+    <feed>
+        <title>Fast Company Work Life</title>
+        <link>https://www.fastcompany.com/leadership/rss</link>
+    </feed>
+    <feed>
+        <title>Fast Company Creativity</title>
+        <link>https://www.fastcompany.com/entertainment/rss</link>
+    </feed>
+    <feed>
+        <title>Fast Company Impact</title>
+        <link>https://www.fastcompany.com/ideas/rss</link>
+    </feed>
+    <feed>
+        <title>Fast Company Audio</title>
+        <link>https://www.fastcompany.com/section/audio/rss</link>
+    </feed>
+    <feed>
+        <title>Fast Company Video</title>
+        <link>https://www.fastcompany.com/section/video/rss</link>
+    </feed>
+    <feed>
+        <title>Fast Company News</title>
+        <link>https://www.fastcompany.com/news/rss</link>
+    </feed>
+    <feed>
+        <title>Fast Company Recommender</title>
+        <link>https://www.fastcompany.com/recommender/rss</link>
+    </feed>
+    <feed>
+        <title>Fast Company</title>
+        <link>https://www.fastcompany.com/latest/rss</link>
     </feed>
 
     <!-- Financial Times -->
