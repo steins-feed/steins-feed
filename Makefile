@@ -1,6 +1,6 @@
 .PHONY: stein
 stein:
-	python3 main.py --no-write
+	python3 main.py
 
 .PHONY: readme
 readme: README.pdf

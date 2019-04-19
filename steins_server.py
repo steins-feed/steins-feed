@@ -14,9 +14,7 @@ from steins_sql import get_connection, get_cursor
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
-SERVER = None
 PORT = 8000
-PROCESS = None
 
 class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -263,37 +261,31 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("</body>\n".encode('utf-8'))
         self.wfile.write("</html>\n".encode('utf-8'))
 
+def steins_halt(server):
+    server.socket.close()
+    print("Connection closed.")
+
 def steins_run_child(server):
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        server.socket.close()
-        print("Connection closed.")
+        steins_halt(server)
 
 def steins_run():
-    global SERVER
-    global PORT
-    global PROCESS
+    port = PORT
 
     while True:
         try:
-            SERVER = HTTPServer(('localhost', PORT), SteinsHandler)
-            print("Connection open.")
+            server = HTTPServer(('localhost', port), SteinsHandler)
+            print("Connection open: {}.".format(port))
             break
         except OSError:
-            PORT += 2
+            port += 2
 
-    PROCESS = mp.Process(target=steins_run_child, args=(SERVER, ))
-    PROCESS.start()
+    process = mp.Process(target=steins_run_child, args=(server, ))
+    process.start()
 
-    return PORT
-
-def steins_halt():
-    #SERVER.shutdown()
-    SERVER.server_close()
-    print("Connection closed.")
-    PROCESS.terminate()
+    return port
 
 if __name__ == "__main__":
-    if sys.argv[1] == "index":
-        print(steins_write_body(int(sys.argv[2])))
+    steins_run()

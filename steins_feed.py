@@ -127,6 +127,4 @@ def steins_update(read_mode=True, write_mode=False):
         steins_write()
 
 if __name__ == "__main__":
-    from steins_web import close_browser
     steins_update()
-    close_browser()

@@ -10,21 +10,23 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+dir_path = os.path.dirname(os.path.abspath(__file__))
+
 def have_browser():
     if "browser" in globals():
         return True
     else:
         return False
 
-def get_browser(filename='sign_in.xml'):
+def get_browser(file_name='sign_in.xml', interaction_mode=False):
     global browser
     if not have_browser():
         print("DEBUG: Firefox.")
-        dir_name = os.path.dirname(os.path.abspath(__file__))
-        gecko_path = dir_name + os.sep + "geckodriver"
+        gecko_path = dir_path + os.sep + "geckodriver"
 
         options = webdriver.firefox.options.Options()
-        options.add_argument('-headless') # DEBUG.
+        if not interaction_mode:
+            options.add_argument('-headless') # DEBUG.
 
         profile = webdriver.FirefoxProfile()
         profile.set_preference('print.print_footerleft', "")
@@ -39,16 +41,13 @@ def get_browser(filename='sign_in.xml'):
 
         browser = webdriver.Firefox(executable_path=gecko_path, firefox_options=options, firefox_profile=profile)
 
-        file_name = dir_name + os.sep + filename
-        with open(file_name, 'r') as f:
-            file_opened = True
+        file_path = dir_path + os.sep + file_name
+        with open(file_path, 'r') as f:
             tree = etree.fromstring(f.read())
             try:
                 node = tree.xpath("//pocket")[0]
             except IndexError:
                 return
-        if not file_opened:
-            return
 
         browser.get("https://getpocket.com/ff_signin")
         wait = WebDriverWait(browser, 30)
