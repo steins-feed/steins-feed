@@ -10,7 +10,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from xml.sax.saxutils import escape
 
 from steins_config import *
-from steins_feed import steins_update, steins_write_payload
+from steins_feed import steins_write_body
 from steins_manager import get_handler
 from steins_sql import get_connection, get_cursor
 
@@ -24,7 +24,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         # Generate page.
         if self.path == "/":
-            #steins_update()
             self.path += "0"
             self.do_GET()
             return
@@ -55,7 +54,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.send_header("Content-type", "text/html")
             self.end_headers()
 
-            # Write payload.
+            # Write body.
             file_name = dir_name + os.sep + "steins-{}.html".format(self.path[1:])
             try:
                 f = open(file_name, 'r')
@@ -119,7 +118,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             title = query_dict['title'.encode('utf-8')][0].decode('utf-8')
             link = query_dict['link'.encode('utf-8')][0].decode('utf-8')
-            add_feed(c, title, link)
+            add_feed(title, link)
 
             conn.commit()
             self.settings_response()
@@ -132,7 +131,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             item_id = int(query_dict['feed'.encode('utf-8')][0])
             row = c.execute("SELECT * FROM Feeds WHERE ItemID=?", (item_id, )).fetchone()
-            delete_feed(c, row[1])
+            delete_feed(row[1])
 
             conn.commit()
             self.settings_response()
@@ -144,7 +143,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             query_dict = urllib.parse.parse_qs(query)
 
             filename = query_dict['file'.encode('utf-8')][0].decode('utf-8')
-            init_feeds(c, filename)
+            init_feeds(filename)
 
             conn.commit()
             self.settings_response()
@@ -190,7 +189,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("<title>Stein's Feed</title>\n".encode('utf-8'))
         self.wfile.write("</head>\n".encode('utf-8'))
         self.wfile.write("<body>\n".encode('utf-8'))
-        self.wfile.write(steins_write_payload(page_no).encode('utf-8'))
+        self.wfile.write(steins_write_body(page_no).encode('utf-8'))
         self.wfile.write("</body>\n".encode('utf-8'))
         self.wfile.write("</html>\n".encode('utf-8'))
 
@@ -297,7 +296,3 @@ def steins_halt():
     SERVER.server_close()
     print("Connection closed.")
     PROCESS.terminate()
-
-if __name__ == "__main__":
-    s_payload = steins_write_payload(int(sys.argv[1]))
-    print(s_payload)

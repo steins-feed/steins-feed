@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 import os
-import sys
 import time
 
 from steins_config import init_feeds
 from steins_manager import get_handler
-from steins_sql import get_connection, get_cursor, have_database, last_updated
+from steins_sql import get_connection, get_cursor, last_updated
 
 dir_name = os.path.dirname(os.path.abspath(__file__))
 
@@ -35,15 +34,13 @@ def steins_read():
 
     conn.commit()
 
-# Generate HTML.
-def steins_write_payload(page_no):
+def steins_write_body(page_no):
     c = get_cursor()
 
     dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
-    try:
-        d_it = dates[page_no][0]
-    except IndexError:
+    if page_no >= len(dates):
         return
+    d_it = dates[page_no][0]
     items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC", (d_it, )).fetchall()
 
     s = ""
@@ -82,41 +79,38 @@ def steins_write_payload(page_no):
 
     return s
 
+# Generate HTML.
 def steins_write():
     c = get_cursor()
 
-    items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1)").fetchall()
-    times = [it[2][:10] for it in items]
-    dates = sorted(list(set(times)), reverse=True)
-
+    dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
     for d_ctr in range(len(dates)):
-        d_it = dates[d_ctr]
-        f = open(dir_name+os.sep+"steins-{}.html".format(d_ctr), 'w')
+        with open(dir_name+os.sep+"steins-{}.html".format(d_ctr), 'w') as f:
+            f.write("<!DOCTYPE html>\n")
+            f.write("<html>\n")
+            f.write("<head>\n")
+            f.write("<meta charset=\"UTF-8\">")
+            f.write("<title>Stein's Feed</title>\n")
+            f.write("</head>\n")
+            f.write("<body>\n")
+            f.write(steins_write_body(d_ctr))
+            f.write("</body>\n")
+            f.write("</html>\n")
 
-        f.write("<!DOCTYPE html>\n")
-        f.write("<html>\n")
-        f.write("<head>\n")
-        f.write("<meta charset=\"UTF-8\">")
-        f.write("<title>Stein's Feed</title>\n")
-        f.write("</head>\n")
-        f.write("<body>\n")
-        f.write(steins_write_payload(d_ctr))
-        f.write("</body>\n")
-        f.write("</html>\n")
-        f.close()
+def steins_update(read_mode=True, write_mode=False):
+    conn = get_connection()
+    c = conn.cursor()
 
-def steins_update():
-    if not have_database():
-        conn = get_connection()
-        c = conn.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Display INTEGER DEFAULT 1)")
+    c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, Like INTEGER DEFAULT 0)")
+    init_feeds()
 
-        c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Display INTEGER DEFAULT 1)")
-        c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, Like INTEGER DEFAULT 0)")
-        init_feeds(c)
+    conn.commit()
 
-        conn.commit()
-
-    if not "--no-read" in sys.argv:
+    if read_mode:
         steins_read()
-    if not "--no-write" in sys.argv:
+    if write_mode:
         steins_write()
+
+if __name__ == "__main__":
+    steins_update()

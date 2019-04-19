@@ -8,9 +8,6 @@ DB_NAME = "steins.db"
 dir_path = os.path.dirname(os.path.abspath(__file__))
 db_path = dir_path + os.sep + DB_NAME
 
-def have_database():
-    return os.path.isfile(db_path)
-
 def last_updated():
     t = os.path.getmtime(db_path)
     t = time.gmtime(t)

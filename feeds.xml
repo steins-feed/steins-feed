@@ -28,12 +28,10 @@
     </feed>
 
     <!-- The Atlantic -->
-    <!--
     <feed>
         <title>The Atlantic Politics</title>
         <link>https://www.theatlantic.com/feed/channel/politics/</link>
     </feed>
-    -->
     <feed>
         <title>The Atlantic Culture</title>
         <link>https://www.theatlantic.com/feed/channel/entertainment/</link>
@@ -66,28 +64,17 @@
         <title>The Atlantic Global</title>
         <link>https://www.theatlantic.com/feed/channel/international/</link>
     </feed>
-    <!--
     <feed>
         <title>The Atlantic National</title>
         <link>https://www.theatlantic.com/feed/channel/national/</link>
     </feed>
-    -->
     <feed>
         <title>The Atlantic</title>
         <link>https://www.theatlantic.com/feed/best-of/</link>
     </feed>
 
-    <!-- Barstool Sports -->
-    <feed>
-        <title>Barstool Sports College Basketball</title>
-        <link>https://cms.barstoolsports.com/topics/college-basketball/feed/</link>
-    </feed>
-    <feed>
-        <title>Barstool Sports NBA</title>
-        <link>https://cms.barstoolsports.com/topics/nba/feed/</link>
-    </feed>
-
     <!-- Capital.de -->
+    <!--
     <feed>
         <title>Capital.de Geld &amp; Versicherungen</title>
         <link>https://www.capital.de/thema/geld-versicherungen/feed</link>
@@ -112,6 +99,7 @@
         <title>Capital.de</title>
         <link>https://www.capital.de/feed</link>
     </feed>
+    -->
 
     <!-- The Economist -->
     <!--
@@ -462,6 +450,7 @@
     </feed>
 
     <!-- Netzpolitik.org -->
+    <!--
     <feed>
         <title>Netzpolitik.org Datenschutz</title>
         <link>https://netzpolitik.org/category/datenschutz/feed</link>
@@ -502,6 +491,7 @@
         <title>Netzpolitik.org</title>
         <link>https://netzpolitik.org/feed</link>
     </feed>
+    -->
 
     <!-- New Scientist -->
     <feed>
@@ -741,16 +731,6 @@
         <link>https://www.theringer.com/rss/march-madness/index.xml</link>
     </feed>
 
-    <!-- SB Nation -->
-    <feed>
-        <title>SB Nation NBA</title>
-        <link>https://www.sbnation.com/rss/nba/index.xml</link>
-    </feed>
-    <feed>
-        <title>SB Nation College Basketball</title>
-        <link>https://www.sbnation.com/rss/college-basketball/index.xml</link>
-    </feed>
-
     <!-- Slate -->
     <feed>
         <title>Slate News &amp; Politics</title>
@@ -778,6 +758,7 @@
     </feed>
 
     <!-- t3n -->
+    <!--
     <feed>
         <title>t3n Digitale Wirtschaft</title>
         <link>https://t3n.de/tag/digitale-wirtschaft/rss.xml</link>
@@ -822,6 +803,7 @@
         <title>t3n</title>
         <link>https://t3n.de/rss.xml</link>
     </feed>
+    -->
 
     <!-- The Verge -->
     <feed>
@@ -903,29 +885,13 @@
 
     <!-- Comics -->
     <feed>
-        <title>Dilbert</title>
-        <link>http://feed.dilbert.com/dilbert/daily_strip?format=xml</link>
-    </feed>
-    <feed>
         <title>Existential Comics</title>
         <link>http://existentialcomics.com/rss.xml</link>
     </feed>
-    <!--
-    <feed>
-        <title>Good Bear Comics</title>
-        <link>https://goodbearcomics.com/feed/</link>
-    </feed>
-    -->
     <feed>
         <title>Piled Higher and Deeper</title>
         <link>http://phdcomics.com/gradfeed.php</link>
     </feed>
-    <!--
-    <feed>
-        <title>Saturday Morning Breakfast Cereal</title>
-        <link>https://www.smbc-comics.com/rss.php</link>
-    </feed>
-    -->
     <feed>
         <title>XKCD</title>
         <link>https://www.xkcd.com/rss.xml</link>

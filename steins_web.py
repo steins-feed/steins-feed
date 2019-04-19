@@ -24,8 +24,7 @@ def get_browser(filename='sign_in.xml'):
         gecko_path = dir_name + os.sep + "geckodriver"
 
         options = webdriver.firefox.options.Options()
-        if "--no-gui" in sys.argv:
-            options.add_argument('-headless')
+        options.add_argument('-headless')
 
         profile = webdriver.FirefoxProfile()
         profile.set_preference('print.print_footerleft', "")
