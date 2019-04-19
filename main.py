@@ -13,7 +13,7 @@ from steins_web import get_browser
 browser = get_browser(interaction_mode=True)
 
 steins_update()
-port = steins_run()
+port, server, process = steins_run()
 browser.get("http://localhost:{}/".format(port))
 
 browser_open = True
@@ -24,4 +24,4 @@ while browser_open:
     except:
         browser_open = False
 
-steins_halt()
+steins_halt(server)

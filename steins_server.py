@@ -285,7 +285,7 @@ def steins_run():
     process = mp.Process(target=steins_run_child, args=(server, ))
     process.start()
 
-    return port
+    return port, server, process
 
 if __name__ == "__main__":
     steins_run()
