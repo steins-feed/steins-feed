@@ -30,7 +30,7 @@ def delete_feed(title):
 
     conn.commit()
 
-def init_feeds():
+def init_feeds(file_path=file_path):
     with open(file_path, 'r') as f:
         tree = etree.fromstring(f.read())
 

@@ -5,8 +5,8 @@ function foo() {
 	} else {
 		$page = 0;
 	}
-	// system('env PYTHONIOENCODING=UTF-8 python3 steins_server.py ' . $page . ' > index.log 2>&1');
-	system('env PYTHONIOENCODING=UTF-8 python3 steins_server.py ' . $page);
+	// system('env PYTHONIOENCODING=UTF-8 python3 steins_server.py index ' . $page . ' > index.log 2>&1'); // DEBUG.
+	system('env PYTHONIOENCODING=UTF-8 python3 steins_server.py index ' . $page);
 }
 ?>
 <!DOCTYPE html>

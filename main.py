@@ -9,7 +9,7 @@ from steins_feed import steins_update
 from steins_server import steins_run, steins_halt
 from steins_web import get_browser, close_browser
 
-steins_update()
+steins_update(not "--no-read" in sys.argv, not "--no-write" in sys.argv)
 
 if "--no-gui" in sys.argv:
     close_browser()

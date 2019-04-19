@@ -47,12 +47,19 @@ def steins_write_body(page_no):
 
     s += "<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
     s += "<p>{} articles. {} pages. Last updated: {}.</p>\n".format(len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated()))
-    s += "<form>\n"
+
+    s += "<p>\n"
     if not page_no == 0:
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Previous\">\n".format(page_no-1)
+        s += "<form style=\"display: inline-block\">\n"
+        s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no-1)
+        s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Previous\">\n"
+        s += "</form>\n"
     if not page_no == len(dates)-1:
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Next\">\n".format(page_no+1)
-    s += "</form>\n"
+        s += "<form style=\"display: inline-block\">\n"
+        s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no+1)
+        s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Next\">\n"
+        s += "</form>\n"
+    s += "</p>\n"
     s += "<hr>\n"
 
     for item_it in items:
@@ -62,20 +69,27 @@ def steins_write_body(page_no):
 
         s += "<p>\n"
         s += "<form>\n"
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/like/{}\" value=\"Like\">\n".format(item_it[0])
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/dislike/{}\" value=\"Dislike\">\n".format(item_it[0])
+        s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it[0])
+        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like\" value=\"Like\">\n"
+        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike\" value=\"Dislike\">\n"
         s += "</form>\n"
         s += "</p>\n"
         s += "<hr>\n"
 
-    s += "<form>\n"
+    s += "<p>\n"
     if not page_no == 0:
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Previous\">\n".format(page_no-1)
+        s += "<form style=\"display: inline-block\">\n"
+        s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no-1)
+        s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Previous\">\n"
+        s += "</form>\n"
     if not page_no == len(dates)-1:
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Next\">\n".format(page_no+1)
-    s += "</form>\n"
+        s += "<form style=\"display: inline-block\">\n"
+        s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no+1)
+        s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Next\">\n"
+        s += "</form>\n"
+    s += "</p>\n"
 
-    s += "<p><a href=\"/settings\">Settings</a></p>\n"
+    s += "<p><a href=\"/steins-feed/settings.php\">Settings</a></p>\n"
 
     return s
 
@@ -113,4 +127,6 @@ def steins_update(read_mode=True, write_mode=False):
         steins_write()
 
 if __name__ == "__main__":
+    from steins_web import close_browser
     steins_update()
+    close_browser()
