@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 
 import os
-import sqlite3
 import sys
 import time
 
 from steins_config import init_feeds
 from steins_manager import get_handler
+from steins_sql import get_connection, get_cursor, have_database, last_updated
+
+dir_name = os.path.dirname(os.path.abspath(__file__))
 
 # Scrape feeds.
-def steins_read(db_name):
-    conn = sqlite3.connect(db_name)
+def steins_read():
+    conn = get_connection()
     c = conn.cursor()
 
     for feed_it in c.execute("SELECT * FROM Feeds WHERE DISPLAY=1").fetchall():
@@ -32,12 +34,10 @@ def steins_read(db_name):
                 c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))
 
     conn.commit()
-    conn.close()
 
 # Generate HTML.
-def steins_write_payload(db_name, page_no):
-    conn = sqlite3.connect(db_name)
-    c = conn.cursor()
+def steins_write_payload(page_no):
+    c = get_cursor()
 
     dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
     try:
@@ -49,8 +49,7 @@ def steins_write_payload(db_name, page_no):
     s = ""
 
     s += "<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
-    last_updated = time.gmtime(os.path.getmtime(db_name))
-    s += "<p>{} articles. {} pages. Last updated: {}.</p>\n".format(len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated))
+    s += "<p>{} articles. {} pages. Last updated: {}.</p>\n".format(len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated()))
     s += "<form>\n"
     if not page_no == 0:
         s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/index.php?page={}\" value=\"Previous\">\n".format(page_no-1)
@@ -81,12 +80,11 @@ def steins_write_payload(db_name, page_no):
 
     s += "<p><a href=\"/settings\">Settings</a></p>\n"
 
-    conn.close()
-
     return s
 
-def steins_write(db_name):
-    dir_name = os.path.dirname(os.path.abspath(__file__))
+def steins_write():
+    c = get_cursor()
+
     items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1)").fetchall()
     times = [it[2][:10] for it in items]
     dates = sorted(list(set(times)), reverse=True)
@@ -102,23 +100,23 @@ def steins_write(db_name):
         f.write("<title>Stein's Feed</title>\n")
         f.write("</head>\n")
         f.write("<body>\n")
-        f.write(steins_write_payload(db_name, d_ctr))
+        f.write(steins_write_payload(d_ctr))
         f.write("</body>\n")
         f.write("</html>\n")
         f.close()
 
-def steins_update(db_name):
-    db_exists = os.path.isfile(db_name)
-    conn = sqlite3.connect(db_name)
-    c = conn.cursor()
-    if not db_exists:
+def steins_update():
+    if not have_database():
+        conn = get_connection()
+        c = conn.cursor()
+
         c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Display INTEGER DEFAULT 1)")
         c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, Like INTEGER DEFAULT 0)")
         init_feeds(c)
-    conn.commit()
-    conn.close()
+
+        conn.commit()
 
     if not "--no-read" in sys.argv:
-        steins_read(db_name)
+        steins_read()
     if not "--no-write" in sys.argv:
-        steins_write(db_name)
+        steins_write()

@@ -76,9 +76,15 @@ def close_browser():
         browser = get_browser()
         browser.quit()
 
+def have_session():
+    if "session" in globals():
+        return True
+    else:
+        return False
+
 def get_session():
     global session
-    if not "session" in globals():
+    if not have_session():
         print("DEBUG: Session.")
         session = requests.Session()
     return session

@@ -2,19 +2,19 @@
 
 import multiprocessing as mp
 import os
-import sqlite3
 import sys
 import time
 import urllib
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from xml.sax.saxutils import escape
+
 from steins_config import *
 from steins_feed import steins_update, steins_write_payload
 from steins_manager import get_handler
-from xml.sax.saxutils import escape
+from steins_sql import get_connection, get_cursor
 
 dir_name = os.path.dirname(os.path.abspath(__file__))
-db_name = dir_name + os.sep + "steins.db"
 
 SERVER = None
 PORT = 8000
@@ -24,7 +24,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         # Generate page.
         if self.path == "/":
-            #steins_update(db_name)
+            #steins_update()
             self.path += "0"
             self.do_GET()
             return
@@ -66,7 +66,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             f.close()
 
     def do_POST(self):
-        conn = sqlite3.connect(db_name)
+        conn = get_connection()
         c = conn.cursor()
 
         # Like.
@@ -109,7 +109,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
                     c.execute("UPDATE Feeds SET Display=0 WHERE ItemID=?", (q_it[0], ))
 
             conn.commit()
-            conn.close()
             self.do_GET()
             return
         # Add feed.
@@ -123,7 +122,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
             add_feed(c, title, link)
 
             conn.commit()
-            conn.close()
             self.settings_response()
             return
         # Delete feed.
@@ -137,7 +135,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
             delete_feed(c, row[1])
 
             conn.commit()
-            conn.close()
             self.settings_response()
             return
         # Load config.
@@ -150,7 +147,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
             init_feeds(c, filename)
 
             conn.commit()
-            conn.close()
             self.settings_response()
             return
         # Export config.
@@ -179,7 +175,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
             print("PRINT deprecated.")
 
         conn.commit()
-        conn.close()
 
     def page_response(self, page_no):
         # Write header.
@@ -195,12 +190,12 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("<title>Stein's Feed</title>\n".encode('utf-8'))
         self.wfile.write("</head>\n".encode('utf-8'))
         self.wfile.write("<body>\n".encode('utf-8'))
-        self.wfile.write(steins_write_payload(db_name, page_no).encode('utf-8'))
+        self.wfile.write(steins_write_payload(page_no).encode('utf-8'))
         self.wfile.write("</body>\n".encode('utf-8'))
         self.wfile.write("</html>\n".encode('utf-8'))
 
     def settings_response(self):
-        conn = sqlite3.connect(db_name)
+        conn = get_connection()
         c = conn.cursor()
 
         # Write header.
@@ -271,7 +266,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("</html>\n".encode('utf-8'))
 
         conn.commit()
-        conn.close()
 
 def steins_run_child(server):
     try:
@@ -305,5 +299,5 @@ def steins_halt():
     PROCESS.terminate()
 
 if __name__ == "__main__":
-    s_payload = steins_write_payload(db_name, int(sys.argv[1]))
+    s_payload = steins_write_payload(int(sys.argv[1]))
     print(s_payload)

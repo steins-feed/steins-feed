@@ -9,9 +9,14 @@ from lxml import etree, html
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException
 
-from steins_web import *
+from steins_web import get_browser, get_tree_from_session, fetch_cookies
+
+FILE_NAME = "sign_in.xml"
+dir_path = os.path.dirname(os.path.abspath(__file__))
+file_path = dir_path + os.sep + FILE_NAME
+file_exists = os.path.isfile(file_path)
 
 class SteinsHandler:
     def __init__(self):
@@ -73,23 +78,20 @@ class SteinsHandler:
 
         raise KeyError
 
-    def sign_in(self, filename):
+    def sign_in(self):
         pass
 
     def parse(self, feed_link):
         return feedparser.parse(feed_link)
 
 class AtlanticHandler(SteinsHandler):
-    def sign_in(self, filename):
-        with open(filename, 'r') as f:
-            file_opened = True
+    def sign_in(self):
+        with open(file_path, 'r') as f:
             tree = etree.fromstring(f.read())
             try:
                 node = tree.xpath("//atlantic")[0]
             except IndexError:
                 return
-        if not file_opened:
-            return
 
         browser = get_browser()
         browser.get("https://accounts.theatlantic.com/login/")
@@ -119,16 +121,13 @@ class AtlanticHandler(SteinsHandler):
         return d
 
 class EconomistHandler(SteinsHandler):
-    def sign_in(self, filename):
-        with open(filename, 'r') as f:
-            file_opened = True
+    def sign_in(self):
+        with open(file_path, 'r') as f:
             tree = etree.fromstring(f.read())
             try:
                 node = tree.xpath("//economist")[0]
             except IndexError:
                 return
-        if not file_opened:
-            return
 
         browser = get_browser()
         browser.get("https://www.economist.com")
@@ -150,16 +149,13 @@ class EconomistHandler(SteinsHandler):
         self.signed_in = True
 
 class FinancialTimesHandler(SteinsHandler):
-    def sign_in(self, filename):
-        with open(filename, 'r') as f:
-            file_opened = True
+    def sign_in(self):
+        with open(file_path, 'r') as f:
             tree = etree.fromstring(f.read())
             try:
                 node = tree.xpath("//financial_times")[0]
             except IndexError:
                 return
-        if not file_opened:
-            return
 
         while True:
             try:
@@ -187,16 +183,13 @@ class FinancialTimesHandler(SteinsHandler):
         self.signed_in = True
 
 class GuardianHandler(SteinsHandler):
-    def sign_in(self, filename):
-        with open(filename, 'r') as f:
-            file_opened = True
+    def sign_in(self):
+        with open(file_path, 'r') as f:
             tree = etree.fromstring(f.read())
             try:
                 node = tree.xpath("//guardian")[0]
             except IndexError:
                 return
-        if not file_opened:
-            return
 
         browser = get_browser()
         browser.get("https://profile.theguardian.com/signin/")
@@ -229,16 +222,13 @@ class MangaStreamHandler(SteinsHandler):
         return d
 
 class NewYorkerHandler(SteinsHandler):
-    def sign_in(self, filename):
-        with open(filename, 'r') as f:
-            file_opened = True
+    def sign_in(self):
+        with open(file_path, 'r') as f:
             tree = etree.fromstring(f.read())
             try:
                 node = tree.xpath("//new_yorker")[0]
             except IndexError:
                 return
-        if not file_opened:
-            return
 
         browser = get_browser()
         browser.get("https://account.newyorker.com")
@@ -255,16 +245,13 @@ class NewYorkerHandler(SteinsHandler):
         self.signed_in = True
 
 class WIREDHandler(SteinsHandler):
-    def sign_in(self, filename):
-        with open(filename, 'r') as f:
-            file_opened = True
+    def sign_in(self):
+        with open(file_path, 'r') as f:
             tree = etree.fromstring(f.read())
             try:
                 node = tree.xpath("//wired")[0]
             except IndexError:
                 return
-        if not file_opened:
-            return
 
         browser = get_browser()
         browser.get("https://www.wired.com/account/sign-in/")
@@ -281,7 +268,7 @@ class WIREDHandler(SteinsHandler):
         self.signed_in = True
 
 # Static factory.
-def get_handler(source, filename="sign_in.xml"):
+def get_handler(source):
     if "The Atlantic" in source:
         global atlantic_handler
         if not "atlantic_handler" in globals():
@@ -327,8 +314,6 @@ def get_handler(source, filename="sign_in.xml"):
     else:
         handler = SteinsHandler()
 
-    dir_name = os.path.dirname(os.path.abspath(__file__))
-    file_name = dir_name + os.sep + filename
-    if os.path.exists(file_name) and not handler.signed_in:
-        handler.sign_in(file_name)
+    if file_exists and not handler.signed_in:
+        handler.sign_in()
     return handler
