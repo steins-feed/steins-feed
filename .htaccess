@@ -1,0 +1,11 @@
+<Files *>
+    Require all denied
+</Files>
+
+<FilesMatch "^$">
+    Require all granted
+</FilesMatch>
+
+<Files "index.php">
+    Require all granted
+</Files>
