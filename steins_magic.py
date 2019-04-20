@@ -1,48 +1,59 @@
 #!/usr/bin/env python3
 
-import os
+import numpy as np
 import time
 
-from steins_config import init_feeds
-from steins_manager import get_handler
-from steins_sql import get_connection, get_cursor, last_updated
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import Pipeline
 
-dir_name = os.path.dirname(os.path.abspath(__file__))
+from steins_sql import get_cursor, last_updated
 
-# Scrape feeds.
-def steins_read():
-    conn = get_connection()
-    c = conn.cursor()
-
-    for feed_it in c.execute("SELECT * FROM Feeds WHERE DISPLAY=1").fetchall():
-        print(feed_it[1])
-        handler = get_handler(feed_it[1])
-        d = handler.parse(feed_it[2])
-
-        for item_it in d['items']:
-            item_title = handler.read_title(item_it)
-            item_time = handler.read_time(item_it)
-
-            # Punish cheaters.
-            if time.strptime(item_time, "%Y-%m-%d %H:%M:%S GMT") > time.gmtime():
-                continue
-
-            if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_title, item_time, )).fetchone()[0] == 0:
-                item_link = handler.read_link(item_it)
-                item_summary = handler.read_summary(item_it)
-                c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))
-
-    conn.commit()
-
-def steins_generate_page(page_no):
+def handle_naive_bayes(qd):
     c = get_cursor()
 
+    likes = c.execute("SELECT Title FROM Items WHERE Like=1").fetchall()
+    dislikes = c.execute("SELECT Title FROM Items WHERE Like=-1").fetchall()
+
+    titles = []
+    titles += [row_it[0] for row_it in likes]
+    titles += [row_it[0] for row_it in dislikes]
+
+    targets = np.zeros(len(likes) + len(dislikes))
+    targets[:len(likes)] = 1
+    targets[len(likes):] = -1
+
+    # Build pipeline.
+    count_vect = ('vect', CountVectorizer())
+    tfidf_transformer = ('tfidf', TfidfTransformer())
+    clf = ('clf', MultinomialNB())
+    text_clf = Pipeline([count_vect, tfidf_transformer, clf])
+
+    # Train classifier.
+    clf = text_clf.fit(titles, targets)
+
+    # Test on training data.
+    #predicted = text_clf.predict(titles)
+    #print(predicted[:len(likes)])
+    #print(predicted[len(likes):])
+    #predicted_proba = text_clf.predict_proba(titles)
+    #print([int(100 * (it[1] - it[0])) / 100. for it in predicted_proba[:len(likes)]])
+    #print([int(100 * (it[1] - it[0])) / 100. for it in predicted_proba[len(likes):]])
+
+    # Make predictions.
     dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
+    page_no = int(qd['page'])
     if page_no >= len(dates):
         return
     d_it = dates[page_no][0]
     items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC", (d_it, )).fetchall()
+    new_titles = [row_it[1] for row_it in items]
+    predicted_proba = text_clf.predict_proba(new_titles)
+    proba = [it[1] - it[0] for it in predicted_proba]
+    proba_map = zip(proba, range(len(proba)))
+    proba_map_sorted = sorted(proba_map, reverse=True)
 
+    # Page.
     s = ""
     s += "<!DOCTYPE html>\n"
     s += "<html>\n"
@@ -69,9 +80,11 @@ def steins_generate_page(page_no):
     s += "</p>\n"
     s += "<hr>\n"
 
-    for item_it in items:
+    for item_ctr in proba_map_sorted:
+        item_it = items[item_ctr[1]]
+
         s += "<h2><a href=\"{}\">{}</a></h2>\n".format(item_it[5], item_it[1])
-        s += "<p>Source: {}. Published: {}.</p>".format(item_it[4], item_it[2])
+        s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>".format(item_it[4], item_it[2], item_ctr[0])
         s += "{}".format(item_it[3])
 
         s += "<p>\n"
@@ -115,34 +128,5 @@ def steins_generate_page(page_no):
 
     return s
 
-# Generate HTML.
-def steins_write():
-    c = get_cursor()
-
-    dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
-    for d_ctr in range(len(dates)):
-        with open(dir_name+os.sep+"steins-{}.html".format(d_ctr), 'w') as f:
-            f.write(steins_generate_page(d_ctr))
-
-def steins_update(read_mode=True, write_mode=False):
-    conn = get_connection()
-    c = conn.cursor()
-
-    c.execute("CREATE TABLE IF NOT EXISTS Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Display INTEGER DEFAULT 1)")
-    c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, Like INTEGER DEFAULT 0)")
-    init_feeds()
-
-    conn.commit()
-
-    if read_mode:
-        steins_read()
-    if write_mode:
-        steins_write()
-
 if __name__ == "__main__":
-    from steins_sql import close_connection
-    from steins_web import close_browser
-
-    steins_update()
-    close_connection()
-    close_browser()
+    handle_naive_bayes({'page': 1})
