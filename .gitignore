@@ -1,7 +1,7 @@
 geckodriver.log
-index.log
 steins.db
 steins-*.html
 README.pdf
 __pycache__/
+*.log
 *.pyc
