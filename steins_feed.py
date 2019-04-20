@@ -75,7 +75,7 @@ def steins_generate_page(page_no):
         s += "{}".format(item_it[3])
 
         s += "<p>\n"
-        s += "<form>\n"
+        s += "<form target=\"foo\">\n"
         s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it[0])
         s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" value=\"Like\">\n"
         s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike.php\" value=\"Dislike\">\n"
@@ -97,6 +97,8 @@ def steins_generate_page(page_no):
     s += "</p>\n"
 
     s += "<p><a href=\"/steins-feed/settings.php\">Settings</a></p>\n"
+
+    s += "<iframe name=\"foo\" style=\"display: none;\"></iframe>\n"
     s += "</body>\n"
     s += "</html>\n"
 
