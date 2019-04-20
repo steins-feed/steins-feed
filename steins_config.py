@@ -41,4 +41,7 @@ def init_feeds(file_path=file_path):
         add_feed(title, link)
 
 if __name__ == "__main__":
+    from steins_sql import close_connection
+
     init_feeds()
+    close_connection()

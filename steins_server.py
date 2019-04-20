@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-import multiprocessing as mp
 import os
-import sys
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlsplit, parse_qs, parse_qsl
@@ -261,31 +259,28 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.wfile.write("</body>\n".encode('utf-8'))
         self.wfile.write("</html>\n".encode('utf-8'))
 
-def steins_halt(server):
-    server.socket.close()
-    print("Connection closed.")
-
-def steins_run_child(server):
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        steins_halt(server)
-
 def steins_run():
+    global PORT
     port = PORT
 
     while True:
         try:
             server = HTTPServer(('localhost', port), SteinsHandler)
-            print("Connection open: {}.".format(port))
             break
         except OSError:
             port += 2
 
-    process = mp.Process(target=steins_run_child, args=(server, ))
-    process.start()
+    print("Connection open: {}.".format(port))
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        server.server_close()
+    print("Connection closed.")
 
-    return port, server, process
+    PORT = port
 
 if __name__ == "__main__":
+    from steins_sql import close_connection
+
     steins_run()
+    close_connection()
