@@ -71,6 +71,7 @@ def get_browser(file_name='sign_in.xml', interaction_mode=False):
 
 def close_browser():
     if have_browser():
+        print("DEBUG: Firefox.")
         browser = get_browser()
         browser.quit()
 
