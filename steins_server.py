@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import time
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlsplit, parse_qs, parse_qsl
@@ -99,6 +100,49 @@ def handle_settings():
 
     return s
 
+def handle_statistics():
+    c = get_cursor()
+
+    s = ""
+
+    # Write payload.
+    s += "<!DOCTYPE html>\n"
+    s += "<html>\n"
+    s += "<head>\n"
+    s += "<meta charset=\"UTF-8\">"
+    s += "<title>Settings</title>\n"
+    s += "</head>\n"
+    s += "<body>\n"
+
+    # Likes.
+    likes = c.execute("SELECT * FROM Items WHERE Like=1 ORDER BY Published DESC").fetchall()
+
+    s += "<h2>Likes</h2>\n"
+    s += "<p>{} likes.</p>\n".format(len(likes))
+    s += "<ul>\n"
+    for row_it in likes:
+        datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it[2], "%Y-%m-%d %H:%M:%S GMT"))
+        s += "<li>{}: {} ({})</li>".format(row_it[4], row_it[1], datestamp)
+    s += "</ul>\n"
+
+    s += "<hr>\n"
+
+    # Dislikes.
+    likes = c.execute("SELECT * FROM Items WHERE Like=-1 ORDER BY Published DESC").fetchall()
+
+    s += "<h2>Dislikes</h2>\n"
+    s += "<p>{} dislikes.</p>\n".format(len(likes))
+    s += "<ul>\n"
+    for row_it in likes:
+        datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it[2], "%Y-%m-%d %H:%M:%S GMT"))
+        s += "<li>{}: {} ({})</li>".format(row_it[4], row_it[1], datestamp)
+    s += "</ul>\n"
+
+    s += "</body>\n"
+    s += "</html>\n"
+
+    return s
+
 class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.path = self.path.replace("/steins-feed", "")
@@ -136,6 +180,14 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
             s = handle_settings()
+            self.wfile.write(s.encode('utf-8'))
+        elif self.path == "/statistics.php":
+            # Write header.
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+
+            s = handle_statistics()
             self.wfile.write(s.encode('utf-8'))
 
     def do_POST(self):

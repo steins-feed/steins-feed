@@ -18,6 +18,7 @@ clean:
 	-rm steins-*.html
 	-rm README.pdf
 	-rm -r __pycache__/
+	-rm *.log
 	-rm *.pyc
 
 .PHONY: distclean

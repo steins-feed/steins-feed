@@ -96,7 +96,10 @@ def steins_generate_page(page_no):
         s += "</form>\n"
     s += "</p>\n"
 
-    s += "<p><a href=\"/steins-feed/settings.php\">Settings</a></p>\n"
+    s += "<p>\n"
+    s += "<a href=\"/steins-feed/settings.php\">Settings</a>\n"
+    s += "<a href=\"/steins-feed/statistics.php\">Statistics</a>\n"
+    s += "</p>\n"
 
     s += "<iframe name=\"foo\" style=\"display: none;\"></iframe>\n"
     s += "</body>\n"
