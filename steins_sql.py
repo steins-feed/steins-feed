@@ -22,13 +22,11 @@ def have_connection():
 def get_connection():
     global connection
     if not have_connection():
-        print("DEBUG: SQL.")
         connection = sqlite3.connect(db_path)
     return connection
 
 def close_connection():
     if have_connection():
-        print("DEBUG: SQL.")
         conn = get_connection()
         conn.close()
 

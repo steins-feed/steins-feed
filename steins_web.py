@@ -21,7 +21,6 @@ def have_browser():
 def get_browser(file_name='sign_in.xml', interaction_mode=False):
     global browser
     if not have_browser():
-        print("DEBUG: Firefox.")
         gecko_path = dir_path + os.sep + "geckodriver"
 
         options = webdriver.firefox.options.Options()
@@ -71,7 +70,6 @@ def get_browser(file_name='sign_in.xml', interaction_mode=False):
 
 def close_browser():
     if have_browser():
-        print("DEBUG: Firefox.")
         browser = get_browser()
         browser.quit()
 
@@ -84,7 +82,6 @@ def have_session():
 def get_session():
     global session
     if not have_session():
-        print("DEBUG: Session.")
         session = requests.Session()
     return session
 

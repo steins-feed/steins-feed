@@ -16,7 +16,6 @@ def add_feed(title, link):
 
     if c.execute("SELECT COUNT(*) FROM Feeds WHERE Title=?", (title, )).fetchone()[0] == 0:
         c.execute("INSERT INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
-        print("ADD: {} <{}>.".format(title, link))
 
     conn.commit()
 
@@ -26,7 +25,6 @@ def delete_feed(title):
 
     row = c.execute("SELECT * FROM Feeds WHERE Title=?", (title, )).fetchone()
     c.execute("DELETE FROM Feeds WHERE Title=?", (title, ))
-    print("DELETE: {} <{}>.".format(row[1], row[2]))
 
     conn.commit()
 

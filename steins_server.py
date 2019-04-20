@@ -25,13 +25,8 @@ def handle_like(qd, val=1):
     row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
     if row[6] == val:
         c.execute("UPDATE Items SET Like=0 WHERE ItemID=?", (item_id, ))
-        print("UNLIKE: {}.".format(row[1]))
     else:
         c.execute("UPDATE Items SET Like=? WHERE ItemID=?", (val, item_id, ))
-        if val == 1:
-            print("LIKE: {}.".format(row[1]))
-        if val == -1:
-            print("DISLIKE: {}.".format(row[1]))
 
     conn.commit()
 
@@ -253,12 +248,10 @@ def steins_run():
         except OSError:
             port += 2
 
-    print("Connection open: {}.".format(port))
     try:
         server.serve_forever()
     except KeyboardInterrupt:
         server.server_close()
-    print("Connection closed.")
 
     PORT = port
 
