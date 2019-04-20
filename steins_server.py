@@ -7,12 +7,33 @@ from urllib.parse import urlsplit, parse_qs, parse_qsl
 from xml.sax.saxutils import escape
 
 from steins_config import add_feed, delete_feed, init_feeds
-from steins_feed import steins_write_body
+from steins_feed import steins_generate_page
 from steins_sql import get_connection, get_cursor
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
 PORT = 8000
+
+def handle_page(qd):
+    return steins_generate_page(int(qd['page']))
+
+def handle_like(qd, val=1):
+    conn = get_connection()
+    c = conn.cursor()
+
+    item_id = int(qd['id'])
+    row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
+    if row[6] == val:
+        c.execute("UPDATE Items SET Like=0 WHERE ItemID=?", (item_id, ))
+        print("UNLIKE: {}.".format(row[1]))
+    else:
+        c.execute("UPDATE Items SET Like=? WHERE ItemID=?", (val, item_id, ))
+        if val == 1:
+            print("LIKE: {}.".format(row[1]))
+        if val == -1:
+            print("DISLIKE: {}.".format(row[1]))
+
+    conn.commit()
 
 class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -26,9 +47,15 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.path += "?page=0"
             self.do_GET()
         elif "/index.php" in self.path:
+            # Write header.
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+
             qs = urlsplit(self.path).query
-            qs = dict(parse_qsl(qs))
-            self.page_response(int(qs['page']))
+            qd = dict(parse_qsl(qs))
+            s = handle_page(qd)
+            self.wfile.write(s.encode('utf-8'))
         elif self.path == "/favicon.ico":
             # Write header.
             self.send_response(200)
@@ -129,65 +156,21 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.send_response(204)
             self.end_headers()
         # Like.
-        elif "/like" in self.path:
-            conn = get_connection()
-            c = conn.cursor()
-
-            query_len = int(self.headers.get('content-length'))
-            query = self.rfile.read(query_len)
-            query_dict = dict(parse_qsl(query))
-
-            item_id = int(query_dict['id'.encode('utf-8')])
-            row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
-            if row[6] == 1:
-                c.execute("UPDATE Items SET Like=0 WHERE ItemID=?", (item_id, ))
-                print("UNLIKE: {}.".format(row[1]))
-            else:
-                c.execute("UPDATE Items SET Like=1 WHERE ItemID=?", (item_id, ))
-                print("LIKE: {}.".format(row[1]))
-
-            conn.commit()
+        elif "/like.php" in self.path:
+            qlen = int(self.headers.get('content-length'))
+            qs = self.rfile.read(qlen).decode('utf-8')
+            qd = dict(parse_qsl(qs))
+            handle_like(qd)
             self.send_response(204)
             self.end_headers()
         # Dislike.
-        elif "/dislike" in self.path:
-            conn = get_connection()
-            c = conn.cursor()
-
-            query_len = int(self.headers.get('content-length'))
-            query = self.rfile.read(query_len)
-            query_dict = dict(parse_qsl(query))
-
-            item_id = int(query_dict['id'.encode('utf-8')])
-            row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
-            if row[6] == -1:
-                c.execute("UPDATE Items SET Like=0 WHERE ItemID=?", (item_id, ))
-                print("UNLIKE: {}.".format(row[1]))
-            else:
-                c.execute("UPDATE Items SET Like=-1 WHERE ItemID=?", (item_id, ))
-                print("DISLIKE: {}.".format(row[1]))
-
-            conn.commit()
+        elif "/dislike.php" in self.path:
+            qlen = int(self.headers.get('content-length'))
+            qs = self.rfile.read(qlen).decode('utf-8')
+            qd = dict(parse_qsl(qs))
+            handle_like(qd, -1)
             self.send_response(204)
             self.end_headers()
-
-    def page_response(self, page_no):
-        # Write header.
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-
-        # Write payload.
-        self.wfile.write("<!DOCTYPE html>\n".encode('utf-8'))
-        self.wfile.write("<html>\n".encode('utf-8'))
-        self.wfile.write("<head>\n".encode('utf-8'))
-        self.wfile.write("<meta charset=\"UTF-8\">".encode('utf-8'))
-        self.wfile.write("<title>Stein's Feed</title>\n".encode('utf-8'))
-        self.wfile.write("</head>\n".encode('utf-8'))
-        self.wfile.write("<body>\n".encode('utf-8'))
-        self.wfile.write(steins_write_body(page_no).encode('utf-8'))
-        self.wfile.write("</body>\n".encode('utf-8'))
-        self.wfile.write("</html>\n".encode('utf-8'))
 
     def settings_response(self):
         c = get_cursor()

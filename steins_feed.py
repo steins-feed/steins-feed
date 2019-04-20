@@ -34,7 +34,7 @@ def steins_read():
 
     conn.commit()
 
-def steins_write_body(page_no):
+def steins_generate_page(page_no):
     c = get_cursor()
 
     dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
@@ -44,6 +44,13 @@ def steins_write_body(page_no):
     items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC", (d_it, )).fetchall()
 
     s = ""
+    s += "<!DOCTYPE html>\n"
+    s += "<html>\n"
+    s += "<head>\n"
+    s += "<meta charset=\"UTF-8\">"
+    s += "<title>Stein's Feed</title>\n"
+    s += "</head>\n"
+    s += "<body>\n"
 
     s += "<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
     s += "<p>{} articles. {} pages. Last updated: {}.</p>\n".format(len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated()))
@@ -70,8 +77,8 @@ def steins_write_body(page_no):
         s += "<p>\n"
         s += "<form>\n"
         s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it[0])
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like\" value=\"Like\">\n"
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike\" value=\"Dislike\">\n"
+        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" value=\"Like\">\n"
+        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike.php\" value=\"Dislike\">\n"
         s += "</form>\n"
         s += "</p>\n"
         s += "<hr>\n"
@@ -90,6 +97,8 @@ def steins_write_body(page_no):
     s += "</p>\n"
 
     s += "<p><a href=\"/steins-feed/settings.php\">Settings</a></p>\n"
+    s += "</body>\n"
+    s += "</html>\n"
 
     return s
 
@@ -100,16 +109,7 @@ def steins_write():
     dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
     for d_ctr in range(len(dates)):
         with open(dir_name+os.sep+"steins-{}.html".format(d_ctr), 'w') as f:
-            f.write("<!DOCTYPE html>\n")
-            f.write("<html>\n")
-            f.write("<head>\n")
-            f.write("<meta charset=\"UTF-8\">")
-            f.write("<title>Stein's Feed</title>\n")
-            f.write("</head>\n")
-            f.write("<body>\n")
-            f.write(steins_write_body(d_ctr))
-            f.write("</body>\n")
-            f.write("</html>\n")
+            f.write(steins_generate_page(d_ctr))
 
 def steins_update(read_mode=True, write_mode=False):
     conn = get_connection()
