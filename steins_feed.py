@@ -34,7 +34,7 @@ def steins_read():
 
     conn.commit()
 
-def steins_generate_page(page_no):
+def steins_generate_page(page_no, score_board=None):
     c = get_cursor()
 
     dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
@@ -69,9 +69,17 @@ def steins_generate_page(page_no):
     s += "</p>\n"
     s += "<hr>\n"
 
-    for item_it in items:
+    for item_ctr in range(len(items)):
+        if score_board is None:
+            item_it = items[item_ctr]
+        else:
+            item_it = items[score_board[item_ctr][1]]
+
         s += "<h2><a href=\"{}\">{}</a></h2>\n".format(item_it[5], item_it[1])
-        s += "<p>Source: {}. Published: {}.</p>".format(item_it[4], item_it[2])
+        if score_board is None:
+            s += "<p>Source: {}. Published: {}.</p>".format(item_it[4], item_it[2])
+        else:
+            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>".format(item_it[4], item_it[2], score_board[item_ctr][0])
         s += "{}".format(item_it[3])
 
         s += "<p>\n"
