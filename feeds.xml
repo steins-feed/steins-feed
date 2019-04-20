@@ -74,7 +74,6 @@
     </feed>
 
     <!-- Capital.de -->
-    <!--
     <feed>
         <title>Capital.de Geld &amp; Versicherungen</title>
         <link>https://www.capital.de/thema/geld-versicherungen/feed</link>
@@ -99,7 +98,6 @@
         <title>Capital.de</title>
         <link>https://www.capital.de/feed</link>
     </feed>
-    -->
 
     <!-- The Economist -->
     <!--
@@ -450,7 +448,6 @@
     </feed>
 
     <!-- Netzpolitik.org -->
-    <!--
     <feed>
         <title>Netzpolitik.org Datenschutz</title>
         <link>https://netzpolitik.org/category/datenschutz/feed</link>
@@ -491,7 +488,6 @@
         <title>Netzpolitik.org</title>
         <link>https://netzpolitik.org/feed</link>
     </feed>
-    -->
 
     <!-- New Scientist -->
     <feed>
@@ -758,7 +754,6 @@
     </feed>
 
     <!-- t3n -->
-    <!--
     <feed>
         <title>t3n Digitale Wirtschaft</title>
         <link>https://t3n.de/tag/digitale-wirtschaft/rss.xml</link>
@@ -803,7 +798,6 @@
         <title>t3n</title>
         <link>https://t3n.de/rss.xml</link>
     </feed>
-    -->
 
     <!-- The Verge -->
     <feed>
