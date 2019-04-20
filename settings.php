@@ -1,21 +1,4 @@
 <?php
-function foo() {
-	if( $_GET["page"] ) {
-		$page = $_GET["page"];
-	} else {
-		$page = 0;
-	}
-	// system('env PYTHONIOENCODING=UTF-8 python3 steins_server.py settings ' . $page . ' > index.log 2>&1'); // DEBUG.
-	system('env PYTHONIOENCODING=UTF-8 python3 steins_server.py settings ' . $page);
-}
+    // system('env PYTHONIOENCODING=UTF-8 python3 settings.py ' . http_build_query($_POST) . ' > settings.log 2>&1'); // DEBUG.
+    system('env PYTHONIOENCODING=UTF-8 python3 settings.py ' . http_build_query($_POST));
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Stein's Feed</title>
-</head>
-<body>
-<?php foo()?>
-</body>
-</html>

@@ -30,6 +30,75 @@ def handle_like(qd, val=1):
 
     conn.commit()
 
+def handle_settings():
+    c = get_cursor()
+
+    s = ""
+
+    # Write payload.
+    s += "<!DOCTYPE html>\n"
+    s += "<html>\n"
+    s += "<head>\n"
+    s += "<meta charset=\"UTF-8\">"
+    s += "<title>Settings</title>\n"
+    s += "</head>\n"
+    s += "<body>\n"
+
+    # Display feeds.
+    s += "<form>\n"
+    for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
+        if feed_it[3] == 0:
+            s += "<input type=\"checkbox\" name=\"{}\" value=\"{}\">{}<br>\n".format(feed_it[0], feed_it[1], feed_it[1])
+        else:
+            s += "<input type=\"checkbox\" name=\"{}\" value=\"{}\" checked>{}<br>\n".format(feed_it[0], feed_it[1], feed_it[1])
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/feeds\" value=\"Display feeds\"></p>\n"
+    s += "</form>\n"
+
+    s += "<hr>\n"
+
+    # Add feed.
+    s += "<form>\n"
+    s += "<p>Title:<br>\n"
+    s += "<input type=\"text\" name=\"title\"></p>\n"
+    s += "<p>Link:<br>\n"
+    s += "<input type=\"text\" name=\"link\"></p>\n"
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/add-feed\" value=\"Add feed\"></p>\n"
+    s += "</form>\n"
+
+    s += "<hr>\n"
+
+    # Delete feed.
+    s += "<form>\n"
+    s += "<p><select name=\"feed\">\n"
+    for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
+        s += "<option value=\"{}\">{}</option>\n".format(feed_it[0], feed_it[1])
+    s += "</select></p>\n"
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/delete-feed\" value=\"Delete feed\"></p>\n"
+    s += "</form>\n"
+
+    s += "<hr>\n"
+
+    # Load config.
+    s += "<form>\n"
+    s += "<p>File:<br>\n"
+    s += "<input type=\"text\" name=\"file\"></p>\n"
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/load-config\" value=\"Load config\"></p>\n"
+    s += "</form>\n"
+
+    s += "<hr>\n"
+
+    # Export config.
+    s += "<form>\n"
+    s += "<p>File:<br>\n"
+    s += "<input type=\"text\" name=\"file\"></p>\n"
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/export-config\" value=\"Export config\"></p>\n"
+    s += "</form>\n"
+
+    s += "</body>\n"
+    s += "</html>\n"
+
+    return s
+
 class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.path = self.path.replace("/steins-feed", "")
@@ -61,7 +130,13 @@ class SteinsHandler(BaseHTTPRequestHandler):
             with open(file_path, 'rb') as f:
                 self.wfile.write(f.read())
         elif self.path == "/settings.php":
-            self.settings_response()
+            # Write header.
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+
+            s = handle_settings()
+            self.wfile.write(s.encode('utf-8'))
 
     def do_POST(self):
         self.path = self.path.replace("/steins-feed", "")
@@ -166,76 +241,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
             handle_like(qd, -1)
             self.send_response(204)
             self.end_headers()
-
-    def settings_response(self):
-        c = get_cursor()
-
-        # Write header.
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-
-        # Write payload.
-        self.wfile.write("<!DOCTYPE html>\n".encode('utf-8'))
-        self.wfile.write("<html>\n".encode('utf-8'))
-        self.wfile.write("<head>\n".encode('utf-8'))
-        self.wfile.write("<meta charset=\"UTF-8\">".encode('utf-8'))
-        self.wfile.write("<title>Settings</title>\n".encode('utf-8'))
-        self.wfile.write("</head>\n".encode('utf-8'))
-        self.wfile.write("<body>\n".encode('utf-8'))
-
-        # Display feeds.
-        self.wfile.write("<form>\n".encode('utf-8'))
-        for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
-            if feed_it[3] == 0:
-                self.wfile.write("<input type=\"checkbox\" name=\"{}\" value=\"{}\">{}<br>\n".format(feed_it[0], feed_it[1], feed_it[1]).encode('utf-8'))
-            else:
-                self.wfile.write("<input type=\"checkbox\" name=\"{}\" value=\"{}\" checked>{}<br>\n".format(feed_it[0], feed_it[1], feed_it[1]).encode('utf-8'))
-        self.wfile.write("<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/feeds\" value=\"Display feeds\"></p>\n".encode('utf-8'))
-        self.wfile.write("</form>\n".encode('utf-8'))
-
-        self.wfile.write("<hr>\n".encode('utf-8'))
-
-        # Add feed.
-        self.wfile.write("<form>\n".encode('utf-8'))
-        self.wfile.write("<p>Title:<br>\n".encode('utf-8'))
-        self.wfile.write("<input type=\"text\" name=\"title\"></p>\n".encode('utf-8'))
-        self.wfile.write("<p>Link:<br>\n".encode('utf-8'))
-        self.wfile.write("<input type=\"text\" name=\"link\"></p>\n".encode('utf-8'))
-        self.wfile.write("<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/add-feed\" value=\"Add feed\"></p>\n".encode('utf-8'))
-        self.wfile.write("</form>\n".encode('utf-8'))
-
-        self.wfile.write("<hr>\n".encode('utf-8'))
-
-        # Delete feed.
-        self.wfile.write("<form>\n".encode('utf-8'))
-        self.wfile.write("<p><select name=\"feed\">\n".encode('utf-8'))
-        for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
-            self.wfile.write("<option value=\"{}\">{}</option>\n".format(feed_it[0], feed_it[1]).encode('utf-8'))
-        self.wfile.write("</select></p>\n".encode('utf-8'))
-        self.wfile.write("<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/delete-feed\" value=\"Delete feed\"></p>\n".encode('utf-8'))
-        self.wfile.write("</form>\n".encode('utf-8'))
-
-        self.wfile.write("<hr>\n".encode('utf-8'))
-
-        # Load config.
-        self.wfile.write("<form>\n".encode('utf-8'))
-        self.wfile.write("<p>File:<br>\n".encode('utf-8'))
-        self.wfile.write("<input type=\"text\" name=\"file\"></p>\n".encode('utf-8'))
-        self.wfile.write("<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/load-config\" value=\"Load config\"></p>\n".encode('utf-8'))
-        self.wfile.write("</form>\n".encode('utf-8'))
-
-        self.wfile.write("<hr>\n".encode('utf-8'))
-
-        # Export config.
-        self.wfile.write("<form>\n".encode('utf-8'))
-        self.wfile.write("<p>File:<br>\n".encode('utf-8'))
-        self.wfile.write("<input type=\"text\" name=\"file\"></p>\n".encode('utf-8'))
-        self.wfile.write("<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/export-config\" value=\"Export config\"></p>\n".encode('utf-8'))
-        self.wfile.write("</form>\n".encode('utf-8'))
-
-        self.wfile.write("</body>\n".encode('utf-8'))
-        self.wfile.write("</html>\n".encode('utf-8'))
 
 def steins_run():
     global PORT
