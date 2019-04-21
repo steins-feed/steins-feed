@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import numpy as np
-
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
@@ -19,9 +17,9 @@ def handle_naive_bayes(qd):
     titles += [row_it[0] for row_it in likes]
     titles += [row_it[0] for row_it in dislikes]
 
-    targets = np.zeros(len(likes) + len(dislikes))
-    targets[:len(likes)] = 1
-    targets[len(likes):] = -1
+    targets = []
+    targets += [1 for row_it in likes]
+    targets += [-1 for row_it in dislikes]
 
     # Build pipeline.
     count_vect = ('vect', CountVectorizer())

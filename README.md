@@ -3,34 +3,44 @@
 Content aggregator.
 Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 
-## Required (python3)
+## Packages
 
 *   lxml
 *   feedparser
+*   requests
+*   scikit-learn
 *   selenium
-*   setuptools
 
-## TODO (major)
+## Run on desktop.
 
-1.  Adapt Mozilla Firefox reader view.
-2.  Use machine learning and NLP for ranking.
+1.  Enter `python3 steins_server.py` on command line.
+2.  Open browser, and enter `localhost:8000`.
+3.  Enjoy.
+4.  Close browser.
+5.  Enter `^C` on command line.
 
-## TODO (minor)
+## Run on web server.
 
-*   Table for authors.
-*   Table for categories.
-*   Use HTML5 layout.
-*   Return HTML upon request.
+1.  Enter git clone `git@github.com:hy144328/steins-feed` on command line.
+2.  Move to site on web server, e.g. `/var/www/html/steins-feed`.
+3.  Make site available.
+    For Apache:
 
-## Sources
+        Alias /steins-feed "/var/www/html/steins-feed/"
 
-*   Facebook
-*   Hacker News
-*   Medium
-*   The Onion
-*   Reddit
-*   Slashdot
-*   Soundcloud
-*   Twitter
-*   WordPress
-*   YouTube
+        <Directory /var/www/html/steins-feed/>
+            Options +FollowSymlinks
+            AllowOverride All
+
+            SetEnv HOME /var/www/html/steins-feed
+            SetEnv HTTP_HOME /var/www/html/steins-feed
+        </Directory>
+
+    Enable it in server config.
+4.  Make sure PHP scripts are accessible (`.htaccess` included).
+5.  Set up a cron job, e.g. hourly:
+
+        00 * * * * python3 /var/www/html/steins-feed/steins_feed.py
+
+6.  Open browser, and enter URL to website.
+7.  Enjoy.

@@ -1,16 +1,14 @@
-.PHONY: stein
-stein:
+.PHONY: run
+run:
 	python3 main.py
-
-.PHONY: readme
-readme: README.pdf
-README.pdf: README.md
-	pandoc -o README.pdf README.md
 
 .PHONY: test
 test:
 	make distclean
 	make
+
+README.pdf: README.md
+	pandoc -o README.pdf README.md
 
 .PHONY: clean
 clean:

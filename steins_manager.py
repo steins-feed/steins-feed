@@ -2,7 +2,6 @@
 
 import feedparser
 import os
-import requests
 import time
 
 from lxml import etree, html
