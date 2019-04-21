@@ -99,6 +99,88 @@
         <link>https://www.capital.de/feed</link>
     </feed>
 
+    <!-- The Conversation (UK) -->
+    <feed>
+        <title>The Conversation (UK) Arts + Culture</title>
+        <link>https://theconversation.com/uk/arts/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (UK) Business + Economy</title>
+        <link>https://theconversation.com/uk/business/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (UK) Cities</title>
+        <link>https://theconversation.com/uk/cities/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (UK) Education</title>
+        <link>https://theconversation.com/uk/education/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (UK) Environment + Energy</title>
+        <link>https://theconversation.com/uk/environment/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (UK) Health + Medicine</title>
+        <link>https://theconversation.com/uk/health/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (UK) Politics + Society</title>
+        <link>https://theconversation.com/uk/politics/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (UK) Science + Technology</title>
+        <link>https://theconversation.com/uk/technology/articles.atom</link>
+    </feed>
+    <!--
+    <feed>
+        <title>The Conversation (UK) Brexit</title>
+        <link>https://theconversation.com/uk/brexit/articles.atom</link>
+    </feed>
+    -->
+    <feed>
+        <title>The Conversation (UK)</title>
+        <link>https://theconversation.com/uk/articles.atom</link>
+    </feed>
+
+    <!-- The Conversation (US) -->
+    <feed>
+        <title>The Conversation (US) Arts + Culture</title>
+        <link>https://theconversation.com/us/arts/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (US) Economy + Business</title>
+        <link>https://theconversation.com/us/business/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (US) Education</title>
+        <link>https://theconversation.com/us/education/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (US) Environment + Energy</title>
+        <link>https://theconversation.com/us/environment/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (US) Ethics + Religion</title>
+        <link>https://theconversation.com/us/ethics/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (US) Health + Medicine</title>
+        <link>https://theconversation.com/us/health/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (US) Politics + Society</title>
+        <link>https://theconversation.com/us/politics/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (US) Science + Technology</title>
+        <link>https://theconversation.com/us/technology/articles.atom</link>
+    </feed>
+    <feed>
+        <title>The Conversation (US)</title>
+        <link>https://theconversation.com/us/articles.atom</link>
+    </feed>
+
     <!-- The Economist -->
     <!--
     <feed>
