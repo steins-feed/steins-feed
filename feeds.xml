@@ -417,6 +417,36 @@
     </feed>
     -->
 
+    <!-- Minutes -->
+    <feed>
+        <title>Minutes Business</title>
+        <link>https://www.minutesmagazine.com/category/business/feed/</link>
+    </feed>
+    <feed>
+        <title>Minutes Leadership</title>
+        <link>https://www.minutesmagazine.com/category/leadership/feed/</link>
+    </feed>
+    <feed>
+        <title>Minutes Startups</title>
+        <link>https://www.minutesmagazine.com/category/startups/feed/</link>
+    </feed>
+    <feed>
+        <title>Minutes Features</title>
+        <link>https://www.minutesmagazine.com/category/features/feed/</link>
+    </feed>
+    <feed>
+        <title>Minutes People</title>
+        <link>https://www.minutesmagazine.com/category/people/feed/</link>
+    </feed>
+    <feed>
+        <title>Minutes Marketing</title>
+        <link>https://www.minutesmagazine.com/category/marketing/feed/</link>
+    </feed>
+    <feed>
+        <title>Minutes</title>
+        <link>https://www.minutesmagazine.com/feed/</link>
+    </feed>
+
     <!-- MIT Technology Review -->
     <feed>
         <title>MIT Technology Review Biomedicine</title>
