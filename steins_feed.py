@@ -77,9 +77,9 @@ def steins_generate_page(page_no, score_board=None):
 
         s += "<h2><a href=\"{}\">{}</a></h2>\n".format(item_it[5], item_it[1])
         if score_board is None:
-            s += "<p>Source: {}. Published: {}.</p>".format(item_it[4], item_it[2])
+            s += "<p>Source: {}. Published: {}.</p>\n".format(item_it[4], item_it[2])
         else:
-            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>".format(item_it[4], item_it[2], score_board[item_ctr][0])
+            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it[4], item_it[2], score_board[item_ctr][0])
         s += "{}".format(item_it[3])
 
         s += "<p>\n"

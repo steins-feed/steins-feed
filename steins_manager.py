@@ -6,6 +6,7 @@ import requests
 import time
 
 from lxml import etree, html
+from lxml.etree import ParserError
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -30,20 +31,19 @@ class SteinsHandler:
 
     def read_summary(self, item_it):
         try:
-            summary = item_it['summary']
+            summary_tree = html.fromstring(item_it['summary'])
 
-            while True:
-                search_str1 = "<img"
-                idx1 = summary.find(search_str1)
-                if idx1 == -1:
-                    break
-                search_str2 = ">"
-                idx2 = summary.find(search_str2, idx1)
-                summary = summary[:idx1] + summary[idx2 + len(search_str2):]
+            if summary_tree.tag == "img":
+                return ""
+            image_nodes = summary_tree.xpath("//img")
+            for node_it in image_nodes:
+                node_it.getparent().remove(node_it)
 
-            return summary
+            return html.tostring(summary_tree).decode('utf-8')
         except KeyError:
             return ""
+        except ParserError:
+            return item_it['summary']
 
     def read_time(self, item_it):
         try:
@@ -83,6 +83,21 @@ class SteinsHandler:
 
     def parse(self, feed_link):
         return feedparser.parse(feed_link)
+
+class AbstractHandler(SteinsHandler):
+    def read_summary(self, item_it):
+        try:
+            summary_tree = html.fromstring(item_it['summary'])
+            p_nodes = summary_tree.xpath("//p")
+            return html.tostring(p_nodes[0]).decode('utf-8')
+        except KeyError:
+            return ""
+        except ParserError:
+            return item_it['summary']
+
+class NoAbstractHandler(SteinsHandler):
+    def read_summary(self, item_it):
+        return ""
 
 class AtlanticHandler(SteinsHandler):
     def sign_in(self):
@@ -275,12 +290,24 @@ def get_handler(source):
             print("DEBUG: AtlanticHandler.")
             atlantic_handler = AtlanticHandler()
         handler = atlantic_handler
-    elif "Economist" in source:
+    elif "The Economist" in source:
         global economist_handler
         if not "economist_handler" in globals():
             print("DEBUG: EconomistHandler.")
             economist_handler = EconomistHandler()
         handler = economist_handler
+    elif "Factorio" in source:
+        global factorio_handler
+        if not "factorio_handler" in globals():
+            print("DEBUG: FactorioHandler.")
+            factorio_handler = NoAbstractHandler()
+        handler = factorio_handler
+    elif "Fast Company" in source:
+        global fast_company_handler
+        if not "fast_company_handler" in globals():
+            print("DEBUG: FastCompanyHandler.")
+            fast_company_handler = NoAbstractHandler()
+        handler = fast_company_handler
     elif "Financial Times" in source:
         global financial_times_handler
         if not "financial_times_handler" in globals():
@@ -299,12 +326,38 @@ def get_handler(source):
             print("DEBUG: MangaStreamHandler.")
             manga_stream_handler = MangaStreamHandler()
         handler = manga_stream_handler
+    elif "New Republic" in source:
+        global new_republic_handler
+        if not "new_republic_handler" in globals():
+            print("DEBUG: NewRepublicHandler.")
+            new_republic_handler = NoAbstractHandler()
+        handler = new_republic_handler
+    elif "New Statesman" in source:
+        global new_statesman_handler
+        if not "new_statesman_handler" in globals():
+            print("DEBUG: NewStatesmanHandler.")
+            new_statesman_handler = AbstractHandler()
+        handler = new_statesman_handler
     elif "The New Yorker" in source:
         global new_yorker_handler
         if not "new_yorker_handler" in globals():
             print("DEBUG: NewYorkerHandler.")
             new_yorker_handler = NewYorkerHandler()
         handler = new_yorker_handler
+    elif "The Ringer" in source:
+        global ringer_handler
+        if not "ringer_handler" in globals():
+            print("DEBUG: RingerHandler.")
+            ringer_handler = AbstractHandler()
+        handler = ringer_handler
+    elif source == "The Verge":
+        handler = SteinsHandler()
+    elif "The Verge" in source:
+        global verge_handler
+        if not "verge_handler" in globals():
+            print("DEBUG: VergeHandler.")
+            verge_handler = NoAbstractHandler()
+        handler = verge_handler
     elif "WIRED" in source:
         global wired_handler
         if not "wired_handler" in globals():

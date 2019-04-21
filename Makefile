@@ -14,7 +14,6 @@ test:
 
 .PHONY: clean
 clean:
-	-rm geckodriver.log
 	-rm steins-*.html
 	-rm README.pdf
 	-rm -r __pycache__/
