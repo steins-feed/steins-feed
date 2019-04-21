@@ -837,6 +837,28 @@
         <link>https://www.theringer.com/rss/march-madness/index.xml</link>
     </feed>
 
+    <!-- Quartz -->
+    <feed>
+        <title>Quartzy</title>
+        <link>https://cms.qz.com/feed/edition/quartzy/</link>
+    </feed>
+    <feed>
+        <title>Quartz at Work</title>
+        <link>https://cms.qz.com/feed/edition/work/</link>
+    </feed>
+    <feed>
+        <title>Quartz India</title>
+        <link>https://cms.qz.com/feed/edition/india/</link>
+    </feed>
+    <feed>
+        <title>Quartz Africa</title>
+        <link>https://cms.qz.com/feed/edition/africa/</link>
+    </feed>
+    <feed>
+        <title>Quartz.com</title>
+        <link>https://cms.qz.com/feed</link>
+    </feed>
+
     <!-- Slate -->
     <feed>
         <title>Slate News &amp; Politics</title>
@@ -1037,10 +1059,6 @@
     <feed>
         <title>Quanta Magazine</title>
         <link>https://api.quantamagazine.org/feed/</link>
-    </feed>
-    <feed>
-        <title>Quartz.com</title>
-        <link>https://cms.qz.com/feed</link>
     </feed>
     <feed>
         <title>Salon.com</title>
