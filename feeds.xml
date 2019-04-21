@@ -652,12 +652,10 @@
         <title>The New Yorker Culture</title>
         <link>https://www.newyorker.com/feed/culture</link>
     </feed>
-    <!--
     <feed>
         <title>The New Yorker Humor</title>
         <link>https://www.newyorker.com/feed/humor</link>
     </feed>
-    -->
     <feed>
         <title>The New Yorker Books &amp; Fiction</title>
         <link>https://www.newyorker.com/feed/books</link>
@@ -978,12 +976,10 @@
         <title>WIRED Backchannel</title>
         <link>https://www.wired.com/feed/category/backchannel/latest/rss</link>
     </feed>
-    <!--
     <feed>
         <title>WIRED Photo</title>
         <link>https://www.wired.com/feed/category/photo/latest/rss</link>
     </feed>
-    -->
     <feed>
         <title>WIRED</title>
         <link>https://www.wired.com/feed/rss</link>
