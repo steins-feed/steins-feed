@@ -973,6 +973,44 @@
         <link>https://www.theverge.com/rss/index.xml</link>
     </feed>
 
+    <!-- Washington Post -->
+    <feed>
+        <title>Washington Post Politics</title>
+        <link>http://feeds.washingtonpost.com/rss/politics</link>
+    </feed>
+    <feed>
+        <title>Washington Post Opinions</title>
+        <link>http://feeds.washingtonpost.com/rss/opinions</link>
+    </feed>
+    <feed>
+        <title>Washington Post Sports</title>
+        <link>http://feeds.washingtonpost.com/rss/sports</link>
+    </feed>
+    <feed>
+        <title>Washington Post D.C., Maryland and Virginia</title>
+        <link>http://feeds.washingtonpost.com/rss/local</link>
+    </feed>
+    <feed>
+        <title>Washington Post National</title>
+        <link>http://feeds.washingtonpost.com/rss/national</link>
+    </feed>
+    <feed>
+        <title>Washington Post World</title>
+        <link>http://feeds.washingtonpost.com/rss/world</link>
+    </feed>
+    <feed>
+        <title>Washington Post Business</title>
+        <link>http://feeds.washingtonpost.com/rss/business</link>
+    </feed>
+    <feed>
+        <title>Washington Post Technology</title>
+        <link>http://feeds.washingtonpost.com/rss/business/technology</link>
+    </feed>
+    <feed>
+        <title>Washington Post</title>
+        <link>http://www.washingtonpost.com/rss</link>
+    </feed>
+
     <!-- WIRED -->
     <feed>
         <title>WIRED Business</title>
