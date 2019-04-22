@@ -223,18 +223,6 @@ class GuardianHandler(SteinsHandler):
         fetch_cookies()
         self.signed_in = True
 
-class MangaStreamHandler(SteinsHandler):
-    def parse(self, feed_link):
-        tree = get_tree_from_session(feed_link)
-        titles = tree.xpath("//item/title")
-        for title_it in titles:
-            if not "One Piece" in title_it.text:
-                item_it = title_it.getparent()
-                channel_it = item_it.getparent()
-                channel_it.remove(item_it)
-        d = feedparser.parse(html.tostring(tree))
-        return d
-
 class NewYorkerHandler(SteinsHandler):
     def sign_in(self):
         with open(file_path, 'r') as f:
@@ -325,12 +313,6 @@ def get_handler(source):
             print("DEBUG: GuardianHandler.")
             guardian_handler = GuardianHandler()
         handler = guardian_handler
-    elif "Manga Stream" in source:
-        global manga_stream_handler
-        if not "manga_stream_handler" in globals():
-            print("DEBUG: MangaStreamHandler.")
-            manga_stream_handler = MangaStreamHandler()
-        handler = manga_stream_handler
     elif "New Republic" in source:
         global new_republic_handler
         if not "new_republic_handler" in globals():

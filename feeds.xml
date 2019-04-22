@@ -37,37 +37,47 @@
         <link>https://www.theatlantic.com/feed/channel/entertainment/</link>
     </feed>
     <feed>
-        <title>The Atlantic Science</title>
-        <link>https://www.theatlantic.com/feed/channel/science/</link>
-    </feed>
-    <feed>
         <title>The Atlantic Technology</title>
         <link>https://www.theatlantic.com/feed/channel/technology/</link>
     </feed>
     <feed>
-        <title>The Atlantic Business</title>
-        <link>https://www.theatlantic.com/feed/channel/business/</link>
+        <title>The Atlantic Ideas</title>
+        <link>https://www.theatlantic.com/feed/channel/ideas/</link>
     </feed>
     <feed>
-        <title>The Atlantic Health</title>
-        <link>https://www.theatlantic.com/feed/channel/health/</link>
+        <title>The Atlantic Science</title>
+        <link>https://www.theatlantic.com/feed/channel/science/</link>
+    </feed>
+    <feed>
+        <title>The Atlantic Books</title>
+        <link>https://www.theatlantic.com/feed/channel/books/</link>
     </feed>
     <feed>
         <title>The Atlantic Family</title>
         <link>https://www.theatlantic.com/feed/channel/family/</link>
     </feed>
     <feed>
-        <title>The Atlantic Education</title>
-        <link>https://www.theatlantic.com/feed/channel/education/</link>
+        <title>The Atlantic Business</title>
+        <link>https://www.theatlantic.com/feed/channel/business/</link>
     </feed>
     <feed>
         <title>The Atlantic Global</title>
         <link>https://www.theatlantic.com/feed/channel/international/</link>
     </feed>
     <feed>
-        <title>The Atlantic National</title>
-        <link>https://www.theatlantic.com/feed/channel/national/</link>
+        <title>The Atlantic Health</title>
+        <link>https://www.theatlantic.com/feed/channel/health/</link>
     </feed>
+    <feed>
+        <title>The Atlantic Education</title>
+        <link>https://www.theatlantic.com/feed/channel/education/</link>
+    </feed>
+    <!--
+    <feed>
+        <title>The Atlantic Letters</title>
+        <link>https://www.theatlantic.com/feed/channel/education/</link>
+    </feed>
+    -->
     <feed>
         <title>The Atlantic</title>
         <link>https://www.theatlantic.com/feed/best-of/</link>
@@ -83,7 +93,7 @@
         <link>https://www.capital.de/thema/immobilien/feed</link>
     </feed>
     <feed>
-        <title>Capital.de Wirtschaft &amp; Politik</title>
+        <title>Capital.de Politik &amp; Wirtschaft</title>
         <link>https://www.capital.de/thema/wirtschaft-politik/feed</link>
     </feed>
     <feed>
@@ -132,12 +142,10 @@
         <title>The Conversation (UK) Science + Technology</title>
         <link>https://theconversation.com/uk/technology/articles.atom</link>
     </feed>
-    <!--
     <feed>
         <title>The Conversation (UK) Brexit</title>
         <link>https://theconversation.com/uk/brexit/articles.atom</link>
     </feed>
-    -->
     <feed>
         <title>The Conversation (UK)</title>
         <link>https://theconversation.com/uk/articles.atom</link>
@@ -310,7 +318,6 @@
     </feed>
 
     <!-- Financial Times -->
-    <!--
     <feed>
         <title>Financial Times World</title>
         <link>https://www.ft.com/world?format=rss</link>
@@ -322,6 +329,10 @@
     <feed>
         <title>Financial Times Companies</title>
         <link>https://www.ft.com/companies?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times Tech</title>
+        <link>https://www.ft.com/technology?format=rss</link>
     </feed>
     <feed>
         <title>Financial Times Markets</title>
@@ -340,35 +351,20 @@
         <link>https://www.ft.com/life-arts?format=rss</link>
     </feed>
     <feed>
+        <title>Financial Times Personal Finance</title>
+        <link>https://www.ft.com/personal-finance?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times Science</title>
+        <link>https://www.ft.com/science?format=rss</link>
+    </feed>
+    <feed>
+        <title>Financial Times Special Reports</title>
+        <link>https://www.ft.com/reports?format=rss</link>
+    </feed>
+    <feed>
         <title>Financial Times</title>
         <link>https://www.ft.com/?format=rss</link>
-    </feed>
-    -->
-
-    <!-- Financial Times Opinion -->
-    <feed>
-        <title>Financial Times Opinion -- The FT View</title>
-        <link>https://www.ft.com/ft-view?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Opinion -- The Big Read</title>
-        <link>https://www.ft.com/the-big-read?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Opinion -- Instant Insight</title>
-        <link>https://www.ft.com/instant-insight?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Opinion -- Lex</title>
-        <link>https://www.ft.com/lex?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Opinion -- Alphaville</title>
-        <link>https://ftalphaville.ft.com/rss-feed/</link>
-    </feed>
-    <feed>
-        <title>Financial Times Opinion</title>
-        <link>https://www.ft.com/opinion?format=rss</link>
     </feed>
 
     <!-- FiveThirtyEight -->
@@ -394,76 +390,69 @@
     </feed>
 
     <!-- The Guardian -->
-    <!--
     <feed>
-        <title>The Guardian Editorial</title>
-        <link>https://www.theguardian.com/profile/editorial/rss</link>
+        <title>The Guardian World News</title>
+        <link>https://www.theguardian.com/world/rss</link>
     </feed>
     <feed>
         <title>The Guardian UK News</title>
         <link>https://www.theguardian.com/uk-news/rss</link>
     </feed>
     <feed>
-        <title>The Guardian World News</title>
-        <link>https://www.theguardian.com/world/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian Economy</title>
-        <link>https://www.theguardian.com/uk/business/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian UK Politics</title>
-        <link>https://www.theguardian.com/politics/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian Environment</title>
-        <link>https://www.theguardian.com/uk/environment/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian Education</title>
-        <link>https://www.theguardian.com/education/rss</link>
-    </feed>
-    <feed>
         <title>The Guardian Science</title>
         <link>https://www.theguardian.com/science/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian Technology</title>
-        <link>https://www.theguardian.com/uk/technology/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian Global Development</title>
-        <link>https://www.theguardian.com/global-development/rss</link>
     </feed>
     <feed>
         <title>The Guardian Cities</title>
         <link>https://www.theguardian.com/cities/rss</link>
     </feed>
     <feed>
+        <title>The Guardian Global Development</title>
+        <link>https://www.theguardian.com/global-development/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Football</title>
+        <link>https://www.theguardian.com/football/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Tech</title>
+        <link>https://www.theguardian.com/uk/technology/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Business</title>
+        <link>https://www.theguardian.com/uk/business/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Environment</title>
+        <link>https://www.theguardian.com/uk/environment/rss</link>
+    </feed>
+    <!--
+    <feed>
         <title>The Guardian Obituaries</title>
         <link>https://www.theguardian.com/tone/obituaries/rss</link>
     </feed>
     -->
-
-    <!-- The Guardian -->
     <feed>
-        <title>The Guardian Editorial</title>
-        <link>https://www.theguardian.com/profile/editorial/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian Editorials</title>
-        <link>https://www.theguardian.com/tone/editorials/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian -- The long read</title>
-        <link>https://www.theguardian.com/news/series/the-long-read/rss</link>
+        <title>The Guardian</title>
+        <link>https://www.theguardian.com/international/rss</link>
     </feed>
 
     <!-- Heise -->
-    <!--
+    <feed>
+        <title>Heise Autos</title>
+        <link>https://www.heise.de/autos/rss/news-atom.xml</link>
+    </feed>
     <feed>
         <title>Heise Developer</title>
         <link>https://www.heise.de/developer/rss/news-atom.xml</link>
+    </feed>
+    <feed>
+        <title>Heise Fotografie</title>
+        <link>https://www.heise.de/foto/rss/news-atom.xml</link>
+    </feed>
+    <feed>
+        <title>Heise Jobs</title>
+        <link>https://jobs.heise.de/rss.xml</link>
     </feed>
     <feed>
         <title>Heise Security</title>
@@ -479,7 +468,11 @@
     </feed>
     <feed>
         <title>Heise iX</title>
-        <link>https://www.heise.de/iX/rss/news-atom.xml</link>
+        <link>https://www.heise.de/ix/rss/news-atom.xml</link>
+    </feed>
+    <feed>
+        <title>Heise Mac &amp; i</title>
+        <link>https://www.heise.de/mac-and-i/news-atom.xml</link>
     </feed>
     <feed>
         <title>Heise Technology Review</title>
@@ -487,7 +480,7 @@
     </feed>
     <feed>
         <title>Heise Telepolis</title>
-        <link>https://www.heise.de/tp/rss/news-atom.xml</link>
+        <link>https://www.heise.de/tp/news-atom.xml</link>
     </feed>
     <feed>
         <title>Heise TechStage</title>
@@ -495,9 +488,8 @@
     </feed>
     <feed>
         <title>Heise</title>
-        <link>https://www.heise.de/newsticker/heise-atom.xml</link>
+        <link>https://www.heise.de/rss/heise-atom.xml</link>
     </feed>
-    -->
 
     <!-- Minutes -->
     <feed>
@@ -711,6 +703,50 @@
         <link>https://www.prospectmagazine.co.uk/home/feed</link>
     </feed>
 
+    <!-- Quanta Magazine -->
+    <feed>
+        <title>Quanta Magazine Physics</title>
+        <link>https://api.quantamagazine.org/physics/feed/</link>
+    </feed>
+    <feed>
+        <title>Quanta Magazine Mathematics</title>
+        <link>https://api.quantamagazine.org/mathematics/feed/</link>
+    </feed>
+    <feed>
+        <title>Quanta Magazine Biology</title>
+        <link>https://api.quantamagazine.org/biology/feed/</link>
+    </feed>
+    <feed>
+        <title>Quanta Magazine Computer Science</title>
+        <link>https://api.quantamagazine.org/computer-science/feed/</link>
+    </feed>
+    <feed>
+        <title>Quanta Magazine</title>
+        <link>https://api.quantamagazine.org/feed/</link>
+    </feed>
+
+    <!-- Quartz -->
+    <feed>
+        <title>Quartzy</title>
+        <link>https://cms.qz.com/feed/edition/quartzy/</link>
+    </feed>
+    <feed>
+        <title>Quartz at Work</title>
+        <link>https://cms.qz.com/feed/edition/work/</link>
+    </feed>
+    <feed>
+        <title>Quartz India</title>
+        <link>https://cms.qz.com/feed/edition/india/</link>
+    </feed>
+    <feed>
+        <title>Quartz Africa</title>
+        <link>https://cms.qz.com/feed/edition/africa/</link>
+    </feed>
+    <feed>
+        <title>Quartz</title>
+        <link>https://cms.qz.com/feed</link>
+    </feed>
+
     <!-- Quillette -->
     <feed>
         <title>Quillette Features</title>
@@ -771,54 +807,6 @@
         <link>https://readwrite.com/feed/</link>
     </feed>
 
-    <!-- The Register -->
-    <!--
-    <feed>
-        <title>The Register Data Centre</title>
-        <link>https://www.theregister.co.uk/data_centre/headlines.atom</link>
-    </feed>
-    <feed>
-        <title>The Register Software</title>
-        <link>https://www.theregister.co.uk/software/headlines.atom</link>
-    </feed>
-    <feed>
-        <title>The Register Security</title>
-        <link>https://www.theregister.co.uk/security/headlines.atom</link>
-    </feed>
-    <feed>
-        <title>The Register Transformation</title>
-        <link>https://www.theregister.co.uk/transformation/headlines.atom</link>
-    </feed>
-    <feed>
-        <title>The Register Devops</title>
-        <link>https://www.theregister.co.uk/devops/headlines.atom</link>
-    </feed>
-    <feed>
-        <title>The Register Business</title>
-        <link>https://www.theregister.co.uk/business/headlines.atom</link>
-    </feed>
-    <feed>
-        <title>The Register Personal Tech</title>
-        <link>https://www.theregister.co.uk/personal_tech/headlines.atom</link>
-    </feed>
-    <feed>
-        <title>The Register Science</title>
-        <link>https://www.theregister.co.uk/science/headlines.atom</link>
-    </feed>
-    <feed>
-        <title>The Register Emergent Tech</title>
-        <link>https://www.theregister.co.uk/emergent_tech/headlines.atom</link>
-    </feed>
-    <feed>
-        <title>The Register Bootnotes</title>
-        <link>https://www.theregister.co.uk/bootnotes/headlines.atom</link>
-    </feed>
-    <feed>
-        <title>The Register</title>
-        <link>https://www.theregister.co.uk/headlines.atom</link>
-    </feed>
-    -->
-
     <!-- The Ringer -->
     <feed>
         <title>The Ringer NBA</title>
@@ -837,26 +825,46 @@
         <link>https://www.theringer.com/rss/march-madness/index.xml</link>
     </feed>
 
-    <!-- Quartz -->
+    <!-- Salon.com -->
     <feed>
-        <title>Quartzy</title>
-        <link>https://cms.qz.com/feed/edition/quartzy/</link>
+        <title>Salon.com News &amp; Politics</title>
+        <link>https://www.salon.com/category/news-and-politics/feed</link>
     </feed>
     <feed>
-        <title>Quartz at Work</title>
-        <link>https://cms.qz.com/feed/edition/work/</link>
+        <title>Salon.com Economy &amp; Innovation</title>
+        <link>https://www.salon.com/category/economy-and-innovation/feed</link>
     </feed>
     <feed>
-        <title>Quartz India</title>
-        <link>https://cms.qz.com/feed/edition/india/</link>
+        <title>Salon.com Culture</title>
+        <link>https://www.salon.com/category/culture/feed</link>
     </feed>
     <feed>
-        <title>Quartz Africa</title>
-        <link>https://cms.qz.com/feed/edition/africa/</link>
+        <title>Salon.com Science &amp; Health</title>
+        <link>https://www.salon.com/category/science-and-health/feed</link>
     </feed>
     <feed>
-        <title>Quartz.com</title>
-        <link>https://cms.qz.com/feed</link>
+        <title>Salon.com Food</title>
+        <link>https://www.salon.com/category/food/feed</link>
+    </feed>
+    <feed>
+        <title>Salon.com Life Stories</title>
+        <link>https://www.salon.com/category/life-stories/feed</link>
+    </feed>
+    <feed>
+        <title>Salon.com Sex &amp; Love</title>
+        <link>https://www.salon.com/category/sex-and-love/feed</link>
+    </feed>
+    <feed>
+        <title>Salon.com Marketplace</title>
+        <link>https://www.salon.com/category/marketplace/feed</link>
+    </feed>
+    <feed>
+        <title>Salon.com Video</title>
+        <link>https://www.salon.com/category/tv/feed</link>
+    </feed>
+    <feed>
+        <title>Salon.com</title>
+        <link>https://www.salon.com/feed</link>
     </feed>
 
     <!-- Slate -->
@@ -967,15 +975,15 @@
 
     <!-- WIRED -->
     <feed>
-        <title>WIRED Guides</title>
-        <link>https://www.wired.com/feed/tag/wired-guide/latest/rss</link>
-    </feed>
-    <feed>
         <title>WIRED Business</title>
         <link>https://www.wired.com/feed/category/business/latest/rss</link>
     </feed>
     <feed>
         <title>WIRED Culture</title>
+        <link>https://www.wired.com/feed/category/culture/latest/rss</link>
+    </feed>
+    <feed>
+        <title>WIRED Gear</title>
         <link>https://www.wired.com/feed/category/culture/latest/rss</link>
     </feed>
     <feed>
@@ -997,6 +1005,10 @@
     <feed>
         <title>WIRED Backchannel</title>
         <link>https://www.wired.com/feed/category/backchannel/latest/rss</link>
+    </feed>
+    <feed>
+        <title>WIRED Guides</title>
+        <link>https://www.wired.com/feed/tag/wired-guide/latest/rss</link>
     </feed>
     <feed>
         <title>WIRED Photo</title>
@@ -1057,20 +1069,8 @@
         <link>https://www.newstatesman.com/feeds/site_feed.rss</link>
     </feed>
     <feed>
-        <title>Quanta Magazine</title>
-        <link>https://api.quantamagazine.org/feed/</link>
-    </feed>
-    <feed>
-        <title>Salon.com</title>
-        <link>https://www.salon.com/feed</link>
-    </feed>
-    <feed>
         <title>Scientific American</title>
         <link>http://rss.sciam.com/ScientificAmerican-Global</link>
-    </feed>
-    <feed>
-        <title>TED Ideas</title>
-        <link>https://ideas.ted.com/feed/</link>
     </feed>
 
     <!-- Miscellaneous -->
@@ -1083,11 +1083,11 @@
         <link>https://www.gatesnotes.com/rss</link>
     </feed>
     <feed>
-        <title>Manga Stream</title>
-        <link>https://readms.net/rss</link>
-    </feed>
-    <feed>
         <title>McKinsey Insights</title>
         <link>https://www.mckinsey.com/Insights/rss.aspx</link>
+    </feed>
+    <feed>
+        <title>TED Ideas</title>
+        <link>https://ideas.ted.com/feed/</link>
     </feed>
 </root>
