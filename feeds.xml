@@ -635,6 +635,52 @@
         <link>https://feeds.newscientist.com</link>
     </feed>
 
+    <!-- The New York Times -->
+    <feed>
+        <title>The New York Times World</title>
+        <link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/world/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The New York Times U.S.</title>
+        <link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/us/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The New York Times Politics</title>
+        <link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/politics/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The New York Times New York</title>
+        <link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/nyregion/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The New York Times Business</title>
+        <link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/business/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The New York Times Opinion</title>
+        <link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/opinion/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The New York Times Technology</title>
+        <link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/technology/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The New York Times Science</title>
+        <link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/science/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The New York Times Health</title>
+        <link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/health/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The New York Times Sports</title>
+        <link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/sports/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The New York Times</title>
+        <link>https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml</link>
+    </feed>
+
     <!-- The New Yorker -->
     <feed>
         <title>The New Yorker News</title>
