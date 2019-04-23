@@ -450,10 +450,12 @@
         <title>Heise Fotografie</title>
         <link>https://www.heise.de/foto/rss/news-atom.xml</link>
     </feed>
+    <!--
     <feed>
         <title>Heise Jobs</title>
         <link>https://jobs.heise.de/rss.xml</link>
     </feed>
+    -->
     <feed>
         <title>Heise Security</title>
         <link>https://www.heise.de/security/rss/news-atom.xml</link>
