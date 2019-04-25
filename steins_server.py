@@ -111,7 +111,7 @@ def handle_statistics():
     s += "<html>\n"
     s += "<head>\n"
     s += "<meta charset=\"UTF-8\">"
-    s += "<title>Settings</title>\n"
+    s += "<title>Statistics</title>\n"
     s += "</head>\n"
     s += "<body>\n"
 
