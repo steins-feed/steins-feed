@@ -15,9 +15,12 @@ def steins_read():
     c = conn.cursor()
 
     for feed_it in c.execute("SELECT * FROM Feeds WHERE DISPLAY=1").fetchall():
-        print(feed_it[1])
         handler = get_handler(feed_it[1])
         d = handler.parse(feed_it[2])
+        try:
+            print("{}: {}.".format(feed_it[1], d.status))
+        except AttributeError:
+            print("{}: 200.".format(feed_it[1]))
 
         for item_it in d['items']:
             item_title = handler.read_title(item_it)

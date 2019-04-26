@@ -223,6 +223,11 @@ class GuardianHandler(SteinsHandler):
         fetch_cookies()
         self.signed_in = True
 
+class MediumHandler(SteinsHandler):
+    def parse(self, feed_link):
+        time.sleep(1)
+        return feedparser.parse(feed_link)
+
 class NewYorkerHandler(SteinsHandler):
     def sign_in(self):
         with open(file_path, 'r') as f:
@@ -313,6 +318,12 @@ def get_handler(source):
             print("DEBUG: GuardianHandler.")
             guardian_handler = GuardianHandler()
         handler = guardian_handler
+    elif "Medium" in source:
+        global medium_handler
+        if not "medium_handler" in globals():
+            print("DEBUG: MediumHandler.")
+            medium_handler = MediumHandler()
+        handler = medium_handler
     elif "New Republic" in source:
         global new_republic_handler
         if not "new_republic_handler" in globals():

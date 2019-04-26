@@ -356,7 +356,7 @@
     </feed>
     <feed>
         <title>Financial Times Science</title>
-        <link>https://www.ft.com/science?format=rss</link>
+        <link>https://www.ft.com/companies/science?format=rss</link>
     </feed>
     <feed>
         <title>Financial Times Special Reports</title>
@@ -491,6 +491,400 @@
     <feed>
         <title>Heise</title>
         <link>https://www.heise.de/rss/heise-atom.xml</link>
+    </feed>
+
+    <!-- Medium Arts & Entertainment -->
+    <feed>
+        <title>Medium Art</title>
+        <link>https://medium.com/feed/topic/art</link>
+    </feed>
+    <feed>
+        <title>Medium Beauty</title>
+        <link>https://medium.com/feed/topic/beauty</link>
+    </feed>
+    <feed>
+        <title>Medium Books</title>
+        <link>https://medium.com/feed/topic/books</link>
+    </feed>
+    <feed>
+        <title>Medium Comics</title>
+        <link>https://medium.com/feed/topic/comics</link>
+    </feed>
+    <feed>
+        <title>Medium Culture</title>
+        <link>https://medium.com/feed/topic/culture</link>
+    </feed>
+    <feed>
+        <title>Medium Fiction</title>
+        <link>https://medium.com/feed/topic/fiction</link>
+    </feed>
+    <feed>
+        <title>Medium Film</title>
+        <link>https://medium.com/feed/topic/film</link>
+    </feed>
+    <feed>
+        <title>Medium Food</title>
+        <link>https://medium.com/feed/topic/food</link>
+    </feed>
+    <feed>
+        <title>Medium Gaming</title>
+        <link>https://medium.com/feed/topic/gaming</link>
+    </feed>
+    <feed>
+        <title>Medium Humor</title>
+        <link>https://medium.com/feed/topic/humor</link>
+    </feed>
+    <feed>
+        <title>Medium Magazine</title>
+        <link>https://medium.com/feed/topic/medium-magazine</link>
+    </feed>
+    <feed>
+        <title>Medium Music</title>
+        <link>https://medium.com/feed/topic/music</link>
+    </feed>
+    <feed>
+        <title>Medium Photography</title>
+        <link>https://medium.com/feed/topic/photography</link>
+    </feed>
+    <feed>
+        <title>Medium Podcasts</title>
+        <link>https://medium.com/feed/topic/podcasts</link>
+    </feed>
+    <feed>
+        <title>Medium Poetry</title>
+        <link>https://medium.com/feed/topic/poetry</link>
+    </feed>
+    <feed>
+        <title>Medium Social Media</title>
+        <link>https://medium.com/feed/topic/social-media</link>
+    </feed>
+    <feed>
+        <title>Medium Sports</title>
+        <link>https://medium.com/feed/topic/sports</link>
+    </feed>
+    <feed>
+        <title>Medium Style</title>
+        <link>https://medium.com/feed/topic/style</link>
+    </feed>
+    <feed>
+        <title>Medium True Crime</title>
+        <link>https://medium.com/feed/topic/true-crime</link>
+    </feed>
+    <feed>
+        <title>Medium TV</title>
+        <link>https://medium.com/feed/topic/tv</link>
+    </feed>
+    <feed>
+        <title>Medium Writing</title>
+        <link>https://medium.com/feed/topic/writing</link>
+    </feed>
+
+    <!-- Medium Industry -->
+    <feed>
+        <title>Medium Business</title>
+        <link>https://medium.com/feed/topic/business</link>
+    </feed>
+    <feed>
+        <title>Medium Design</title>
+        <link>https://medium.com/feed/topic/design</link>
+    </feed>
+    <feed>
+        <title>Medium Economy</title>
+        <link>https://medium.com/feed/topic/economy</link>
+    </feed>
+    <feed>
+        <title>Medium Freelancing</title>
+        <link>https://medium.com/feed/topic/freelancing</link>
+    </feed>
+    <feed>
+        <title>Medium Leadership</title>
+        <link>https://medium.com/feed/topic/leadership</link>
+    </feed>
+    <feed>
+        <title>Medium Marketing</title>
+        <link>https://medium.com/feed/topic/marketing</link>
+    </feed>
+    <feed>
+        <title>Medium Product Management</title>
+        <link>https://medium.com/feed/topic/product-management</link>
+    </feed>
+    <feed>
+        <title>Medium Productivity</title>
+        <link>https://medium.com/feed/topic/productivity</link>
+    </feed>
+    <feed>
+        <title>Medium Startups</title>
+        <link>https://medium.com/feed/topic/startups</link>
+    </feed>
+    <feed>
+        <title>Medium Venture Capital</title>
+        <link>https://medium.com/feed/topic/venture-capital</link>
+    </feed>
+    <feed>
+        <title>Medium Work</title>
+        <link>https://medium.com/feed/topic/work</link>
+    </feed>
+
+    <!-- Medium Innovation & Tech -->
+    <feed>
+        <title>Medium Accessibility</title>
+        <link>https://medium.com/feed/topic/accessibility</link>
+    </feed>
+    <feed>
+        <title>Medium Android Dev</title>
+        <link>https://medium.com/feed/topic/android-development</link>
+    </feed>
+    <feed>
+        <title>Medium Artificial Intelligence</title>
+        <link>https://medium.com/feed/topic/artificial-intelligence</link>
+    </feed>
+    <feed>
+        <title>Medium Blockchain</title>
+        <link>https://medium.com/feed/topic/blockchain</link>
+    </feed>
+    <feed>
+        <title>Medium Cryptocurrency</title>
+        <link>https://medium.com/feed/topic/cryptocurrency</link>
+    </feed>
+    <feed>
+        <title>Medium Cybersecurity</title>
+        <link>https://medium.com/feed/topic/cybersecurity</link>
+    </feed>
+    <feed>
+        <title>Medium Data Science</title>
+        <link>https://medium.com/feed/topic/data-science</link>
+    </feed>
+    <feed>
+        <title>Medium Digital Life</title>
+        <link>https://medium.com/feed/topic/digital-life</link>
+    </feed>
+    <feed>
+        <title>Medium Gadgets</title>
+        <link>https://medium.com/feed/topic/gadgets</link>
+    </feed>
+    <feed>
+        <title>Medium iOS Dev</title>
+        <link>https://medium.com/feed/topic/ios-development</link>
+    </feed>
+    <feed>
+        <title>Medium Javascript</title>
+        <link>https://medium.com/feed/topic/javascript</link>
+    </feed>
+    <feed>
+        <title>Medium Machine Learning</title>
+        <link>https://medium.com/feed/topic/machine-learning</link>
+    </feed>
+    <feed>
+        <title>Medium Math</title>
+        <link>https://medium.com/feed/topic/math</link>
+    </feed>
+    <feed>
+        <title>Medium Neuroscience</title>
+        <link>https://medium.com/feed/topic/neuroscience</link>
+    </feed>
+    <feed>
+        <title>Medium Programming</title>
+        <link>https://medium.com/feed/topic/programming</link>
+    </feed>
+    <feed>
+        <title>Medium Science</title>
+        <link>https://medium.com/feed/topic/science</link>
+    </feed>
+    <feed>
+        <title>Medium Self-Driving Cars</title>
+        <link>https://medium.com/feed/topic/self-driving-cars</link>
+    </feed>
+    <feed>
+        <title>Medium Software Engineering</title>
+        <link>https://medium.com/feed/topic/software-engineering</link>
+    </feed>
+    <feed>
+        <title>Medium Space</title>
+        <link>https://medium.com/feed/topic/space</link>
+    </feed>
+    <feed>
+        <title>Medium Technology</title>
+        <link>https://medium.com/feed/topic/technology</link>
+    </feed>
+    <feed>
+        <title>Medium UX</title>
+        <link>https://medium.com/feed/topic/ux</link>
+    </feed>
+    <feed>
+        <title>Medium Visual Design</title>
+        <link>https://medium.com/feed/topic/visual-design</link>
+    </feed>
+
+    <!-- Medium Life -->
+    <feed>
+        <title>Medium Addiction</title>
+        <link>https://medium.com/feed/topic/addiction</link>
+    </feed>
+    <feed>
+        <title>Medium Cannabis</title>
+        <link>https://medium.com/feed/topic/cannabis</link>
+    </feed>
+    <feed>
+        <title>Medium Creativity</title>
+        <link>https://medium.com/feed/topic/creativity</link>
+    </feed>
+    <feed>
+        <title>Medium Disability</title>
+        <link>https://medium.com/feed/topic/disability</link>
+    </feed>
+    <feed>
+        <title>Medium Family</title>
+        <link>https://medium.com/feed/topic/family</link>
+    </feed>
+    <feed>
+        <title>Medium Health</title>
+        <link>https://medium.com/feed/topic/health</link>
+    </feed>
+    <feed>
+        <title>Medium Lifestyle</title>
+        <link>https://medium.com/feed/topic/lifestyle</link>
+    </feed>
+    <feed>
+        <title>Medium Mental Health</title>
+        <link>https://medium.com/feed/topic/mental-health</link>
+    </feed>
+    <feed>
+        <title>Medium Mindfulness</title>
+        <link>https://medium.com/feed/topic/mindfulness</link>
+    </feed>
+    <feed>
+        <title>Medium Money</title>
+        <link>https://medium.com/feed/topic/money</link>
+    </feed>
+    <feed>
+        <title>Medium Parenting</title>
+        <link>https://medium.com/feed/topic/parenting</link>
+    </feed>
+    <feed>
+        <title>Medium Pets</title>
+        <link>https://medium.com/feed/topic/pets</link>
+    </feed>
+    <feed>
+        <title>Medium Psychedelics</title>
+        <link>https://medium.com/feed/topic/psychedelics</link>
+    </feed>
+    <feed>
+        <title>Medium Psychology</title>
+        <link>https://medium.com/feed/topic/psychology</link>
+    </feed>
+    <feed>
+        <title>Medium Relationships</title>
+        <link>https://medium.com/feed/topic/relationships</link>
+    </feed>
+    <feed>
+        <title>Medium Self</title>
+        <link>https://medium.com/feed/topic/self</link>
+    </feed>
+    <feed>
+        <title>Medium Sexuality</title>
+        <link>https://medium.com/feed/topic/sexuality</link>
+    </feed>
+    <feed>
+        <title>Medium Spirituality</title>
+        <link>https://medium.com/feed/topic/spirituality</link>
+    </feed>
+    <feed>
+        <title>Medium Travel</title>
+        <link>https://medium.com/feed/topic/travel</link>
+    </feed>
+
+    <!-- Medium Society -->
+    <feed>
+        <title>Medium Basic Income</title>
+        <link>https://medium.com/feed/topic/basic-income</link>
+    </feed>
+    <feed>
+        <title>Medium Cities</title>
+        <link>https://medium.com/feed/topic/cities</link>
+    </feed>
+    <feed>
+        <title>Medium Education</title>
+        <link>https://medium.com/feed/topic/education</link>
+    </feed>
+    <feed>
+        <title>Medium Election 2020</title>
+        <link>https://medium.com/feed/topic/election-2020</link>
+    </feed>
+    <feed>
+        <title>Medium Environment</title>
+        <link>https://medium.com/feed/topic/environment</link>
+    </feed>
+    <feed>
+        <title>Medium Equality</title>
+        <link>https://medium.com/feed/topic/equality</link>
+    </feed>
+    <feed>
+        <title>Medium Future</title>
+        <link>https://medium.com/feed/topic/future</link>
+    </feed>
+    <feed>
+        <title>Medium Gun Control</title>
+        <link>https://medium.com/feed/topic/gun-control</link>
+    </feed>
+    <feed>
+        <title>Medium History</title>
+        <link>https://medium.com/feed/topic/history</link>
+    </feed>
+    <feed>
+        <title>Medium Immigration</title>
+        <link>https://medium.com/feed/topic/immigration</link>
+    </feed>
+    <feed>
+        <title>Medium Justice</title>
+        <link>https://medium.com/feed/topic/justice</link>
+    </feed>
+    <feed>
+        <title>Medium Language</title>
+        <link>https://medium.com/feed/topic/language</link>
+    </feed>
+    <feed>
+        <title>Medium LGBTQIA</title>
+        <link>https://medium.com/feed/topic/lgbtqia</link>
+    </feed>
+    <feed>
+        <title>Medium Media</title>
+        <link>https://medium.com/feed/topic/media</link>
+    </feed>
+    <feed>
+        <title>Medium Philosophy</title>
+        <link>https://medium.com/feed/topic/philosophy</link>
+    </feed>
+    <feed>
+        <title>Medium Politics</title>
+        <link>https://medium.com/feed/topic/politics</link>
+    </feed>
+    <feed>
+        <title>Medium Privacy</title>
+        <link>https://medium.com/feed/topic/privacy</link>
+    </feed>
+    <feed>
+        <title>Medium Race</title>
+        <link>https://medium.com/feed/topic/race</link>
+    </feed>
+    <feed>
+        <title>Medium Religion</title>
+        <link>https://medium.com/feed/topic/religion</link>
+    </feed>
+    <feed>
+        <title>Medium San Francisco</title>
+        <link>https://medium.com/feed/topic/san-francisco</link>
+    </feed>
+    <feed>
+        <title>Medium Transportation</title>
+        <link>https://medium.com/feed/topic/transportation</link>
+    </feed>
+    <feed>
+        <title>Medium Women</title>
+        <link>https://medium.com/feed/topic/women</link>
+    </feed>
+    <feed>
+        <title>Medium World</title>
+        <link>https://medium.com/feed/topic/world</link>
     </feed>
 
     <!-- Minutes -->
@@ -717,40 +1111,6 @@
         <link>https://www.newyorker.com/feed/everything</link>
     </feed>
 
-    <!-- Prospect Magazine -->
-    <feed>
-        <title>Prospect Magazine Politics</title>
-        <link>https://www.prospectmagazine.co.uk/category/politics/feed</link>
-    </feed>
-    <feed>
-        <title>Prospect Magazine Economics &amp; Finance</title>
-        <link>https://www.prospectmagazine.co.uk/category/economics-and-finance/feed</link>
-    </feed>
-    <feed>
-        <title>Prospect Magazine World</title>
-        <link>https://www.prospectmagazine.co.uk/category/world/feed</link>
-    </feed>
-    <feed>
-        <title>Prospect Magazine Arts &amp; Books</title>
-        <link>https://www.prospectmagazine.co.uk/category/arts-and-books/feed</link>
-    </feed>
-    <feed>
-        <title>Prospect Magazine Life</title>
-        <link>https://www.prospectmagazine.co.uk/category/life/feed</link>
-    </feed>
-    <feed>
-        <title>Prospect Magazine Science &amp; Technology</title>
-        <link>https://www.prospectmagazine.co.uk/category/science-and-technology/feed</link>
-    </feed>
-    <feed>
-        <title>Prospect Magazine Philosophy</title>
-        <link>https://www.prospectmagazine.co.uk/category/philosophy/feed</link>
-    </feed>
-    <feed>
-        <title>Prospect Magazine</title>
-        <link>https://www.prospectmagazine.co.uk/home/feed</link>
-    </feed>
-
     <!-- Quanta Magazine -->
     <feed>
         <title>Quanta Magazine Physics</title>
@@ -809,8 +1169,8 @@
         <link>https://quillette.com/category/politics/feed</link>
     </feed>
     <feed>
-        <title>Quillette Reviews</title>
-        <link>https://quillette.com/category/reviews/feed</link>
+        <title>Quillette Review</title>
+        <link>https://quillette.com/category/review/feed</link>
     </feed>
     <feed>
         <title>Quillette</title>
@@ -1013,10 +1373,6 @@
         <link>https://www.theverge.com/rss/features/index.xml</link>
     </feed>
     <feed>
-        <title>The Verge Podcasts</title>
-        <link>https://www.theverge.com/rss/podcasts/index.xml</link>
-    </feed>
-    <feed>
         <title>The Verge</title>
         <link>https://www.theverge.com/rss/index.xml</link>
     </feed>
@@ -1031,12 +1387,12 @@
         <link>http://feeds.washingtonpost.com/rss/opinions</link>
     </feed>
     <feed>
-        <title>Washington Post Sports</title>
-        <link>http://feeds.washingtonpost.com/rss/sports</link>
-    </feed>
-    <feed>
         <title>Washington Post D.C., Maryland and Virginia</title>
         <link>http://feeds.washingtonpost.com/rss/local</link>
+    </feed>
+    <feed>
+        <title>Washington Post Sports</title>
+        <link>http://feeds.washingtonpost.com/rss/sports</link>
     </feed>
     <feed>
         <title>Washington Post National</title>
@@ -1051,12 +1407,12 @@
         <link>http://feeds.washingtonpost.com/rss/business</link>
     </feed>
     <feed>
-        <title>Washington Post Technology</title>
-        <link>http://feeds.washingtonpost.com/rss/business/technology</link>
+        <title>Washington Post Lifestyle</title>
+        <link>http://feeds.washingtonpost.com/rss/lifestyle</link>
     </feed>
     <feed>
-        <title>Washington Post</title>
-        <link>http://www.washingtonpost.com/rss</link>
+        <title>Washington Post Entertainment</title>
+        <link>http://feeds.washingtonpost.com/rss/entertainment</link>
     </feed>
 
     <!-- WIRED -->
@@ -1127,10 +1483,6 @@
     <feed>
         <title>New York Review of Books</title>
         <link>http://feeds.feedburner.com/nybooks</link>
-    </feed>
-    <feed>
-        <title>The Times Literary Supplement</title>
-        <link>https://www.the-tls.co.uk/home-page/feed/</link>
     </feed>
 
     <!-- Magazines -->
