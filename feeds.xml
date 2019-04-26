@@ -1173,6 +1173,10 @@
         <link>https://www.mckinsey.com/Insights/rss.aspx</link>
     </feed>
     <feed>
+        <title>The Onion</title>
+        <link>https://www.theonion.com/rss</link>
+    </feed>
+    <feed>
         <title>TED Ideas</title>
         <link>https://ideas.ted.com/feed/</link>
     </feed>
