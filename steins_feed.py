@@ -25,14 +25,21 @@ def steins_read():
         for item_it in d['items']:
             item_title = handler.read_title(item_it)
             item_time = handler.read_time(item_it)
+            item_summary = handler.read_summary(item_it)
+            item_link = handler.read_link(item_it)
 
             # Punish cheaters.
             if time.strptime(item_time, "%Y-%m-%d %H:%M:%S GMT") > time.gmtime():
                 continue
 
-            if c.execute("SELECT COUNT(*) FROM Items WHERE Title=? AND Published=?", (item_title, item_time, )).fetchone()[0] == 0:
-                item_link = handler.read_link(item_it)
-                item_summary = handler.read_summary(item_it)
+            # Remove duplicates.
+            cands = c.execute("SELECT * FROM Items WHERE Link=?", (item_link, )).fetchall()
+            item_exists = False
+            for cand_it in cands:
+                if item_time[:10] == cand_it[2][:10]:
+                    item_exists = True
+                    break
+            if not item_exists:
                 c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))
 
     conn.commit()
