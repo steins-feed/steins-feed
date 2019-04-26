@@ -33,10 +33,12 @@ def steins_read():
                 continue
 
             # Remove duplicates.
-            cands = c.execute("SELECT * FROM Items WHERE Link=?", (item_link, )).fetchall()
+            cands = c.execute("SELECT * FROM Items WHERE Title=?", (item_title, )).fetchall()
             item_exists = False
             for cand_it in cands:
-                if item_time[:10] == cand_it[2][:10]:
+                if not item_time[:10] == cand_it[2][:10]:
+                    continue
+                if item_link.split("?")[0] == cand_it[5].split("?")[0]:
                     item_exists = True
                     break
             if not item_exists:
