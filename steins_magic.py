@@ -10,12 +10,26 @@ from steins_sql import get_cursor
 def handle_naive_bayes(qd):
     c = get_cursor()
 
-    likes = c.execute("SELECT Title FROM Items WHERE Like=1").fetchall()
-    dislikes = c.execute("SELECT Title FROM Items WHERE Like=-1").fetchall()
+    likes = c.execute("SELECT * FROM Items WHERE Like=1").fetchall()
+    dislikes = c.execute("SELECT * FROM Items WHERE Like=-1").fetchall()
 
     titles = []
-    titles += [row_it[0] for row_it in likes]
-    titles += [row_it[0] for row_it in dislikes]
+    for row_it in likes:
+        title = row_it[1] + " " + row_it[3]
+        idx1 = title.find("<")
+        while not idx1 == -1:
+            idx2 = title.find(">", idx1)
+            title = title[:idx1] + title[idx2+1:]
+            idx1 = title.find("<")
+        titles.append(title)
+    for row_it in dislikes:
+        title = row_it[1] + " " + row_it[3]
+        idx1 = title.find("<")
+        while not idx1 == -1:
+            idx2 = title.find(">", idx1)
+            title = title[:idx1] + title[idx2+1:]
+            idx1 = title.find("<")
+        titles.append(title)
 
     targets = []
     targets += [1 for row_it in likes]
