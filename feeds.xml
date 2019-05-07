@@ -1461,6 +1461,28 @@
         <link>https://www.wired.com/feed/rss</link>
     </feed>
 
+    <!-- Blogs -->
+    <feed>
+        <title>Gates Notes</title>
+        <link>https://www.gatesnotes.com/rss</link>
+    </feed>
+    <feed>
+        <title>The New York Times -- Paul Krugman</title>
+	<link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/column/paul-krugman/rss.xml</link>
+    </feed>
+    <feed>
+        <title>Mark Manson</title>
+        <link>https://markmanson.net/feed</link>
+    </feed>
+    <feed>
+        <title>Robert Reich</title>
+        <link>https://robertreich.org/rss</link>
+    </feed>
+    <feed>
+        <title>Schneier on Security</title>
+        <link>https://www.schneier.com/blog/atom.xml</link>
+    </feed>
+
     <!-- Comics -->
     <feed>
         <title>Existential Comics</title>
@@ -1495,8 +1517,16 @@
         <link>https://www.edge.org/feed</link>
     </feed>
     <feed>
+        <title>Harvard Business Review</title>
+        <link>http://feeds.hbr.org/harvardbusiness/</link>
+    </feed>
+    <feed>
         <title>The Intercept</title>
         <link>https://theintercept.com/feed/?lang=en</link>
+    </feed>
+    <feed>
+        <title>Nautilus</title>
+        <link>http://nautil.us/rss/all</link>
     </feed>
     <feed>
         <title>The New Republic</title>
@@ -1517,10 +1547,6 @@
         <link>https://factorio.com/blog/rss</link>
     </feed>
     <feed>
-        <title>Gates Notes</title>
-        <link>https://www.gatesnotes.com/rss</link>
-    </feed>
-    <feed>
         <title>McKinsey Insights</title>
         <link>https://www.mckinsey.com/Insights/rss.aspx</link>
     </feed>
@@ -1531,5 +1557,9 @@
     <feed>
         <title>TED Ideas</title>
         <link>https://ideas.ted.com/feed/</link>
+    </feed>
+    <feed>
+        <title>Wait But Why</title>
+        <link>https://waitbutwhy.com/feed</link>
     </feed>
 </root>
