@@ -317,56 +317,6 @@
         <link>https://www.fastcompany.com/latest/rss</link>
     </feed>
 
-    <!-- Financial Times -->
-    <feed>
-        <title>Financial Times World</title>
-        <link>https://www.ft.com/world?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times UK</title>
-        <link>https://www.ft.com/world/uk?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Companies</title>
-        <link>https://www.ft.com/companies?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Tech</title>
-        <link>https://www.ft.com/technology?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Markets</title>
-        <link>https://www.ft.com/markets?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Opinion</title>
-        <link>https://www.ft.com/opinion?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Work &amp; Careers</title>
-        <link>https://www.ft.com/work-careers?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Life &amp; Arts</title>
-        <link>https://www.ft.com/life-arts?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Personal Finance</title>
-        <link>https://www.ft.com/personal-finance?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Science</title>
-        <link>https://www.ft.com/companies/science?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times Special Reports</title>
-        <link>https://www.ft.com/reports?format=rss</link>
-    </feed>
-    <feed>
-        <title>Financial Times</title>
-        <link>https://www.ft.com/?format=rss</link>
-    </feed>
-
     <!-- FiveThirtyEight -->
     <feed>
         <title>FiveThirtyEight NBA</title>
