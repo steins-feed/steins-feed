@@ -1183,6 +1183,16 @@
         <link>https://www.theringer.com/rss/march-madness/index.xml</link>
     </feed>
 
+    <!-- Royal Society -->
+    <feed>
+        <title>Royal Society Notes and Records</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsnr</link>
+    </feed>
+    <feed>
+        <title>Royal Society Biographical Memoirs</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsbm</link>
+    </feed>
+
     <!-- Salon.com -->
     <feed>
         <title>Salon.com News &amp; Politics</title>
@@ -1475,6 +1485,10 @@
         <link>https://theintercept.com/feed/?lang=en</link>
     </feed>
     <feed>
+        <title>Nature</title>
+        <link>http://feeds.nature.com/nature/rss/current</link>
+    </feed>
+    <feed>
         <title>Nautilus</title>
         <link>http://nautil.us/rss/all</link>
     </feed>
@@ -1485,6 +1499,14 @@
     <feed>
         <title>New Statesman</title>
         <link>https://www.newstatesman.com/feeds/site_feed.rss</link>
+    </feed>
+    <feed>
+        <title>Physics</title>
+        <link>http://feeds.aps.org/rss/recent/physics.xml</link>
+    </feed>
+    <feed>
+        <title>Science</title>
+        <link>https://science.sciencemag.org/rss/current.xml</link>
     </feed>
     <feed>
         <title>Scientific American</title>
