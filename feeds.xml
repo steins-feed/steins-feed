@@ -1183,16 +1183,6 @@
         <link>https://www.theringer.com/rss/march-madness/index.xml</link>
     </feed>
 
-    <!-- Royal Society -->
-    <feed>
-        <title>Royal Society Notes and Records</title>
-        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsnr</link>
-    </feed>
-    <feed>
-        <title>Royal Society Biographical Memoirs</title>
-        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsbm</link>
-    </feed>
-
     <!-- Salon.com -->
     <feed>
         <title>Salon.com News &amp; Politics</title>
