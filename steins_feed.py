@@ -97,8 +97,14 @@ def steins_generate_page(page_no, score_board=None):
         s += "<p>\n"
         s += "<form target=\"foo\">\n"
         s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it[0])
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" value=\"Like\">\n"
-        s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike.php\" value=\"Dislike\">\n"
+        if item_it[6] == 1:
+            s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" value=\"Like\" style=\"background-color: green\">\n"
+        else:
+            s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" value=\"Like\">\n"
+        if item_it[6] == -1:
+            s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike.php\" value=\"Dislike\" style=\"background-color: red\">\n"
+        else:
+            s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike.php\" value=\"Dislike\">\n"
         s += "</form>\n"
         s += "</p>\n"
         s += "<hr>\n"
