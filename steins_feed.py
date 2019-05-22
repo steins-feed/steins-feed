@@ -61,6 +61,30 @@ def steins_generate_page(page_no, score_board=None):
     s += "<head>\n"
     s += "<meta charset=\"UTF-8\">"
     s += "<title>Stein's Feed</title>\n"
+    s += "<script>\n"
+    s += "function set_color_like(button_id) {\n"
+    s += "    var stat_like = document.getElementById('like_' + button_id);\n"
+    s += "    var stat_dislike = document.getElementById('dislike_' + button_id);\n"
+    s += "    if (stat_like.style.backgroundColor == 'green') {\n"
+    s += "        stat_like.style.backgroundColor = '';\n"
+    s += "    } else {\n"
+    s += "        stat_like.style.backgroundColor = 'green';\n"
+    s += "    }\n"
+    s += "    stat_dislike.style.backgroundColor = '';\n"
+    s += "}\n"
+    s += "</script>\n"
+    s += "<script>\n"
+    s += "function set_color_dislike(button_id) {\n"
+    s += "    var stat_like = document.getElementById('like_' + button_id);\n"
+    s += "    var stat_dislike = document.getElementById('dislike_' + button_id);\n"
+    s += "    if (stat_dislike.style.backgroundColor == 'red') {\n"
+    s += "        stat_dislike.style.backgroundColor = '';\n"
+    s += "    } else {\n"
+    s += "        stat_dislike.style.backgroundColor = 'red';\n"
+    s += "    }\n"
+    s += "    stat_like.style.backgroundColor = '';\n"
+    s += "}\n"
+    s += "</script>\n"
     s += "</head>\n"
     s += "<body>\n"
 
@@ -98,13 +122,13 @@ def steins_generate_page(page_no, score_board=None):
         s += "<form target=\"foo\">\n"
         s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it[0])
         if item_it[6] == 1:
-            s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" value=\"Like\" style=\"background-color: green\">\n"
+            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" value=\"Like\" style=\"background-color: green\" onclick=\"set_color_like({0})\">\n".format(item_it[0])
         else:
-            s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" value=\"Like\">\n"
+            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" value=\"Like\" onclick=\"set_color_like({0})\">\n".format(item_it[0])
         if item_it[6] == -1:
-            s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike.php\" value=\"Dislike\" style=\"background-color: red\">\n"
+            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike.php\" value=\"Dislike\" style=\"background-color: red\" onclick=\"set_color_dislike({0})\">\n".format(item_it[0])
         else:
-            s += "<input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike.php\" value=\"Dislike\">\n"
+            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike.php\" value=\"Dislike\" onclick=\"set_color_dislike({0})\">\n".format(item_it[0])
         s += "</form>\n"
         s += "</p>\n"
         s += "<hr>\n"
