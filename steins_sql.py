@@ -23,6 +23,7 @@ def get_connection():
     global connection
     if not have_connection():
         connection = sqlite3.connect(db_path)
+        #connection = sqlite3.connect(db_path, isolation_level=None)
     return connection
 
 def close_connection():

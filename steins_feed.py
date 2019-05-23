@@ -43,8 +43,7 @@ def steins_read():
                     break
             if not item_exists:
                 c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))
-
-    conn.commit()
+                conn.commit()
 
 def steins_generate_page(page_no, score_board=None):
     c = get_cursor()

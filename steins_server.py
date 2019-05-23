@@ -219,8 +219,8 @@ class SteinsHandler(BaseHTTPRequestHandler):
                     c.execute("UPDATE Feeds SET Display=1 WHERE ItemID=?", (q_it[0], ))
                 else:
                     c.execute("UPDATE Feeds SET Display=0 WHERE ItemID=?", (q_it[0], ))
+                conn.commit()
 
-            conn.commit()
             self.path = "/"
             self.do_GET()
         # Add feed.
