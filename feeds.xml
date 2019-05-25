@@ -1417,10 +1417,6 @@
         <link>https://www.gatesnotes.com/rss</link>
     </feed>
     <feed>
-        <title>The New York Times -- Paul Krugman</title>
-	<link>https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/column/paul-krugman/rss.xml</link>
-    </feed>
-    <feed>
         <title>Mark Manson</title>
         <link>https://markmanson.net/feed</link>
     </feed>
