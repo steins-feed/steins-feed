@@ -1524,4 +1524,10 @@
         <title>Wait But Why</title>
         <link>https://waitbutwhy.com/feed</link>
     </feed>
+
+    <!-- Podcasts -->
+    <feed>
+        <title>Slate Money</title>
+        <link>http://feeds.megaphone.fm/slatemoney</link>
+    </feed>
 </root>
