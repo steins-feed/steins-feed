@@ -1523,8 +1523,20 @@
 
     <!-- Podcasts -->
     <feed>
+        <title>Nature Podcast</title>
+	<link>http://rss.acast.com/nature</link>
+    </feed>
+    <feed>
         <title>Science Friday</title>
         <link>http://feeds.wnyc.org/science-friday</link>
+    </feed>
+    <feed>
+        <title>Science Podcast</title>
+	<link>https://science.sciencemag.org/rss/podcast.xml</link>
+    </feed>
+    <feed>
+        <title>Science Sessions</title>
+	<link>https://feeds.feedburner.com/pnas/uSDM</link>
     </feed>
     <feed>
         <title>Slate Money</title>
