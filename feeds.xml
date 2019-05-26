@@ -1523,11 +1523,11 @@
 
     <!-- Podcasts -->
     <feed>
-        <title>Slate Money</title>
-        <link>http://feeds.megaphone.fm/slatemoney</link>
-    </feed>
-    <feed>
         <title>Science Friday</title>
         <link>http://feeds.wnyc.org/science-friday</link>
+    </feed>
+    <feed>
+        <title>Slate Money</title>
+        <link>http://feeds.megaphone.fm/slatemoney</link>
     </feed>
 </root>
