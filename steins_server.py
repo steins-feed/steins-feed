@@ -123,7 +123,7 @@ def handle_statistics():
     s += "<ul>\n"
     for row_it in likes:
         datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it[2], "%Y-%m-%d %H:%M:%S GMT"))
-        s += "<li>{}: {} ({})</li>".format(row_it[4], row_it[1], datestamp)
+        s += "<li>{}: <a href={}>{}</a> ({})</li>".format(row_it[4], row_it[5], row_it[1], datestamp)
     s += "</ul>\n"
 
     s += "<hr>\n"
@@ -136,7 +136,7 @@ def handle_statistics():
     s += "<ul>\n"
     for row_it in likes:
         datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it[2], "%Y-%m-%d %H:%M:%S GMT"))
-        s += "<li>{}: {} ({})</li>".format(row_it[4], row_it[1], datestamp)
+        s += "<li>{}: <a href={}>{}</a> ({})</li>".format(row_it[4], row_it[5], row_it[1], datestamp)
     s += "</ul>\n"
 
     s += "</body>\n"
