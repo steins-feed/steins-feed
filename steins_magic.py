@@ -8,7 +8,7 @@ from sklearn.pipeline import Pipeline
 from steins_feed import steins_generate_page
 from steins_sql import get_cursor
 
-def handle_naive_bayes(qd):
+def handle_naive_bayes(qd, surprise=-1):
     c = get_cursor()
 
     likes = c.execute("SELECT * FROM Items WHERE Like=1").fetchall()
@@ -67,7 +67,7 @@ def handle_naive_bayes(qd):
     score_board = sorted(score_sheet, reverse=True)
 
     # Page.
-    return steins_generate_page(page_no, score_board)
+    return steins_generate_page(page_no, score_board, surprise)
 
 def handle_logistic_regression(qd):
     c = get_cursor()

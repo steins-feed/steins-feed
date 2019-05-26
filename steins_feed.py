@@ -3,6 +3,9 @@
 import os
 import time
 
+import numpy as np
+import numpy.random as random
+
 from steins_config import init_feeds
 from steins_manager import get_handler
 from steins_sql import get_connection, get_cursor, last_updated
@@ -45,7 +48,7 @@ def steins_read():
                 c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))
                 conn.commit()
 
-def steins_generate_page(page_no, score_board=None):
+def steins_generate_page(page_no, score_board=None, surprise=-1):
     c = get_cursor()
 
     dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
@@ -104,17 +107,33 @@ def steins_generate_page(page_no, score_board=None):
     s += "</p>\n"
     s += "<hr>\n"
 
+    if surprise > 0:
+        scores = np.array([it[0] for it in score_board])
+        scores = 0.5 * (1. + scores)
+        logit_scores = np.log(scores / (1. - scores))
+        sigma = np.sqrt(np.sum(logit_scores**2) / scores.size)
+        probs = np.exp(-0.5 * logit_scores**2 / sigma**2) / scores / (1. - scores) / sigma / np.sqrt(2. * np.pi)
+        probs /= np.sum(probs)
+        sample = random.choice(scores.size, surprise, False, probs)
+
     for item_ctr in range(len(items)):
-        if score_board is None:
-            item_it = items[item_ctr]
-        else:
+        if surprise == 0:
+            break
+        elif surprise > 0:
+            surprise -= 1
+            item_it = items[score_board[sample[surprise]][1]]
+        elif not score_board is None:
             item_it = items[score_board[item_ctr][1]]
+        else:
+            item_it = items[item_ctr]
 
         s += "<h2><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{}\">{}</a></h2>\n".format(item_it[5], item_it[1])
-        if score_board is None:
-            s += "<p>Source: {}. Published: {}.</p>\n".format(item_it[4], item_it[2])
-        else:
+        if surprise >= 0:
+            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it[4], item_it[2], score_board[sample[surprise]][0])
+        elif not score_board is None:
             s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it[4], item_it[2], score_board[item_ctr][0])
+        else:
+            s += "<p>Source: {}. Published: {}.</p>\n".format(item_it[4], item_it[2])
         s += "{}".format(item_it[3])
 
         s += "<p>\n"
@@ -155,6 +174,7 @@ def steins_generate_page(page_no, score_board=None):
     s += "<form style=\"display: inline-block\">\n"
     s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/naive_bayes.php\" value=\"Naive Bayes\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/naive_bayes_surprise.php\" value=\"Naive Bayes (Surprise)\">\n"
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/logistic_regression.php\" value=\"Logistic regression\">\n"
     s += "</form>\n"
     s += "</p>\n"
