@@ -26,7 +26,19 @@ class SteinsHandler:
         return item_it['title']
 
     def read_link(self, item_it):
-        return item_it['link']
+        try:
+            item_link = item_it['link']
+            return item_link
+        except KeyError:
+            pass
+
+        try:
+            item_link = item_it['links'][0]['href']
+            return item_link
+        except KeyError:
+            pass
+
+        raise KeyError
 
     def read_summary(self, item_it):
         try:
@@ -49,7 +61,7 @@ class SteinsHandler:
             item_time = item_it['published_parsed']
             item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
-        except:
+        except KeyError:
             pass
 
         try:
@@ -57,14 +69,14 @@ class SteinsHandler:
             item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
             item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
-        except:
+        except KeyError:
             pass
 
         try:
             item_time = item_it['updated_parsed']
             item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
-        except:
+        except KeyError:
             pass
 
         try:
@@ -72,7 +84,7 @@ class SteinsHandler:
             item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
             item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
-        except:
+        except KeyError:
             pass
 
         raise KeyError
