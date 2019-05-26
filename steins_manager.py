@@ -61,7 +61,7 @@ class SteinsHandler:
             item_time = item_it['published_parsed']
             item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
-        except KeyError:
+        except (KeyError, TypeError):
             pass
 
         try:
@@ -69,14 +69,14 @@ class SteinsHandler:
             item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
             item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
-        except KeyError:
+        except (KeyError, TypeError):
             pass
 
         try:
             item_time = item_it['updated_parsed']
             item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
-        except KeyError:
+        except (KeyError, TypeError):
             pass
 
         try:
@@ -84,7 +84,7 @@ class SteinsHandler:
             item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
             item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
             return item_time
-        except KeyError:
+        except (KeyError, TypeError):
             pass
 
         raise KeyError
