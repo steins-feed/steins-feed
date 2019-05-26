@@ -2,8 +2,8 @@
 
 import sys
 
-from steins_magic import handle_logistic_regression
+from steins_magic import handle_surprise
 from urllib.parse import parse_qsl
 
 qd = dict(parse_qsl(sys.argv[1]))
-print(handle_logistic_regression(qd, surprise=10))
+print(handle_surprise(qd, 'Logistic Regression'))

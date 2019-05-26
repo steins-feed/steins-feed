@@ -198,7 +198,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
-            s = handle_naive_bayes(qd)
+            s = handle_magic(qd)
             self.wfile.write(s.encode('utf-8'))
         elif "/naive_bayes_surprise.php" in self.path:
             # Write header.
@@ -208,7 +208,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
-            s = handle_naive_bayes(qd, 10)
+            s = handle_surprise(qd)
             self.wfile.write(s.encode('utf-8'))
         elif "/logistic_regression.php" in self.path:
             # Write header.
@@ -218,7 +218,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
-            s = handle_logistic_regression(qd)
+            s = handle_magic(qd, 'Logistic Regression')
             self.wfile.write(s.encode('utf-8'))
         elif "/logistic_regression_surprise.php" in self.path:
             # Write header.
@@ -228,7 +228,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
-            s = handle_logistic_regression(qd, 10)
+            s = handle_surprise(qd, 'Logistic Regression')
             self.wfile.write(s.encode('utf-8'))
 
     def do_POST(self):
