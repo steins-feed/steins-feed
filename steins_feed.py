@@ -155,6 +155,7 @@ def steins_generate_page(page_no, score_board=None):
     s += "<form style=\"display: inline-block\">\n"
     s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/naive_bayes.php\" value=\"Naive Bayes\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/logistic_regression.php\" value=\"Logistic regression\">\n"
     s += "</form>\n"
     s += "</p>\n"
 
