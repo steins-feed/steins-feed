@@ -220,6 +220,16 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qd = dict(parse_qsl(qs))
             s = handle_logistic_regression(qd)
             self.wfile.write(s.encode('utf-8'))
+        elif "/logistic_regression_surprise.php" in self.path:
+            # Write header.
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+
+            qs = urlsplit(self.path).query
+            qd = dict(parse_qsl(qs))
+            s = handle_logistic_regression(qd, 10)
+            self.wfile.write(s.encode('utf-8'))
 
     def do_POST(self):
         self.path = self.path.replace("/steins-feed", "")

@@ -170,12 +170,19 @@ def steins_generate_page(page_no, score_board=None, surprise=-1):
     s += "</p>\n"
     s += "<hr>\n"
 
-    s += "<p>Bag of words:\n"
+    s += "<p>Naive Bayes:\n"
     s += "<form style=\"display: inline-block\">\n"
     s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/naive_bayes.php\" value=\"Naive Bayes\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/naive_bayes_surprise.php\" value=\"Naive Bayes (Surprise)\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/logistic_regression.php\" value=\"Logistic regression\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/naive_bayes.php\" value=\"Magic\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/naive_bayes_surprise.php\" value=\"Surprise\">\n"
+    s += "</form>\n"
+    s += "</p>\n"
+
+    s += "<p>Logistic regression:\n"
+    s += "<form style=\"display: inline-block\">\n"
+    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/logistic_regression.php\" value=\"Magic\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/logistic_regression_surprise.php\" value=\"Surprise\">\n"
     s += "</form>\n"
     s += "</p>\n"
 

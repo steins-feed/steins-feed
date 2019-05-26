@@ -69,7 +69,7 @@ def handle_naive_bayes(qd, surprise=-1):
     # Page.
     return steins_generate_page(page_no, score_board, surprise)
 
-def handle_logistic_regression(qd):
+def handle_logistic_regression(qd, surprise=-1):
     c = get_cursor()
 
     likes = c.execute("SELECT * FROM Items WHERE Like=1").fetchall()
@@ -128,7 +128,7 @@ def handle_logistic_regression(qd):
     score_board = sorted(score_sheet, reverse=True)
 
     # Page.
-    return steins_generate_page(page_no, score_board)
+    return steins_generate_page(page_no, score_board, surprise)
 
 if __name__ == "__main__":
     handle_naive_bayes({'page': 1})
