@@ -1165,6 +1165,80 @@
         <link>https://readwrite.com/feed/</link>
     </feed>
 
+    <!-- Reuters -->
+    <feed>
+        <title>Reuters Arts</title>
+        <link>http://feeds.reuters.com/news/artsculture</link>
+    </feed>
+    <feed>
+        <title>Reuters Business</title>
+        <link>http://feeds.reuters.com/reuters/businessNews</link>
+    </feed>
+    <feed>
+        <title>Reuters Company News</title>
+        <link>http://feeds.reuters.com/reuters/companyNews</link>
+    </feed>
+    <feed>
+        <title>Reuters Entertainment</title>
+        <link>http://feeds.reuters.com/reuters/entertainment</link>
+    </feed>
+    <feed>
+        <title>Reuters Environment</title>
+        <link>http://feeds.reuters.com/reuters/environment</link>
+    </feed>
+    <feed>
+        <title>Reuters Health News</title>
+        <link>http://feeds.reuters.com/reuters/healthNews</link>
+    </feed>
+    <feed>
+        <title>Reuters Lifestyle</title>
+        <link>http://feeds.reuters.com/reuters/lifestyle</link>
+    </feed>
+    <feed>
+        <title>Reuters Money</title>
+        <link>http://feeds.reuters.com/news/wealth</link>
+    </feed>
+    <feed>
+        <title>Reuters Oddly Enough</title>
+        <link>http://feeds.reuters.com/reuters/oddlyEnoughNews</link>
+    </feed>
+    <feed>
+        <title>Reuters Pictures</title>
+        <link>http://feeds.reuters.com/ReutersPictures</link>
+    </feed>
+    <feed>
+        <title>Reuters People</title>
+        <link>http://feeds.reuters.com/reuters/peopleNews</link>
+    </feed>
+    <feed>
+        <title>Reuters Politics</title>
+        <link>http://feeds.reuters.com/Reuters/PoliticsNews</link>
+    </feed>
+    <feed>
+        <title>Reuters Science</title>
+        <link>http://feeds.reuters.com/reuters/scienceNews</link>
+    </feed>
+    <feed>
+        <title>Reuters Sports</title>
+        <link>http://feeds.reuters.com/reuters/sportsNews</link>
+    </feed>
+    <feed>
+        <title>Reuters Technology</title>
+        <link>http://feeds.reuters.com/reuters/technologyNews</link>
+    </feed>
+    <feed>
+        <title>Reuters Top News</title>
+        <link>http://feeds.reuters.com/reuters/topNews</link>
+    </feed>
+    <feed>
+        <title>Reuters US News</title>
+        <link>http://feeds.reuters.com/Reuters/domesticNews</link>
+    </feed>
+    <feed>
+        <title>Reuters World</title>
+        <link>http://feeds.reuters.com/Reuters/worldNews</link>
+    </feed>
+
     <!-- The Ringer -->
     <feed>
         <title>The Ringer NBA</title>
