@@ -41,7 +41,13 @@ def steins_read():
             for cand_it in cands:
                 if not item_time[:10] == cand_it[2][:10]:
                     continue
-                if item_link.split("?")[0] == cand_it[5].split("?")[0]:
+
+                idx0_item = item_link.find("//")
+                idx1_item = item_link.find("/", idx0_item + 2)
+                idx0_cand = cand_it[5].find("//")
+                idx1_cand = cand_it[5].find("/", idx0_cand + 2)
+
+                if item_link[:idx1_item] == cand_it[5][:idx1_cand]:
                     item_exists = True
                     break
             if not item_exists:
