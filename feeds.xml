@@ -1455,6 +1455,10 @@
 
     <!-- Magazines -->
     <feed>
+        <title>Breitbart</title>
+        <link>https://feeds.feedburner.com/breitbart</link>
+    </feed>
+    <feed>
         <title>Chalkdust</title>
         <link>http://chalkdustmagazine.com/feed/</link>
     </feed>
