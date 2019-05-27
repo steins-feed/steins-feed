@@ -1545,6 +1545,10 @@
         <link>http://feeds.hbr.org/harvardbusiness/</link>
     </feed>
     <feed>
+        <title>Inc.com</title>
+        <link>https://www.inc.com/rss</link>
+    </feed>
+    <feed>
         <title>The Intercept</title>
         <link>https://theintercept.com/feed/?lang=en</link>
     </feed>
