@@ -1593,6 +1593,34 @@
         <link>https://www.vox.com/rss/index.xml</link>
     </feed>
 
+    <!-- The Wall Street Journal -->
+    <!--
+    <feed>
+        <title>The Wall Street Journal Opinion</title>
+        <link>https://feeds.a.dj.com/rss/RSSOpinion.xml</link>
+    </feed>
+    <feed>
+        <title>The Wall Street Journal World News</title>
+        <link>https://feeds.a.dj.com/rss/RSSWorldNews.xml</link>
+    </feed>
+    <feed>
+        <title>The Wall Street Journal U.S. Business</title>
+        <link>https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml</link>
+    </feed>
+    <feed>
+        <title>The Wall Street Journal Market Views</title>
+        <link>https://feeds.a.dj.com/rss/RSSMarketsMain.xml</link>
+    </feed>
+    <feed>
+        <title>The Wall Street Journal Technology</title>
+        <link>https://feeds.a.dj.com/rss/RSSWSJD.xml</link>
+    </feed>
+    <feed>
+        <title>The Wall Street Journal Lifestyle</title>
+        <link>https://feeds.a.dj.com/rss/RSSLifestyle.xml</link>
+    </feed>
+    -->
+
     <!-- Washington Post -->
     <feed>
         <title>Washington Post Politics</title>
