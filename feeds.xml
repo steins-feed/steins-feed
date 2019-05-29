@@ -369,6 +369,92 @@
         <link>https://www.forbes.com/lifestyle/feed/</link>
     </feed>
 
+    <!-- Fortune -->
+    <feed>
+        <title>Fortune Autos</title>
+        <link>http://fortune.com/autos/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Careers</title>
+        <link>http://fortune.com/careers/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Commentary</title>
+        <link>http://fortune.com/commentary/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Design</title>
+        <link>http://fortune.com/design/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Energy</title>
+        <link>http://fortune.com/energy/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Entertainment</title>
+        <link>http://fortune.com/entertainment/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Finance</title>
+        <link>http://fortune.com/finance/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Health</title>
+        <link>http://fortune.com/health/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Humor</title>
+        <link>http://fortune.com/humor/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune International</title>
+        <link>http://fortune.com/international/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Leadership</title>
+        <link>http://fortune.com/leadership/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Luxury</title>
+        <link>http://fortune.com/luxury/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Most Powerful Women</title>
+        <link>http://fortune.com/mpw/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Real Estate</title>
+        <link>http://fortune.com/real-estate/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Retail</title>
+        <link>http://fortune.com/retail/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Sports</title>
+        <link>http://fortune.com/sports/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Technology</title>
+        <link>http://fortune.com/tech/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune -- The Ledger</title>
+        <link>http://fortune.com/ledger/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Travel</title>
+        <link>http://fortune.com/travel/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune Venture</title>
+        <link>http://fortune.com/venture/feed</link>
+    </feed>
+    <feed>
+        <title>Fortune</title>
+        <link>http://fortune.com/feed</link>
+    </feed>
+
     <!-- The Guardian -->
     <feed>
         <title>The Guardian UK News</title>
