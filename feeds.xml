@@ -339,42 +339,80 @@
         <link>https://fivethirtyeight.com/tag/basketball/feed/</link>
     </feed>
 
-    <!-- The Guardian -->
+    <!-- Forbes -->
     <feed>
-        <title>The Guardian World News</title>
-        <link>https://www.theguardian.com/world/rss</link>
+        <title>Forbes Billionaires</title>
+        <link>https://www.forbes.com/worlds-billionaires/feed/</link>
     </feed>
+    <feed>
+        <title>Forbes Innovation</title>
+        <link>https://www.forbes.com/innovation/feed/</link>
+    </feed>
+    <feed>
+        <title>Forbes Leadership</title>
+        <link>https://www.forbes.com/leadership/feed/</link>
+    </feed>
+    <feed>
+        <title>Forbes Money</title>
+        <link>https://www.forbes.com/money/feed/</link>
+    </feed>
+    <feed>
+        <title>Forbes Consumer</title>
+        <link>https://www.forbes.com/consumer/feed/</link>
+    </feed>
+    <feed>
+        <title>Forbes Industry</title>
+        <link>https://www.forbes.com/industry/feed/</link>
+    </feed>
+    <feed>
+        <title>Forbes Lifestyle</title>
+        <link>https://www.forbes.com/lifestyle/feed/</link>
+    </feed>
+
+    <!-- The Guardian -->
     <feed>
         <title>The Guardian UK News</title>
         <link>https://www.theguardian.com/uk-news/rss</link>
     </feed>
     <feed>
-        <title>The Guardian Science</title>
-        <link>https://www.theguardian.com/science/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian Cities</title>
-        <link>https://www.theguardian.com/cities/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian Global Development</title>
-        <link>https://www.theguardian.com/global-development/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian Football</title>
-        <link>https://www.theguardian.com/football/rss</link>
-    </feed>
-    <feed>
-        <title>The Guardian Tech</title>
-        <link>https://www.theguardian.com/uk/technology/rss</link>
+        <title>The Guardian World News</title>
+        <link>https://www.theguardian.com/world/rss</link>
     </feed>
     <feed>
         <title>The Guardian Business</title>
         <link>https://www.theguardian.com/uk/business/rss</link>
     </feed>
     <feed>
+        <title>The Guardian Football</title>
+        <link>https://www.theguardian.com/football/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian UK Politics</title>
+        <link>https://www.theguardian.com/politics/rss</link>
+    </feed>
+    <feed>
         <title>The Guardian Environment</title>
         <link>https://www.theguardian.com/uk/environment/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Society</title>
+        <link>https://www.theguardian.com/society/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Science</title>
+        <link>https://www.theguardian.com/science/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Tech</title>
+        <link>https://www.theguardian.com/uk/technology/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Global Development</title>
+        <link>https://www.theguardian.com/global-development/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Cities</title>
+        <link>https://www.theguardian.com/cities/rss</link>
     </feed>
     <!--
     <feed>
@@ -1401,6 +1439,74 @@
         <link>https://www.theverge.com/rss/index.xml</link>
     </feed>
 
+    <!-- Vox -->
+    <feed>
+        <title>Vox Recode</title>
+        <link>https://www.vox.com/rss/recode/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox Explainers</title>
+        <link>https://www.vox.com/rss/explainers/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox -- The Highlight</title>
+        <link>https://www.vox.com/rss/the-highlight/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox Future Perfect</title>
+        <link>https://www.vox.com/rss/future-perfect/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox -- The Goods</title>
+        <link>https://www.vox.com/rss/the-goods/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox Policy &amp; Politics</title>
+        <link>https://www.vox.com/rss/policy-and-politics/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox Culture</title>
+        <link>https://www.vox.com/rss/culture/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox Science &amp; Health</title>
+        <link>https://www.vox.com/rss/science-and-health/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox World</title>
+        <link>https://www.vox.com/rss/world/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox Identities</title>
+        <link>https://www.vox.com/rss/identities/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox Energy</title>
+        <link>https://www.vox.com/rss/energy/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox Technology</title>
+        <link>https://www.vox.com/rss/technology/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox Business &amp; Finance</title>
+        <link>https://www.vox.com/rss/business-and-finance/index.xml</link>
+    </feed>
+    <feed>
+        <title>Vox First Person</title>
+        <link>https://www.vox.com/rss/first-person/index.xml</link>
+    </feed>
+    <!--
+    <feed>
+        <title>Vox Video</title>
+        <link>https://www.vox.com/rss/videos/index.xml</link>
+    </feed>
+    -->
+    <feed>
+        <title>Vox</title>
+        <link>https://www.vox.com/rss/index.xml</link>
+    </feed>
+
     <!-- Washington Post -->
     <feed>
         <title>Washington Post Politics</title>
@@ -1469,16 +1575,12 @@
         <link>https://www.wired.com/feed/category/transportation/latest/rss</link>
     </feed>
     <feed>
-        <title>WIRED Backchannel</title>
-        <link>https://www.wired.com/feed/category/backchannel/latest/rss</link>
-    </feed>
-    <feed>
-        <title>WIRED Guides</title>
-        <link>https://www.wired.com/feed/tag/wired-guide/latest/rss</link>
-    </feed>
-    <feed>
         <title>WIRED Photo</title>
         <link>https://www.wired.com/feed/category/photo/latest/rss</link>
+    </feed>
+    <feed>
+        <title>WIRED Backchannel</title>
+        <link>https://www.wired.com/feed/category/backchannel/latest/rss</link>
     </feed>
     <feed>
         <title>WIRED</title>
