@@ -72,12 +72,14 @@
         <title>The Atlantic Education</title>
         <link>https://www.theatlantic.com/feed/channel/education/</link>
     </feed>
-    <!--
     <feed>
         <title>The Atlantic Letters</title>
         <link>https://www.theatlantic.com/feed/channel/education/</link>
     </feed>
-    -->
+    <feed>
+        <title>The Atlantic -- The Masthead</title>
+        <link>https://www.theatlantic.com/feed/channel/membership/</link>
+    </feed>
     <feed>
         <title>The Atlantic</title>
         <link>https://www.theatlantic.com/feed/best-of/</link>
@@ -190,31 +192,13 @@
     </feed>
 
     <!-- The Economist -->
-    <!--
-    <feed>
-        <title>The Economist Letters</title>
-        <link>https://www.economist.com/letters/rss.xml</link>
-    </feed>
-    -->
     <feed>
         <title>The Economist Leaders</title>
         <link>https://www.economist.com/leaders/rss.xml</link>
     </feed>
     <feed>
-        <title>The Economist Briefings</title>
+        <title>The Economist Briefing</title>
         <link>https://www.economist.com/briefing/rss.xml</link>
-    </feed>
-    <feed>
-        <title>The Economist Special Reports</title>
-        <link>https://www.economist.com/special-report/rss.xml</link>
-    </feed>
-    <feed>
-        <title>The Economist Britain</title>
-        <link>https://www.economist.com/britain/rss.xml</link>
-    </feed>
-    <feed>
-        <title>The Economist Europe</title>
-        <link>https://www.economist.com/europe/rss.xml</link>
     </feed>
     <feed>
         <title>The Economist United States</title>
@@ -225,16 +209,24 @@
         <link>https://www.economist.com/the-americas/rss.xml</link>
     </feed>
     <feed>
-        <title>The Economist Middle East &amp; Africa</title>
-        <link>https://www.economist.com/middle-east-and-africa/rss.xml</link>
-    </feed>
-    <feed>
         <title>The Economist Asia</title>
         <link>https://www.economist.com/asia/rss.xml</link>
     </feed>
     <feed>
         <title>The Economist China</title>
         <link>https://www.economist.com/china/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Middle East &amp; Africa</title>
+        <link>https://www.economist.com/middle-east-and-africa/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Europe</title>
+        <link>https://www.economist.com/europe/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Britain</title>
+        <link>https://www.economist.com/britain/rss.xml</link>
     </feed>
     <feed>
         <title>The Economist International</title>
@@ -256,23 +248,21 @@
         <title>The Economist Books &amp; Arts</title>
         <link>https://www.economist.com/books-and-arts/rss.xml</link>
     </feed>
-    <!--
-    <feed>
-        <title>The Economist Obituaries</title>
-        <link>https://www.economist.com/obituary/rss.xml</link>
-    </feed>
-    -->
     <feed>
         <title>The Economist Graphic Detail</title>
         <link>https://www.economist.com/graphic-detail/rss.xml</link>
     </feed>
     <feed>
-        <title>The Economist Indicators</title>
-        <link>https://www.economist.com/economic-and-financial-indicators/rss.xml</link>
+        <title>The Economist Obituary</title>
+        <link>https://www.economist.com/obituary/rss.xml</link>
+    </feed>
+    <feed>
+        <title>The Economist Special Reports</title>
+        <link>https://www.economist.com/special-report/rss.xml</link>
     </feed>
     <feed>
         <title>The Economist</title>
-        <link>https://www.economist.com/the-world-this-week/rss.xml</link>
+        <link>https://www.economist.com/latest/rss.xml</link>
     </feed>
 
     <!-- Fast Company -->
@@ -481,6 +471,10 @@
         <link>https://www.theguardian.com/uk/environment/rss</link>
     </feed>
     <feed>
+        <title>The Guardian Education</title>
+        <link>https://www.theguardian.com/education/rss</link>
+    </feed>
+    <feed>
         <title>The Guardian Society</title>
         <link>https://www.theguardian.com/society/rss</link>
     </feed>
@@ -500,15 +494,35 @@
         <title>The Guardian Cities</title>
         <link>https://www.theguardian.com/cities/rss</link>
     </feed>
-    <!--
     <feed>
         <title>The Guardian Obituaries</title>
         <link>https://www.theguardian.com/tone/obituaries/rss</link>
     </feed>
-    -->
     <feed>
         <title>The Guardian</title>
         <link>https://www.theguardian.com/international/rss</link>
+    </feed>
+
+    <!-- The Guardian Opinion -->
+    <feed>
+        <title>The Guardian View</title>
+        <link>https://www.theguardian.com/profile/editorial/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Columnists</title>
+        <link>https://www.theguardian.com/index/contributors/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Cartoons</title>
+        <link>https://www.theguardian.com/cartoons/archive/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Opinion Videos</title>
+        <link>https://www.theguardian.com/commentisfree/series/comment-is-free-weekly/rss</link>
+    </feed>
+    <feed>
+        <title>The Guardian Letters</title>
+        <link>https://www.theguardian.com/tone/letters/rss</link>
     </feed>
 
     <!-- Heise -->
@@ -524,12 +538,10 @@
         <title>Heise Fotografie</title>
         <link>https://www.heise.de/foto/rss/news-atom.xml</link>
     </feed>
-    <!--
     <feed>
         <title>Heise Jobs</title>
         <link>https://jobs.heise.de/rss.xml</link>
     </feed>
-    -->
     <feed>
         <title>Heise Security</title>
         <link>https://www.heise.de/security/rss/news-atom.xml</link>
@@ -1582,19 +1594,16 @@
         <title>Vox First Person</title>
         <link>https://www.vox.com/rss/first-person/index.xml</link>
     </feed>
-    <!--
     <feed>
         <title>Vox Video</title>
         <link>https://www.vox.com/rss/videos/index.xml</link>
     </feed>
-    -->
     <feed>
         <title>Vox</title>
         <link>https://www.vox.com/rss/index.xml</link>
     </feed>
 
     <!-- The Wall Street Journal -->
-    <!--
     <feed>
         <title>The Wall Street Journal Opinion</title>
         <link>https://feeds.a.dj.com/rss/RSSOpinion.xml</link>
@@ -1619,7 +1628,6 @@
         <title>The Wall Street Journal Lifestyle</title>
         <link>https://feeds.a.dj.com/rss/RSSLifestyle.xml</link>
     </feed>
-    -->
 
     <!-- Washington Post -->
     <feed>
@@ -1749,10 +1757,6 @@
         <link>https://feeds.feedburner.com/breitbart</link>
     </feed>
     <feed>
-        <title>Chalkdust</title>
-        <link>http://chalkdustmagazine.com/feed/</link>
-    </feed>
-    <feed>
         <title>Edge.org</title>
         <link>https://www.edge.org/feed</link>
     </feed>
@@ -1769,32 +1773,12 @@
         <link>https://theintercept.com/feed/?lang=en</link>
     </feed>
     <feed>
-        <title>Nature</title>
-        <link>http://feeds.nature.com/nature/rss/current</link>
-    </feed>
-    <feed>
-        <title>Nautilus</title>
-        <link>http://nautil.us/rss/all</link>
-    </feed>
-    <feed>
         <title>The New Republic</title>
         <link>https://www.newrepublic.com/rss.xml</link>
     </feed>
     <feed>
         <title>New Statesman</title>
         <link>https://www.newstatesman.com/feeds/site_feed.rss</link>
-    </feed>
-    <feed>
-        <title>Physics</title>
-        <link>http://feeds.aps.org/rss/recent/physics.xml</link>
-    </feed>
-    <feed>
-        <title>Science</title>
-        <link>https://science.sciencemag.org/rss/current.xml</link>
-    </feed>
-    <feed>
-        <title>Scientific American</title>
-        <link>http://rss.sciam.com/ScientificAmerican-Global</link>
     </feed>
 
     <!-- Miscellaneous -->
@@ -1839,5 +1823,31 @@
     <feed>
         <title>Slate Money</title>
         <link>http://feeds.megaphone.fm/slatemoney</link>
+    </feed>
+
+    <!-- Science -->
+    <feed>
+        <title>Chalkdust</title>
+        <link>http://chalkdustmagazine.com/feed/</link>
+    </feed>
+    <feed>
+        <title>Nature</title>
+        <link>http://feeds.nature.com/nature/rss/current</link>
+    </feed>
+    <feed>
+        <title>Nautilus</title>
+        <link>http://nautil.us/rss/all</link>
+    </feed>
+    <feed>
+        <title>Physics</title>
+        <link>http://feeds.aps.org/rss/recent/physics.xml</link>
+    </feed>
+    <feed>
+        <title>Science</title>
+        <link>https://science.sciencemag.org/rss/current.xml</link>
+    </feed>
+    <feed>
+        <title>Scientific American</title>
+        <link>http://rss.sciam.com/ScientificAmerican-Global</link>
     </feed>
 </root>
