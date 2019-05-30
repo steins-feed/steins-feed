@@ -309,24 +309,28 @@
 
     <!-- FiveThirtyEight -->
     <feed>
-        <title>FiveThirtyEight NBA</title>
-        <link>https://fivethirtyeight.com/tag/nba/feed/</link>
+        <title>FiveThirtyEight Politics</title>
+        <link>https://fivethirtyeight.com/politics/feed/</link>
     </feed>
     <feed>
-        <title>FiveThirtyEight NBA Playoffs</title>
-        <link>https://fivethirtyeight.com/tag/nba-playoffs/feed/</link>
+        <title>FiveThirtyEight Sports</title>
+        <link>https://fivethirtyeight.com/sports/feed/</link>
     </feed>
     <feed>
-        <title>FiveThirtyEight College Basketball</title>
-        <link>https://fivethirtyeight.com/tag/college-basketball/feed/</link>
+        <title>FiveThirtyEight Science</title>
+        <link>https://fivethirtyeight.com/science/feed/</link>
     </feed>
     <feed>
-        <title>FiveThirtyEight March Madness</title>
-        <link>https://fivethirtyeight.com/tag/march-madness/feed/</link>
+        <title>FiveThirtyEight Economics</title>
+        <link>https://fivethirtyeight.com/economics/feed/</link>
     </feed>
     <feed>
-        <title>FiveThirtyEight Basketball</title>
-        <link>https://fivethirtyeight.com/tag/basketball/feed/</link>
+        <title>FiveThirtyEight Culture</title>
+        <link>https://fivethirtyeight.com/life/feed/</link>
+    </feed>
+    <feed>
+        <title>FiveThirtyEight</title>
+        <link>https://fivethirtyeight.com/all/feed</link>
     </feed>
 
     <!-- Forbes -->
@@ -1375,24 +1379,6 @@
         <link>http://feeds.reuters.com/Reuters/worldNews</link>
     </feed>
 
-    <!-- The Ringer -->
-    <feed>
-        <title>The Ringer NBA</title>
-        <link>https://www.theringer.com/rss/nba/index.xml</link>
-    </feed>
-    <feed>
-        <title>The Ringer NBA Playoffs</title>
-        <link>https://www.theringer.com/rss/nba-playoffs/index.xml</link>
-    </feed>
-    <feed>
-        <title>The Ringer College Basketball</title>
-        <link>https://www.theringer.com/rss/college-basketball/index.xml</link>
-    </feed>
-    <feed>
-        <title>The Ringer March Madness</title>
-        <link>https://www.theringer.com/rss/march-madness/index.xml</link>
-    </feed>
-
     <!-- Salon.com -->
     <feed>
         <title>Salon.com News &amp; Politics</title>
@@ -1849,5 +1835,23 @@
     <feed>
         <title>Scientific American</title>
         <link>http://rss.sciam.com/ScientificAmerican-Global</link>
+    </feed>
+
+    <!-- Sports -->
+    <feed>
+        <title>FiveThirtyEight NBA</title>
+        <link>https://fivethirtyeight.com/tag/nba/feed/</link>
+    </feed>
+    <feed>
+        <title>Barstool Sports NBA</title>
+        <link>https://cms.barstoolsports.com/topics/nba/feed/</link>
+    </feed>
+    <feed>
+        <title>The Ringer NBA</title>
+        <link>https://www.theringer.com/rss/nba/index.xml</link>
+    </feed>
+    <feed>
+        <title>SB Nation NBA</title>
+        <link>https://www.sbnation.com/rss/nba/index.xml</link>
     </feed>
 </root>
