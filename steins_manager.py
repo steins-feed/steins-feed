@@ -368,6 +368,12 @@ def get_handler(source):
             print("DEBUG: VergeHandler.")
             verge_handler = NoAbstractHandler()
         handler = verge_handler
+    elif "Vox" in source:
+        global vox_handler
+        if not "vox_handler" in globals():
+            print("DEBUG: VoxHandler.")
+            vox_handler = AbstractHandler()
+        handler = vox_handler
     elif "WIRED" in source:
         global wired_handler
         if not "wired_handler" in globals():
