@@ -1793,6 +1793,10 @@
 
     <!-- Magazines -->
     <feed>
+        <title>Al Jazeera</title>
+        <link>https://www.aljazeera.com/xml/rss/all.xml</link>
+    </feed>
+    <feed>
         <title>Breitbart</title>
         <link>https://feeds.feedburner.com/breitbart</link>
     </feed>
