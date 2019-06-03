@@ -545,6 +545,56 @@
         <link>http://fortune.com/feed</link>
     </feed>
 
+    <!-- Frankfurter Allgemeine Zeitung -->
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung Politik</title>
+        <link>https://www.faz.net/rss/aktuell/politik/</link>
+    </feed>
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung Wirtschaft</title>
+        <link>https://www.faz.net/rss/aktuell/wirtschaft/</link>
+    </feed>
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung Finanzen</title>
+        <link>https://www.faz.net/rss/aktuell/finanzen/</link>
+    </feed>
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung Feuilleton</title>
+        <link>https://www.faz.net/rss/aktuell/feuilleton/</link>
+    </feed>
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung Gesellschaft</title>
+        <link>https://www.faz.net/rss/aktuell/gesellschaft/</link>
+    </feed>
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung Stil</title>
+        <link>https://www.faz.net/rss/aktuell/stil/</link>
+    </feed>
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung Rhein-Main</title>
+        <link>https://www.faz.net/rss/aktuell/rhein-main/</link>
+    </feed>
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung Technik</title>
+        <link>https://www.faz.net/rss/aktuell/technik-motor/</link>
+    </feed>
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung Wissen</title>
+        <link>https://www.faz.net/rss/aktuell/wissen/</link>
+    </feed>
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung Reise</title>
+        <link>https://www.faz.net/rss/aktuell/reise/</link>
+    </feed>
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung Karriere</title>
+        <link>https://www.faz.net/rss/aktuell/beruf-chance/</link>
+    </feed>
+    <feed>
+        <title>Frankfurter Allgemeine Zeitung</title>
+        <link>https://www.faz.net/rss/aktuell/</link>
+    </feed>
+
     <!-- The Guardian -->
     <feed>
         <title>The Guardian Opinion</title>
