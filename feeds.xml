@@ -1925,6 +1925,60 @@
         <link>https://www.wired.com/feed/rss</link>
     </feed>
 
+    <!-- Die ZEIT -->
+    <feed>
+        <title>Die ZEIT Politik</title>
+        <link>http://newsfeed.zeit.de/politik/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT Wirtschaft</title>
+        <link>http://newsfeed.zeit.de/wirtschaft/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT Gesellschaft</title>
+        <link>http://newsfeed.zeit.de/gesellschaft/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT Kultur</title>
+        <link>http://newsfeed.zeit.de/kultur/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT Wissen</title>
+        <link>http://newsfeed.zeit.de/wissen/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT Digital</title>
+        <link>http://newsfeed.zeit.de/digital/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT Campus</title>
+        <link>http://newsfeed.zeit.de/campus/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT Arbeit</title>
+        <link>http://newsfeed.zeit.de/arbeit/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT Magazin</title>
+        <link>http://newsfeed.zeit.de/zeit-magazin/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT Entdecken</title>
+        <link>http://newsfeed.zeit.de/entdecken/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT Mobilität</title>
+        <link>http://newsfeed.zeit.de/mobilitaet/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT Sport</title>
+        <link>http://newsfeed.zeit.de/sport/index</link>
+    </feed>
+    <feed>
+        <title>Die ZEIT</title>
+        <link>http://newsfeed.zeit.de/index</link>
+    </feed>
+
     <!-- Blogs -->
     <feed>
         <title>Gates Notes</title>
