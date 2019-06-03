@@ -1561,6 +1561,84 @@
         <link>https://slate.com/feeds/all.rss</link>
     </feed>
 
+    <!-- Süddeutsche Zeitung -->
+    <feed>
+        <title>Süddeutsche Zeitung Politik</title>
+        <link>http://rss.sueddeutsche.de/rss/politik</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Wirtschaft</title>
+        <link>http://rss.sueddeutsche.de/rss/wirtschaft</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Geld</title>
+        <link>http://rss.sueddeutsche.de/rss/geld</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Panorama</title>
+        <link>http://rss.sueddeutsche.de/rss/panorama</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Gesellschaft</title>
+        <link>http://rss.sueddeutsche.de/rss/leben</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Sport</title>
+        <link>http://rss.sueddeutsche.de/rss/sport</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung München</title>
+        <link>http://rss.sueddeutsche.de/rss/muenchen</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Bayern</title>
+        <link>http://rss.sueddeutsche.de/rss/bayern</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Kultur</title>
+        <link>http://rss.sueddeutsche.de/rss/kultur</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Medien</title>
+        <link>http://rss.sueddeutsche.de/rss/medien</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Wissen</title>
+        <link>http://rss.sueddeutsche.de/rss/wissen</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Gesundheit</title>
+        <link>http://rss.sueddeutsche.de/rss/gesundheit</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Digital</title>
+        <link>http://rss.sueddeutsche.de/rss/digital</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Karriere</title>
+        <link>http://rss.sueddeutsche.de/rss/karriere</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Bildung</title>
+        <link>http://rss.sueddeutsche.de/rss/bildung</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Reise</title>
+        <link>http://rss.sueddeutsche.de/rss/reise</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Auto</title>
+        <link>http://rss.sueddeutsche.de/rss/auto</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung Stil</title>
+        <link>http://rss.sueddeutsche.de/rss/stil</link>
+    </feed>
+    <feed>
+        <title>Süddeutsche Zeitung</title>
+        <link>http://rss.sueddeutsche.de/rss/Topthemen</link>
+    </feed>
+
     <!-- t3n -->
     <feed>
         <title>t3n Digitale Wirtschaft</title>
