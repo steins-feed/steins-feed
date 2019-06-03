@@ -294,6 +294,12 @@ def get_handler(source):
             print("DEBUG: AtlanticHandler.")
             atlantic_handler = AtlanticHandler()
         handler = atlantic_handler
+    elif "Bild" in source:
+        global bild_handler
+        if not "bild_handler" in globals():
+            print("DEBUG: BildHandler.")
+            bild_handler = NoAbstractHandler()
+        handler = bild_handler
     elif "The Conversation" in source:
         global conversation_handler
         if not "conversation_handler" in globals():
