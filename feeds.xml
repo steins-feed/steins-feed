@@ -85,6 +85,48 @@
         <link>https://www.theatlantic.com/feed/best-of/</link>
     </feed>
 
+    <!-- Bild -->
+    <feed>
+        <title>Bild News</title>
+        <link>https://www.bild.de/rss-feeds/rss-16725492,feed=news.bild.html</link>
+    </feed>
+    <feed>
+        <title>Bild Politik</title>
+        <link>https://www.bild.de/rss-feeds/rss-16725492,feed=politik.bild.html</link>
+    </feed>
+    <feed>
+        <title>Bild Unterhaltung</title>
+        <link>https://www.bild.de/rss-feeds/rss-16725492,feed=unterhaltung.bild.html</link>
+    </feed>
+    <feed>
+        <title>Bild Sport</title>
+        <link>https://www.bild.de/rss-feeds/rss-16725492,feed=sport.bild.html</link>
+    </feed>
+    <feed>
+        <title>Bild Lifestyle</title>
+        <link>https://www.bild.de/rss-feeds/rss-16725492,feed=lifestyle.bild.html</link>
+    </feed>
+    <feed>
+        <title>Bild Ratgeber</title>
+        <link>https://www.bild.de/rss-feeds/rss-16725492,feed=ratgeber.bild.html</link>
+    </feed>
+    <feed>
+        <title>Bild Auto</title>
+        <link>https://www.bild.de/rss-feeds/rss-16725492,feed=auto.bild.html</link>
+    </feed>
+    <feed>
+        <title>Bild Digital</title>
+        <link>https://www.bild.de/rss-feeds/rss-16725492,feed=digital.bild.html</link>
+    </feed>
+    <feed>
+        <title>Bild Spiele</title>
+        <link>https://www.bild.de/rss-feeds/rss-16725492,feed=spiele.bild.html</link>
+    </feed>
+    <feed>
+        <title>Bild</title>
+        <link>https://www.bild.de/rss-feeds/rss-16725492,feed=home.bild.html</link>
+    </feed>
+
     <!-- Capital.de -->
     <feed>
         <title>Capital.de Geld &amp; Versicherungen</title>
