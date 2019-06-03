@@ -1557,6 +1557,44 @@
         <link>https://t3n.de/rss.xml</link>
     </feed>
 
+    <!-- taz -->
+    <feed>
+        <title>taz Politik</title>
+        <link>https://taz.de/!p4615;rss/</link>
+    </feed>
+    <feed>
+        <title>taz Öko</title>
+        <link>https://taz.de/!p4610;rss/</link>
+    </feed>
+    <feed>
+        <title>taz Gesellschaft</title>
+        <link>https://taz.de/!p4611;rss/</link>
+    </feed>
+    <feed>
+        <title>taz Kultur</title>
+        <link>https://taz.de/!p4639;rss/</link>
+    </feed>
+    <feed>
+        <title>taz Sport</title>
+        <link>https://taz.de/!p4646;rss/</link>
+    </feed>
+    <feed>
+        <title>taz Berlin</title>
+        <link>https://taz.de/!p4649;rss/</link>
+    </feed>
+    <feed>
+        <title>taz Nord</title>
+        <link>https://taz.de/!p4650;rss/</link>
+    </feed>
+    <feed>
+        <title>taz Wahrheit</title>
+        <link>https://taz.de/!p4644;rss/</link>
+    </feed>
+    <feed>
+        <title>taz</title>
+        <link>https://taz.de/!s=&amp;ExportStatus=Intern&amp;SuchRahmen=Online;rss/</link>
+    </feed>
+
     <!-- The Verge -->
     <feed>
         <title>The Verge Tech</title>

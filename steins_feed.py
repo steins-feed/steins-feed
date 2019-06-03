@@ -26,10 +26,13 @@ def steins_read():
             print("{}: 200.".format(feed_it[1]))
 
         for item_it in d['items']:
-            item_title = handler.read_title(item_it)
-            item_time = handler.read_time(item_it)
-            item_summary = handler.read_summary(item_it)
-            item_link = handler.read_link(item_it)
+            try:
+                item_title = handler.read_title(item_it)
+                item_time = handler.read_time(item_it)
+                item_summary = handler.read_summary(item_it)
+                item_link = handler.read_link(item_it)
+            except KeyError:
+                continue
 
             # Punish cheaters.
             if time.strptime(item_time, "%Y-%m-%d %H:%M:%S GMT") > time.gmtime():
