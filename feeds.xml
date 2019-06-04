@@ -2067,6 +2067,10 @@
 
     <!-- Blogs -->
     <feed>
+        <title>Andreessen Horowitz</title>
+        <link>https://a16z.com/articles/feed/</link>
+    </feed>
+    <feed>
         <title>Gates Notes</title>
         <link>https://www.gatesnotes.com/rss</link>
     </feed>
