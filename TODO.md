@@ -4,6 +4,8 @@
 
 *   Bloomberg.
 *   Boston Globe.
+*   The Telegraph.
+*   The Times.
 
 ## Behind Paywall
 

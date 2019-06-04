@@ -1535,6 +1535,92 @@
         <link>https://www.salon.com/feed</link>
     </feed>
 
+    <!-- Seeking Alpha -->
+    <feed>
+        <title>Seeking Alpha Stock Ideas</title>
+        <link>https://seekingalpha.com/feed/stock-ideas</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Dividends</title>
+        <link>https://seekingalpha.com/feed/dividends</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Market Outlook</title>
+        <link>https://seekingalpha.com/feed/market-outlook</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Investing Strategy</title>
+        <link>https://seekingalpha.com/feed/investing-strategy</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha ETFs &amp; Funds</title>
+        <link>https://seekingalpha.com/feed/etfs-and-funds</link>
+    </feed>
+
+    <!-- Seeking Alpha Stock Ideas -->
+    <feed>
+        <title>Seeking Alpha Technology Stocks</title>
+        <link>https://seekingalpha.com/feed/stock-ideas/technology</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Basic Materials Stocks</title>
+        <link>https://seekingalpha.com/feed/stock-ideas/basic-materials</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Healthcare Stocks</title>
+        <link>https://seekingalpha.com/feed/stock-ideas/healthcare</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Consumer Stocks</title>
+        <link>https://seekingalpha.com/feed/stock-ideas/consumer-goods</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Services Stocks</title>
+        <link>https://seekingalpha.com/feed/stock-ideas/services</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Utilities Stocks</title>
+        <link>https://seekingalpha.com/feed/stock-ideas/utilities</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Financials Stocks</title>
+        <link>https://seekingalpha.com/feed/stock-ideas/financial</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Industrial Stocks</title>
+        <link>https://seekingalpha.com/feed/stock-ideas/industrial-goods</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Conglomerates Stocks</title>
+        <link>https://seekingalpha.com/feed/stock-ideas/conglomerates</link>
+    </feed>
+
+    <!-- Seeking Alpha Market News -->
+    <feed>
+        <title>Seeking Alpha Tech News</title>
+        <link>https://seekingalpha.com/news/tech/feed</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Healthcare News</title>
+        <link>https://seekingalpha.com/news/healthcare/feed</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Financials News</title>
+        <link>https://seekingalpha.com/news/financials/feed</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Energy News</title>
+        <link>https://seekingalpha.com/news/energy/feed</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Consumer News</title>
+        <link>https://seekingalpha.com/news/consumer/feed</link>
+    </feed>
+    <feed>
+        <title>Seeking Alpha Commodities News</title>
+        <link>https://seekingalpha.com/news/commodities/feed</link>
+    </feed>
+
     <!-- Slate -->
     <feed>
         <title>Slate News &amp; Politics</title>
@@ -1985,12 +2071,12 @@
         <link>https://www.gatesnotes.com/rss</link>
     </feed>
     <feed>
-        <title>Mark Manson</title>
-        <link>https://markmanson.net/feed</link>
+        <title>Om Malik</title>
+        <link>https://om.co/</link>
     </feed>
     <feed>
-        <title>Nate Silver</title>
-        <link>https://fivethirtyeight.com/contributors/nate-silver/feed</link>
+        <title>Mark Manson</title>
+        <link>https://markmanson.net/feed</link>
     </feed>
     <feed>
         <title>Robert Reich</title>
@@ -1999,6 +2085,10 @@
     <feed>
         <title>Schneier on Security</title>
         <link>https://www.schneier.com/blog/atom.xml</link>
+    </feed>
+    <feed>
+        <title>Nate Silver</title>
+        <link>https://fivethirtyeight.com/contributors/nate-silver/feed</link>
     </feed>
 
     <!-- Comics -->
