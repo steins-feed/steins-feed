@@ -11,7 +11,14 @@ from steins_web import get_tree_from_session
 
 class SteinsHandler:
     def read_title(self, item_it):
-        return item_it['title']
+        try:
+            item_title = item_it['title']
+            return item_title
+        except KeyError:
+            pass
+
+        get_logger().error("No title.")
+        raise KeyError
 
     def read_link(self, item_it):
         try:
@@ -26,6 +33,7 @@ class SteinsHandler:
         except KeyError:
             pass
 
+        get_logger().error("No link for '{}'.".format(self.read_title(item_it)))
         raise KeyError
 
     def read_summary(self, item_it):
@@ -39,10 +47,9 @@ class SteinsHandler:
                 node_it.getparent().remove(node_it)
 
             return html.tostring(summary_tree).decode('utf-8')
-        except KeyError:
+        except:
+            get_logger().error("No summary for '{}'.".format(self.read_title(item_it)))
             return ""
-        except ParserError:
-            return item_it['summary']
 
     def read_time(self, item_it):
         try:
@@ -59,6 +66,7 @@ class SteinsHandler:
         except (KeyError, TypeError, ValueError):
             pass
 
+        get_logger().error("No time for '{}'.".format(self.read_title(item_it)))
         raise KeyError
 
     def parse(self, feed_link):
@@ -70,10 +78,9 @@ class AbstractHandler(SteinsHandler):
             summary_tree = html.fromstring(item_it['summary'])
             p_nodes = summary_tree.xpath("//p")
             return html.tostring(p_nodes[0]).decode('utf-8')
-        except KeyError:
+        except:
+            get_logger().error("No summary for '{}'.".format(self.read_title(item_it)))
             return ""
-        except ParserError:
-            return item_it['summary']
 
 class NoAbstractHandler(SteinsHandler):
     def read_summary(self, item_it):
