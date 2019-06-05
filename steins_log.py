@@ -16,10 +16,12 @@ def have_logger():
 def get_logger():
     global logger
     if not have_logger():
-        logger = logging.getLogger('stein')
-        logger.setLevel(logging.DEBUG)
-        fh = logging.FileHandler(LOG_NAME)
         formatter = logging.Formatter("[%(asctime)s] %(levelname)s: %(message)s")
+
+        fh = logging.FileHandler(LOG_NAME)
         fh.setFormatter(formatter)
+
+        logger = logging.getLogger('stein')
+        logger.setLevel(logging.INFO)
         logger.addHandler(fh)
     return logger

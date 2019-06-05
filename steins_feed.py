@@ -23,7 +23,7 @@ def steins_read():
         handler = get_handler(feed_it[1])
         d = handler.parse(feed_it[2])
         try:
-            logger.info("{}: {}.".format(feed_it[1], d.status))
+            logger.info("{} -- {}.".format(feed_it[1], d.status))
         except AttributeError:
             logger.info("{}.".format(feed_it[1]))
 
