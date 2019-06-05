@@ -7,6 +7,7 @@ import numpy as np
 import numpy.random as random
 
 from steins_config import init_feeds
+from steins_log import get_logger
 from steins_manager import get_handler
 from steins_sql import get_connection, get_cursor, last_updated
 
@@ -16,14 +17,15 @@ dir_name = os.path.dirname(os.path.abspath(__file__))
 def steins_read():
     conn = get_connection()
     c = conn.cursor()
+    logger = get_logger()
 
     for feed_it in c.execute("SELECT * FROM Feeds WHERE DISPLAY=1").fetchall():
         handler = get_handler(feed_it[1])
         d = handler.parse(feed_it[2])
         try:
-            print("{}: {}.".format(feed_it[1], d.status))
+            logger.info("{}: {}.".format(feed_it[1], d.status))
         except AttributeError:
-            print("{}: 200.".format(feed_it[1]))
+            logger.info("{}.".format(feed_it[1]))
 
         for item_it in d['items']:
             try:

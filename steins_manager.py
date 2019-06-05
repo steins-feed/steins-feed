@@ -11,6 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 
+from steins_log import get_logger
 from steins_web import get_browser, get_tree_from_session, fetch_cookies
 
 FILE_NAME = "sign_in.xml"
@@ -201,7 +202,8 @@ class FinancialTimesHandler(SteinsHandler):
                 button.click()
                 break
             except NoSuchElementException:
-                print("ERROR: FinancialTimesHandler.")
+                logger = get_logger()
+                logger.error("FinancialTimesHandler.")
 
         wait = WebDriverWait(browser, 30)
         wait.until(EC.title_contains("Financial Times"))
@@ -288,82 +290,84 @@ class WIREDHandler(SteinsHandler):
 
 # Static factory.
 def get_handler(source):
+    logger = get_logger()
+
     if "The Atlantic" in source:
         global atlantic_handler
         if not "atlantic_handler" in globals():
-            print("DEBUG: AtlanticHandler.")
+            logger.info("AtlanticHandler.")
             atlantic_handler = AtlanticHandler()
         handler = atlantic_handler
     elif "Bild" in source:
         global bild_handler
         if not "bild_handler" in globals():
-            print("DEBUG: BildHandler.")
+            logger.info("BildHandler.")
             bild_handler = NoAbstractHandler()
         handler = bild_handler
     elif "The Conversation" in source:
         global conversation_handler
         if not "conversation_handler" in globals():
-            print("DEBUG: ConversationHandler.")
+            logger.info("ConversationHandler.")
             conversation_handler = NoAbstractHandler()
         handler = conversation_handler
     elif "The Economist" in source:
         global economist_handler
         if not "economist_handler" in globals():
-            print("DEBUG: EconomistHandler.")
+            logger.info("EconomistHandler.")
             economist_handler = EconomistHandler()
         handler = economist_handler
     elif "Factorio" in source:
         global factorio_handler
         if not "factorio_handler" in globals():
-            print("DEBUG: FactorioHandler.")
+            logger.info("FactorioHandler.")
             factorio_handler = NoAbstractHandler()
         handler = factorio_handler
     elif "Fast Company" in source:
         global fast_company_handler
         if not "fast_company_handler" in globals():
-            print("DEBUG: FastCompanyHandler.")
+            logger.info("FastCompanyHandler.")
             fast_company_handler = NoAbstractHandler()
         handler = fast_company_handler
     elif "Financial Times" in source:
         global financial_times_handler
         if not "financial_times_handler" in globals():
-            print("DEBUG: FinancialTimesHandler.")
+            logger.info("FinancialTimesHandler.")
             financial_times_handler = FinancialTimesHandler()
         handler = financial_times_handler
     elif "The Guardian" in source:
         global guardian_handler
         if not "guardian_handler" in globals():
-            print("DEBUG: GuardianHandler.")
+            logger.info("GuardianHandler.")
             guardian_handler = GuardianHandler()
         handler = guardian_handler
     elif "Medium" in source:
         global medium_handler
         if not "medium_handler" in globals():
-            print("DEBUG: MediumHandler.")
+            logger.info("MediumHandler.")
             medium_handler = MediumHandler()
         handler = medium_handler
     elif "New Republic" in source:
         global new_republic_handler
         if not "new_republic_handler" in globals():
-            print("DEBUG: NewRepublicHandler.")
+            logger.info("NewRepublicHandler.")
             new_republic_handler = NoAbstractHandler()
         handler = new_republic_handler
     elif "New Statesman" in source:
         global new_statesman_handler
         if not "new_statesman_handler" in globals():
-            print("DEBUG: NewStatesmanHandler.")
+            logger.info("NewStatesmanHandler.")
             new_statesman_handler = AbstractHandler()
         handler = new_statesman_handler
     elif "The New Yorker" in source:
         global new_yorker_handler
         if not "new_yorker_handler" in globals():
-            print("DEBUG: NewYorkerHandler.")
+            logger.info("NewYorkerHandler.")
             new_yorker_handler = NewYorkerHandler()
         handler = new_yorker_handler
     elif "The Ringer" in source:
         global ringer_handler
         if not "ringer_handler" in globals():
-            print("DEBUG: RingerHandler.")
+            logger.info("RingerHandler.")
             ringer_handler = AbstractHandler()
         handler = ringer_handler
     elif source == "The Verge":
@@ -371,19 +375,19 @@ def get_handler(source):
     elif "The Verge" in source:
         global verge_handler
         if not "verge_handler" in globals():
-            print("DEBUG: VergeHandler.")
+            logger.info("VergeHandler.")
             verge_handler = NoAbstractHandler()
         handler = verge_handler
     elif "Vox" in source:
         global vox_handler
         if not "vox_handler" in globals():
-            print("DEBUG: VoxHandler.")
+            logger.info("VoxHandler.")
             vox_handler = AbstractHandler()
         handler = vox_handler
     elif "WIRED" in source:
         global wired_handler
         if not "wired_handler" in globals():
-            print("DEBUG: WIREDHandler.")
+            logger.info("WIREDHandler.")
             wired_handler = WIREDHandler()
         handler = wired_handler
     else:
