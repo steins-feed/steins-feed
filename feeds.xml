@@ -2211,6 +2211,10 @@
         <link>http://nautil.us/rss/all</link>
     </feed>
     <feed>
+        <title>Numberphile</title>
+        <link>https://www.numberphile.com/?format=rss</link>
+    </feed>
+    <feed>
         <title>Physics</title>
         <link>http://feeds.aps.org/rss/recent/physics.xml</link>
     </feed>
