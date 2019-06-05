@@ -9,7 +9,6 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 *   feedparser
 *   requests
 *   scikit-learn
-*   selenium
 
 ## Run on desktop.
 
