@@ -7,10 +7,9 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlsplit, parse_qs, parse_qsl
 from xml.sax.saxutils import escape
 
-from steins_config import add_feed, delete_feed, init_feeds
 from steins_feed import steins_generate_page
 from steins_magic import handle_magic, handle_surprise
-from steins_sql import get_connection, get_cursor
+from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
