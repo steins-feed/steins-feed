@@ -2209,6 +2209,10 @@
 
     <!-- Miscellaneous -->
     <feed>
+        <title>Electronic Frontier Foundation</title>
+        <link>https://www.eff.org/rss/updates.xml</link>
+    </feed>
+    <feed>
         <title>Factorio</title>
         <link>https://factorio.com/blog/rss</link>
     </feed>
@@ -2301,6 +2305,10 @@
 	<link>https://bgr.com/feed/</link>
     </feed>
     <feed>
+        <title>CNET</title>
+	<link>https://www.cnet.com/rss/news/</link>
+    </feed>
+    <feed>
         <title>Digital Trends</title>
 	<link>https://www.digitaltrends.com/feed/</link>
     </feed>
@@ -2331,5 +2339,9 @@
     <feed>
         <title>TechRadar</title>
 	<link>https://www.techradar.com/rss</link>
+    </feed>
+    <feed>
+        <title>ZDNet</title>
+	<link>https://www.zdnet.com/news/rss.xml</link>
     </feed>
 </root>
