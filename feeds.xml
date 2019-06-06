@@ -2294,4 +2294,42 @@
         <title>The Ringer NBA</title>
         <link>https://www.theringer.com/rss/nba/index.xml</link>
     </feed>
+
+    <!-- Technology -->
+    <feed>
+        <title>Boy Genius Report</title>
+	<link>https://bgr.com/feed/</link>
+    </feed>
+    <feed>
+        <title>Digital Trends</title>
+	<link>https://www.digitaltrends.com/feed/</link>
+    </feed>
+    <feed>
+        <title>Engadget</title>
+	<link>https://www.engadget.com/rss.xml</link>
+    </feed>
+    <feed>
+        <title>Gigaom</title>
+	<link>https://gigaom.com/feed/</link>
+    </feed>
+    <feed>
+        <title>Gizmodo</title>
+	<link>https://gizmodo.com/rss</link>
+    </feed>
+    <feed>
+        <title>Mashable</title>
+	<link>http://feeds.mashable.com/Mashable</link>
+    </feed>
+    <feed>
+        <title>The Next Web</title>
+	<link>https://thenextweb.com/feed/</link>
+    </feed>
+    <feed>
+        <title>TechCrunch</title>
+	<link>https://techcrunch.com/feed/</link>
+    </feed>
+    <feed>
+        <title>TechRadar</title>
+	<link>https://www.techradar.com/rss</link>
+    </feed>
 </root>
