@@ -95,6 +95,19 @@ class AtlanticHandler(SteinsHandler):
         d = feedparser.parse(html.tostring(tree))
         return d
 
+class GatesHandler(SteinsHandler):
+    def read_time(self, item_it):
+        try:
+            item_time = item_it['published']
+            item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
+            item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
+            return item_time
+        except (KeyError, TypeError, ValueError):
+            pass
+
+        get_logger().error("No time for '{}'.".format(self.read_title(item_it)))
+        raise KeyError
+
 class MediumHandler(SteinsHandler):
     def parse(self, feed_link):
         time.sleep(1)
@@ -134,6 +147,12 @@ def get_handler(source):
             logger.debug("FastCompanyHandler.")
             fast_company_handler = NoAbstractHandler()
         handler = fast_company_handler
+    elif "Gates" in source:
+        global gates_handler
+        if not "gates_handler" in globals():
+            logger.debug("GatesHandler.")
+            gates_handler = GatesHandler()
+        handler = gates_handler
     elif "Medium" in source:
         global medium_handler
         if not "medium_handler" in globals():
