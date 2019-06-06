@@ -31,6 +31,18 @@ def handle_like(qd, val=1):
 
     conn.commit()
 
+def handle_display_feeds(qd):
+    conn = get_connection()
+    c = conn.cursor()
+
+    query_keys = [int(q_it) for q_it in qd.keys()]
+    for q_it in c.execute("SELECT * FROM Feeds").fetchall():
+        if int(q_it[0]) in query_keys:
+            c.execute("UPDATE Feeds SET Display=1 WHERE ItemID=?", (q_it[0], ))
+        else:
+            c.execute("UPDATE Feeds SET Display=0 WHERE ItemID=?", (q_it[0], ))
+        conn.commit()
+
 def handle_settings():
     c = get_cursor()
 
@@ -40,7 +52,8 @@ def handle_settings():
     s += "<!DOCTYPE html>\n"
     s += "<html>\n"
     s += "<head>\n"
-    s += "<meta charset=\"UTF-8\">"
+    s += "<meta charset=\"UTF-8\">\n"
+    s += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n"
     s += "<title>Settings</title>\n"
     s += "</head>\n"
     s += "<body>\n"
@@ -52,7 +65,7 @@ def handle_settings():
             s += "<input type=\"checkbox\" name=\"{}\" value=\"{}\">{}<br>\n".format(feed_it[0], feed_it[1], feed_it[1])
         else:
             s += "<input type=\"checkbox\" name=\"{}\" value=\"{}\" checked>{}<br>\n".format(feed_it[0], feed_it[1], feed_it[1])
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/feeds\" value=\"Display feeds\"></p>\n"
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/display_feeds.php\" value=\"Display feeds\"></p>\n"
     s += "</form>\n"
 
     s += "<hr>\n"
@@ -234,21 +247,13 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.path = self.path.replace("/steins-feed", "")
 
         # Feeds.
-        if self.path == "/feeds":
-            conn = get_connection()
-            c = conn.cursor()
-
-            query_len = int(self.headers.get('content-length'))
-            query = self.rfile.read(query_len)
-            query_dict = parse_qs(query.decode('utf-8'))
-            query_keys = [int(q_it) for q_it in query_dict.keys()]
-
-            for q_it in c.execute("SELECT * FROM Feeds").fetchall():
-                if int(q_it[0]) in query_keys:
-                    c.execute("UPDATE Feeds SET Display=1 WHERE ItemID=?", (q_it[0], ))
-                else:
-                    c.execute("UPDATE Feeds SET Display=0 WHERE ItemID=?", (q_it[0], ))
-                conn.commit()
+        if self.path == "/display_feeds.php":
+            qlen = int(self.headers.get('content-length'))
+            qs = self.rfile.read(qlen).decode('utf-8')
+            qd = dict(parse_qsl(qs))
+            handle_display_feeds(qd)
+            self.send_response(204)
+            self.end_headers()
 
             self.path = "/"
             self.do_GET()
