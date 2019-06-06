@@ -8,14 +8,13 @@ import numpy.random as random
 
 from steins_log import get_logger
 from steins_manager import get_handler
-from steins_sql import get_connection, get_cursor, last_updated
+from steins_sql import add_item, get_cursor, last_updated
 
 dir_name = os.path.dirname(os.path.abspath(__file__))
 
 # Scrape feeds.
 def steins_read():
-    conn = get_connection()
-    c = conn.cursor()
+    c = get_cursor()
     logger = get_logger()
 
     for feed_it in c.execute("SELECT * FROM Feeds WHERE DISPLAY=1").fetchall():
@@ -35,29 +34,7 @@ def steins_read():
             except KeyError:
                 continue
 
-            # Punish cheaters.
-            if time.strptime(item_time, "%Y-%m-%d %H:%M:%S GMT") > time.gmtime():
-                continue
-
-            # Remove duplicates.
-            cands = c.execute("SELECT * FROM Items WHERE Title=?", (item_title, )).fetchall()
-            item_exists = False
-            for cand_it in cands:
-                if not item_time[:10] == cand_it[2][:10]:
-                    continue
-
-                idx0_item = item_link.find("//")
-                idx1_item = item_link.find("/", idx0_item + 2)
-                idx0_cand = cand_it[5].find("//")
-                idx1_cand = cand_it[5].find("/", idx0_cand + 2)
-
-                if item_link[:idx1_item] == cand_it[5][:idx1_cand]:
-                    item_exists = True
-                    break
-            if not item_exists:
-                c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))
-                logger.info("Add item -- {}.".format(item_title))
-                conn.commit()
+            add_item(item_title, item_time, item_summary, feed_it[1], item_link)
 
 def steins_generate_page(page_no, score_board=None, surprise=-1):
     c = get_cursor()

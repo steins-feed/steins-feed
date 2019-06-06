@@ -84,6 +84,35 @@ def init_feeds(file_path=file_path):
         link = feed_it.xpath("./link")[0].text
         add_feed(title, link)
 
+def add_item(item_title, item_time, item_summary, item_source, item_link):
+    conn = get_connection()
+    c = conn.cursor()
+    logger = get_logger()
+
+    # Punish cheaters.
+    if time.strptime(item_time, "%Y-%m-%d %H:%M:%S GMT") > time.gmtime():
+        return
+
+    # Remove duplicates.
+    cands = c.execute("SELECT * FROM Items WHERE Title=?", (item_title, )).fetchall()
+    item_exists = False
+    for cand_it in cands:
+        if not item_time[:10] == cand_it[2][:10]:
+            continue
+
+        idx0_item = item_link.find("//")
+        idx1_item = item_link.find("/", idx0_item + 2)
+        idx0_cand = cand_it[5].find("//")
+        idx1_cand = cand_it[5].find("/", idx0_cand + 2)
+
+        if item_link[:idx1_item] == cand_it[5][:idx1_cand]:
+            item_exists = True
+            break
+    if not item_exists:
+        c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, item_source, item_link, ))
+        logger.info("Add item -- {}.".format(item_title))
+        conn.commit()
+
 if __name__ == "__main__":
     conn = get_connection()
     c = conn.cursor()
