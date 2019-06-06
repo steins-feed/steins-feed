@@ -14,8 +14,7 @@ def add_feed(title, link):
     conn = get_connection()
     c = conn.cursor()
 
-    if c.execute("SELECT COUNT(*) FROM Feeds WHERE Title=?", (title, )).fetchone()[0] == 0:
-        c.execute("INSERT INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
+    c.execute("INSERT OR IGNORE INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
 
     conn.commit()
 
