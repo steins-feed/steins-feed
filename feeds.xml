@@ -27,6 +27,60 @@
         <link>https://aeon.co/feed.rss</link>
     </feed>
 
+    <!-- Ars Technica -->
+    <feed>
+        <title>Ars Technica -- Technology Lab</title>
+        <link>http://feeds.arstechnica.com/arstechnica/technology-lab</link>
+    </feed>
+    <feed>
+        <title>Ars Technica -- Gear &amp; Gadgets</title>
+        <link>http://feeds.arstechnica.com/arstechnica/gadgets</link>
+    </feed>
+    <feed>
+        <title>Ars Technica -- Ministry of Innovation</title>
+        <link>http://feeds.arstechnica.com/arstechnica/business</link>
+    </feed>
+    <feed>
+        <title>Ars Technica -- Risk Assessment</title>
+        <link>http://feeds.arstechnica.com/arstechnica/security</link>
+    </feed>
+    <feed>
+        <title>Ars Technica -- Law &amp; Disorder</title>
+        <link>http://feeds.arstechnica.com/arstechnica/tech-policy</link>
+    </feed>
+    <feed>
+        <title>Ars Technica -- Infinite Loop</title>
+        <link>http://feeds.arstechnica.com/arstechnica/apple</link>
+    </feed>
+    <feed>
+        <title>Ars Technica -- Opposable Thumbs</title>
+        <link>http://feeds.arstechnica.com/arstechnica/gaming</link>
+    </feed>
+    <feed>
+        <title>Ars Technica -- The Scientific Method</title>
+        <link>http://feeds.arstechnica.com/arstechnica/science</link>
+    </feed>
+    <feed>
+        <title>Ars Technica -- The Multiverse</title>
+        <link>http://feeds.arstechnica.com/arstechnica/multiverse</link>
+    </feed>
+    <feed>
+        <title>Ars Technica -- Cars Technica</title>
+        <link>http://feeds.arstechnica.com/arstechnica/cars</link>
+    </feed>
+    <feed>
+        <title>Ars Technica -- Staff Blogs</title>
+        <link>http://feeds.arstechnica.com/arstechnica/staff-blogs</link>
+    </feed>
+    <feed>
+        <title>Ars Technica -- Ars Cardboard</title>
+        <link>http://feeds.arstechnica.com/arstechnica/cardboard</link>
+    </feed>
+    <feed>
+        <title>Ars Technica</title>
+        <link>http://feeds.arstechnica.com/arstechnica/features</link>
+    </feed>
+
     <!-- The Atlantic -->
     <feed>
         <title>The Atlantic Politics</title>
