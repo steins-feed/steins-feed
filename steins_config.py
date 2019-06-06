@@ -4,6 +4,7 @@ import os
 
 from lxml import etree
 
+from steins_log import get_logger
 from steins_sql import get_connection
 
 FILE_NAME = "feeds.xml"
@@ -15,6 +16,7 @@ def add_feed(title, link):
     c = conn.cursor()
 
     c.execute("INSERT OR IGNORE INTO Feeds (Title, Link) VALUES (?, ?)", (title, link, ))
+    get_logger().warning("Add feed -- {}.".format(title))
 
     conn.commit()
 
@@ -24,6 +26,7 @@ def delete_feed(title):
 
     row = c.execute("SELECT * FROM Feeds WHERE Title=?", (title, )).fetchone()
     c.execute("DELETE FROM Feeds WHERE Title=?", (title, ))
+    get_logger().warning("Delete feed -- {}.".format(title))
 
     conn.commit()
 
@@ -31,6 +34,7 @@ def init_feeds(file_path=file_path):
     with open(file_path, 'r') as f:
         tree = etree.fromstring(f.read())
 
+    get_logger().warning("Initialize feeds -- {}.".format(file_path))
     feed_list = tree.xpath("//feed")
     for feed_it in feed_list:
         title = feed_it.xpath("./title")[0].text

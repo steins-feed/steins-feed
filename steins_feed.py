@@ -57,6 +57,7 @@ def steins_read():
                     break
             if not item_exists:
                 c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, feed_it[1], item_link, ))
+                logger.debug("Add item -- {}.".format(item_title))
                 conn.commit()
 
 def steins_generate_page(page_no, score_board=None, surprise=-1):
@@ -219,9 +220,12 @@ def steins_write():
 def steins_update(read_mode=True, write_mode=False):
     conn = get_connection()
     c = conn.cursor()
+    logger = get_logger()
 
     c.execute("CREATE TABLE IF NOT EXISTS Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL, Display INTEGER DEFAULT 1)")
+    logger.warning("Create Feeds.")
     c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, Like INTEGER DEFAULT 0)")
+    logger.warning("Create Items.")
     init_feeds()
 
     conn.commit()

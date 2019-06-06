@@ -18,7 +18,7 @@ def get_logger():
     if not have_logger():
         formatter = logging.Formatter("[%(asctime)s] %(levelname)s: %(message)s")
 
-        fh = logging.FileHandler(LOG_NAME)
+        fh = logging.FileHandler(log_path)
         fh.setFormatter(formatter)
 
         logger = logging.getLogger('stein')
