@@ -36,7 +36,7 @@ def steins_read(title_pattern=""):
 
             add_item(item_title, item_time, item_summary, feed_it[1], item_link)
 
-def steins_generate_page(page_no, score_board=None, surprise=-1):
+def steins_generate_page(page_no=0, score_board=None, surprise=-1):
     c = get_cursor()
 
     dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()

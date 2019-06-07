@@ -15,7 +15,7 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 
 PORT = 8000
 
-def handle_page(qd):
+def handle_page(qd={'page': "0"}):
     return steins_generate_page(int(qd['page']))
 
 def handle_like(qd, val=1):
