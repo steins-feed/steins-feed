@@ -12,8 +12,9 @@ README.pdf: README.md
 
 .PHONY: clean
 clean:
-	-rm steins-*.html
 	-rm README.pdf
+	-rm steins-*.html
+	-rm tmp_feeds.xml
 	-rm -r __pycache__/
 	-rm *.log
 	-rm *.pyc

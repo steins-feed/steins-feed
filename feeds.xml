@@ -2206,6 +2206,10 @@
         <title>New Statesman</title>
         <link>https://www.newstatesman.com/feeds/site_feed.rss</link>
     </feed>
+    <feed>
+        <title>Vanity Fair</title>
+        <link>https://www.vanityfair.com/feed/rss</link>
+    </feed>
 
     <!-- Miscellaneous -->
     <feed>

@@ -43,3 +43,15 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 
 6.  Open browser, and enter URL to website.
 7.  Enjoy.
+
+## Feeds behind paywalls.
+
+*   Financial Times.
+*   The Wall Street Journal.
+
+## No RSS.
+
+*   Bloomberg.
+*   Boston Globe.
+*   The Telegraph.
+*   The Times.
