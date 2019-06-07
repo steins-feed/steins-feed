@@ -13,11 +13,11 @@ from steins_sql import add_item, get_cursor, last_updated
 dir_name = os.path.dirname(os.path.abspath(__file__))
 
 # Scrape feeds.
-def steins_read():
+def steins_read(title_pattern=""):
     c = get_cursor()
     logger = get_logger()
 
-    for feed_it in c.execute("SELECT * FROM Feeds WHERE DISPLAY=1").fetchall():
+    for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ? AND DISPLAY=1", ("%" + title_pattern + "%", )).fetchall():
         handler = get_handler(feed_it[1])
         d = handler.parse(feed_it[2])
         try:
@@ -193,14 +193,18 @@ def steins_write():
         with open(dir_name+os.sep+"steins-{}.html".format(d_ctr), 'w') as f:
             f.write(steins_generate_page(d_ctr))
 
-def steins_update(read_mode=True, write_mode=False):
+def steins_update(title_pattern="", read_mode=True, write_mode=False):
     if read_mode:
-        steins_read()
+        steins_read(title_pattern)
     if write_mode:
         steins_write()
 
 if __name__ == "__main__":
+    import sys
     from steins_sql import close_connection
 
-    steins_update()
+    title_pattern = ""
+    if len(sys.argv) > 1:
+        title_pattern = sys.argv[1]
+    steins_update(title_pattern)
     close_connection()
