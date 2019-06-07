@@ -55,6 +55,20 @@ def handle_delete_feed(qd):
 def handle_load_config():
     init_feeds(dir_path + os.sep + "tmp_feeds.xml")
 
+def handle_export_config():
+    c = get_cursor()
+    feeds = c.execute("SELECT * FROM Feeds").fetchall()
+
+    with open("tmp_feeds.xml", 'w', encoding='utf-8') as f:
+        f.write("<?xml version=\"1.0\"?>\n\n")
+        f.write("<root>\n")
+        for feed_it in feeds:
+            f.write("    <feed>\n")
+            f.write("        <title>{}</title>\n".format(escape(feed_it[1])))
+            f.write("        <link>{}</link>\n".format(escape(feed_it[2])))
+            f.write("    </feed>\n")
+        f.write("</root>\n")
+
 def handle_settings():
     c = get_cursor()
 
@@ -114,9 +128,7 @@ def handle_settings():
 
     # Export config.
     s += "<form>\n"
-    s += "<p>File:<br>\n"
-    s += "<input type=\"text\" name=\"file\"></p>\n"
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/export-config\" value=\"Export config\"></p>\n"
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/export_config.php\" value=\"Export config\"></p>\n"
     s += "</form>\n"
 
     s += "</body>\n"
@@ -306,28 +318,16 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.path = "/settings.php"
             self.do_GET()
         # Export config.
-        if "/export-config" in self.path:
-            c = get_cursor()
-
-            query_len = int(self.headers.get('content-length'))
-            query = self.rfile.read(query_len)
-            query_dict = parse_qs(query)
-
-            file_name = query_dict['file'.encode('utf-8')][0].decode('utf-8')
-            file_path = dir_path + os.sep + file_name
-            with open(file_path, 'w') as f:
-                f.write("<?xml version=\"1.0\"?>\n")
-                f.write("\n")
-                f.write("<root>\n")
-                for feed_it in c.execute("SELECT * FROM Feeds").fetchall():
-                    f.write("    <feed>\n")
-                    f.write("        <title>{}</title>\n".format(escape(feed_it[1])))
-                    f.write("        <link>{}</link>\n".format(escape(feed_it[2])))
-                    f.write("    </feed>\n")
-                f.write("</root>\n")
-
-            self.send_response(204)
+        if "/export_config.php" in self.path:
+            self.send_response(200)
+            self.send_header("Content-Description", "File Transfer")
+            self.send_header("Content-Type", "application/xml")
+            self.send_header("Content-Disposition", "attachment; filename=tmp_feeds.xml")
             self.end_headers()
+
+            handle_export_config()
+            with open("tmp_feeds.xml", 'r', 'utf-8') as f:
+                self.wfile.write(f.read().encode('utf-8'))
         # Like.
         elif "/like.php" in self.path:
             qlen = int(self.headers.get('content-length'))
