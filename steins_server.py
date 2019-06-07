@@ -43,6 +43,15 @@ def handle_display_feeds(qd):
             c.execute("UPDATE Feeds SET Display=0 WHERE ItemID=?", (q_it[0], ))
         conn.commit()
 
+def handle_add_feed(qd):
+    title = qd['title']
+    link = qd['link']
+    add_feed(title, link)
+
+def handle_delete_feed(qd):
+    item_id = int(qd['feed'])
+    delete_feed(item_id)
+
 def handle_settings():
     c = get_cursor()
 
@@ -76,7 +85,7 @@ def handle_settings():
     s += "<input type=\"text\" name=\"title\"></p>\n"
     s += "<p>Link:<br>\n"
     s += "<input type=\"text\" name=\"link\"></p>\n"
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/add-feed\" value=\"Add feed\"></p>\n"
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/add_feed.php\" value=\"Add feed\"></p>\n"
     s += "</form>\n"
 
     s += "<hr>\n"
@@ -87,7 +96,7 @@ def handle_settings():
     for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
         s += "<option value=\"{}\">{}</option>\n".format(feed_it[0], feed_it[1])
     s += "</select></p>\n"
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/delete-feed\" value=\"Delete feed\"></p>\n"
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/delete_feed.php\" value=\"Delete feed\"></p>\n"
     s += "</form>\n"
 
     s += "<hr>\n"
@@ -258,35 +267,27 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.path = "/"
             self.do_GET()
         # Add feed.
-        elif "/add-feed" in self.path:
-            conn = get_connection()
-            c = conn.cursor()
+        elif self.path == "/add_feed.php":
+            qlen = int(self.headers.get('content-length'))
+            qs = self.rfile.read(qlen).decode('utf-8')
+            qd = dict(parse_qsl(qs))
+            handle_add_feed(qd)
+            self.send_response(204)
+            self.end_headers()
 
-            query_len = int(self.headers.get('content-length'))
-            query = self.rfile.read(query_len)
-            query_dict = parse_qs(query)
-
-            title = query_dict['title'.encode('utf-8')][0].decode('utf-8')
-            link = query_dict['link'.encode('utf-8')][0].decode('utf-8')
-            add_feed(title, link)
-
-            conn.commit()
-            self.settings_response()
+            self.path = "/settings.php"
+            self.do_GET()
         # Delete feed.
-        elif "/delete-feed" in self.path:
-            conn = get_connection()
-            c = conn.cursor()
+        elif self.path == "/delete_feed.php":
+            qlen = int(self.headers.get('content-length'))
+            qs = self.rfile.read(qlen).decode('utf-8')
+            qd = dict(parse_qsl(qs))
+            handle_delete_feed(qd)
+            self.send_response(204)
+            self.end_headers()
 
-            query_len = int(self.headers.get('content-length'))
-            query = self.rfile.read(query_len)
-            query_dict = parse_qs(query)
-
-            item_id = int(query_dict['feed'.encode('utf-8')][0])
-            row = c.execute("SELECT * FROM Feeds WHERE ItemID=?", (item_id, )).fetchone()
-            delete_feed(row[1])
-
-            conn.commit()
-            self.settings_response()
+            self.path = "/settings.php"
+            self.do_GET()
         # Load config.
         elif "/load-config" in self.path:
             query_len = int(self.headers.get('content-length'))

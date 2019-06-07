@@ -63,12 +63,12 @@ def add_feed(title, link):
 
     conn.commit()
 
-def delete_feed(title):
+def delete_feed(item_id):
     conn = get_connection()
     c = conn.cursor()
 
-    row = c.execute("SELECT * FROM Feeds WHERE Title=?", (title, )).fetchone()
-    c.execute("DELETE FROM Feeds WHERE Title=?", (title, ))
+    title = c.execute("Select Title FROM Feeds WHERE ItemID=?", (item_id, )).fetchone()
+    c.execute("DELETE FROM Feeds WHERE ItemID=?", (item_id, ))
     logger.info("Delete feed -- {}.".format(title))
 
     conn.commit()
