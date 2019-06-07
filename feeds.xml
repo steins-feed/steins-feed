@@ -2301,10 +2301,6 @@
 
     <!-- Technology -->
     <feed>
-        <title>Boy Genius Report</title>
-	<link>https://bgr.com/feed/</link>
-    </feed>
-    <feed>
         <title>CNET</title>
 	<link>https://www.cnet.com/rss/news/</link>
     </feed>
@@ -2327,10 +2323,6 @@
     <feed>
         <title>Mashable</title>
 	<link>http://feeds.mashable.com/Mashable</link>
-    </feed>
-    <feed>
-        <title>The Next Web</title>
-	<link>https://thenextweb.com/feed/</link>
     </feed>
     <feed>
         <title>TechCrunch</title>

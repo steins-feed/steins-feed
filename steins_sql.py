@@ -67,7 +67,7 @@ def delete_feed(item_id):
     conn = get_connection()
     c = conn.cursor()
 
-    title = c.execute("Select Title FROM Feeds WHERE ItemID=?", (item_id, )).fetchone()
+    title = c.execute("Select Title FROM Feeds WHERE ItemID=?", (item_id, )).fetchone()[0]
     c.execute("DELETE FROM Feeds WHERE ItemID=?", (item_id, ))
     logger.info("Delete feed -- {}.".format(title))
 
@@ -126,3 +126,13 @@ if __name__ == "__main__":
 
     init_feeds()
     close_connection()
+
+def delete_item(item_id):
+    conn = get_connection()
+    c = conn.cursor()
+
+    title = c.execute("Select Title FROM Items WHERE ItemID=?", (item_id, )).fetchone()[0]
+    c.execute("DELETE FROM Items WHERE ItemID=?", (item_id, ))
+    logger.info("Delete item -- {}.".format(title))
+
+    conn.commit()
