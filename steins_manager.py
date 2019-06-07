@@ -40,11 +40,13 @@ class SteinsHandler:
         try:
             summary_tree = html.fromstring(item_it['summary'])
 
-            if summary_tree.tag == "img":
-                return ""
-            image_nodes = summary_tree.xpath("//img")
-            for node_it in image_nodes:
-                node_it.getparent().remove(node_it)
+            tags = ["img", "iframe"]
+            for tag_it in tags:
+                if summary_tree.tag == tag_it:
+                    return ""
+                image_nodes = summary_tree.xpath("//" + tag_it)
+                for node_it in image_nodes:
+                    node_it.getparent().remove(node_it)
 
             return html.tostring(summary_tree).decode('utf-8')
         except:
