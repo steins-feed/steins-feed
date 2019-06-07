@@ -74,7 +74,7 @@ def delete_feed(item_id):
     conn.commit()
 
 def init_feeds(file_path=file_path):
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding='utf-8') as f:
         tree = etree.fromstring(f.read())
 
     logger.warning("Initialize feeds -- {}.".format(file_path))
@@ -113,6 +113,16 @@ def add_item(item_title, item_time, item_summary, item_source, item_link):
         logger.info("Add item -- {}.".format(item_title))
         conn.commit()
 
+def delete_item(item_id):
+    conn = get_connection()
+    c = conn.cursor()
+
+    title = c.execute("Select Title FROM Items WHERE ItemID=?", (item_id, )).fetchone()[0]
+    c.execute("DELETE FROM Items WHERE ItemID=?", (item_id, ))
+    logger.info("Delete item -- {}.".format(title))
+
+    conn.commit()
+
 if __name__ == "__main__":
     conn = get_connection()
     c = conn.cursor()
@@ -126,13 +136,3 @@ if __name__ == "__main__":
 
     init_feeds()
     close_connection()
-
-def delete_item(item_id):
-    conn = get_connection()
-    c = conn.cursor()
-
-    title = c.execute("Select Title FROM Items WHERE ItemID=?", (item_id, )).fetchone()[0]
-    c.execute("DELETE FROM Items WHERE ItemID=?", (item_id, ))
-    logger.info("Delete item -- {}.".format(title))
-
-    conn.commit()

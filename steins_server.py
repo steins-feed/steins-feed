@@ -52,6 +52,9 @@ def handle_delete_feed(qd):
     item_id = int(qd['feed'])
     delete_feed(item_id)
 
+def handle_load_config():
+    init_feeds(dir_path + os.sep + "tmp_feeds.xml")
+
 def handle_settings():
     c = get_cursor()
 
@@ -103,9 +106,8 @@ def handle_settings():
 
     # Load config.
     s += "<form>\n"
-    s += "<p>File:<br>\n"
-    s += "<input type=\"text\" name=\"file\"></p>\n"
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/load-config\" value=\"Load config\"></p>\n"
+    s += "<p><input type=\"file\" name=\"feeds\" value=\"feeds\"></p>\n"
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/load_config.php\" formenctype=\"multipart/form-data\" value=\"Load config\"></p>\n"
     s += "</form>\n"
 
     s += "<hr>\n"
@@ -289,17 +291,20 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.path = "/settings.php"
             self.do_GET()
         # Load config.
-        elif "/load-config" in self.path:
-            query_len = int(self.headers.get('content-length'))
-            query = self.rfile.read(query_len)
-            query_dict = parse_qs(query)
-
-            file_name = query_dict['file'.encode('utf-8')][0].decode('utf-8')
+        elif "/load_config.php" in self.path:
+            qlen = int(self.headers.get('content-length'))
+            qs = self.rfile.read(qlen).decode('utf-8')
+            qd = dict(parse_qsl(qs))
+            file_name = "tmp_feeds.xml"
             file_path = dir_path + os.sep + file_name
-            init_feeds(file_path)
-
+            with open(file_path, 'w') as f:
+                f.write(qd['files'].values()[0])
+            handle_load_config()
             self.send_response(204)
             self.end_headers()
+
+            self.path = "/settings.php"
+            self.do_GET()
         # Export config.
         if "/export-config" in self.path:
             c = get_cursor()
