@@ -8,6 +8,7 @@ from urllib.parse import urlsplit, parse_qs, parse_qsl
 from xml.sax.saxutils import escape
 
 from steins_feed import steins_generate_page
+from steins_html import select_lang
 from steins_magic import handle_magic, handle_surprise
 from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds
 
@@ -35,12 +36,14 @@ def handle_display_feeds(qd):
     conn = get_connection()
     c = conn.cursor()
 
-    query_keys = [int(q_it) for q_it in qd.keys()]
     for q_it in c.execute("SELECT * FROM Feeds").fetchall():
-        if int(q_it[0]) in query_keys:
+        if str(q_it[0]) in qd.keys():
             c.execute("UPDATE Feeds SET Display=1 WHERE ItemID=?", (q_it[0], ))
         else:
             c.execute("UPDATE Feeds SET Display=0 WHERE ItemID=?", (q_it[0], ))
+
+        c.execute("UPDATE Feeds SET Language=? WHERE ItemID=?", (qd["lang_{}".format(q_it[0])], q_it[0]))
+
         conn.commit()
 
 def handle_add_feed(qd):
@@ -88,9 +91,11 @@ def handle_settings():
     s += "<form>\n"
     for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
         if feed_it[3] == 0:
-            s += "<input type=\"checkbox\" name=\"{}\" value=\"{}\">{}<br>\n".format(feed_it[0], feed_it[1], feed_it[1])
+            s += "<input type=\"checkbox\" name=\"{}\" value=\"{}\">{}\n".format(feed_it[0], feed_it[1], feed_it[1])
         else:
-            s += "<input type=\"checkbox\" name=\"{}\" value=\"{}\" checked>{}<br>\n".format(feed_it[0], feed_it[1], feed_it[1])
+            s += "<input type=\"checkbox\" name=\"{}\" value=\"{}\" checked>{}\n".format(feed_it[0], feed_it[1], feed_it[1])
+        s += "{}\n".format(select_lang(feed_it[0], feed_it[4]))
+        s += "<br>\n"
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/display_feeds.php\" value=\"Display feeds\"></p>\n"
     s += "</form>\n"
 

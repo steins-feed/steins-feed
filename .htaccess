@@ -9,3 +9,5 @@
 <Files "*.php">
     Require all granted
 </Files>
+
+php_value max_input_vars 10000
