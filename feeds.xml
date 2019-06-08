@@ -177,51 +177,61 @@
         <title>Bild News</title>
         <link>https://www.bild.de/rss-feeds/rss-16725492,feed=news.bild.html</link>
         <lang>German</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Bild Politik</title>
         <link>https://www.bild.de/rss-feeds/rss-16725492,feed=politik.bild.html</link>
         <lang>German</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Bild Unterhaltung</title>
         <link>https://www.bild.de/rss-feeds/rss-16725492,feed=unterhaltung.bild.html</link>
         <lang>German</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Bild Sport</title>
         <link>https://www.bild.de/rss-feeds/rss-16725492,feed=sport.bild.html</link>
         <lang>German</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Bild Lifestyle</title>
         <link>https://www.bild.de/rss-feeds/rss-16725492,feed=lifestyle.bild.html</link>
         <lang>German</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Bild Ratgeber</title>
         <link>https://www.bild.de/rss-feeds/rss-16725492,feed=ratgeber.bild.html</link>
         <lang>German</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Bild Auto</title>
         <link>https://www.bild.de/rss-feeds/rss-16725492,feed=auto.bild.html</link>
         <lang>German</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Bild Digital</title>
         <link>https://www.bild.de/rss-feeds/rss-16725492,feed=digital.bild.html</link>
         <lang>German</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Bild Spiele</title>
         <link>https://www.bild.de/rss-feeds/rss-16725492,feed=spiele.bild.html</link>
         <lang>German</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Bild</title>
         <link>https://www.bild.de/rss-feeds/rss-16725492,feed=home.bild.html</link>
         <lang>German</lang>
+        <summary>0</summary>
     </feed>
 
     <!-- Business Insider -->
@@ -252,7 +262,7 @@
     </feed>
     <feed>
         <title>Business Insider</title>
-	<link>https://www.businessinsider.com/rss</link>
+	<link>https://www.businessinsider.com/rss?r=US&amp;IR=T</link>
         <lang>English</lang>
     </feed>
 
@@ -293,51 +303,61 @@
         <title>The Conversation (UK) Arts + Culture</title>
         <link>https://theconversation.com/uk/arts/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (UK) Business + Economy</title>
         <link>https://theconversation.com/uk/business/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (UK) Cities</title>
         <link>https://theconversation.com/uk/cities/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (UK) Education</title>
         <link>https://theconversation.com/uk/education/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (UK) Environment + Energy</title>
         <link>https://theconversation.com/uk/environment/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (UK) Health + Medicine</title>
         <link>https://theconversation.com/uk/health/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (UK) Politics + Society</title>
         <link>https://theconversation.com/uk/politics/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (UK) Science + Technology</title>
         <link>https://theconversation.com/uk/technology/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (UK) Brexit</title>
         <link>https://theconversation.com/uk/brexit/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (UK)</title>
         <link>https://theconversation.com/uk/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
 
     <!-- The Conversation (US) -->
@@ -345,46 +365,55 @@
         <title>The Conversation (US) Arts + Culture</title>
         <link>https://theconversation.com/us/arts/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (US) Economy + Business</title>
         <link>https://theconversation.com/us/business/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (US) Education</title>
         <link>https://theconversation.com/us/education/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (US) Environment + Energy</title>
         <link>https://theconversation.com/us/environment/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (US) Ethics + Religion</title>
         <link>https://theconversation.com/us/ethics/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (US) Health + Medicine</title>
         <link>https://theconversation.com/us/health/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (US) Politics + Society</title>
         <link>https://theconversation.com/us/politics/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (US) Science + Technology</title>
         <link>https://theconversation.com/us/technology/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Conversation (US)</title>
         <link>https://theconversation.com/us/articles.atom</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
 
     <!-- The Economist -->
@@ -484,51 +513,61 @@
         <title>Fast Company Co.Design</title>
         <link>https://www.fastcompany.com/co-design/rss</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Fast Company Tech</title>
         <link>https://www.fastcompany.com/technology/rss</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Fast Company Work Life</title>
         <link>https://www.fastcompany.com/leadership/rss</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Fast Company Creativity</title>
         <link>https://www.fastcompany.com/entertainment/rss</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Fast Company Impact</title>
         <link>https://www.fastcompany.com/ideas/rss</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Fast Company Audio</title>
         <link>https://www.fastcompany.com/section/audio/rss</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Fast Company Video</title>
         <link>https://www.fastcompany.com/section/video/rss</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Fast Company News</title>
         <link>https://www.fastcompany.com/news/rss</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Fast Company Recommender</title>
         <link>https://www.fastcompany.com/recommender/rss</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Fast Company</title>
         <link>https://www.fastcompany.com/latest/rss</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
 
     <!-- Financial Times -->
@@ -2345,31 +2384,37 @@
         <title>The Verge Tech</title>
         <link>https://www.theverge.com/rss/tech/index.xml</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Verge Reviews</title>
         <link>https://www.theverge.com/rss/reviews/index.xml</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Verge Science</title>
         <link>https://www.theverge.com/rss/science/index.xml</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Verge Creators</title>
         <link>https://www.theverge.com/rss/creators/index.xml</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Verge Entertainment</title>
         <link>https://www.theverge.com/rss/entertainment/index.xml</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Verge Features</title>
         <link>https://www.theverge.com/rss/features/index.xml</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>The Verge</title>
@@ -2382,81 +2427,97 @@
         <title>Vox Recode</title>
         <link>https://www.vox.com/rss/recode/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox Explainers</title>
         <link>https://www.vox.com/rss/explainers/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox -- The Highlight</title>
         <link>https://www.vox.com/rss/the-highlight/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox Future Perfect</title>
         <link>https://www.vox.com/rss/future-perfect/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox -- The Goods</title>
         <link>https://www.vox.com/rss/the-goods/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox Policy &amp; Politics</title>
         <link>https://www.vox.com/rss/policy-and-politics/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox Culture</title>
         <link>https://www.vox.com/rss/culture/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox Science &amp; Health</title>
         <link>https://www.vox.com/rss/science-and-health/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox World</title>
         <link>https://www.vox.com/rss/world/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox Identities</title>
         <link>https://www.vox.com/rss/identities/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox Energy &amp; Environment</title>
         <link>https://www.vox.com/rss/energy-and-environment/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox Technology</title>
         <link>https://www.vox.com/rss/technology/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox Business &amp; Finance</title>
         <link>https://www.vox.com/rss/business-and-finance/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox First Person</title>
         <link>https://www.vox.com/rss/first-person/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox Video</title>
         <link>https://www.vox.com/rss/videos/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vox</title>
         <link>https://www.vox.com/rss/index.xml</link>
         <lang>English</lang>
+        <summary>1</summary>
     </feed>
 
     <!-- The Wall Street Journal -->
@@ -2758,11 +2819,13 @@
         <title>The New Republic</title>
         <link>https://www.newrepublic.com/rss.xml</link>
         <lang>English</lang>
+	<summary>0</summary>
     </feed>
     <feed>
         <title>New Statesman</title>
         <link>https://www.newstatesman.com/feeds/site_feed.rss</link>
         <lang>English</lang>
+	<summary>1</summary>
     </feed>
     <feed>
         <title>Vanity Fair</title>
@@ -2780,6 +2843,7 @@
         <title>Factorio</title>
         <link>https://factorio.com/blog/rss</link>
         <lang>English</lang>
+	<summary>0</summary>
     </feed>
     <feed>
         <title>Humble Bundle</title>
@@ -2881,6 +2945,7 @@
         <title>The Ringer NBA</title>
         <link>https://www.theringer.com/rss/nba/index.xml</link>
         <lang>English</lang>
+	<summary>1</summary>
     </feed>
 
     <!-- Technology -->

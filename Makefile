@@ -16,10 +16,10 @@ clean:
 	-rm steins-*.html
 	-rm tmp_feeds.xml
 	-rm -r __pycache__/
-	-rm *.log
 	-rm *.pyc
 
 .PHONY: distclean
 distclean:
 	make clean
 	-rm steins.db
+	-rm steins.log

@@ -98,6 +98,16 @@ class AtlanticHandler(SteinsHandler):
         d = feedparser.parse(html.tostring(tree))
         return d
 
+class BusinessInsiderHandler(SteinsHandler):
+    def read_summary(self, item_it):
+        try:
+            summary_tree = html.fromstring(item_it['summary'])
+            p_nodes = summary_tree.xpath("//ul[@class='summary-list']")
+            return html.tostring(p_nodes[0]).decode('utf-8')
+        except:
+            get_logger().error("No summary for '{}'.".format(self.read_title(item_it)))
+            return ""
+
 class GatesHandler(SteinsHandler):
     def read_time(self, item_it):
         try:
@@ -127,6 +137,12 @@ def get_handler(source):
             logger.debug("AtlanticHandler.")
             atlantic_handler = AtlanticHandler()
         handler = atlantic_handler
+    elif "Business Insider" in source:
+        global business_insider_handler
+        if not "business_insider_handler" in globals():
+            logger.debug("BusinessInsiderHandler.")
+            business_insider_handler = BusinessInsiderHandler()
+        handler = business_insider_handler
     elif "Gates" in source:
         global gates_handler
         if not "gates_handler" in globals():

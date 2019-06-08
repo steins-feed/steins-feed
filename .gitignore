@@ -1,7 +1,7 @@
 README.pdf
 steins.db
+steins.log
 steins-*.html
 tmp_feeds.xml
 __pycache__/
-*.log
 *.pyc

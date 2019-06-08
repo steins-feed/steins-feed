@@ -94,9 +94,9 @@ def handle_settings():
     s += "<form>\n"
     for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
         if feed_it[3] == 0:
-            s += "<input type=\"checkbox\" name=\"{}\">{}\n".format(feed_it[0], feed_it[1])
+            s += "<input type=\"checkbox\" name=\"{}\"><a href={}>{}</a>\n".format(feed_it[0], feed_it[2], feed_it[1])
         else:
-            s += "<input type=\"checkbox\" name=\"{}\" checked>{}\n".format(feed_it[0], feed_it[1])
+            s += "<input type=\"checkbox\" name=\"{}\" checked><a href={}>{}</a>\n".format(feed_it[0], feed_it[2], feed_it[1])
         s += "{}\n".format(select_lang(feed_it[0], feed_it[4]))
         s += "<br>\n"
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/display_feeds.php\" value=\"Display feeds\"></p>\n"
