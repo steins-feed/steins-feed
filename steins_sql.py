@@ -54,11 +54,11 @@ def get_cursor():
         cursor = conn.cursor()
     return cursor
 
-def add_feed(title, link, disp=1, lang=''):
+def add_feed(title, link, disp=1, lang='', summary=2):
     conn = get_connection()
     c = conn.cursor()
 
-    c.execute("INSERT OR IGNORE INTO Feeds (Title, Link, Display, Language) VALUES (?, ?, ?, ?)", (title, link, disp, lang))
+    c.execute("INSERT OR IGNORE INTO Feeds (Title, Link, Display, Language, Summary) VALUES (?, ?, ?, ?, ?)", (title, link, disp, lang, summary))
     logger.info("Add feed -- {}.".format(title))
 
     conn.commit()
@@ -90,7 +90,11 @@ def init_feeds(file_path=file_path):
             lang = feed_it.xpath("./lang")[0].text
         except IndexError:
             lang = ''
-        add_feed(title, link, disp, lang)
+        try:
+            summary = feed_it.xpath("./summary")[0].text
+        except IndexError:
+            summary = 2
+        add_feed(title, link, disp, lang, summary)
 
 def add_item(item_title, item_time, item_summary, item_source, item_link):
     conn = get_connection()
@@ -136,7 +140,7 @@ if __name__ == "__main__":
     c = conn.cursor()
     logger = get_logger()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL, Display INTEGER DEFAULT 1, Language TEXT DEFAULT '')")
+    c.execute("CREATE TABLE IF NOT EXISTS Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL, Display INTEGER DEFAULT 1, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2)")
     logger.warning("Create Feeds.")
     c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, Like INTEGER DEFAULT 0)")
     logger.warning("Create Items.")

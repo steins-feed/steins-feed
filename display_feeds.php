@@ -6,7 +6,7 @@ import sys
 from steins_server import handle_display_feeds, handle_page
 from urllib.parse import parse_qsl
 
-qd = dict(parse_qsl(sys.argv[1]))
+qd = dict(parse_qsl(sys.argv[1], keep_blank_values=True))
 handle_display_feeds(qd)
 print(handle_page())
 EOT;

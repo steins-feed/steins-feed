@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-def select_lang(feed_id, selected=''):
-    s = '''<select name='lang_{}'>
-  <option value="International"></option>
+def select_lang(feed_id=None, selected=''):
+    s = '''<select name='lang'>
+  <option value=""></option>
   <option value="Afrikanns">Afrikanns</option>
   <option value="Albanian">Albanian</option>
   <option value="Arabic">Arabic</option>
@@ -76,6 +76,9 @@ def select_lang(feed_id, selected=''):
   <option value="Welsh">Welsh</option>
   <option value="Xhosa">Xhosa</option>
 </select>'''.format(feed_id)
+
+    if not feed_id is None:
+        s = s.replace("<select name='lang'>", "<select name='lang_{}'>".format(feed_id))
 
     if selected == '':
         s = s.replace("<option value=\"\">", "<option value=\"\" selected>")

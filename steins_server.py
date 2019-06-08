@@ -49,7 +49,10 @@ def handle_display_feeds(qd):
 def handle_add_feed(qd):
     title = qd['title']
     link = qd['link']
-    add_feed(title, link)
+    disp = qd['disp']
+    lang = qd['lang']
+    summary = qd['summary']
+    add_feed(title, link, disp, lang, summary)
 
 def handle_delete_feed(qd):
     item_id = int(qd['feed'])
@@ -91,14 +94,13 @@ def handle_settings():
     s += "<form>\n"
     for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
         if feed_it[3] == 0:
-            s += "<input type=\"checkbox\" name=\"{}\" value=\"{}\">{}\n".format(feed_it[0], feed_it[1], feed_it[1])
+            s += "<input type=\"checkbox\" name=\"{}\">{}\n".format(feed_it[0], feed_it[1])
         else:
-            s += "<input type=\"checkbox\" name=\"{}\" value=\"{}\" checked>{}\n".format(feed_it[0], feed_it[1], feed_it[1])
+            s += "<input type=\"checkbox\" name=\"{}\" checked>{}\n".format(feed_it[0], feed_it[1])
         s += "{}\n".format(select_lang(feed_it[0], feed_it[4]))
         s += "<br>\n"
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/display_feeds.php\" value=\"Display feeds\"></p>\n"
     s += "</form>\n"
-
     s += "<hr>\n"
 
     # Add feed.
@@ -107,9 +109,19 @@ def handle_settings():
     s += "<input type=\"text\" name=\"title\"></p>\n"
     s += "<p>Link:<br>\n"
     s += "<input type=\"text\" name=\"link\"></p>\n"
+    s += "<p>Display:<br>\n"
+    s += "<input type=\"radio\" name=\"disp\" value=1 checked> Yes\n"
+    s += "<input type=\"radio\" name=\"disp\" value=0> No\n"
+    s += "</p>\n"
+    s += "<p>Language:<br>\n"
+    s += "{}\n".format(select_lang())
+    s += "<p>Summary:<br>\n"
+    s += "<input type=\"radio\" name=\"summary\" value=0> No abstract.\n"
+    s += "<input type=\"radio\" name=\"summary\" value=1> First paragraph.\n"
+    s += "<input type=\"radio\" name=\"summary\" value=2 checked> Full abstract.\n"
+    s += "</p>\n"
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/add_feed.php\" value=\"Add feed\"></p>\n"
     s += "</form>\n"
-
     s += "<hr>\n"
 
     # Delete feed.
@@ -120,7 +132,6 @@ def handle_settings():
     s += "</select></p>\n"
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/delete_feed.php\" value=\"Delete feed\"></p>\n"
     s += "</form>\n"
-
     s += "<hr>\n"
 
     # Load config.
@@ -128,7 +139,6 @@ def handle_settings():
     s += "<p><input type=\"file\" name=\"feeds\" value=\"feeds\"></p>\n"
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/load_config.php\" formenctype=\"multipart/form-data\" value=\"Load config\"></p>\n"
     s += "</form>\n"
-
     s += "<hr>\n"
 
     # Export config.
