@@ -7,6 +7,7 @@ from lxml import html
 from lxml.etree import ParserError
 
 from steins_log import get_logger
+from steins_sql import get_cursor
 from steins_web import get_tree_from_session
 
 class SteinsHandler:
@@ -117,6 +118,7 @@ class MediumHandler(SteinsHandler):
 
 # Static factory.
 def get_handler(source):
+    c = get_cursor()
     logger = get_logger()
 
     if "The Atlantic" in source:
@@ -125,30 +127,6 @@ def get_handler(source):
             logger.debug("AtlanticHandler.")
             atlantic_handler = AtlanticHandler()
         handler = atlantic_handler
-    elif "Bild" in source:
-        global bild_handler
-        if not "bild_handler" in globals():
-            logger.debug("BildHandler.")
-            bild_handler = NoAbstractHandler()
-        handler = bild_handler
-    elif "The Conversation" in source:
-        global conversation_handler
-        if not "conversation_handler" in globals():
-            logger.debug("ConversationHandler.")
-            conversation_handler = NoAbstractHandler()
-        handler = conversation_handler
-    elif "Factorio" in source:
-        global factorio_handler
-        if not "factorio_handler" in globals():
-            logger.debug("FactorioHandler.")
-            factorio_handler = NoAbstractHandler()
-        handler = factorio_handler
-    elif "Fast Company" in source:
-        global fast_company_handler
-        if not "fast_company_handler" in globals():
-            logger.debug("FastCompanyHandler.")
-            fast_company_handler = NoAbstractHandler()
-        handler = fast_company_handler
     elif "Gates" in source:
         global gates_handler
         if not "gates_handler" in globals():
@@ -161,39 +139,13 @@ def get_handler(source):
             logger.debug("MediumHandler.")
             medium_handler = MediumHandler()
         handler = medium_handler
-    elif "New Republic" in source:
-        global new_republic_handler
-        if not "new_republic_handler" in globals():
-            logger.debug("NewRepublicHandler.")
-            new_republic_handler = NoAbstractHandler()
-        handler = new_republic_handler
-    elif "New Statesman" in source:
-        global new_statesman_handler
-        if not "new_statesman_handler" in globals():
-            logger.debug("NewStatesmanHandler.")
-            new_statesman_handler = AbstractHandler()
-        handler = new_statesman_handler
-    elif "The Ringer" in source:
-        global ringer_handler
-        if not "ringer_handler" in globals():
-            logger.debug("RingerHandler.")
-            ringer_handler = AbstractHandler()
-        handler = ringer_handler
-    elif source == "The Verge":
-        handler = SteinsHandler()
-    elif "The Verge" in source:
-        global verge_handler
-        if not "verge_handler" in globals():
-            logger.debug("VergeHandler.")
-            verge_handler = NoAbstractHandler()
-        handler = verge_handler
-    elif "Vox" in source:
-        global vox_handler
-        if not "vox_handler" in globals():
-            logger.debug("VoxHandler.")
-            vox_handler = AbstractHandler()
-        handler = vox_handler
     else:
-        handler = SteinsHandler()
+        summary = c.execute("SELECT Summary FROM Feeds WHERE Title=?", (source, )).fetchone()[0]
+        if summary == 0:
+            handler = NoAbstractHandler()
+        elif summary == 1:
+            handler = AbstractHandler()
+        else:
+            handler = SteinsHandler()
 
     return handler
