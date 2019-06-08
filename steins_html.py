@@ -2,7 +2,7 @@
 
 def select_lang(feed_id, selected=''):
     s = '''<select name='lang_{}'>
-  <option value=""></option>
+  <option value="International"></option>
   <option value="Afrikanns">Afrikanns</option>
   <option value="Albanian">Albanian</option>
   <option value="Arabic">Arabic</option>

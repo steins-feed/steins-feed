@@ -2,6 +2,9 @@
 if( !$_GET["page"] ) {
     $_GET["page"] = 0;
 }
+if( !$_GET["lang"] ) {
+    $_GET["lang"] = "International";
+}
 $get_query = http_build_query($_GET);
 $python_cmd = <<<EOT
 import sys
