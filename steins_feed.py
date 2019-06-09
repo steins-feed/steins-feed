@@ -87,6 +87,7 @@ def steins_generate_page(page_no=0, lang="International", score_board=None, surp
 
     langs = c.execute("SELECT DISTINCT Language FROM Feeds").fetchall()
     s += "<p align=right>\n"
+    s += "<span style=\"float: left;\">[<a id=top href=#bottom>Bottom</a>]</span>\n"
     s += "<a href=\"/steins-feed/index.php\">International</a>\n"
     for lang_it in langs:
         s += "<a href=\"/steins-feed/index.php?lang={0}\">{0}</a>\n".format(lang_it[0])
@@ -147,13 +148,13 @@ def steins_generate_page(page_no=0, lang="International", score_board=None, surp
         s += "<form target=\"foo\">\n"
         s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it[0])
         if item_it[6] == 1:
-            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" value=\"Like\" style=\"background-color: green\" onclick=\"set_color_like({0})\">\n".format(item_it[0])
+            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" style=\"background-color: green\" onclick=\"set_color_like({0})\">\n".format(item_it[0])
         else:
-            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" value=\"Like\" onclick=\"set_color_like({0})\">\n".format(item_it[0])
+            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" onclick=\"set_color_like({0})\">\n".format(item_it[0])
         if item_it[6] == -1:
-            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike.php\" value=\"Dislike\" style=\"background-color: red\" onclick=\"set_color_dislike({0})\">\n".format(item_it[0])
+            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Dislike\" style=\"background-color: red\" onclick=\"set_color_dislike({0})\">\n".format(item_it[0])
         else:
-            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/dislike.php\" value=\"Dislike\" onclick=\"set_color_dislike({0})\">\n".format(item_it[0])
+            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Dislike\" onclick=\"set_color_dislike({0})\">\n".format(item_it[0])
         s += "</form>\n"
         s += "</p>\n"
         s += "<hr>\n"
@@ -198,6 +199,9 @@ def steins_generate_page(page_no=0, lang="International", score_board=None, surp
     s += "</p>\n"
 
     s += "<iframe name=\"foo\" style=\"display: none;\"></iframe>\n"
+    s += "<p align=right>\n"
+    s += "<span style=\"float: left;\">[<a id=bottom href=#top>Top</a>]</span>\n"
+    s += "</p>\n"
     s += "</body>\n"
     s += "</html>\n"
 

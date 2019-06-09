@@ -19,11 +19,15 @@ PORT = 8000
 def handle_page(qd={'page': "0", 'lang': "International"}):
     return steins_generate_page(int(qd['page']), qd['lang'])
 
-def handle_like(qd, val=1):
+def handle_like(qd):
     conn = get_connection()
     c = conn.cursor()
 
     item_id = int(qd['id'])
+    if qd['submit'] == "Like":
+        val = 1
+    if qd['submit'] == "Dislike":
+        val = -1
     row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
     if row[6] == val:
         c.execute("UPDATE Items SET Like=0 WHERE ItemID=?", (item_id, ))
