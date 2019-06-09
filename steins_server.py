@@ -29,7 +29,7 @@ def handle_like(qd):
     if qd['submit'] == "Dislike":
         val = -1
     row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
-    if row[6] == val:
+    if row['Like'] == val:
         c.execute("UPDATE Items SET Like=0 WHERE ItemID=?", (item_id, ))
     else:
         c.execute("UPDATE Items SET Like=? WHERE ItemID=?", (val, item_id, ))
@@ -40,13 +40,13 @@ def handle_display_feeds(qd):
     conn = get_connection()
     c = conn.cursor()
 
-    for q_it in c.execute("SELECT * FROM Feeds").fetchall():
-        if str(q_it[0]) in qd.keys():
-            c.execute("UPDATE Feeds SET Display=1 WHERE ItemID=?", (q_it[0], ))
+    for feed_it in c.execute("SELECT * FROM Feeds").fetchall():
+        if str(feed_it['ItemID']) in qd.keys():
+            c.execute("UPDATE Feeds SET Display=1 WHERE ItemID=?", (feed_it['ItemID'], ))
         else:
-            c.execute("UPDATE Feeds SET Display=0 WHERE ItemID=?", (q_it[0], ))
+            c.execute("UPDATE Feeds SET Display=0 WHERE ItemID=?", (feed_it['ItemID'], ))
 
-        c.execute("UPDATE Feeds SET Language=? WHERE ItemID=?", (qd["lang_{}".format(q_it[0])], q_it[0]))
+        c.execute("UPDATE Feeds SET Language=? WHERE ItemID=?", (qd["lang_{}".format(feed_it['ItemID'])], feed_it['ItemID']))
 
         conn.commit()
 
@@ -74,8 +74,8 @@ def handle_export_config():
         f.write("<root>\n")
         for feed_it in feeds:
             f.write("    <feed>\n")
-            f.write("        <title>{}</title>\n".format(escape(feed_it[1])))
-            f.write("        <link>{}</link>\n".format(escape(feed_it[2])))
+            f.write("        <title>{}</title>\n".format(escape(feed_it['Title'])))
+            f.write("        <link>{}</link>\n".format(escape(feed_it['Link'])))
             f.write("    </feed>\n")
         f.write("</root>\n")
 
@@ -97,11 +97,11 @@ def handle_settings():
     # Display feeds.
     s += "<form>\n"
     for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
-        if feed_it[3] == 0:
-            s += "<input type=\"checkbox\" name=\"{}\"><a href={}>{}</a>\n".format(feed_it[0], feed_it[2], feed_it[1])
+        if feed_it['Display'] == 0:
+            s += "<input type=\"checkbox\" name=\"{}\"><a href={}>{}</a>\n".format(feed_it['ItemID'], feed_it['Link'], feed_it['Title'])
         else:
-            s += "<input type=\"checkbox\" name=\"{}\" checked><a href={}>{}</a>\n".format(feed_it[0], feed_it[2], feed_it[1])
-        s += "{}\n".format(select_lang(feed_it[0], feed_it[4]))
+            s += "<input type=\"checkbox\" name=\"{}\" checked><a href={}>{}</a>\n".format(feed_it['ItemID'], feed_it['Link'], feed_it['Title'])
+        s += "{}\n".format(select_lang(feed_it['ItemID'], feed_it['Language']))
         s += "<br>\n"
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/display_feeds.php\" value=\"Display feeds\"></p>\n"
     s += "</form>\n"
@@ -132,7 +132,7 @@ def handle_settings():
     s += "<form>\n"
     s += "<p><select name=\"feed\">\n"
     for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
-        s += "<option value=\"{}\">{}</option>\n".format(feed_it[0], feed_it[1])
+        s += "<option value=\"{}\">{}</option>\n".format(feed_it['ItemID'], feed_it['Title'])
     s += "</select></p>\n"
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/delete_feed.php\" value=\"Delete feed\"></p>\n"
     s += "</form>\n"
@@ -176,8 +176,8 @@ def handle_statistics():
     s += "<p>{} likes.</p>\n".format(len(likes))
     s += "<ul>\n"
     for row_it in likes:
-        datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it[2], "%Y-%m-%d %H:%M:%S GMT"))
-        s += "<li>{}: <a href={}>{}</a> ({})</li>".format(row_it[4], row_it[5], row_it[1], datestamp)
+        datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it['Published'], "%Y-%m-%d %H:%M:%S GMT"))
+        s += "<li>{}: <a href={}>{}</a> ({})</li>".format(row_it['Source'], row_it['Link'], row_it['Title'], datestamp)
     s += "</ul>\n"
 
     s += "<hr>\n"
@@ -189,8 +189,8 @@ def handle_statistics():
     s += "<p>{} dislikes.</p>\n".format(len(likes))
     s += "<ul>\n"
     for row_it in likes:
-        datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it[2], "%Y-%m-%d %H:%M:%S GMT"))
-        s += "<li>{}: <a href={}>{}</a> ({})</li>".format(row_it[4], row_it[5], row_it[1], datestamp)
+        datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it['Published'], "%Y-%m-%d %H:%M:%S GMT"))
+        s += "<li>{}: <a href={}>{}</a> ({})</li>".format(row_it['Source'], row_it['Link'], row_it['Title'], datestamp)
     s += "</ul>\n"
 
     s += "</body>\n"

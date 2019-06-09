@@ -18,12 +18,12 @@ def steins_read(title_pattern=""):
     logger = get_logger()
 
     for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ? AND DISPLAY=1", ("%" + title_pattern + "%", )).fetchall():
-        handler = get_handler(feed_it[1])
-        d = handler.parse(feed_it[2])
+        handler = get_handler(feed_it['Title'])
+        d = handler.parse(feed_it['Link'])
         try:
-            logger.info("{} -- {}.".format(feed_it[1], d.status))
+            logger.info("{} -- {}.".format(feed_it['Title'], d.status))
         except AttributeError:
-            logger.info("{}.".format(feed_it[1]))
+            logger.info("{}.".format(feed_it['Title']))
 
         for item_it in d['items']:
             try:
@@ -34,7 +34,7 @@ def steins_read(title_pattern=""):
             except KeyError:
                 continue
 
-            add_item(item_title, item_time, item_summary, feed_it[1], item_link)
+            add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
 
 def steins_generate_page(page_no=0, lang="International", score_board=None, surprise=-1):
     c = get_cursor()
@@ -135,26 +135,26 @@ def steins_generate_page(page_no=0, lang="International", score_board=None, surp
         else:
             item_it = items[item_ctr]
 
-        s += "<h2><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{}\">{}</a></h2>\n".format(item_it[5], item_it[1])
+        s += "<h2><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{}\">{}</a></h2>\n".format(item_it['Link'], item_it['Title'])
         if surprise >= 0:
-            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it[4], item_it[2], score_board[sample[surprise]][0])
+            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it['Source'], item_it['Published'], score_board[sample[surprise]][0])
         elif not score_board is None:
-            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it[4], item_it[2], score_board[item_ctr][0])
+            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it['Source'], item_it['Published'], score_board[item_ctr][0])
         else:
-            s += "<p>Source: {}. Published: {}.</p>\n".format(item_it[4], item_it[2])
-        s += "{}".format(item_it[3])
+            s += "<p>Source: {}. Published: {}.</p>\n".format(item_it['Source'], item_it['Published'])
+        s += "{}".format(item_it['Summary'])
 
         s += "<p>\n"
         s += "<form target=\"foo\">\n"
-        s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it[0])
-        if item_it[6] == 1:
-            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" style=\"background-color: green\" onclick=\"set_color_like({0})\">\n".format(item_it[0])
+        s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it['ItemID'])
+        if item_it['Like'] == 1:
+            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" style=\"background-color: green\" onclick=\"set_color_like({0})\">\n".format(item_it['ItemID'])
         else:
-            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" onclick=\"set_color_like({0})\">\n".format(item_it[0])
-        if item_it[6] == -1:
-            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Dislike\" style=\"background-color: red\" onclick=\"set_color_dislike({0})\">\n".format(item_it[0])
+            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" onclick=\"set_color_like({0})\">\n".format(item_it['ItemID'])
+        if item_it['Like'] == -1:
+            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Dislike\" style=\"background-color: red\" onclick=\"set_color_dislike({0})\">\n".format(item_it['ItemID'])
         else:
-            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Dislike\" onclick=\"set_color_dislike({0})\">\n".format(item_it[0])
+            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Dislike\" onclick=\"set_color_dislike({0})\">\n".format(item_it['ItemID'])
         s += "</form>\n"
         s += "</p>\n"
         s += "<hr>\n"

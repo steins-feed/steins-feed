@@ -2759,6 +2759,11 @@
         <link>https://fivethirtyeight.com/contributors/nate-silver/feed</link>
         <lang>English</lang>
     </feed>
+    <feed>
+        <title>Terence Tao</title>
+        <link>https://terrytao.wordpress.com/</link>
+        <lang>English</lang>
+    </feed>
 
     <!-- Comics -->
     <feed>
@@ -2858,6 +2863,11 @@
     <feed>
         <title>Inside Philanthropy</title>
         <link>https://www.insidephilanthropy.com/home?format=RSS</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>MangaStream</title>
+        <link>https://readms.net/rss</link>
         <lang>English</lang>
     </feed>
     <feed>

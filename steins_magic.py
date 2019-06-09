@@ -8,6 +8,15 @@ from sklearn.pipeline import Pipeline
 from steins_feed import steins_generate_page
 from steins_sql import get_cursor
 
+def build_feature(row):
+    title = row['Title'] + " " + row['Summary']
+    idx1 = title.find("<")
+    while not idx1 == -1:
+        idx2 = title.find(">", idx1)
+        title = title[:idx1] + title[idx2+1:]
+        idx1 = title.find("<")
+    return title
+
 def handle_magic(qd, classifier='Naive Bayes', surprise=-1):
     c = get_cursor()
 
@@ -15,22 +24,8 @@ def handle_magic(qd, classifier='Naive Bayes', surprise=-1):
     dislikes = c.execute("SELECT * FROM Items WHERE Like=-1").fetchall()
 
     titles = []
-    for row_it in likes:
-        title = row_it[1] + " " + row_it[3]
-        idx1 = title.find("<")
-        while not idx1 == -1:
-            idx2 = title.find(">", idx1)
-            title = title[:idx1] + title[idx2+1:]
-            idx1 = title.find("<")
-        titles.append(title)
-    for row_it in dislikes:
-        title = row_it[1] + " " + row_it[3]
-        idx1 = title.find("<")
-        while not idx1 == -1:
-            idx2 = title.find(">", idx1)
-            title = title[:idx1] + title[idx2+1:]
-            idx1 = title.find("<")
-        titles.append(title)
+    titles += [build_feature(row_it) for row_it in likes]
+    titles += [build_feature(row_it) for row_it in dislikes]
 
     targets = []
     targets += [1 for row_it in likes]
@@ -72,7 +67,7 @@ def handle_magic(qd, classifier='Naive Bayes', surprise=-1):
         items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC", (d_it, )).fetchall()
     else:
         items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC", (lang, d_it)).fetchall()
-    new_titles = [row_it[1] for row_it in items]
+    new_titles = [build_feature(row_it) for row_it in items]
     predicted_proba = text_clf.predict_proba(new_titles)
     scores = [it[1] - it[0] for it in predicted_proba]
     score_sheet = zip(scores, range(len(scores)))
