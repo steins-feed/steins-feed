@@ -1,4 +1,7 @@
 <?php
+if( !$_POST["user"] ) {
+    $_POST["user"] = "nobody";
+}
 $post_query = http_build_query($_POST);
 $python_cmd = <<<EOT
 import sys

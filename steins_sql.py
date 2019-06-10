@@ -146,10 +146,10 @@ if __name__ == "__main__":
     logger = get_logger()
 
     c.execute("CREATE TABLE IF NOT EXISTS Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2)")
-    c.execute("CREATE TABLE IF NOT EXISTS Display (ItemID INTEGER PRIMARY KEY, Nobody INTEGER DEFAULT 1)")
+    c.execute("CREATE TABLE IF NOT EXISTS Display (ItemID INTEGER PRIMARY KEY, nobody INTEGER DEFAULT 1)")
     logger.warning("Create Feeds.")
     c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL)")
-    c.execute("CREATE TABLE IF NOT EXISTS Like (ItemID INTEGER PRIMARY KEY, Nobody INTEGER DEFAULT 0)")
+    c.execute("CREATE TABLE IF NOT EXISTS Like (ItemID INTEGER PRIMARY KEY, nobody INTEGER DEFAULT 0)")
     logger.warning("Create Items.")
     conn.commit()
 

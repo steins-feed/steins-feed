@@ -1,4 +1,7 @@
 <?php
+if( !$_POST["user"] ) {
+    $_POST["user"] = "nobody";
+}
 $post_query = http_build_query($_POST);
 $python_cmd = <<<EOT
 import sys
@@ -8,7 +11,7 @@ from urllib.parse import parse_qsl
 
 qd = dict(parse_qsl(sys.argv[1]))
 handle_delete_feed(qd)
-print(handle_settings())
+print(handle_settings(qd))
 EOT;
 $bash_cmd = "env PYTHONIOENCODING=UTF-8 python3 -c \"$python_cmd\" \"$post_query\"";
 // system($bash_cmd . ' >> delete_feed.log 2>&1'); // DEBUG.

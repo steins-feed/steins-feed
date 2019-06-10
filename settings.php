@@ -1,10 +1,17 @@
 <?php
+if( !$_GET["user"] ) {
+    $_GET["user"] = "nobody";
+}
 $python_cmd = <<<EOT
-from steins_server import handle_settings
+import sys
 
-print(handle_settings())
+from steins_server import handle_settings
+from urllib.parse import parse_qsl
+
+qd = dict(parse_qsl(sys.argv[1]))
+print(handle_settings(qd))
 EOT;
-$bash_cmd = "env PYTHONIOENCODING=UTF-8 python3 -c \"$python_cmd\"";
+$bash_cmd = "env PYTHONIOENCODING=UTF-8 python3 -c \"$python_cmd\" \"$get_query\"";
 // system($bash_cmd . ' >> settings.log 2>&1'); // DEBUG.
 system($bash_cmd);
 ?>

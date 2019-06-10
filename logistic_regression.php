@@ -1,4 +1,7 @@
 <?php
+if( !$_GET["user"] ) {
+    $_GET["user"] = "nobody";
+}
 if( !$_GET["page"] ) {
     $_GET["page"] = 0;
 }
