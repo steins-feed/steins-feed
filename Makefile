@@ -22,4 +22,6 @@ clean:
 distclean:
 	make clean
 	-rm steins.db
+	-rm steins.db.0
+	-rm steins.db.1
 	-rm steins.log

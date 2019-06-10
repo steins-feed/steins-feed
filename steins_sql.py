@@ -106,7 +106,6 @@ def init_feeds(file_path=file_path, user='nobody'):
 def add_item(item_title, item_time, item_summary, item_source, item_link):
     conn = get_connection()
     c = conn.cursor()
-    logger = get_logger()
 
     # Punish cheaters.
     if time.strptime(item_time, "%Y-%m-%d %H:%M:%S GMT") > time.gmtime():
@@ -144,10 +143,49 @@ def delete_item(item_id):
 
     conn.commit()
 
+def add_user(name):
+    conn = get_connection()
+    c = conn.cursor()
+
+    c.execute("ALTER TABLE Display ADD COLUMN {} INTEGER DEFAULT 0".format(name))
+    c.execute("UPDATE Display SET {}=1".format(name))
+    c.execute("ALTER TABLE Like ADD COLUMN {} INTEGER DEFAULT 0".format(name))
+    logger.warning("Add user -- {}.".format(name))
+
+    conn.commit()
+
+def rename_user(old_name, new_name):
+    conn = get_connection()
+    c = conn.cursor()
+
+    c.execute("ALTER TABLE Display RENAME COLUMN {} TO {}".format(old_name, new_name))
+    c.execute("ALTER TABLE Like RENAME COLUMN {} TO {}".format(old_name, new_name))
+    logger.warning("Rename user -- {} to {}.".format(old_name, new_name))
+
+    conn.commit()
+
+def delete_user(name):
+    conn = get_connection()
+    c = conn.cursor()
+
+    name_list = [e[1] for e in c.execute("PRAGMA table_info(Feeds)").fetchall()]
+    name_list.remove(name)
+    c.execute("ALTER TABLE Feeds RENAME TO Feeds_old")
+    c.execute("CREATE TABLE Feeds AS SELECT {} FROM Feeds_old".format(", ".join(name_list)))
+    c.execute("DROP TABLE Feeds_old")
+
+    name_list = [e[1] for e in c.execute("PRAGMA table_info(Like)").fetchall()]
+    name_list.remove(name)
+    c.execute("ALTER TABLE Like RENAME TO Like_old")
+    c.execute("CREATE TABLE Like AS SELECT {} FROM Like_old".format(", ".join(name_list)))
+    c.execute("DROP TABLE Like_old")
+
+    logger.warning("Delete user -- {}.".format(name))
+    conn.commit()
+
 if __name__ == "__main__":
     conn = get_connection()
     c = conn.cursor()
-    logger = get_logger()
 
     c.execute("CREATE TABLE IF NOT EXISTS Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2)")
     c.execute("CREATE TABLE IF NOT EXISTS Display (ItemID INTEGER PRIMARY KEY, nobody INTEGER DEFAULT 1)")
