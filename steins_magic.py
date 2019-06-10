@@ -20,8 +20,8 @@ def build_feature(row):
 def handle_magic(qd, classifier='Naive Bayes', surprise=-1):
     c = get_cursor()
 
-    likes = c.execute("SELECT * FROM Items WHERE Like=1").fetchall()
-    dislikes = c.execute("SELECT * FROM Items WHERE Like=-1").fetchall()
+    likes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=1".format(qd['user'])).fetchall()
+    dislikes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=-1".format(qd['user'])).fetchall()
 
     titles = []
     titles += [build_feature(row_it) for row_it in likes]
@@ -56,17 +56,17 @@ def handle_magic(qd, classifier='Naive Bayes', surprise=-1):
     # Make predictions.
     lang = qd['lang']
     if lang == "International":
-        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
+        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) ORDER BY Published DESC".format(qd['user'])).fetchall()
     else:
-        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1 AND Language=?) ORDER BY Published DESC", (lang, )).fetchall()
+        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) ORDER BY Published DESC".format(qd['user']), (lang, )).fetchall()
     page_no = int(qd['page'])
     if page_no >= len(dates):
         return
     d_it = dates[page_no][0]
     if lang == "International":
-        items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC", (d_it, )).fetchall()
+        items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC".format(qd['user']), (d_it, )).fetchall()
     else:
-        items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC", (lang, d_it)).fetchall()
+        items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {}=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC".format(qd['user']), (lang, d_it, )).fetchall()
     new_titles = [build_feature(row_it) for row_it in items]
     predicted_proba = text_clf.predict_proba(new_titles)
     scores = [it[1] - it[0] for it in predicted_proba]
@@ -74,7 +74,7 @@ def handle_magic(qd, classifier='Naive Bayes', surprise=-1):
     score_board = sorted(score_sheet, reverse=True)
 
     # Page.
-    return steins_generate_page(page_no, lang, score_board, surprise)
+    return steins_generate_page(page_no, lang, score_board, surprise, qd['user'])
 
 def handle_surprise(qd, classifier='Naive Bayes'):
     return handle_magic(qd, classifier, 10)

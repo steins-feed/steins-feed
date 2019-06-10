@@ -1,4 +1,10 @@
 <?php
+if( !$_POST["page"] ) {
+    $_POST["page"] = 0;
+}
+if( !$_POST["lang"] ) {
+    $_POST["lang"] = "International";
+}
 if( !$_POST["user"] ) {
     $_POST["user"] = "nobody";
 }

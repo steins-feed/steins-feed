@@ -55,17 +55,21 @@ def get_cursor():
         cursor = conn.cursor()
     return cursor
 
-def add_feed(title, link, disp=1, lang='', summary=2):
+def add_feed(title, link, disp=1, lang='', summary=2, user='nobody'):
     conn = get_connection()
     c = conn.cursor()
 
-    c.execute("INSERT OR IGNORE INTO Feeds (Title, Link, Display, Language, Summary) VALUES (?, ?, ?, ?, ?)", (title, link, disp, lang, summary, ))
-    c.execute("INSERT OR IGNORE INTO Display (ItemID) SELECT ItemID FROM Feeds WHERE Title=? AND Link=? AND Display=? AND Language=? AND Summary=?", (title, link, disp, lang, summary, ))
-    logger.info("Add feed -- {}.".format(title))
+    c.execute("INSERT OR IGNORE INTO Feeds (Title, Link, Language, Summary) VALUES (?, ?, ?, ?)", (title, link, lang, summary, ))
+    try:
+        item_id = c.execute("SELECT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?", (title, link, lang, summary, )).fetchone()[0]
+        c.execute("INSERT OR IGNORE INTO Display (ItemID, {}) VALUES (?, ?)".format(user), (item_id, disp, ))
+        logger.info("Add feed -- {}.".format(title))
+    except TypeError:
+        pass
 
     conn.commit()
 
-def delete_feed(item_id):
+def delete_feed(item_id, user='nobody'):
     conn = get_connection()
     c = conn.cursor()
 
@@ -76,7 +80,7 @@ def delete_feed(item_id):
 
     conn.commit()
 
-def init_feeds(file_path=file_path):
+def init_feeds(file_path=file_path, user='nobody'):
     with open(file_path, 'r', encoding='utf-8') as f:
         tree = etree.fromstring(f.read())
 
@@ -97,7 +101,7 @@ def init_feeds(file_path=file_path):
             summary = feed_it.xpath("./summary")[0].text
         except IndexError:
             summary = 2
-        add_feed(title, link, disp, lang, summary)
+        add_feed(title, link, disp, lang, summary, user)
 
 def add_item(item_title, item_time, item_summary, item_source, item_link):
     conn = get_connection()

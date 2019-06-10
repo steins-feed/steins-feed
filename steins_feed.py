@@ -17,7 +17,7 @@ def steins_read(title_pattern=""):
     c = get_cursor()
     logger = get_logger()
 
-    for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ? AND DISPLAY=1", ("%" + title_pattern + "%", )).fetchall():
+    for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
         handler = get_handler(feed_it['Title'])
         d = handler.parse(feed_it['Link'])
         try:
@@ -36,20 +36,21 @@ def steins_read(title_pattern=""):
 
             add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
 
-def steins_generate_page(page_no=0, lang="International", score_board=None, surprise=-1):
+def steins_generate_page(page_no="0", lang="International", score_board=None, surprise=-1, user="nobody"):
     c = get_cursor()
+    page_no = int(page_no)
 
     if lang == "International":
-        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
+        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) ORDER BY Published DESC".format(user)).fetchall()
     else:
-        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1 AND Language=?) ORDER BY Published DESC", (lang, )).fetchall()
+        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) ORDER BY Published DESC".format(user), (lang, )).fetchall()
     if page_no >= len(dates):
         return
     d_it = dates[page_no][0]
     if lang == "International":
-        items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC", (d_it, )).fetchall()
+        items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC".format(user), (d_it, )).fetchall()
     else:
-        items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC", (lang, d_it)).fetchall()
+        items = c.execute("SELECT * FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC".format(user), (lang, d_it)).fetchall()
 
     s = ""
     s += "<!DOCTYPE html>\n"
@@ -88,9 +89,9 @@ def steins_generate_page(page_no=0, lang="International", score_board=None, surp
     langs = c.execute("SELECT DISTINCT Language FROM Feeds").fetchall()
     s += "<p align=right>\n"
     s += "<span style=\"float: left;\">[<a id=top href=#bottom>Bottom</a>]</span>\n"
-    s += "<a href=\"/steins-feed/index.php\">International</a>\n"
+    s += "<a href=\"/steins-feed/index.php?user={}\">International</a>\n".format(user)
     for lang_it in langs:
-        s += "<a href=\"/steins-feed/index.php?lang={0}\">{0}</a>\n".format(lang_it[0])
+        s += "<a href=\"/steins-feed/index.php?lang={0}&user={1}\">{0}</a>\n".format(lang_it[0], user)
     s += "</p>\n"
 
     s += "<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
@@ -104,12 +105,14 @@ def steins_generate_page(page_no=0, lang="International", score_board=None, surp
         s += "<form style=\"display: inline-block\">\n"
         s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no-1)
         s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Previous\">\n"
         s += "</form>\n"
     if not page_no == len(dates)-1:
         s += "<form style=\"display: inline-block\">\n"
         s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no+1)
         s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Next\">\n"
         s += "</form>\n"
     s += "</p>\n"
@@ -147,6 +150,7 @@ def steins_generate_page(page_no=0, lang="International", score_board=None, surp
         s += "<p>\n"
         s += "<form target=\"foo\">\n"
         s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it['ItemID'])
+        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         if item_it['Like'] == 1:
             s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" style=\"background-color: green\" onclick=\"set_color_like({0})\">\n".format(item_it['ItemID'])
         else:
@@ -164,19 +168,21 @@ def steins_generate_page(page_no=0, lang="International", score_board=None, surp
         s += "<form style=\"display: inline-block\">\n"
         s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no-1)
         s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Previous\">\n"
         s += "</form>\n"
     if not page_no == len(dates)-1:
         s += "<form style=\"display: inline-block\">\n"
         s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no+1)
         s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Next\">\n"
         s += "</form>\n"
     s += "</p>\n"
 
     s += "<p>\n"
-    s += "<a href=\"/steins-feed/settings.php\">Settings</a>\n"
-    s += "<a href=\"/steins-feed/statistics.php\">Statistics</a>\n"
+    s += "<a href=\"/steins-feed/settings.php?user={}\">Settings</a>\n".format(user)
+    s += "<a href=\"/steins-feed/statistics.php?user={}\">Statistics</a>\n".format(user)
     s += "</p>\n"
     s += "<hr>\n"
 
@@ -184,6 +190,7 @@ def steins_generate_page(page_no=0, lang="International", score_board=None, surp
     s += "<form style=\"display: inline-block\">\n"
     s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
     s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/naive_bayes.php\" value=\"Magic\">\n"
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/naive_bayes_surprise.php\" value=\"Surprise\">\n"
     s += "</form>\n"
@@ -193,6 +200,7 @@ def steins_generate_page(page_no=0, lang="International", score_board=None, surp
     s += "<form style=\"display: inline-block\">\n"
     s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
     s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/logistic_regression.php\" value=\"Magic\">\n"
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/logistic_regression_surprise.php\" value=\"Surprise\">\n"
     s += "</form>\n"
@@ -211,7 +219,7 @@ def steins_generate_page(page_no=0, lang="International", score_board=None, surp
 def steins_write():
     c = get_cursor()
 
-    dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM Feeds WHERE Display=1) ORDER BY Published DESC").fetchall()
+    dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items ORDER BY Published DESC").fetchall()
     for d_ctr in range(len(dates)):
         with open(dir_name+os.sep+"steins-{}.html".format(d_ctr), 'w') as f:
             f.write(steins_generate_page(d_ctr))

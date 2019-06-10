@@ -16,8 +16,8 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 
 PORT = 8000
 
-def handle_page(qd={'page': "0", 'lang': "International"}):
-    return steins_generate_page(int(qd['page']), qd['lang'])
+def handle_page(qd={'page': "0", 'lang': "International", 'user': "nobody"}):
+    return steins_generate_page(qd['page'], qd['lang'], user=qd['user'])
 
 def handle_like(qd):
     conn = get_connection()
@@ -28,11 +28,11 @@ def handle_like(qd):
         val = 1
     if qd['submit'] == "Dislike":
         val = -1
-    row = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
-    if row['Like'] == val:
-        c.execute("UPDATE Items SET Like=0 WHERE ItemID=?", (item_id, ))
+    row_val = c.execute("SELECT {} FROM Like WHERE ItemID=?".format(qd['user']), (item_id, )).fetchone()[0]
+    if row_val == val:
+        c.execute("UPDATE Like SET {}=0 WHERE ItemID=?".format(qd['user']), (item_id, ))
     else:
-        c.execute("UPDATE Items SET Like=? WHERE ItemID=?", (val, item_id, ))
+        c.execute("UPDATE Like SET {}=? WHERE ItemID=?".format(qd['user']), (val, item_id, ))
 
     conn.commit()
 
@@ -40,46 +40,42 @@ def handle_display_feeds(qd):
     conn = get_connection()
     c = conn.cursor()
 
-    for feed_it in c.execute("SELECT * FROM Feeds").fetchall():
+    for feed_it in c.execute("SELECT ItemID FROM Feeds").fetchall():
         if str(feed_it['ItemID']) in qd.keys():
-            c.execute("UPDATE Feeds SET Display=1 WHERE ItemID=?", (feed_it['ItemID'], ))
+            c.execute("UPDATE Display SET {}=1 WHERE ItemID=?".format(qd['user']), (feed_it[0], ))
         else:
-            c.execute("UPDATE Feeds SET Display=0 WHERE ItemID=?", (feed_it['ItemID'], ))
+            c.execute("UPDATE Display SET {}=0 WHERE ItemID=?".format(qd['user']), (feed_it[0], ))
 
-        c.execute("UPDATE Feeds SET Language=? WHERE ItemID=?", (qd["lang_{}".format(feed_it['ItemID'])], feed_it['ItemID']))
+        c.execute("UPDATE Feeds SET Language=? WHERE ItemID=?", (qd["lang_{}".format(feed_it[0])], feed_it[0]))
 
         conn.commit()
 
 def handle_add_feed(qd):
-    title = qd['title']
-    link = qd['link']
-    disp = qd['disp']
-    lang = qd['lang']
-    summary = qd['summary']
-    add_feed(title, link, disp, lang, summary)
+    add_feed(qd['title'], qd['link'], qd['disp'], qd['lang'], qd['summary'], qd['user'])
 
 def handle_delete_feed(qd):
-    item_id = int(qd['feed'])
-    delete_feed(item_id)
+    delete_feed(int(qd['feed']), qd['user'])
 
-def handle_load_config():
-    init_feeds(dir_path + os.sep + "tmp_feeds.xml")
+def handle_load_config(qd):
+    init_feeds(dir_path + os.sep + "tmp_feeds.xml", qd['user'])
 
-def handle_export_config():
+def handle_export_config(qd):
     c = get_cursor()
-    feeds = c.execute("SELECT * FROM Feeds").fetchall()
 
     with open("tmp_feeds.xml", 'w', encoding='utf-8') as f:
         f.write("<?xml version=\"1.0\"?>\n\n")
         f.write("<root>\n")
-        for feed_it in feeds:
+        for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID".format(qd['user'])).fetchall():
             f.write("    <feed>\n")
             f.write("        <title>{}</title>\n".format(escape(feed_it['Title'])))
             f.write("        <link>{}</link>\n".format(escape(feed_it['Link'])))
+            f.write("        <disp>{}</disp>\n".format(feed_it[qd['user']]))
+            f.write("        <lang>{}</lang>\n".format(escape(feed_it['Language'])))
+            f.write("        <summary>{}</summary>\n".format(feed_it['Summary']))
             f.write("    </feed>\n")
         f.write("</root>\n")
 
-def handle_settings():
+def handle_settings(qd):
     c = get_cursor()
 
     s = ""
@@ -96,13 +92,14 @@ def handle_settings():
 
     # Display feeds.
     s += "<form>\n"
-    for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
-        if feed_it['Display'] == 0:
+    for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID ORDER BY Title".format(qd['user'])).fetchall():
+        if feed_it[qd['user']] == 0:
             s += "<input type=\"checkbox\" name=\"{}\"><a href={}>{}</a>\n".format(feed_it['ItemID'], feed_it['Link'], feed_it['Title'])
         else:
             s += "<input type=\"checkbox\" name=\"{}\" checked><a href={}>{}</a>\n".format(feed_it['ItemID'], feed_it['Link'], feed_it['Title'])
         s += "{}\n".format(select_lang(feed_it['ItemID'], feed_it['Language']))
         s += "<br>\n"
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/display_feeds.php\" value=\"Display feeds\"></p>\n"
     s += "</form>\n"
     s += "<hr>\n"
@@ -124,6 +121,7 @@ def handle_settings():
     s += "<input type=\"radio\" name=\"summary\" value=1> First paragraph.\n"
     s += "<input type=\"radio\" name=\"summary\" value=2 checked> Full abstract.\n"
     s += "</p>\n"
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/add_feed.php\" value=\"Add feed\"></p>\n"
     s += "</form>\n"
     s += "<hr>\n"
@@ -134,6 +132,7 @@ def handle_settings():
     for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
         s += "<option value=\"{}\">{}</option>\n".format(feed_it['ItemID'], feed_it['Title'])
     s += "</select></p>\n"
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/delete_feed.php\" value=\"Delete feed\"></p>\n"
     s += "</form>\n"
     s += "<hr>\n"
@@ -141,12 +140,14 @@ def handle_settings():
     # Load config.
     s += "<form>\n"
     s += "<p><input type=\"file\" name=\"feeds\" value=\"feeds\"></p>\n"
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/load_config.php\" formenctype=\"multipart/form-data\" value=\"Load config\"></p>\n"
     s += "</form>\n"
     s += "<hr>\n"
 
     # Export config.
     s += "<form>\n"
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/export_config.php\" value=\"Export config\"></p>\n"
     s += "</form>\n"
 
@@ -155,7 +156,7 @@ def handle_settings():
 
     return s
 
-def handle_statistics():
+def handle_statistics(qd):
     c = get_cursor()
 
     s = ""
@@ -170,7 +171,7 @@ def handle_statistics():
     s += "<body>\n"
 
     # Likes.
-    likes = c.execute("SELECT * FROM Items WHERE Like=1 ORDER BY Published DESC").fetchall()
+    likes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=1 ORDER BY Published DESC".format(qd['user'], qd['user'])).fetchall()
 
     s += "<h2>Likes</h2>\n"
     s += "<p>{} likes.</p>\n".format(len(likes))
@@ -183,12 +184,12 @@ def handle_statistics():
     s += "<hr>\n"
 
     # Dislikes.
-    likes = c.execute("SELECT * FROM Items WHERE Like=-1 ORDER BY Published DESC").fetchall()
+    dislikes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=-1 ORDER BY Published DESC".format(qd['user'], qd['user'])).fetchall()
 
     s += "<h2>Dislikes</h2>\n"
-    s += "<p>{} dislikes.</p>\n".format(len(likes))
+    s += "<p>{} dislikes.</p>\n".format(len(dislikes))
     s += "<ul>\n"
-    for row_it in likes:
+    for row_it in dislikes:
         datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it['Published'], "%Y-%m-%d %H:%M:%S GMT"))
         s += "<li>{}: <a href={}>{}</a> ({})</li>".format(row_it['Source'], row_it['Link'], row_it['Title'], datestamp)
     s += "</ul>\n"
@@ -234,7 +235,9 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.send_header("Content-type", "text/html")
             self.end_headers()
 
-            s = handle_settings()
+            qs = urlsplit(self.path).query
+            qd = dict(parse_qsl(qs))
+            s = handle_settings(qd)
             self.wfile.write(s.encode('utf-8'))
         elif self.path == "/statistics.php":
             # Write header.
@@ -242,7 +245,9 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.send_header("Content-type", "text/html")
             self.end_headers()
 
-            s = handle_statistics()
+            qs = urlsplit(self.path).query
+            qd = dict(parse_qsl(qs))
+            s = handle_statistics(qd)
             self.wfile.write(s.encode('utf-8'))
         elif "/naive_bayes.php" in self.path:
             # Write header.
@@ -330,7 +335,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             file_path = dir_path + os.sep + file_name
             with open(file_path, 'w') as f:
                 f.write(qd['files'].values()[0])
-            handle_load_config()
+            handle_load_config(qd)
             self.send_response(204)
             self.end_headers()
 
@@ -344,7 +349,9 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Disposition", "attachment; filename=tmp_feeds.xml")
             self.end_headers()
 
-            handle_export_config()
+            qs = self.rfile.read(qlen).decode('utf-8')
+            qd = dict(parse_qsl(qs))
+            handle_export_config(qd)
             with open("tmp_feeds.xml", 'r', 'utf-8') as f:
                 self.wfile.write(f.read().encode('utf-8'))
         # Like.

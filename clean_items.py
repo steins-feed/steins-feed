@@ -5,8 +5,7 @@ import sqlite3
 conn = sqlite3.connect("steins.db")
 c = conn.cursor()
 
-feeds = c.execute("SELECT Title FROM Feeds").fetchall()
-feeds = [e['ItemID'] for e in feeds]
+feeds = [e[0] for e in c.execute("SELECT Title FROM Feeds").fetchall()]
 items = c.execute("SELECT * FROM Items").fetchall()
 
 for item_it in items:
