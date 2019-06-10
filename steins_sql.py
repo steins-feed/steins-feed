@@ -59,7 +59,8 @@ def add_feed(title, link, disp=1, lang='', summary=2):
     conn = get_connection()
     c = conn.cursor()
 
-    c.execute("INSERT OR IGNORE INTO Feeds (Title, Link, Display, Language, Summary) VALUES (?, ?, ?, ?, ?)", (title, link, disp, lang, summary))
+    c.execute("INSERT OR IGNORE INTO Feeds (Title, Link, Display, Language, Summary) VALUES (?, ?, ?, ?, ?)", (title, link, disp, lang, summary, ))
+    c.execute("INSERT OR IGNORE INTO Display (ItemID) SELECT ItemID FROM Feeds WHERE Title=? AND Link=? AND Display=? AND Language=? AND Summary=?", (title, link, disp, lang, summary, ))
     logger.info("Add feed -- {}.".format(title))
 
     conn.commit()
@@ -70,6 +71,7 @@ def delete_feed(item_id):
 
     title = c.execute("Select Title FROM Feeds WHERE ItemID=?", (item_id, )).fetchone()[0]
     c.execute("DELETE FROM Feeds WHERE ItemID=?", (item_id, ))
+    c.execute("DELETE FROM Display WHERE ItemID=?", (item_id, ))
     logger.info("Delete feed -- {}.".format(title))
 
     conn.commit()
@@ -123,6 +125,7 @@ def add_item(item_title, item_time, item_summary, item_source, item_link):
             break
     if not item_exists:
         c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, item_source, item_link, ))
+        c.execute("INSERT INTO Like (ItemID) SELECT ItemID FROM Items WHERE Title=? AND Published=? AND Summary=? AND Source=? AND Link=?", (item_title, item_time, item_summary, item_source, item_link, ))
         logger.info("Add item -- {}.".format(item_title))
         conn.commit()
 
@@ -132,6 +135,7 @@ def delete_item(item_id):
 
     title = c.execute("Select Title FROM Items WHERE ItemID=?", (item_id, )).fetchone()[0]
     c.execute("DELETE FROM Items WHERE ItemID=?", (item_id, ))
+    c.execute("DELETE FROM Like WHERE ItemID=?", (item_id, ))
     logger.info("Delete item -- {}.".format(title))
 
     conn.commit()
@@ -141,9 +145,11 @@ if __name__ == "__main__":
     c = conn.cursor()
     logger = get_logger()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL, Display INTEGER DEFAULT 1, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2)")
+    c.execute("CREATE TABLE IF NOT EXISTS Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2)")
+    c.execute("CREATE TABLE IF NOT EXISTS Display (ItemID INTEGER PRIMARY KEY, Nobody INTEGER DEFAULT 1)")
     logger.warning("Create Feeds.")
-    c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, Like INTEGER DEFAULT 0)")
+    c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL)")
+    c.execute("CREATE TABLE IF NOT EXISTS Like (ItemID INTEGER PRIMARY KEY, Nobody INTEGER DEFAULT 0)")
     logger.warning("Create Items.")
     conn.commit()
 
