@@ -60,12 +60,11 @@ def add_feed(title, link, disp=1, lang='', summary=2, user='nobody'):
     c = conn.cursor()
 
     c.execute("INSERT OR IGNORE INTO Feeds (Title, Link, Language, Summary) VALUES (?, ?, ?, ?)", (title, link, lang, summary, ))
-    try:
-        item_id = c.execute("SELECT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?", (title, link, lang, summary, )).fetchone()[0]
-        c.execute("INSERT OR IGNORE INTO Display (ItemID, {}) VALUES (?, ?)".format(user), (item_id, disp, ))
-        logger.info("Add feed -- {}.".format(title))
-    except TypeError:
-        pass
+    for item_it in c.execute("SELECT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?", (title, link, lang, summary, )).fetchall():
+        item_id = item_it[0]
+        if c.execute("SELECT COUNT(*) FROM Display WHERE ItemID=?", (item_id, )).fetchone()[0] == 0:
+            c.execute("INSERT INTO Display (ItemID, {}) VALUES (?, ?)".format(user), (item_id, disp, ))
+            logger.info("Add feed -- {}.".format(title))
 
     conn.commit()
 
@@ -163,7 +162,7 @@ def rename_user(old_name, new_name):
     c.execute("ALTER TABLE Display RENAME TO Display_old")
     c.execute("CREATE TABLE Display AS SELECT {} FROM Display_old".format(", ".join(name_list)))
     c.execute("ALTER TABLE Display ADD COLUMN {} INTERGER DEFAULT 0".format(new_name))
-    c.execute("INSERT INTO Display({}) SELECT {} FROM Display_old".format(new_name, old_name))
+    c.execute("UPDATE Display SET {}=(SELECT {} FROM Display_old WHERE ItemID=Display.ItemID)".format(new_name, old_name))
     c.execute("DROP TABLE Display_old")
 
     name_list = [e[1] for e in c.execute("PRAGMA table_info(Like)").fetchall()]
@@ -171,7 +170,7 @@ def rename_user(old_name, new_name):
     c.execute("ALTER TABLE Like RENAME TO Like_old")
     c.execute("CREATE TABLE Like AS SELECT {} FROM Like_old".format(", ".join(name_list)))
     c.execute("ALTER TABLE Like ADD COLUMN {} INTERGER DEFAULT 0".format(new_name))
-    c.execute("INSERT INTO Like({}) SELECT {} FROM Like_old".format(new_name, old_name))
+    c.execute("UPDATE Like SET {}=(SELECT {} FROM Like_old WHERE ItemID=Like.ItemID)".format(new_name, old_name))
     c.execute("DROP TABLE Like_old")
 
     logger.warning("Rename user -- {} to {}.".format(old_name, new_name))
