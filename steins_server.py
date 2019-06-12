@@ -40,13 +40,15 @@ def handle_display_feeds(qd):
     conn = get_connection()
     c = conn.cursor()
 
+    qd_keys = qd.keys()
     for feed_it in c.execute("SELECT ItemID FROM Feeds").fetchall():
-        if str(feed_it['ItemID']) in qd.keys():
+        if str(feed_it[0]) in qd_keys:
             c.execute("UPDATE Display SET {}=1 WHERE ItemID=?".format(qd['user']), (feed_it[0], ))
         else:
             c.execute("UPDATE Display SET {}=0 WHERE ItemID=?".format(qd['user']), (feed_it[0], ))
 
-        c.execute("UPDATE Feeds SET Language=? WHERE ItemID=?", (qd["lang_{}".format(feed_it[0])], feed_it[0]))
+        if "lang_{}".format(feed_it[0]) in qd_keys:
+            c.execute("UPDATE Feeds SET Language=? WHERE ItemID=?", (qd["lang_{}".format(feed_it[0])], feed_it[0]))
 
         conn.commit()
 

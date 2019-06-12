@@ -2784,6 +2784,11 @@
 
     <!-- Literature reviews -->
     <feed>
+        <title>Five Books</title>
+        <link>https://fivebooks.us8.list-manage.com/track/click?u=ce22475e3f1c122db90ab6515&amp;id=324682680e&amp;e=cfdb3b3199</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>London Review of Books</title>
         <link>https://cdn.lrb.co.uk/feeds/lrb</link>
         <lang>English</lang>
@@ -2856,6 +2861,11 @@
 	<summary>0</summary>
     </feed>
     <feed>
+        <title>Hacker News</title>
+        <link>https://news.ycombinator.com/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>Humble Bundle</title>
         <link>https://blog.humblebundle.com/rss</link>
         <lang>English</lang>
@@ -2910,6 +2920,11 @@
 
     <!-- Science -->
     <feed>
+        <title>APS News</title>
+        <link>https://www.aps.org/newsroom/updates/rss-all.cfm?xml=announcements,RSS2.0</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>Chalkdust</title>
         <link>http://chalkdustmagazine.com/feed/</link>
         <lang>English</lang>
@@ -2930,8 +2945,13 @@
         <lang>English</lang>
     </feed>
     <feed>
-        <title>Physics</title>
+        <title>Physics Magazine</title>
         <link>http://feeds.aps.org/rss/recent/physics.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Physics Today</title>
+        <link>https://physicstoday.scitation.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=pto</link>
         <lang>English</lang>
     </feed>
     <feed>

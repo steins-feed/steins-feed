@@ -86,7 +86,7 @@ def steins_generate_page(page_no="0", lang="International", score_board=None, su
     s += "</head>\n"
     s += "<body>\n"
 
-    langs = c.execute("SELECT DISTINCT Language FROM Feeds").fetchall()
+    langs = c.execute("SELECT DISTINCT Language FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE {}=1".format(user)).fetchall()
     s += "<p align=right>\n"
     s += "<span style=\"float: left;\">[<a id=top href=#bottom>Bottom</a>]</span>\n"
     s += "<a href=\"/steins-feed/index.php?user={}\">International</a>\n".format(user)
