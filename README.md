@@ -55,3 +55,7 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 *   Boston Globe.
 *   The Telegraph.
 *   The Times.
+
+## GDPR.
+
+*   LA Times.
