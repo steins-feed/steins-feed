@@ -55,7 +55,7 @@ def get_cursor():
         cursor = conn.cursor()
     return cursor
 
-def add_feed(title, link, disp=1, lang='', summary=2, user='nobody'):
+def add_feed(title, link, disp=1, lang='English', summary=2, user='nobody'):
     conn = get_connection()
     c = conn.cursor()
 
@@ -95,7 +95,7 @@ def init_feeds(file_path=file_path, user='nobody'):
         try:
             lang = feed_it.xpath("./lang")[0].text
         except IndexError:
-            lang = ''
+            lang = 'English'
         try:
             summary = feed_it.xpath("./summary")[0].text
         except IndexError:
