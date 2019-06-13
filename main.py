@@ -5,7 +5,7 @@
 from multiprocessing import Process
 
 from steins_feed import steins_update
-from steins_server import steins_run, PORT
+from steins_server import steins_run
 from steins_sql import close_connection
 
 #sig_ign = signal.signal(signal.SIGINT, signal.SIG_IGN)

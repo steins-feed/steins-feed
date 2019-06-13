@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
-import requests
-
 from lxml import html
+import requests
 
 def have_session():
     if "session" in globals():

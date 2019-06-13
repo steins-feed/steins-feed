@@ -4,7 +4,7 @@ import os
 import time
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlsplit, parse_qs, parse_qsl
+from urllib.parse import urlsplit, parse_qsl
 from xml.sax.saxutils import escape
 
 from steins_feed import steins_generate_page
@@ -94,7 +94,7 @@ def handle_settings(qd):
 
     # Display feeds.
     s += "<form>\n"
-    for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID ORDER BY Title".format(qd['user'])).fetchall():
+    for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID ORDER BY Title COLLATE NOCASE".format(qd['user'])).fetchall():
         if feed_it[qd['user']] == 0:
             s += "<input type=\"checkbox\" name=\"{}\"><a href={}>{}</a>\n".format(feed_it['ItemID'], feed_it['Link'], feed_it['Title'])
         else:
@@ -131,7 +131,7 @@ def handle_settings(qd):
     # Delete feed.
     s += "<form>\n"
     s += "<p><select name=\"feed\">\n"
-    for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title").fetchall():
+    for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title COLLATE NOCASE").fetchall():
         s += "<option value=\"{}\">{}</option>\n".format(feed_it['ItemID'], feed_it['Title'])
     s += "</select></p>\n"
     s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])

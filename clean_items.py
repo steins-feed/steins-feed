@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
 
-import sqlite3
+from steins_sql import get_cursor, delete_item
 
-conn = sqlite3.connect("steins.db")
-c = conn.cursor()
+c = get_cursor()
 
-feeds = [e[0] for e in c.execute("SELECT Title FROM Feeds").fetchall()]
+feeds = [e[0] for e in c.execute("SELECT DISTINCT Title FROM Feeds").fetchall()]
 items = c.execute("SELECT * FROM Items").fetchall()
 
 for item_it in items:
     if not item_it['Source'] in feeds:
-        print("Delete \"{}\" ({}).".format(item_it['Title'], item_it['Source']))
-        c.execute("DELETE FROM Items WHERE ItemID=?", (item_it['ItemID'], ))
-
-conn.commit()
+        delete_item(item_it['ItemID'])

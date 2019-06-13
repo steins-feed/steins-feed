@@ -2,6 +2,7 @@
 
 import os
 import sqlite3
+from sqlite3 import IntegrityError
 import time
 
 from lxml import etree
@@ -59,14 +60,15 @@ def add_feed(title, link, disp=1, lang='English', summary=2, user='nobody'):
     conn = get_connection()
     c = conn.cursor()
 
-    c.execute("INSERT OR IGNORE INTO Feeds (Title, Link, Language, Summary) VALUES (?, ?, ?, ?)", (title, link, lang, summary, ))
-    for item_it in c.execute("SELECT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?", (title, link, lang, summary, )).fetchall():
-        item_id = item_it[0]
-        if c.execute("SELECT COUNT(*) FROM Display WHERE ItemID=?", (item_id, )).fetchone()[0] == 0:
-            c.execute("INSERT INTO Display (ItemID, {}) VALUES (?, ?)".format(user), (item_id, disp, ))
-            logger.info("Add feed -- {}.".format(title))
-
-    conn.commit()
+    try:
+        c.execute("INSERT INTO Feeds (Title, Link, Language, Summary) VALUES (?, ?, ?, ?)", (title, link, lang, summary, ))
+        c.execute("INSERT INTO Display (ItemID) SELECT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?", (title, link, lang, summary, ))
+        c.execute("UPDATE Display SET {}=? WHERE ItemID IN (SELECT DISTINCT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?)".format(user), (disp, title, link, lang, summary, ))
+        conn.commit()
+        logger.info("Add feed -- {}.".format(title))
+    except IntegrityError:
+        conn.rollback()
+        logger.error("Add feed -- {}.".format(title))
 
 def delete_feed(item_id, user='nobody'):
     conn = get_connection()
@@ -111,9 +113,8 @@ def add_item(item_title, item_time, item_summary, item_source, item_link):
         return
 
     # Remove duplicates.
-    cands = c.execute("SELECT * FROM Items WHERE Title=?", (item_title, )).fetchall()
     item_exists = False
-    for cand_it in cands:
+    for cand_it in c.execute("SELECT * FROM Items WHERE Title=?", (item_title, )).fetchall():
         if not item_time[:10] == cand_it['Published'][:10]:
             continue
 
@@ -126,10 +127,14 @@ def add_item(item_title, item_time, item_summary, item_source, item_link):
             item_exists = True
             break
     if not item_exists:
-        c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, item_source, item_link, ))
-        c.execute("INSERT INTO Like (ItemID) SELECT ItemID FROM Items WHERE Title=? AND Published=? AND Summary=? AND Source=? AND Link=?", (item_title, item_time, item_summary, item_source, item_link, ))
-        logger.info("Add item -- {}.".format(item_title))
-        conn.commit()
+        try:
+            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, item_source, item_link, ))
+            c.execute("INSERT INTO Like (ItemID) SELECT ItemID FROM Items WHERE Title=? AND Published=? AND Summary=? AND Source=? AND Link=?", (item_title, item_time, item_summary, item_source, item_link, ))
+            conn.commit()
+            logger.info("Add item -- {}.".format(item_title))
+        except IntegrityError:
+            conn.rollback()
+            logger.error("Add item -- {}.".format(item_title))
 
 def delete_item(item_id):
     conn = get_connection()
