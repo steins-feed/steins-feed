@@ -77,7 +77,7 @@ def handle_magic(qd, classifier='Naive Bayes', surprise=-1):
     score_board = sorted(score_sheet, reverse=True)
 
     # Page.
-    return steins_generate_page(page_no, lang, score_board, surprise, user)
+    return steins_generate_page(page_no, lang, user, score_board, surprise)
 
 def handle_surprise(qd, classifier='Naive Bayes'):
     return handle_magic(qd, classifier, 10)

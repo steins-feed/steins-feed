@@ -36,7 +36,7 @@ def steins_read(title_pattern=""):
 
             add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
 
-def steins_generate_page(page_no="0", lang="International", score_board=None, surprise=-1, user="nobody"):
+def steins_generate_page(page_no="0", lang="International", user="nobody", score_board=None, surprise=-1):
     c = get_cursor()
     page_no = int(page_no)
 

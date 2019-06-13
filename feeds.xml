@@ -3016,6 +3016,11 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>Mozilla Blog</title>
+        <link>https://blog.mozilla.org/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>The Onion</title>
         <link>https://www.theonion.com/rss</link>
         <lang>English</lang>
