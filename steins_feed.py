@@ -2,6 +2,7 @@
 
 import os
 import time
+from xml.sax.saxutils import unescape
 
 import numpy as np
 import numpy.random as random
@@ -154,7 +155,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
             s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it['Source'], item_it['Published'], item_it['Score'])
         else:
             s += "<p>Source: {}. Published: {}.</p>\n".format(item_it['Source'], item_it['Published'])
-        s += "{}".format(item_it['Summary'])
+        s += "{}".format(unescape(item_it['Summary']))
 
         s += "<p>\n"
         s += "<form target=\"foo\">\n"
