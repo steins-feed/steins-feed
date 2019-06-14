@@ -16,7 +16,7 @@ def build_feature(row):
         idx1 = title.find("<")
     return title
 
-def handle_magic(qd, classifier='Naive Bayes', surprise=-1):
+def handle_magic(qd):
     c = get_cursor()
     lang = qd['lang']
     user = qd['user']
@@ -35,9 +35,9 @@ def handle_magic(qd, classifier='Naive Bayes', surprise=-1):
     # Build pipeline.
     count_vect = ('vect', CountVectorizer())
     tfidf_transformer = ('tfidf', TfidfTransformer())
-    if classifier == 'Naive Bayes':
+    if qd['classifier'] == 'Naive Bayes':
         clf = ('clf', MultinomialNB())
-    elif classifier == 'Logistic Regression':
+    elif qd['classifier'] == 'Logistic Regression':
         clf = ('clf', LogisticRegression())
     else:
         raise KeyError
