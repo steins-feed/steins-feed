@@ -7,6 +7,7 @@ import numpy as np
 import numpy.random as random
 
 from steins_log import get_logger
+from steins_magic import build_feature
 from steins_manager import get_handler
 from steins_sql import add_item, get_cursor, last_updated
 
@@ -36,7 +37,7 @@ def steins_read(title_pattern=""):
 
             add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
 
-def steins_generate_page(page_no="0", lang="International", user="nobody", score_board=None, surprise=-1):
+def steins_generate_page(page_no="0", lang="International", user="nobody", scorer=None, surprise=-1):
     c = get_cursor()
     page_no = int(page_no)
 
@@ -118,31 +119,28 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "</p>\n"
     s += "<hr>\n"
 
+    if not scorer is None:
+        new_titles = [build_feature(item_it) for item_it in items]
+        predicted_proba = scorer.predict_proba(new_titles)
+        scores = np.array([it[1] - it[0] for it in predicted_proba])
+        for item_ct in range(len(items)):
+            items[item_ct] = dict(items[item_ct])
+            items[item_ct]['Score'] = scores[item_ct]
+
     if surprise > 0:
-        scores = np.array([it[0] for it in score_board])
-        scores = 0.5 * (1. + scores)
-        logit_scores = np.log(scores / (1. - scores))
+        logit_scores = np.log((1. + scores) / (1. - scores))
         sigma = np.sqrt(np.sum(logit_scores**2) / scores.size)
-        probs = np.exp(-0.5 * logit_scores**2 / sigma**2) / scores / (1. - scores) / sigma / np.sqrt(2. * np.pi)
+        probs = np.exp(-0.5 * logit_scores**2 / sigma**2) / (1. + scores) / (1. - scores) / sigma / np.sqrt(2. * np.pi)
         probs /= np.sum(probs)
         sample = random.choice(scores.size, surprise, False, probs)
+        items = [items[cnt] for cnt in sample]
+    elif not scorer is None:
+        items = sorted(items, key=lambda item_it: item_it['Score'], reverse=True)
 
-    for item_ctr in range(len(items)):
-        if surprise == 0:
-            break
-        elif surprise > 0:
-            surprise -= 1
-            item_it = items[score_board[sample[surprise]][1]]
-        elif not score_board is None:
-            item_it = items[score_board[item_ctr][1]]
-        else:
-            item_it = items[item_ctr]
-
+    for item_it in items:
         s += "<h2><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{}\">{}</a></h2>\n".format(item_it['Link'], item_it['Title'])
-        if surprise >= 0:
-            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it['Source'], item_it['Published'], score_board[sample[surprise]][0])
-        elif not score_board is None:
-            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it['Source'], item_it['Published'], score_board[item_ctr][0])
+        if not scorer is None:
+            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it['Source'], item_it['Published'], item_it['Score'])
         else:
             s += "<p>Source: {}. Published: {}.</p>\n".format(item_it['Source'], item_it['Published'])
         s += "{}".format(item_it['Summary'])

@@ -9,7 +9,7 @@ from xml.sax.saxutils import escape
 
 from steins_feed import steins_generate_page
 from steins_html import select_lang
-from steins_magic import handle_magic, handle_surprise
+from steins_magic import handle_magic
 from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
@@ -269,7 +269,8 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
-            s = handle_surprise(qd)
+            #s = handle_surprise(qd)
+            s = handle_magic(qd)
             self.wfile.write(s.encode('utf-8'))
         elif "/logistic_regression.php" in self.path:
             # Write header.
@@ -289,7 +290,8 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
-            s = handle_surprise(qd, 'Logistic Regression')
+            #s = handle_surprise(qd, 'Logistic Regression')
+            s = handle_magic(qd, 'Logistic Regression')
             self.wfile.write(s.encode('utf-8'))
 
     def do_POST(self):
