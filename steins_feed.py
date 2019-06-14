@@ -37,7 +37,7 @@ def steins_read(title_pattern=""):
 
             add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
 
-def steins_generate_page(page_no="0", lang="International", user="nobody", scorer=None, surprise=-1):
+def steins_generate_page(page_no="0", lang="International", user="nobody", scorer=[], surprise=-1):
     c = get_cursor()
     page_no = int(page_no)
 
@@ -49,9 +49,9 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         return
     d_it = dates[page_no][0]
     if lang == "International":
-        items = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC".format(user), (d_it, )).fetchall()
+        items = c.execute("SELECT Items.*, Like.{0}, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC".format(user), (d_it, )).fetchall()
     else:
-        items = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC".format(user), (lang, d_it)).fetchall()
+        items = c.execute("SELECT Items.*, Like.{0}, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC".format(user), (lang, d_it)).fetchall()
 
     s = ""
     s += "<!DOCTYPE html>\n"
@@ -119,10 +119,21 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "</p>\n"
     s += "<hr>\n"
 
-    if not scorer is None:
-        new_titles = [build_feature(item_it) for item_it in items]
-        predicted_proba = scorer.predict_proba(new_titles)
-        scores = np.array([it[1] - it[0] for it in predicted_proba])
+    if len(scorer) != 0:
+        scores = np.zeros(len(items))
+        langs = set([e['Language'] for e in items])
+
+        for lang_it in langs:
+            try:
+                clf = scorer[lang_it]
+            except KeyError:
+                continue
+
+            idx = [i for i in range(len(items)) if items[i]['Language'] == lang_it]
+            new_titles = [build_feature(items[i]) for i in idx]
+            predicted_proba = clf.predict_proba(new_titles)
+            scores[idx] = [it[1] - it[0] for it in predicted_proba]
+
         for item_ct in range(len(items)):
             items[item_ct] = dict(items[item_ct])
             items[item_ct]['Score'] = scores[item_ct]
@@ -134,12 +145,12 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         probs /= np.sum(probs)
         sample = random.choice(scores.size, surprise, False, probs)
         items = [items[cnt] for cnt in sample]
-    elif not scorer is None:
+    elif len(scorer) != 0:
         items = sorted(items, key=lambda item_it: item_it['Score'], reverse=True)
 
     for item_it in items:
         s += "<h2><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{}\">{}</a></h2>\n".format(item_it['Link'], item_it['Title'])
-        if not scorer is None:
+        if len(scorer) != 0:
             s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it['Source'], item_it['Published'], item_it['Score'])
         else:
             s += "<p>Source: {}. Published: {}.</p>\n".format(item_it['Source'], item_it['Published'])
