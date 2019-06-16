@@ -60,29 +60,30 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<head>\n"
     s += "<meta charset=\"UTF-8\">\n"
     s += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n"
+    s += "<link rel=\"stylesheet\" type=\"text/css\" href=\"/steins-feed/index.css\"/>\n"
     s += "<title>Stein's Feed</title>\n"
     s += "<script>\n"
     s += "function set_color_like(button_id) {\n"
     s += "    var stat_like = document.getElementById('like_' + button_id);\n"
     s += "    var stat_dislike = document.getElementById('dislike_' + button_id);\n"
-    s += "    if (stat_like.style.backgroundColor == 'green') {\n"
-    s += "        stat_like.style.backgroundColor = '';\n"
+    s += "    if (stat_like.className == 'liked') {\n"
+    s += "        stat_like.className = 'like';\n"
     s += "    } else {\n"
-    s += "        stat_like.style.backgroundColor = 'green';\n"
+    s += "        stat_like.className = 'liked';\n"
     s += "    }\n"
-    s += "    stat_dislike.style.backgroundColor = '';\n"
+    s += "    stat_dislike.className = 'dislike';\n"
     s += "}\n"
     s += "</script>\n"
     s += "<script>\n"
     s += "function set_color_dislike(button_id) {\n"
     s += "    var stat_like = document.getElementById('like_' + button_id);\n"
     s += "    var stat_dislike = document.getElementById('dislike_' + button_id);\n"
-    s += "    if (stat_dislike.style.backgroundColor == 'red') {\n"
-    s += "        stat_dislike.style.backgroundColor = '';\n"
+    s += "    if (stat_dislike.className == 'disliked') {\n"
+    s += "        stat_dislike.className = 'dislike';\n"
     s += "    } else {\n"
-    s += "        stat_dislike.style.backgroundColor = 'red';\n"
+    s += "        stat_dislike.className = 'disliked';\n"
     s += "    }\n"
-    s += "    stat_like.style.backgroundColor = '';\n"
+    s += "    stat_like.className = 'like';\n"
     s += "}\n"
     s += "</script>\n"
     s += "</head>\n"
@@ -104,14 +105,14 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
 
     s += "<p>\n"
     if not page_no == 0:
-        s += "<form style=\"display: inline-block\">\n"
+        s += "<form class=\"button\">\n"
         s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no-1)
         s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
         s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Previous\">\n"
         s += "</form>\n"
     if not page_no == len(dates)-1:
-        s += "<form style=\"display: inline-block\">\n"
+        s += "<form class=\"button\">\n"
         s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no+1)
         s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
         s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
@@ -161,28 +162,28 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         s += "<form target=\"foo\">\n"
         s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it['ItemID'])
         s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
+        s_temp = "<input id=\"like_{0}\" class=\"like\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" onclick=\"set_color_like({0})\">\n".format(item_it['ItemID'])
         if item_it['{}'.format(user)] == 1:
-            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" style=\"background-color: green\" onclick=\"set_color_like({0})\">\n".format(item_it['ItemID'])
-        else:
-            s += "<input id=\"like_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" onclick=\"set_color_like({0})\">\n".format(item_it['ItemID'])
+            s_temp = s_temp.replace("class=\"like\"", "class=\"liked\"")
+        s += s_temp
+        s_temp = "<input id=\"dislike_{0}\" class=\"dislike\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Dislike\" onclick=\"set_color_dislike({0})\">\n".format(item_it['ItemID'])
         if item_it['{}'.format(user)] == -1:
-            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Dislike\" style=\"background-color: red\" onclick=\"set_color_dislike({0})\">\n".format(item_it['ItemID'])
-        else:
-            s += "<input id=\"dislike_{0}\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Dislike\" onclick=\"set_color_dislike({0})\">\n".format(item_it['ItemID'])
+            s_temp = s_temp.replace("class=\"dislike\"", "class=\"disliked\"")
+        s += s_temp
         s += "</form>\n"
         s += "</p>\n"
         s += "<hr>\n"
 
     s += "<p>\n"
     if not page_no == 0:
-        s += "<form style=\"display: inline-block\">\n"
+        s += "<form class=\"button\">\n"
         s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no-1)
         s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
         s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Previous\">\n"
         s += "</form>\n"
     if not page_no == len(dates)-1:
-        s += "<form style=\"display: inline-block\">\n"
+        s += "<form class=\"button\">\n"
         s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no+1)
         s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
         s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
@@ -197,7 +198,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<hr>\n"
 
     s += "<p>Naive Bayes:\n"
-    s += "<form style=\"display: inline-block\">\n"
+    s += "<form class=\"button\">\n"
     s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
     s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
     s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
@@ -208,7 +209,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "</p>\n"
 
     s += "<p>Logistic regression:\n"
-    s += "<form style=\"display: inline-block\">\n"
+    s += "<form class=\"button\">\n"
     s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
     s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
     s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)

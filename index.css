@@ -1,0 +1,11 @@
+input.liked {
+	background-color: green;
+}
+
+input.disliked {
+	background-color: red;
+}
+
+form.button {
+	display: inline-block;
+}
