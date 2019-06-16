@@ -2,7 +2,7 @@
 
 import os
 import sqlite3
-from sqlite3 import IntegrityError
+from sqlite3 import IntegrityError, OperationalError
 import time
 
 from lxml import etree
@@ -151,6 +151,7 @@ def add_user(name):
     conn = get_connection()
     c = conn.cursor()
 
+    c.execute("INSERT INTO Users (Name) VALUES (?)", (name, ))
     c.execute("ALTER TABLE Display ADD COLUMN {} INTEGER DEFAULT 0".format(name))
     c.execute("UPDATE Display SET {}=1".format(name))
     c.execute("ALTER TABLE Like ADD COLUMN {} INTEGER DEFAULT 0".format(name))
@@ -161,6 +162,8 @@ def add_user(name):
 def rename_user(old_name, new_name):
     conn = get_connection()
     c = conn.cursor()
+
+    c.execute("UPDATE Users SET Name=? WHERE Name=?", (new_name, old_name, ))
 
     name_list = [e[1] for e in c.execute("PRAGMA table_info(Display)").fetchall()]
     name_list.remove(old_name)
@@ -185,6 +188,8 @@ def delete_user(name):
     conn = get_connection()
     c = conn.cursor()
 
+    c.execute("DELETE FROM Users WHERE Name=?", (name, ))
+
     name_list = [e[1] for e in c.execute("PRAGMA table_info(Display)").fetchall()]
     name_list.remove(name)
     c.execute("ALTER TABLE Display RENAME TO Display_old")
@@ -204,13 +209,28 @@ if __name__ == "__main__":
     conn = get_connection()
     c = conn.cursor()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2)")
-    c.execute("CREATE TABLE IF NOT EXISTS Display (ItemID INTEGER PRIMARY KEY, nobody INTEGER DEFAULT 1)")
-    logger.warning("Create Feeds.")
-    c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL)")
-    c.execute("CREATE TABLE IF NOT EXISTS Like (ItemID INTEGER PRIMARY KEY, nobody INTEGER DEFAULT 0)")
-    logger.warning("Create Items.")
-    conn.commit()
+    try:
+        c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2)")
+        c.execute("CREATE TABLE Display (ItemID INTEGER PRIMARY KEY, nobody INTEGER DEFAULT 1)")
+        conn.commit()
+        logger.warning("Create Feeds.")
+    except OperationalError:
+        pass
+
+    try:
+        c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL)")
+        c.execute("CREATE TABLE Like (ItemID INTEGER PRIMARY KEY, nobody INTEGER DEFAULT 0)")
+        conn.commit()
+        logger.warning("Create Items.")
+    except OperationalError:
+        pass
+
+    try:
+        c.execute("CREATE TABLE Users (ItemID INTEGER PRIMARY KEY, User TINYTEXT NOT NULL UNIQUE)")
+        conn.commit()
+        logger.warning("Create Users.")
+    except OperationalError:
+        pass
 
     init_feeds()
     close_connection()
