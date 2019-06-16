@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import html
+
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
@@ -14,11 +16,10 @@ def build_feature(row):
         idx2 = title.find(">", idx1)
         title = title[:idx1] + title[idx2+1:]
         idx1 = title.find("<")
-    return title
+    return html.unescape(title)
 
 def handle_magic(qd):
     c = get_cursor()
-    lang = qd['lang']
     user = qd['user']
 
     clfs = dict()
@@ -48,7 +49,10 @@ def handle_magic(qd):
         targets += [1 for row_it in likes]
         targets += [-1 for row_it in dislikes]
 
-        clf = text_clf.fit(titles, targets)
+        try:
+            clf = text_clf.fit(titles, targets)
+        except ValueError:
+            continue
         clfs[lang_it] = clf
 
     return clfs
@@ -62,4 +66,14 @@ def handle_magic(qd):
     #print([int(100 * (it[1] - it[0])) / 100. for it in predicted_proba[len(likes):]])
 
 if __name__ == "__main__":
-    handle_magic({'page': 1})
+    clfs = handle_magic({'user': "hansolo", 'classifier': 'Logistic Regression'})
+    clf = clfs['English']
+    count_vect = clf.named_steps['vect']
+    tfidf_transformer = clf.named_steps['tfidf']
+    lr_clf = clf.named_steps['clf']
+    table = count_vect.vocabulary_.items()
+    coeffs = lr_clf.coef_[0] * tfidf_transformer.idf_
+    table = [row + (coeffs[row[1]], ) for row in table]
+    table = sorted(table, key=lambda row: row[2])
+    print("Least favorite:", [row[0] for row in table[:10]])
+    print("Most favorite:", [row[0] for row in table[:-10:-1]])

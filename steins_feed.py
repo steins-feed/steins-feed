@@ -150,11 +150,11 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         items = sorted(items, key=lambda item_it: item_it['Score'], reverse=True)
 
     for item_it in items:
-        s += "<h2><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{}\">{}</a></h2>\n".format(item_it['Link'], item_it['Title'])
+        s += "<h2><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{}\">{}</a></h2>\n".format(unescape(item_it['Link']), unescape(item_it['Title']))
         if len(scorer) != 0:
-            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(item_it['Source'], item_it['Published'], item_it['Score'])
+            s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(unescape(item_it['Source']), item_it['Published'], item_it['Score'])
         else:
-            s += "<p>Source: {}. Published: {}.</p>\n".format(item_it['Source'], item_it['Published'])
+            s += "<p>Source: {}. Published: {}.</p>\n".format(unescape(item_it['Source']), item_it['Published'])
         s += "{}".format(unescape(item_it['Summary']))
 
         s += "<p>\n"
