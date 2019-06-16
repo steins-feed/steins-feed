@@ -21,7 +21,11 @@ div.sidenav {
 	position:fixed;
 	top: 0;
 	left: 0;
-	background-color: grey;
+	background-color: lightgrey;
 	overflow-x: hidden;
-	transition: 1.0s;
+	transition: 0.5s;
+}
+
+p.sidenav {
+	white-space: nowrap;
 }
