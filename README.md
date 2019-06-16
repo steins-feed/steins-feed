@@ -53,6 +53,7 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 
 *   Bloomberg.
 *   Boston Globe.
+*   The Tab.
 *   The Telegraph.
 *   The Times.
 

@@ -2847,12 +2847,19 @@
         <lang>German</lang>
     </feed>
 
-    <!-- Blogs -->
+    <!-- Aggregators -->
     <feed>
-        <title>Andreessen Horowitz</title>
-        <link>https://a16z.com/articles/feed/</link>
+        <title>Hacker News</title>
+        <link>https://news.ycombinator.com/rss</link>
         <lang>English</lang>
     </feed>
+    <feed>
+        <title>Slashdot</title>
+        <link>http://rss.slashdot.org/Slashdot/slashdotMain</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- Blogs -->
     <feed>
         <title>John Carlos Baez</title>
         <link>https://johncarlosbaez.wordpress.com/feed/</link>
@@ -2894,6 +2901,13 @@
         <lang>English</lang>
     </feed>
 
+    <!-- Cambridge -->
+    <feed>
+        <title>Varsity</title>
+        <link>http://feeds.varsity.co.uk/varsity/rss</link>
+        <lang>English</lang>
+    </feed>
+
     <!-- Comics -->
     <feed>
         <title>Existential Comics</title>
@@ -2911,6 +2925,28 @@
         <lang>English</lang>
     </feed>
 
+    <!-- Companies -->
+    <feed>
+        <title>Andreessen Horowitz</title>
+        <link>https://a16z.com/articles/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Facebook</title>
+	<link>https://newsroom.fb.com/news/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Google</title>
+	<link>https://www.blog.google/rss/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>McKinsey Insights</title>
+        <link>https://www.mckinsey.com/Insights/rss.aspx</link>
+        <lang>English</lang>
+    </feed>
+
     <!-- Literature reviews -->
     <feed>
         <title>Five Books</title>
@@ -2920,6 +2956,11 @@
     <feed>
         <title>London Review of Books</title>
         <link>https://cdn.lrb.co.uk/feeds/lrb</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Longreads</title>
+        <link>https://longreads.com/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
@@ -2991,11 +3032,6 @@
 	<summary>0</summary>
     </feed>
     <feed>
-        <title>Hacker News</title>
-        <link>https://news.ycombinator.com/rss</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
         <title>Humble Bundle</title>
         <link>https://blog.humblebundle.com/rss</link>
         <lang>English</lang>
@@ -3008,11 +3044,6 @@
     <feed>
         <title>MangaStream</title>
         <link>https://readms.net/rss</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>McKinsey Insights</title>
-        <link>https://www.mckinsey.com/Insights/rss.aspx</link>
         <lang>English</lang>
     </feed>
     <feed>
