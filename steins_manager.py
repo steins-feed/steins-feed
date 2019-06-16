@@ -49,6 +49,15 @@ class SteinsHandler:
                 for node_it in image_nodes:
                     node_it.getparent().remove(node_it)
 
+            p_nodes = summary_tree.xpath("//" + "p")
+            for node_it in p_nodes:
+                if len(node_it) == 0:
+                    continue
+                if node_it[0].tag == "br":
+                    node_it.remove(node_it[0])
+                if node_it[-1].tag == "br":
+                    node_it.remove(node_it[-1])
+
             return html.tostring(summary_tree).decode('utf-8')
         except:
             get_logger().error("No summary for '{}'.".format(self.read_title(item_it)))
