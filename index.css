@@ -9,3 +9,19 @@ input.disliked {
 form.button {
 	display: inline-block;
 }
+
+span.sidenav {
+	cursor: pointer;
+}
+
+div.sidenav {
+	z-index: 1;
+	width: 0;
+	height: 100%;
+	position:fixed;
+	top: 0;
+	left: 0;
+	background-color: grey;
+	overflow-x: hidden;
+	transition: 1.0s;
+}

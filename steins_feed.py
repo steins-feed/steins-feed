@@ -54,14 +54,18 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     else:
         items = c.execute("SELECT Items.*, Like.{0}, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC".format(user), (lang, d_it)).fetchall()
 
-    s = ""
-    s += "<!DOCTYPE html>\n"
+    #--------------------------------------------------------------------------
+
+    # Preamble.
+    s = "<!DOCTYPE html>\n"
     s += "<html>\n"
     s += "<head>\n"
     s += "<meta charset=\"UTF-8\">\n"
     s += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n"
     s += "<link rel=\"stylesheet\" type=\"text/css\" href=\"/steins-feed/index.css\"/>\n"
     s += "<title>Stein's Feed</title>\n"
+
+    # Like button.
     s += "<script>\n"
     s += "function set_color_like(button_id) {\n"
     s += "    var stat_like = document.getElementById('like_' + button_id);\n"
@@ -74,6 +78,8 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "    stat_dislike.className = 'dislike';\n"
     s += "}\n"
     s += "</script>\n"
+
+    # Dislike button.
     s += "<script>\n"
     s += "function set_color_dislike(button_id) {\n"
     s += "    var stat_like = document.getElementById('like_' + button_id);\n"
@@ -86,17 +92,81 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "    stat_like.className = 'like';\n"
     s += "}\n"
     s += "</script>\n"
+
+    # Open menu.
+    s += "<script>\n"
+    s += "function open_menu() {\n"
+    s += "    var stat = document.getElementById('sidenav');\n"
+    s += "    stat.style.width = \"250px\";\n"
+    s += "}\n"
+    s += "</script>\n"
+
+    # Close menu.
+    s += "<script>\n"
+    s += "function close_menu() {\n"
+    s += "    var stat = document.getElementById('sidenav');\n"
+    s += "    stat.style.width = \"0\";\n"
+    s += "}\n"
+    s += "</script>\n"
+
     s += "</head>\n"
     s += "<body>\n"
 
+    #--------------------------------------------------------------------------
+
+    # Side navigation menu.
+    s += "<p><span class=\"sidenav\" onclick=\"open_menu()\">&#9776;</span></p>\n"
+    s += "<div id=\"sidenav\" class=\"sidenav\">\n"
+    s += "<p style=\"text-align:right\"><span class=\"sidenav\" onclick=\"close_menu()\">&times;</span></p>\n"
+
+    # Languages.
+    s += "Feeds\n"
+    s += "<ul>\n"
+    s += "<li><a href=\"/steins-feed/index.php?user={}\">International</a></li>\n".format(user)
     langs = c.execute("SELECT DISTINCT Language FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE {}=1".format(user)).fetchall()
-    s += "<p align=right>\n"
-    s += "<span style=\"float: left;\">[<a id=top href=#bottom>Bottom</a>]</span>\n"
-    s += "<a href=\"/steins-feed/index.php?user={}\">International</a>\n".format(user)
     for lang_it in langs:
-        s += "<a href=\"/steins-feed/index.php?lang={0}&user={1}\">{0}</a>\n".format(lang_it[0], user)
+        s += "<li><a href=\"/steins-feed/index.php?lang={0}&user={1}\">{0}</a></li>\n".format(lang_it[0], user)
+    s += "</ul>\n"
+
+    # Naive Bayes.
+    s += "<p>Naive Bayes:\n"
+    s += "<form class=\"button\">\n"
+    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
+    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
+    s += "<input type=\"hidden\" name=\"classifier\" value=\"Naive Bayes\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Magic\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Surprise\">\n"
+    s += "</form>\n"
     s += "</p>\n"
 
+    # Logistic Regression.
+    s += "<p>Logistic regression:\n"
+    s += "<form class=\"button\">\n"
+    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
+    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
+    s += "<input type=\"hidden\" name=\"classifier\" value=\"Logistic Regression\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Magic\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Surprise\">\n"
+    s += "</form>\n"
+    s += "</p>\n"
+
+    # Statistics.
+    s += "<p>\n"
+    s += "<a href=\"/steins-feed/statistics.php?user={}\">Statistics</a>\n".format(user)
+    s += "</p>\n"
+
+    # Settings.
+    s += "<p>\n"
+    s += "<a href=\"/steins-feed/settings.php?user={}\">Settings</a>\n".format(user)
+    s += "</p>\n"
+
+    s += "</div>\n"
+
+    #--------------------------------------------------------------------------
+
+    # Body.
     s += "<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
     if surprise > 0:
         s += "<p>{} out of {} articles. {} pages. Last updated: {}.</p>\n".format(surprise, len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated()))
@@ -191,38 +261,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         s += "</form>\n"
     s += "</p>\n"
 
-    s += "<p>\n"
-    s += "<a href=\"/steins-feed/settings.php?user={}\">Settings</a>\n".format(user)
-    s += "<a href=\"/steins-feed/statistics.php?user={}\">Statistics</a>\n".format(user)
-    s += "</p>\n"
-    s += "<hr>\n"
-
-    s += "<p>Naive Bayes:\n"
-    s += "<form class=\"button\">\n"
-    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
-    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-    s += "<input type=\"hidden\" name=\"classifier\" value=\"Naive Bayes\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Magic\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Surprise\">\n"
-    s += "</form>\n"
-    s += "</p>\n"
-
-    s += "<p>Logistic regression:\n"
-    s += "<form class=\"button\">\n"
-    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
-    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-    s += "<input type=\"hidden\" name=\"classifier\" value=\"Logistic Regression\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Magic\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Surprise\">\n"
-    s += "</form>\n"
-    s += "</p>\n"
-
     s += "<iframe name=\"foo\" style=\"display: none;\"></iframe>\n"
-    s += "<p align=right>\n"
-    s += "<span style=\"float: left;\">[<a id=bottom href=#top>Top</a>]</span>\n"
-    s += "</p>\n"
     s += "</body>\n"
     s += "</html>\n"
 
