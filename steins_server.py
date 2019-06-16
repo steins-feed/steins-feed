@@ -91,6 +91,7 @@ def handle_settings(qd):
     s += "<title>Settings</title>\n"
     s += "</head>\n"
     s += "<body>\n"
+    s += "<h1>{}</h1>\n".format(qd['user'])
 
     # Display feeds.
     s += "<form>\n"
@@ -151,6 +152,30 @@ def handle_settings(qd):
     s += "<form>\n"
     s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/export_config.php\" value=\"Export config\"></p>\n"
+    s += "</form>\n"
+    s += "<hr>\n"
+
+    # Add user.
+    s += "<form>\n"
+    s += "<p>Name:<br>\n"
+    s += "<input type=\"text\" name=\"name\"></p>\n"
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/add_user.php\" value=\"Add user\"></p>\n"
+    s += "</form>\n"
+    s += "<hr>\n"
+
+    # Rename user.
+    s += "<form>\n"
+    s += "<p>New name:<br>\n"
+    s += "<input type=\"text\" name=\"name\"></p>\n"
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/rename_user.php\" value=\"Rename user\"></p>\n"
+    s += "</form>\n"
+    s += "<hr>\n"
+
+    # Delete user.
+    s += "<form>\n"
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
+    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/delete_user.php\" value=\"Delete user\" style='background-color:red'></p>\n"
     s += "</form>\n"
 
     s += "</body>\n"
