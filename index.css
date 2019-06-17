@@ -24,16 +24,22 @@ div.topnav {
 	background-color: white;
 }
 
-p.topnav {
+div.topnav form {
 	display: inline-block;
 }
 
-span.topnav {
+div.topnav p {
+	display: inline-block;
+}
+
+div.topnav span.nav {
 	float: right;
 }
 
-form.topnav {
+div.topnav span.nav-scroll {
 	display: inline-block;
+	overflow-y: scroll;
+	visibility: hidden;
 }
 
 /* sidenav */
@@ -49,10 +55,14 @@ div.sidenav {
 	transition: 0.5s;
 }
 
-form.sidenav {
+div.sidenav form {
 	display: inline-block;
 }
 
-p.sidenav {
+div.sidenav p {
 	white-space: nowrap;
+}
+
+div.sidenav p.onclick {
+	text-align: right;
 }
