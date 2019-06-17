@@ -7,7 +7,7 @@ input.disliked {
 }
 
 div.main {
-	margin-top: 65px;
+	margin-top: 75px;
 }
 
 span.onclick {
@@ -18,7 +18,7 @@ span.onclick {
 div.topnav {
 	z-index: 1;
 	width: 100%;
-	height: 50px;
+	height: 60px;
 	position:fixed;
 	top: 0;
 	background-color: white;
@@ -28,7 +28,7 @@ div.topnav form {
 	display: inline-block;
 }
 
-div.topnav p {
+div.topnav p, div.topnav h2 {
 	display: inline-block;
 }
 
@@ -63,6 +63,6 @@ div.sidenav p {
 	white-space: nowrap;
 }
 
-div.sidenav p.onclick {
+div.sidenav p.onclick, div.sidenav h2.onclick {
 	text-align: right;
 }

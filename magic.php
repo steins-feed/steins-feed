@@ -1,12 +1,12 @@
 <?php
-if( !$_GET["user"] ) {
-    $_GET["user"] = "nobody";
-}
 if( !$_GET["page"] ) {
     $_GET["page"] = 0;
 }
 if( !$_GET["lang"] ) {
     $_GET["lang"] = "International";
+}
+if( !$_GET["user"] ) {
+    $_GET["user"] = "nobody";
 }
 $get_query = http_build_query($_GET);
 $python_cmd = <<<EOT

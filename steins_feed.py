@@ -117,27 +117,27 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     # Top navigation menu.
     s += "<div class=\"topnav\">\n"
 
-    s += "<p><span class=\"onclick\" onclick=\"open_menu()\">&#9776;</span></p>\n"
+    s += "<h2><span class=\"onclick\" onclick=\"open_menu()\">&#9776;</span> {}</h2>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
 
     # Navigation.
     s += "<span class=\"nav\">\n"
     if not page_no == 0:
         s += "<form>\n"
-        s += "<p>\n"
+        s += "<h2>\n"
         s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no-1)
         s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
         s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"&larr;\">\n"
-        s += "</p>\n"
+        s += "</h2>\n"
         s += "</form>\n"
     if not page_no == len(dates)-1:
         s += "<form>\n"
-        s += "<p>\n"
+        s += "<h2>\n"
         s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no+1)
         s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
         s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"&rarr;\">\n"
-        s += "</p>\n"
+        s += "</h2>\n"
         s += "</form>\n"
     s += "<span class=\"nav-scroll\"></span>"
     s += "</span>\n"
@@ -148,9 +148,10 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
 
     # Side navigation menu.
     s += "<div id=\"sidenav\" class=\"sidenav\">\n"
-    s += "<p class=\"onclick\"><span class=\"onclick\" onclick=\"close_menu()\">&times;</span></p>\n"
+    s += "<h2 class=\"onclick\"><span class=\"onclick\" onclick=\"close_menu()\">&times;</span></h2>\n"
 
     # Languages.
+    s += "<p>\n"
     s += "Feeds:\n"
     s += "<ul>\n"
     s += "<li><a href=\"/steins-feed/index.php?user={}\">International</a></li>\n".format(user)
@@ -158,6 +159,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     for lang_it in langs:
         s += "<li><a href=\"/steins-feed/index.php?lang={0}&user={1}\">{0}</a></li>\n".format(lang_it[0], user)
     s += "</ul>\n"
+    s += "</p>\n"
 
     # Naive Bayes.
     s += "<form>\n"
@@ -205,7 +207,6 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
 
     # Body.
     s += "<div class=\"main\">\n"
-    s += "<h1>{}</h1>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
     if surprise > 0:
         s += "<p>{} out of {} articles. {} pages. Last updated: {}.</p>\n".format(surprise, len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated()))
     else:
