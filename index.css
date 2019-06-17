@@ -20,10 +20,20 @@ span.onclick {
 div.topnav {
 	z-index: 1;
 	width: 100%;
-	height: 60px;
+	height: 75px;
 	position:fixed;
 	top: 0;
 	background-color: white;
+}
+
+div.topnav span.onclick {
+	float: right;
+}
+
+div.topnav span.scroll {
+	float: right;
+	overflow-y: scroll;
+	visibility: hidden;
 }
 
 /*****************************************************************************/
@@ -35,7 +45,7 @@ div.sidenav {
 	height: 100%;
 	position:fixed;
 	top: 0;
-	left: 0;
+	right: 0;
 	background-color: lightgrey;
 	overflow-x: hidden;
 	transition: 0.5s;
@@ -49,15 +59,12 @@ div.sidenav p, div.sidenav h1, div.sidenav h2 {
 	white-space: nowrap;
 }
 
-/*****************************************************************************/
-
-/* h2.sidenav */
-h2.sidenav form {
+h1.sidenav form, h2.sidenav form {
 	display: inline-block;
 	clear: below;
 }
 
-h2.sidenav span.onclick {
+h1.sidenav span.onclick, h2.sidenav span.onclick {
 	position: absolute;
 	right: 0;
 }

@@ -115,9 +115,11 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     #--------------------------------------------------------------------------
 
     # Top navigation menu.
-    s += "<div class=\"topnav\">\n"
-    s += "<h2><span class=\"onclick\" onclick=\"open_menu()\">&#9776;</span> {}</h2>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
-    s += "</div>\n"
+    s += "<div class=\"topnav\"><h1>\n"
+    s += "{}\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
+    s += "<span class=\"scroll\"></span>\n"
+    s += "<span class=\"onclick\" onclick=\"open_menu()\">&#9776;</span>\n"
+    s += "</h1></div>\n"
 
     #--------------------------------------------------------------------------
 
@@ -125,7 +127,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<div id=\"sidenav\" class=\"sidenav\">\n"
 
     # Navigation.
-    s += "<h2 class=\"sidenav\">\n"
+    s += "<h1 class=\"sidenav\">\n"
     if not page_no == 0:
         s += "<form>\n"
         s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no-1)
@@ -141,7 +143,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"&rarr;\">\n"
         s += "</form>\n"
     s += "<span class=\"onclick\" onclick=\"close_menu()\">&times;</span>\n"
-    s += "</h2>\n"
+    s += "</h1>\n"
 
     # Languages.
     s += "<p>\n"
