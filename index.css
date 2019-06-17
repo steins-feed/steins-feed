@@ -6,16 +6,39 @@ input.disliked {
 	background-color: red;
 }
 
-form.button {
-	display: inline-block;
+div.main {
+	margin-top: 65px;
 }
 
-span.sidenav {
+span.onclick {
 	cursor: pointer;
 }
 
-div.sidenav {
+/* topnav */
+div.topnav {
 	z-index: 1;
+	width: 100%;
+	height: 50px;
+	position:fixed;
+	top: 0;
+	background-color: white;
+}
+
+p.topnav {
+	display: inline-block;
+}
+
+span.topnav {
+	float: right;
+}
+
+form.topnav {
+	display: inline-block;
+}
+
+/* sidenav */
+div.sidenav {
+	z-index: 2;
 	width: 0;
 	height: 100%;
 	position:fixed;
@@ -24,6 +47,10 @@ div.sidenav {
 	background-color: lightgrey;
 	overflow-x: hidden;
 	transition: 0.5s;
+}
+
+form.sidenav {
+	display: inline-block;
 }
 
 p.sidenav {
