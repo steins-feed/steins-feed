@@ -116,39 +116,32 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
 
     # Top navigation menu.
     s += "<div class=\"topnav\">\n"
-
     s += "<h2><span class=\"onclick\" onclick=\"open_menu()\">&#9776;</span> {}</h2>\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
-
-    # Navigation.
-    s += "<span class=\"nav\">\n"
-    if not page_no == 0:
-        s += "<form>\n"
-        s += "<h2>\n"
-        s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no-1)
-        s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
-        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-        s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"&larr;\">\n"
-        s += "</h2>\n"
-        s += "</form>\n"
-    if not page_no == len(dates)-1:
-        s += "<form>\n"
-        s += "<h2>\n"
-        s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no+1)
-        s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
-        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-        s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"&rarr;\">\n"
-        s += "</h2>\n"
-        s += "</form>\n"
-    s += "<span class=\"nav-scroll\"></span>"
-    s += "</span>\n"
-
     s += "</div>\n"
 
     #--------------------------------------------------------------------------
 
     # Side navigation menu.
     s += "<div id=\"sidenav\" class=\"sidenav\">\n"
-    s += "<h2 class=\"onclick\"><span class=\"onclick\" onclick=\"close_menu()\">&times;</span></h2>\n"
+
+    # Navigation.
+    s += "<h2 class=\"sidenav\">\n"
+    if not page_no == 0:
+        s += "<form>\n"
+        s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no-1)
+        s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
+        s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"&larr;\">\n"
+        s += "</form>\n"
+    if not page_no == len(dates)-1:
+        s += "<form>\n"
+        s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no+1)
+        s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
+        s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"&rarr;\">\n"
+        s += "</form>\n"
+    s += "<span class=\"onclick\" onclick=\"close_menu()\">&times;</span>\n"
+    s += "</h2>\n"
 
     # Languages.
     s += "<p>\n"
@@ -174,8 +167,6 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "</p>\n"
     s += "</form>\n"
 
-    s += "<br>\n"
-
     # Logistic Regression.
     s += "<form>\n"
     s += "<p>Logistic regression:\n</p>"
@@ -191,15 +182,9 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
 
     s += "<hr>\n"
 
-    # Statistics.
-    s += "<p>\n"
-    s += "<a href=\"/steins-feed/statistics.php?user={}\">Statistics</a>\n".format(user)
-    s += "</p>\n"
-
-    # Settings.
-    s += "<p>\n"
-    s += "<a href=\"/steins-feed/settings.php?user={}\">Settings</a>\n".format(user)
-    s += "</p>\n"
+    # Statistics & Settings.
+    s += "<p><a href=\"/steins-feed/statistics.php?user={}\">Statistics</a></p>\n".format(user)
+    s += "<p><a href=\"/steins-feed/settings.php?user={}\">Settings</a></p>\n".format(user)
 
     s += "</div>\n"
 
@@ -248,10 +233,10 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
             s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(unescape(item_it['Source']), item_it['Published'], item_it['Score'])
         else:
             s += "<p>Source: {}. Published: {}.</p>\n".format(unescape(item_it['Source']), item_it['Published'])
-        s += "{}".format(unescape(item_it['Summary']))
+        s += "{}\n".format(unescape(item_it['Summary']))
 
-        s += "<p>\n"
         s += "<form target=\"foo\">\n"
+        s += "<p>\n"
         s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it['ItemID'])
         s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         s_temp = "<input id=\"like_{0}\" class=\"like\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" onclick=\"set_color_like({0})\">\n".format(item_it['ItemID'])
@@ -262,8 +247,8 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         if item_it['{}'.format(user)] == -1:
             s_temp = s_temp.replace("class=\"dislike\"", "class=\"disliked\"")
         s += s_temp
-        s += "</form>\n"
         s += "</p>\n"
+        s += "</form>\n"
         s += "<hr>\n"
 
     s += "<iframe name=\"foo\" style=\"display: none;\"></iframe>\n"

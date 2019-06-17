@@ -14,7 +14,9 @@ span.onclick {
 	cursor: pointer;
 }
 
-/* topnav */
+/*****************************************************************************/
+
+/* div.topnav */
 div.topnav {
 	z-index: 1;
 	width: 100%;
@@ -24,25 +26,9 @@ div.topnav {
 	background-color: white;
 }
 
-div.topnav form {
-	display: inline-block;
-}
+/*****************************************************************************/
 
-div.topnav p, div.topnav h2 {
-	display: inline-block;
-}
-
-div.topnav span.nav {
-	float: right;
-}
-
-div.topnav span.nav-scroll {
-	display: inline-block;
-	overflow-y: scroll;
-	visibility: hidden;
-}
-
-/* sidenav */
+/* div.sidenav */
 div.sidenav {
 	z-index: 2;
 	width: 0;
@@ -55,14 +41,23 @@ div.sidenav {
 	transition: 0.5s;
 }
 
-div.sidenav form {
+div.sidenav input {
 	display: inline-block;
 }
 
-div.sidenav p {
+div.sidenav p, div.sidenav h1, div.sidenav h2 {
 	white-space: nowrap;
 }
 
-div.sidenav p.onclick, div.sidenav h2.onclick {
-	text-align: right;
+/*****************************************************************************/
+
+/* h2.sidenav */
+h2.sidenav form {
+	display: inline-block;
+	clear: below;
+}
+
+h2.sidenav span.onclick {
+	position: absolute;
+	right: 0;
 }
