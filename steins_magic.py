@@ -9,6 +9,9 @@ from sklearn.pipeline import Pipeline
 
 from steins_sql import get_cursor
 
+def unescape(s):
+    return html.unescape(html.unescape(s))
+
 def build_feature(row):
     title = row['Title'] + " " + row['Summary']
     idx1 = title.find("<")
@@ -16,7 +19,7 @@ def build_feature(row):
         idx2 = title.find(">", idx1)
         title = title[:idx1] + title[idx2+1:]
         idx1 = title.find("<")
-    return html.unescape(title)
+    return unescape(title)
 
 def handle_magic(qd):
     c = get_cursor()

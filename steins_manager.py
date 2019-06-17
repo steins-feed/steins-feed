@@ -4,7 +4,7 @@ import feedparser
 import time
 
 from lxml import html
-from lxml.etree import ParserError
+from lxml.etree import ParserError, strip_elements, strip_tags
 
 from steins_log import get_logger
 from steins_sql import get_cursor
@@ -40,28 +40,33 @@ class SteinsHandler:
     def read_summary(self, item_it):
         try:
             summary_tree = html.fromstring(item_it['summary'])
+        except ParserError:
+            summary = "<p>" + item_it['summary'] + "</p>"
+            summary_tree = html.fromstring(summary)
 
-            tags = ["img", "iframe"]
-            for tag_it in tags:
-                if summary_tree.tag == tag_it:
-                    return ""
-                image_nodes = summary_tree.xpath("//" + tag_it)
-                for node_it in image_nodes:
-                    node_it.getparent().remove(node_it)
+        # Remove.
+        tags = ["img", "iframe"]
+        for tag_it in tags:
+            strip_elements(summary_tree, tag_it)
 
-            p_nodes = summary_tree.xpath("//" + "p")
-            for node_it in p_nodes:
-                if len(node_it) == 0:
-                    continue
-                if node_it[0].tag == "br":
-                    node_it.remove(node_it[0])
-                if node_it[-1].tag == "br":
-                    node_it.remove(node_it[-1])
+        # Remove leading and trailing <br>.
+        p_nodes = summary_tree.xpath("//" + "p")
+        for node_it in p_nodes:
+            if len(node_it) == 0:
+                continue
+            if node_it[0].tag == "br":
+                node_it.remove(node_it[0])
+            if len(node_it) == 0:
+                continue
+            if node_it[-1].tag == "br":
+                node_it.remove(node_it[-1])
 
-            return html.tostring(summary_tree).decode('utf-8')
-        except:
-            get_logger().error("No summary for '{}'.".format(self.read_title(item_it)))
-            return ""
+        # Strip.
+        tags = ["strong"]
+        for tag_it in tags:
+            strip_tags(summary_tree, tag_it)
+
+        return html.tostring(summary_tree).decode('utf-8')
 
     def read_time(self, item_it):
         try:
@@ -86,17 +91,19 @@ class SteinsHandler:
 
 class AbstractHandler(SteinsHandler):
     def read_summary(self, item_it):
-        try:
-            summary_tree = html.fromstring(item_it['summary'])
-            p_nodes = summary_tree.xpath("//p")
-            return html.tostring(p_nodes[0]).decode('utf-8')
-        except:
+        summary = super().read_summary(item_it)
+        summary_tree = html.fromstring(summary)
+
+        p_nodes = summary_tree.xpath("//p")
+        if len(p_nodes) == 0:
             get_logger().error("No summary for '{}'.".format(self.read_title(item_it)))
-            return ""
+            return "<p></p>"
+
+        return html.tostring(p_nodes[0]).decode('utf-8')
 
 class NoAbstractHandler(SteinsHandler):
     def read_summary(self, item_it):
-        return ""
+        return "<p></p>"
 
 class AtlanticHandler(SteinsHandler):
     def parse(self, feed_link):
@@ -109,13 +116,15 @@ class AtlanticHandler(SteinsHandler):
 
 class BusinessInsiderHandler(SteinsHandler):
     def read_summary(self, item_it):
-        try:
-            summary_tree = html.fromstring(item_it['summary'])
-            p_nodes = summary_tree.xpath("//ul[@class='summary-list']")
-            return html.tostring(p_nodes[0]).decode('utf-8')
-        except:
+        summary = super().read_summary(item_it)
+        summary_tree = html.fromstring(summary)
+
+        p_nodes = summary_tree.xpath("//ul[@class='summary-list']")
+        if len(p_nodes) == 0:
             get_logger().error("No summary for '{}'.".format(self.read_title(item_it)))
-            return ""
+            return "<p></p>"
+
+        return html.tostring(p_nodes[0]).decode('utf-8')
 
 class GatesHandler(SteinsHandler):
     def read_time(self, item_it):

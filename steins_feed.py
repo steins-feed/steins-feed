@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
+from html import unescape
 import os
 import time
-from xml.sax.saxutils import unescape
 
 import numpy as np
 import numpy.random as random
