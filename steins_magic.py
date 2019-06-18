@@ -2,6 +2,8 @@
 
 import html
 
+import numpy as np
+
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
@@ -172,35 +174,22 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<div class=\"main\">\n"
     s += "<hr>\n"
 
-    tables = dict()
     langs = scorer.keys()
 
+    #--------------------------------------------------------------------------
+
+    tables = dict()
     for lang_it in langs:
         pipeline = scorer[lang_it]
         count_vect = pipeline.named_steps['vect']
 
         table = list(count_vect.vocabulary_.keys())
         coeffs = pipeline.predict_log_proba(table)
-        table = [(table[i], coeffs[i, 0], ) for i in range(len(table))]
+        table = [(table[i], coeffs[i, 1], ) for i in range(len(table))]
         tables[lang_it] = sorted(table, key=lambda row: row[1])
 
     # Most favorite words.
     s += "<h2>Most favorite words</h2>\n"
-    s += "<table>\n"
-    s += "<tr>"
-    for lang_it in langs:
-        s += "<th>{}</th>".format(lang_it)
-    s += "</tr>\n"
-    s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
-    for i in range(10):
-        s += "<tr>"
-        for lang_it in langs:
-            s += "<td>{}</td>".format(tables[lang_it][i][0])
-        s += "</tr>\n"
-    s += "</table>\n"
-
-    # Most favorite words.
-    s += "<h2>Least favorite words</h2>\n"
     s += "<table>\n"
     s += "<tr>"
     for lang_it in langs:
@@ -214,7 +203,75 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         s += "</tr>\n"
     s += "</table>\n"
 
+    # Least favorite words.
+    s += "<h2>Least favorite words</h2>\n"
+    s += "<table>\n"
+    s += "<tr>"
+    for lang_it in langs:
+        s += "<th>{}</th>".format(lang_it)
+    s += "</tr>\n"
+    s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
+    for i in range(10):
+        s += "<tr>"
+        for lang_it in langs:
+            s += "<td>{}</td>".format(tables[lang_it][i][0])
+        s += "</tr>\n"
+    s += "</table>\n"
+
     s += "<hr>"
+
+    #--------------------------------------------------------------------------
+
+    tables = dict()
+    for lang_it in langs:
+        pipeline = scorer[lang_it]
+        count_vect = pipeline.named_steps['vect']
+
+        feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE Language=? AND Display.{}=1".format(user), (lang_it, )).fetchall()]
+        coeffs = []
+        for title_it in feeds:
+            articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? ORDER BY Published DESC LIMIT 100", (title_it, )).fetchall()]
+            if len(articles) == 0:
+                coeffs.append(0.)
+                continue
+            articles_proba = pipeline.predict_proba(articles)
+            articles_proba = np.log(articles_proba / (1. - articles_proba))
+            coeff = np.sum(articles_proba[:, 1]) / (articles_proba.shape[0] + 10.)
+            coeffs.append(coeff)
+        table = [(feeds[i], coeffs[i], ) for i in range(len(feeds))]
+        tables[lang_it] = sorted(table, key=lambda row: row[1])
+
+    # Most favorite feeds.
+    s += "<h2>Most favorite feeds</h2>\n"
+    s += "<table>\n"
+    s += "<tr>"
+    for lang_it in langs:
+        s += "<th>{}</th>".format(lang_it)
+    s += "</tr>\n"
+    s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
+    for i in reversed(range(-10, 0)):
+        s += "<tr>"
+        for lang_it in langs:
+            s += "<td>{} ({:.2f})</td>".format(tables[lang_it][i][0], tables[lang_it][i][1])
+        s += "</tr>\n"
+    s += "</table>\n"
+
+    # Least favorite feeds.
+    s += "<h2>Least favorite feeds</h2>\n"
+    s += "<table>\n"
+    s += "<tr>"
+    for lang_it in langs:
+        s += "<th>{}</th>".format(lang_it)
+    s += "</tr>\n"
+    s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
+    for i in range(10):
+        s += "<tr>"
+        for lang_it in langs:
+            s += "<td>{} ({:.2f})</td>".format(tables[lang_it][i][0], tables[lang_it][i][1])
+        s += "</tr>\n"
+    s += "</table>\n"
+
+    #--------------------------------------------------------------------------
 
     s += "</div>\n"
     s += "</body>\n"
