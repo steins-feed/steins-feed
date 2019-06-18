@@ -184,7 +184,8 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         count_vect = pipeline.named_steps['vect']
 
         table = list(count_vect.vocabulary_.keys())
-        coeffs = pipeline.predict_log_proba(table)
+        coeffs = pipeline.predict_proba(table)
+        coeffs = 2. * coeffs - 1.
         table = [(table[i], coeffs[i, 1], ) for i in range(len(table))]
         tables[lang_it] = sorted(table, key=lambda row: row[1])
 
@@ -199,7 +200,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     for i in reversed(range(-10, 0)):
         s += "<tr>"
         for lang_it in langs:
-            s += "<td>{}</td>".format(tables[lang_it][i][0])
+            s += "<td>{} ({:.2f})</td>".format(tables[lang_it][i][0], tables[lang_it][i][1])
         s += "</tr>\n"
     s += "</table>\n"
 
@@ -214,7 +215,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     for i in range(10):
         s += "<tr>"
         for lang_it in langs:
-            s += "<td>{}</td>".format(tables[lang_it][i][0])
+            s += "<td>{} ({:.2f})</td>".format(tables[lang_it][i][0], tables[lang_it][i][1])
         s += "</tr>\n"
     s += "</table>\n"
 
@@ -237,6 +238,8 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
             articles_proba = pipeline.predict_proba(articles)
             articles_proba = np.log(articles_proba / (1. - articles_proba))
             coeff = np.sum(articles_proba[:, 1]) / (articles_proba.shape[0] + 10.)
+            coeff = np.exp(coeff)
+            coeff = 2. * coeff / (1. + coeff) - 1.
             coeffs.append(coeff)
         table = [(feeds[i], coeffs[i], ) for i in range(len(feeds))]
         tables[lang_it] = sorted(table, key=lambda row: row[1])
@@ -249,7 +252,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         s += "<th>{}</th>".format(lang_it)
     s += "</tr>\n"
     s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
-    for i in reversed(range(-10, 0)):
+    for i in reversed(range(-5, 0)):
         s += "<tr>"
         for lang_it in langs:
             s += "<td>{} ({:.2f})</td>".format(tables[lang_it][i][0], tables[lang_it][i][1])
@@ -264,7 +267,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         s += "<th>{}</th>".format(lang_it)
     s += "</tr>\n"
     s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
-    for i in range(10):
+    for i in range(5):
         s += "<tr>"
         for lang_it in langs:
             s += "<td>{} ({:.2f})</td>".format(tables[lang_it][i][0], tables[lang_it][i][1])
