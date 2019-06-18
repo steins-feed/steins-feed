@@ -8,6 +8,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
+from sklearn.svm import SVC
 
 from steins_sql import get_cursor
 
@@ -38,6 +39,10 @@ def handle_magic(qd):
             clf = ('clf', MultinomialNB())
         elif qd['classifier'] == 'Logistic Regression':
             clf = ('clf', LogisticRegression())
+        elif qd['classifier'] == 'SVM':
+            clf = ('clf', SVC(probability=True))
+        elif qd['classifier'] == 'Linear SVM':
+            clf = ('clf', SVC(kernel='linear', probability=True))
         else:
             raise KeyError
         text_clf = Pipeline([count_vect, tfidf_transformer, clf])
@@ -154,6 +159,34 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
     s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
     s += "<input type=\"hidden\" name=\"classifier\" value=\"Logistic Regression\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Magic\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Surprise\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" name=\"submit\" value=\"Analysis\">\n"
+    s += "</p>\n"
+    s += "</form>\n"
+
+    # SVM.
+    s += "<form>\n"
+    s += "<p>SVM:\n</p>"
+    s += "<p>\n"
+    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
+    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
+    s += "<input type=\"hidden\" name=\"classifier\" value=\"SVM\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Magic\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Surprise\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" name=\"submit\" value=\"Analysis\">\n"
+    s += "</p>\n"
+    s += "</form>\n"
+
+    # Linear SVM.
+    s += "<form>\n"
+    s += "<p>Linear SVM:\n</p>"
+    s += "<p>\n"
+    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
+    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
+    s += "<input type=\"hidden\" name=\"classifier\" value=\"Linear SVM\">\n"
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Magic\">\n"
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Surprise\">\n"
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" name=\"submit\" value=\"Analysis\">\n"

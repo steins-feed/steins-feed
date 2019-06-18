@@ -184,6 +184,34 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "</p>\n"
     s += "</form>\n"
 
+    # SVM.
+    s += "<form>\n"
+    s += "<p>SVM:\n</p>"
+    s += "<p>\n"
+    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
+    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
+    s += "<input type=\"hidden\" name=\"classifier\" value=\"SVM\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Magic\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Surprise\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" name=\"submit\" value=\"Analysis\">\n"
+    s += "</p>\n"
+    s += "</form>\n"
+
+    # Linear SVM.
+    s += "<form>\n"
+    s += "<p>Linear SVM:\n</p>"
+    s += "<p>\n"
+    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
+    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
+    s += "<input type=\"hidden\" name=\"classifier\" value=\"Linear SVM\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Magic\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Surprise\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" name=\"submit\" value=\"Analysis\">\n"
+    s += "</p>\n"
+    s += "</form>\n"
+
     s += "<hr>\n"
 
     # Statistics & Settings.
