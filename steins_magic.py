@@ -172,35 +172,49 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<div class=\"main\">\n"
     s += "<hr>\n"
 
+    tables = dict()
     langs = scorer.keys()
-    for lang_it in langs:
-        s += "<h2>{}</h2>\n".format(lang_it)
 
+    for lang_it in langs:
         pipeline = scorer[lang_it]
         count_vect = pipeline.named_steps['vect']
-        tfidf_transformer = pipeline.named_steps['tfidf']
-        clf = pipeline.named_steps['clf']
 
-        #table = count_vect.vocabulary_.items()
-        #coeffs = clf.coef_[0] * tfidf_transformer.idf_
-        #table = [(row[0], coeffs[row[1]], ) for row in table]
-        #table = sorted(table, key=lambda row: row[2])
         table = list(count_vect.vocabulary_.keys())
         coeffs = pipeline.predict_log_proba(table)
-        table = [(table[ct], coeffs[ct, 0], ) for ct in range(len(table))]
-        table = sorted(table, key=lambda row: row[1])
+        table = [(table[i], coeffs[i, 0], ) for i in range(len(table))]
+        tables[lang_it] = sorted(table, key=lambda row: row[1])
 
-        # Least favorite words.
-        s += "<ol>\n"
-        for row in table[:10]:
-            s += "<li>{}</li>\n".format(row[0])
-        s += "</ol>\n"
+    # Most favorite words.
+    s += "<h2>Most favorite words</h2>\n"
+    s += "<table>\n"
+    s += "<tr>"
+    for lang_it in langs:
+        s += "<th>{}</th>".format(lang_it)
+    s += "</tr>\n"
+    s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
+    for i in range(10):
+        s += "<tr>"
+        for lang_it in langs:
+            s += "<td>{}</td>".format(tables[lang_it][i][0])
+        s += "</tr>\n"
+    s += "</table>\n"
 
-        # Most favorite words.
-        s += "<ol>\n"
-        for row in reversed(table[-10:]):
-            s += "<li>{}</li>\n".format(row[0])
-        s += "</ol>\n"
+    # Most favorite words.
+    s += "<h2>Least favorite words</h2>\n"
+    s += "<table>\n"
+    s += "<tr>"
+    for lang_it in langs:
+        s += "<th>{}</th>".format(lang_it)
+    s += "</tr>\n"
+    s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
+    for i in reversed(range(-10, 0)):
+        s += "<tr>"
+        for lang_it in langs:
+            s += "<td>{}</td>".format(tables[lang_it][i][0])
+        s += "</tr>\n"
+    s += "</table>\n"
+
+    s += "<hr>"
 
     s += "</div>\n"
     s += "</body>\n"
