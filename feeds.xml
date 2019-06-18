@@ -234,38 +234,6 @@
         <summary>0</summary>
     </feed>
 
-    <!-- Business Insider -->
-    <feed>
-        <title>Business Insider Tech</title>
-        <link>https://www.businessinsider.com/sai/rss</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>Business Insider Finance</title>
-        <link>https://www.businessinsider.com/clusterstuck/rss</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>Business Insider Politics</title>
-        <link>https://www.businessinsider.com/politics/rss</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>Business Insider Strategy</title>
-        <link>https://www.businessinsider.com/warroom/rss</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>Business Insider Life</title>
-        <link>https://www.businessinsider.com/thelife/rss</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>Business Insider</title>
-        <link>https://www.businessinsider.com/rss?r=US&amp;IR=T</link>
-        <lang>English</lang>
-    </feed>
-
     <!-- Capital.de -->
     <feed>
         <title>Capital.de Geld &amp; Versicherungen</title>
