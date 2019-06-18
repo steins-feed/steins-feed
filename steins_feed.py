@@ -97,7 +97,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<script>\n"
     s += "function open_menu() {\n"
     s += "    var stat = document.getElementById('sidenav');\n"
-    s += "    stat.style.width = \"200px\";\n"
+    s += "    stat.style.width = \"250px\";\n"
     s += "}\n"
     s += "</script>\n"
 
@@ -166,6 +166,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<input type=\"hidden\" name=\"classifier\" value=\"Naive Bayes\">\n"
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Magic\">\n"
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Surprise\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" name=\"submit\" value=\"Analysis\">\n"
     s += "</p>\n"
     s += "</form>\n"
 
@@ -179,6 +180,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<input type=\"hidden\" name=\"classifier\" value=\"Logistic Regression\">\n"
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Magic\">\n"
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/magic.php\" name=\"submit\" value=\"Surprise\">\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" name=\"submit\" value=\"Analysis\">\n"
     s += "</p>\n"
     s += "</form>\n"
 

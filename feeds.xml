@@ -237,32 +237,32 @@
     <!-- Business Insider -->
     <feed>
         <title>Business Insider Tech</title>
-	<link>https://www.businessinsider.com/sai/rss</link>
+        <link>https://www.businessinsider.com/sai/rss</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>Business Insider Finance</title>
-	<link>https://www.businessinsider.com/clusterstuck/rss</link>
+        <link>https://www.businessinsider.com/clusterstuck/rss</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>Business Insider Politics</title>
-	<link>https://www.businessinsider.com/politics/rss</link>
+        <link>https://www.businessinsider.com/politics/rss</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>Business Insider Strategy</title>
-	<link>https://www.businessinsider.com/warroom/rss</link>
+        <link>https://www.businessinsider.com/warroom/rss</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>Business Insider Life</title>
-	<link>https://www.businessinsider.com/thelife/rss</link>
+        <link>https://www.businessinsider.com/thelife/rss</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>Business Insider</title>
-	<link>https://www.businessinsider.com/rss?r=US&amp;IR=T</link>
+        <link>https://www.businessinsider.com/rss?r=US&amp;IR=T</link>
         <lang>English</lang>
     </feed>
 
@@ -2933,12 +2933,12 @@
     </feed>
     <feed>
         <title>Facebook</title>
-	<link>https://newsroom.fb.com/news/feed</link>
+        <link>https://newsroom.fb.com/news/feed</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>Google</title>
-	<link>https://www.blog.google/rss/</link>
+        <link>https://www.blog.google/rss/</link>
         <lang>English</lang>
     </feed>
     <feed>
@@ -3004,13 +3004,13 @@
         <title>The New Republic</title>
         <link>https://www.newrepublic.com/rss.xml</link>
         <lang>English</lang>
-	<summary>0</summary>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>New Statesman</title>
         <link>https://www.newstatesman.com/feeds/site_feed.rss</link>
         <lang>English</lang>
-	<summary>1</summary>
+        <summary>1</summary>
     </feed>
     <feed>
         <title>Vanity Fair</title>
@@ -3029,7 +3029,7 @@
         <title>Factorio</title>
         <link>https://factorio.com/blog/rss</link>
         <lang>English</lang>
-	<summary>0</summary>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>Humble Bundle</title>
@@ -3065,7 +3065,7 @@
     <!-- Podcasts -->
     <feed>
         <title>Nature Podcast</title>
-	<link>http://rss.acast.com/nature</link>
+        <link>http://rss.acast.com/nature</link>
         <lang>English</lang>
     </feed>
     <feed>
@@ -3075,7 +3075,7 @@
     </feed>
     <feed>
         <title>Science Podcast</title>
-	<link>https://www.sciencemag.org/rss/podcast.xml</link>
+        <link>https://www.sciencemag.org/rss/podcast.xml</link>
         <lang>English</lang>
     </feed>
     <feed>
@@ -3146,53 +3146,58 @@
         <title>The Ringer NBA</title>
         <link>https://www.theringer.com/rss/nba/index.xml</link>
         <lang>English</lang>
-	<summary>1</summary>
+        <summary>1</summary>
     </feed>
 
     <!-- Technology -->
     <feed>
         <title>CNET</title>
-	<link>https://www.cnet.com/rss/news/</link>
+        <link>https://www.cnet.com/rss/news/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>Digital Trends</title>
-	<link>https://www.digitaltrends.com/feed/</link>
+        <link>https://www.digitaltrends.com/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>Engadget</title>
-	<link>https://www.engadget.com/rss.xml</link>
+        <link>https://www.engadget.com/rss.xml</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>Gigaom</title>
-	<link>https://gigaom.com/feed/</link>
+        <link>https://gigaom.com/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>Gizmodo</title>
-	<link>https://gizmodo.com/rss</link>
+        <link>https://gizmodo.com/rss</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>Mashable</title>
-	<link>http://feeds.mashable.com/Mashable</link>
+        <link>http://feeds.mashable.com/Mashable</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>TechCrunch</title>
-	<link>https://techcrunch.com/feed/</link>
+        <link>https://techcrunch.com/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>TechRadar</title>
-	<link>https://www.techradar.com/rss</link>
+        <link>https://www.techradar.com/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat</title>
+        <link>https://venturebeat.com/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>ZDNet</title>
-	<link>https://www.zdnet.com/news/rss.xml</link>
+        <link>https://www.zdnet.com/news/rss.xml</link>
         <lang>English</lang>
     </feed>
 </root>
