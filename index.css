@@ -55,7 +55,7 @@ div.sidenav input {
 	display: inline-block;
 }
 
-div.sidenav p, div.sidenav h1, div.sidenav h2 {
+div.sidenav form, div.sidenav p, div.sidenav h1, div.sidenav h2 {
 	white-space: nowrap;
 }
 

@@ -85,74 +85,36 @@ def select_lang(feed_id=None, selected='English'):
     return s
 
 def side_nav(page_no, lang, user, scorer, surprise):
-    s = ""
+    s = "<form>\n"
     c = get_cursor()
 
-    # Languages.
-    s += "<p>\n"
-    s += "Feeds:\n"
-    s += "<ul>\n"
-    s += "<li><a href=\"/steins-feed/index.php?user={}\">International</a></li>\n".format(user)
-    langs = c.execute("SELECT DISTINCT Language FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE {}=1".format(user)).fetchall()
+    # Language.
+    s += "<p>Language:</p>\n"
+    langs = ["International"]
+    langs += [e[0] for e in c.execute("SELECT DISTINCT Language FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE {}=1".format(user)).fetchall()]
     for lang_it in langs:
-        s += "<li><a href=\"/steins-feed/index.php?lang={0}&user={1}\">{0}</a></li>\n".format(lang_it[0], user)
-    s += "</ul>\n"
-    s += "</p>\n"
+        t = "<input type=\"radio\" name=\"lang\" value=\"{0}\">{0}<br>\n".format(lang_it)
+        if lang_it == lang:
+            idx = t.find(">")
+            t = t[:idx] + " checked" + t[idx:]
+        s += t
 
-    # Naive Bayes.
-    s += "<form>\n"
-    s += "<p>Naive Bayes:</p>\n"
-    s += "<p>\n"
+    # Feed.
+    s += "<p>Feed:</p>\n"
+    for feed_it in ["Full", "Magic", "Surprise"]:
+        s += "<input type=\"radio\" name=\"submit\" value=\"{0}\">{0}<br>\n".format(feed_it)
+
+    # Algorithm.
+    s += "<p>Algorithm:</p>\n"
+    for ml_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
+        s += "<input type=\"radio\" name=\"classifier\" value=\"{0}\">{0}<br>\n".format(ml_it)
+
+    # Button.
+    s += "<p>"
     s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
-    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
     s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-    s += "<input type=\"hidden\" name=\"classifier\" value=\"Naive Bayes\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" name=\"submit\" value=\"Magic\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" name=\"submit\" value=\"Surprise\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" name=\"submit\" value=\"Analysis\">\n"
-    s += "</p>\n"
-    s += "</form>\n"
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Display\">\n"
+    s += "</p>"
 
-    # Logistic Regression.
-    s += "<form>\n"
-    s += "<p>Logistic regression:\n</p>"
-    s += "<p>\n"
-    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
-    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-    s += "<input type=\"hidden\" name=\"classifier\" value=\"Logistic Regression\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" name=\"submit\" value=\"Magic\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" name=\"submit\" value=\"Surprise\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" name=\"submit\" value=\"Analysis\">\n"
-    s += "</p>\n"
-    s += "</form>\n"
-
-    # SVM.
-    s += "<form>\n"
-    s += "<p>SVM:\n</p>"
-    s += "<p>\n"
-    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
-    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-    s += "<input type=\"hidden\" name=\"classifier\" value=\"SVM\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" name=\"submit\" value=\"Magic\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" name=\"submit\" value=\"Surprise\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" name=\"submit\" value=\"Analysis\">\n"
-    s += "</p>\n"
-    s += "</form>\n"
-
-    # Linear SVM.
-    s += "<form>\n"
-    s += "<p>Linear SVM:\n</p>"
-    s += "<p>\n"
-    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
-    s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-    s += "<input type=\"hidden\" name=\"classifier\" value=\"Linear SVM\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" name=\"submit\" value=\"Magic\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" name=\"submit\" value=\"Surprise\">\n"
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" name=\"submit\" value=\"Analysis\">\n"
-    s += "</p>\n"
-    s += "</form>\n"
-
+    s += "</form>"
     return s
