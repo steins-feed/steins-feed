@@ -25,9 +25,8 @@ def build_feature(row):
         idx1 = title.find("<")
     return unescape(title)
 
-def handle_magic(qd):
+def steins_learn(user, classifier):
     c = get_cursor()
-    user = qd['user']
 
     clfs = dict()
     langs = [e[0] for e in c.execute("SELECT DISTINCT Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}!=0".format(user)).fetchall()]
@@ -36,13 +35,13 @@ def handle_magic(qd):
         # Build pipeline.
         count_vect = ('vect', CountVectorizer())
         tfidf_transformer = ('tfidf', TfidfTransformer())
-        if qd['classifier'] == 'Naive Bayes':
+        if classifier == 'Naive Bayes':
             clf = ('clf', MultinomialNB())
-        elif qd['classifier'] == 'Logistic Regression':
+        elif classifier == 'Logistic Regression':
             clf = ('clf', LogisticRegression())
-        elif qd['classifier'] == 'SVM':
+        elif classifier == 'SVM':
             clf = ('clf', SVC(probability=True))
-        elif qd['classifier'] == 'Linear SVM':
+        elif classifier == 'Linear SVM':
             clf = ('clf', SVC(kernel='linear', probability=True))
         else:
             raise KeyError
@@ -76,9 +75,9 @@ def handle_magic(qd):
     #print([int(100 * (it[1] - it[0])) / 100. for it in predicted_proba[:len(likes)]])
     #print([int(100 * (it[1] - it[0])) / 100. for it in predicted_proba[len(likes):]])
 
-def steins_generate_page(page_no="0", lang="International", user="nobody", scorer=[], surprise=-1):
+def steins_generate_page(user="nobody", clf="Naive Bayes"):
     c = get_cursor()
-    page_no = int(page_no)
+    scorers = steins_learn(user, clf)
 
     # Preamble.
     s = "<!DOCTYPE html>\n"
@@ -127,7 +126,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<span class=\"onclick\" onclick=\"close_menu()\">&times;</span>\n"
     s += "</h1>\n"
 
-    s += side_nav(page_no, lang, user, scorer, surprise)
+    s += side_nav(user=user, clf=clf)
 
     s += "<hr>\n"
 
@@ -143,13 +142,13 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<div class=\"main\">\n"
     s += "<hr>\n"
 
-    langs = scorer.keys()
+    langs = scorers.keys()
 
     #--------------------------------------------------------------------------
 
     tables = dict()
     for lang_it in langs:
-        pipeline = scorer[lang_it]
+        pipeline = scorers[lang_it]
         count_vect = pipeline.named_steps['vect']
 
         table = list(count_vect.vocabulary_.keys())
@@ -194,7 +193,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
 
     tables = dict()
     for lang_it in langs:
-        pipeline = scorer[lang_it]
+        pipeline = scorers[lang_it]
         count_vect = pipeline.named_steps['vect']
 
         feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE Language=? AND Display.{}=1".format(user), (lang_it, )).fetchall()]
@@ -253,7 +252,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
 
 def handle_analysis(qd):
     clfs = handle_magic(qd)
-    print(steins_generate_page(user=qd['user'], scorer=clfs))
+    print(steins_generate_page(qd['user'], clfs))
 
 if __name__ == "__main__":
     clfs = handle_magic({'user': "hansolo", 'classifier': "Logistic Regression"})

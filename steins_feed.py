@@ -9,7 +9,7 @@ import numpy.random as random
 
 from steins_html import side_nav
 from steins_log import get_logger
-from steins_magic import build_feature
+from steins_magic import build_feature, steins_learn
 from steins_manager import get_handler
 from steins_sql import add_item, get_cursor, last_updated
 
@@ -39,9 +39,14 @@ def steins_read(title_pattern=""):
 
             add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
 
-def steins_generate_page(page_no="0", lang="International", user="nobody", scorer=[], surprise=-1):
+def steins_generate_page(user="nobody", lang="International", page_no=0, feed="Full", clf="Naive Bayes"):
     c = get_cursor()
-    page_no = int(page_no)
+    scorers = []
+    if not feed == "Full":
+        scorers = steins_learn(user, clf)
+    surprise = -1
+    if feed == "Surprise":
+        surprise = 10
 
     if lang == "International":
         dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) ORDER BY Published DESC".format(user)).fetchall()
@@ -145,7 +150,7 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
     s += "<span class=\"onclick\" onclick=\"close_menu()\">&times;</span>\n"
     s += "</h1>\n"
 
-    s += side_nav(page_no, lang, user, scorer, surprise)
+    s += side_nav(user, lang, page_no, feed, clf)
 
     s += "<hr>\n"
 
@@ -165,13 +170,13 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         s += "<p>{} articles. {} pages. Last updated: {}.</p>\n".format(len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated()))
     s += "<hr>\n"
 
-    if len(scorer) != 0:
+    if len(scorers) != 0:
         scores = np.zeros(len(items))
         langs = set([e['Language'] for e in items])
 
         for lang_it in langs:
             try:
-                clf = scorer[lang_it]
+                clf = scorers[lang_it]
             except KeyError:
                 continue
 
@@ -191,12 +196,12 @@ def steins_generate_page(page_no="0", lang="International", user="nobody", score
         probs /= np.sum(probs)
         sample = random.choice(scores.size, surprise, False, probs)
         items = [items[cnt] for cnt in sample]
-    elif len(scorer) != 0:
+    elif len(scorers) != 0:
         items = sorted(items, key=lambda item_it: item_it['Score'], reverse=True)
 
     for item_it in items:
         s += "<h2><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{}\">{}</a></h2>\n".format(unescape(item_it['Link']), unescape(item_it['Title']))
-        if len(scorer) != 0:
+        if len(scorers) != 0:
             s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(unescape(item_it['Source']), item_it['Published'], item_it['Score'])
         else:
             s += "<p>Source: {}. Published: {}.</p>\n".format(unescape(item_it['Source']), item_it['Published'])
@@ -232,7 +237,7 @@ def steins_write():
     dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items ORDER BY Published DESC").fetchall()
     for d_ctr in range(len(dates)):
         with open(dir_name+os.sep+"steins-{}.html".format(d_ctr), 'w') as f:
-            f.write(steins_generate_page(d_ctr))
+            f.write(steins_generate_page(page=d_ctr))
 
 def steins_update(title_pattern="", read_mode=True, write_mode=False):
     if read_mode:

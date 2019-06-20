@@ -84,7 +84,7 @@ def select_lang(feed_id=None, selected='English'):
 
     return s
 
-def side_nav(page_no, lang, user, scorer, surprise):
+def side_nav(user="nobody", lang="International", page_no=0, feed="Full", clf="Naive Bayes"):
     s = "<form>\n"
     c = get_cursor()
 
@@ -102,12 +102,20 @@ def side_nav(page_no, lang, user, scorer, surprise):
     # Feed.
     s += "<p>Feed:</p>\n"
     for feed_it in ["Full", "Magic", "Surprise"]:
-        s += "<input type=\"radio\" name=\"submit\" value=\"{0}\">{0}<br>\n".format(feed_it)
+        t = "<input type=\"radio\" name=\"feed\" value=\"{0}\">{0}<br>\n".format(feed_it)
+        if feed_it == feed:
+            idx = t.find(">")
+            t = t[:idx] + " checked" + t[idx:]
+        s += t
 
     # Algorithm.
     s += "<p>Algorithm:</p>\n"
-    for ml_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
-        s += "<input type=\"radio\" name=\"classifier\" value=\"{0}\">{0}<br>\n".format(ml_it)
+    for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
+        t = "<input type=\"radio\" name=\"clf\" value=\"{0}\">{0}<br>\n".format(clf_it)
+        if clf_it == clf:
+            idx = t.find(">")
+            t = t[:idx] + " checked" + t[idx:]
+        s += t
 
     # Button.
     s += "<p>"

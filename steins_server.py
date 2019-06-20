@@ -9,15 +9,12 @@ from xml.sax.saxutils import escape
 
 from steins_feed import steins_generate_page
 from steins_html import select_lang
-from steins_magic import handle_magic
+from steins_magic import steins_learn
 from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
 PORT = 8000
-
-def handle_page(qd={'page': "0", 'lang': "International", 'user': "nobody"}):
-    return steins_generate_page(qd['page'], qd['lang'], qd['user'])
 
 def handle_like(qd):
     conn = get_connection()
@@ -183,7 +180,7 @@ def handle_settings(qd):
 
     return s
 
-def handle_statistics(qd):
+def handle_statistics(user):
     c = get_cursor()
 
     s = ""
@@ -198,7 +195,7 @@ def handle_statistics(qd):
     s += "<body>\n"
 
     # Likes.
-    likes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=1 ORDER BY Published DESC".format(qd['user'], qd['user'])).fetchall()
+    likes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=1 ORDER BY Published DESC".format(user, user)).fetchall()
 
     s += "<h2>Likes</h2>\n"
     s += "<p>{} likes.</p>\n".format(len(likes))
@@ -211,7 +208,7 @@ def handle_statistics(qd):
     s += "<hr>\n"
 
     # Dislikes.
-    dislikes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=-1 ORDER BY Published DESC".format(qd['user'], qd['user'])).fetchall()
+    dislikes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=-1 ORDER BY Published DESC".format(user, user)).fetchall()
 
     s += "<h2>Dislikes</h2>\n"
     s += "<p>{} dislikes.</p>\n".format(len(dislikes))
@@ -245,7 +242,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
-            s = handle_page(qd)
+            s = steins_generate_page(qd['user'], qd['lang'], qd['page'])
             self.wfile.write(s.encode('utf-8'))
         elif self.path == "/favicon.ico":
             # Write header.
