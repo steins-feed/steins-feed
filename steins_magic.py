@@ -128,12 +128,6 @@ def steins_generate_page(user="nobody", clf="Naive Bayes"):
 
     s += side_nav(user=user, clf=clf)
 
-    s += "<hr>\n"
-
-    # Statistics & Settings.
-    s += "<p><a href=\"/steins-feed/statistics.php?user={}\">Statistics</a></p>\n".format(user)
-    s += "<p><a href=\"/steins-feed/settings.php?user={}\">Settings</a></p>\n".format(user)
-
     s += "</div>\n"
 
     #--------------------------------------------------------------------------
@@ -251,11 +245,10 @@ def steins_generate_page(user="nobody", clf="Naive Bayes"):
     return s
 
 def handle_analysis(qd):
-    clfs = handle_magic(qd)
-    print(steins_generate_page(qd['user'], clfs))
+    print(steins_generate_page(qd['user'], qd['clf']))
 
 if __name__ == "__main__":
-    clfs = handle_magic({'user': "hansolo", 'classifier': "Logistic Regression"})
+    clfs = steins_learn("hansolo", "Logistic Regression")
     clf = clfs['English']
     count_vect = clf.named_steps['vect']
     tfidf_transformer = clf.named_steps['tfidf']

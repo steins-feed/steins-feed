@@ -132,6 +132,7 @@ def steins_generate_page(user="nobody", lang="International", page_no=0, feed="F
     # Side navigation menu.
     s += "<div id=\"sidenav\" class=\"sidenav\">\n"
 
+    # Navigation.
     s += "<h1 class=\"sidenav\">\n"
     if not page_no == 0:
         s += "<form>\n"
@@ -151,12 +152,6 @@ def steins_generate_page(user="nobody", lang="International", page_no=0, feed="F
     s += "</h1>\n"
 
     s += side_nav(user, lang, page_no, feed, clf)
-
-    s += "<hr>\n"
-
-    # Statistics & Settings.
-    s += "<p><a href=\"/steins-feed/statistics.php?user={}\">Statistics</a></p>\n".format(user)
-    s += "<p><a href=\"/steins-feed/settings.php?user={}\">Settings</a></p>\n".format(user)
 
     s += "</div>\n"
 
@@ -207,20 +202,26 @@ def steins_generate_page(user="nobody", lang="International", page_no=0, feed="F
             s += "<p>Source: {}. Published: {}.</p>\n".format(unescape(item_it['Source']), item_it['Published'])
         s += "{}\n".format(unescape(item_it['Summary']))
 
-        s += "<form target=\"foo\">\n"
         s += "<p>\n"
+        s += "<form target=\"foo\">\n"
         s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it['ItemID'])
         s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         s_temp = "<input id=\"like_{0}\" class=\"like\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Like\" onclick=\"set_color_like({0})\">\n".format(item_it['ItemID'])
         if item_it['{}'.format(user)] == 1:
             s_temp = s_temp.replace("class=\"like\"", "class=\"liked\"")
         s += s_temp
+        s += "</form>\n"
+
+        s += "<form target=\"foo\">\n"
+        s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it['ItemID'])
+        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
         s_temp = "<input id=\"dislike_{0}\" class=\"dislike\" type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/like.php\" name=\"submit\" value=\"Dislike\" onclick=\"set_color_dislike({0})\">\n".format(item_it['ItemID'])
         if item_it['{}'.format(user)] == -1:
             s_temp = s_temp.replace("class=\"dislike\"", "class=\"disliked\"")
         s += s_temp
-        s += "</p>\n"
         s += "</form>\n"
+        s += "</p>\n"
+
         s += "<hr>\n"
 
     s += "<iframe name=\"foo\" style=\"display: none;\"></iframe>\n"

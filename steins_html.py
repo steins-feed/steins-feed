@@ -118,11 +118,34 @@ def side_nav(user="nobody", lang="International", page_no=0, feed="Full", clf="N
         s += t
 
     # Button.
-    s += "<p>"
+    s += "<p>\n"
     s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
     s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
     s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Display\">\n"
-    s += "</p>"
+    s += "</p>\n"
 
-    s += "</form>"
+    s += "</form>\n"
+
+    s += "<hr>\n"
+
+    # Report.
+    s += "<form><p>\n"
+    s += "<select name=\"clf\">\n"
+    for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
+        t = "<option value=\"{0}\">{0}</option>\n".format(clf_it)
+        if clf_it == clf:
+            idx = t.find(">")
+            t = t[:idx] + " selected" + t[idx:]
+        s += t
+    s += "</select>\n"
+    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
+    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" value=\"Report\">\n"
+    s += "</p></form>\n"
+
+    s += "<hr>\n"
+
+    # Statistics & Settings.
+    s += "<p><a href=\"/steins-feed/statistics.php?user={}\">Statistics</a></p>\n".format(user)
+    s += "<p><a href=\"/steins-feed/settings.php?user={}\">Settings</a></p>\n".format(user)
+
     return s

@@ -10,6 +10,10 @@ div.main {
 	margin-top: 75px;
 }
 
+div.main form {
+	display: inline-block;
+}
+
 span.onclick {
 	cursor: pointer;
 }
