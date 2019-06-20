@@ -48,6 +48,7 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 
 *   Financial Times.
 *   The Wall Street Journal.
+*   Die WELT.
 
 ## No RSS.
 

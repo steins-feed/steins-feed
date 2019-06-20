@@ -62,7 +62,7 @@ class SteinsHandler:
                 node_it.remove(node_it[-1])
 
         # Strip.
-        tags = ["strong"]
+        tags = ["strong", "hr"]
         for tag_it in tags:
             strip_tags(summary_tree, tag_it)
 

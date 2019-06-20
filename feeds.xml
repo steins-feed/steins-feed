@@ -2908,6 +2908,7 @@
         <title>Google</title>
         <link>https://www.blog.google/rss/</link>
         <lang>English</lang>
+        <summary>0</summary>
     </feed>
     <feed>
         <title>McKinsey Insights</title>
@@ -2959,6 +2960,11 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>The Hill</title>
+        <link>http://thehill.com/rss/syndicator/19110</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>Inc.com</title>
         <link>https://www.inc.com/rss</link>
         <lang>English</lang>
@@ -2979,6 +2985,11 @@
         <link>https://www.newstatesman.com/feeds/site_feed.rss</link>
         <lang>English</lang>
         <summary>1</summary>
+    </feed>
+    <feed>
+        <title>Politico</title>
+        <link>https://www.politico.com/rss/politicopicks.xml</link>
+        <lang>English</lang>
     </feed>
     <feed>
         <title>Vanity Fair</title>
@@ -3050,6 +3061,11 @@
         <title>Slate Money</title>
         <link>http://feeds.megaphone.fm/slatemoney</link>
         <lang>English</lang>
+    </feed>
+    <feed>
+        <title>t3n Podcast</title>
+        <link>http://feeds.soundcloud.com/users/soundcloud:users:213461595/sounds.rss</link>
+        <lang>German</lang>
     </feed>
 
     <!-- Science -->
