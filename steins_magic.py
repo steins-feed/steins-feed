@@ -247,6 +247,77 @@ def steins_generate_page(user="nobody", clf="Naive Bayes"):
 def handle_analysis(qd):
     print(steins_generate_page(qd['user'], qd['clf']))
 
+def handle_highlight(qd):
+    c = get_cursor()
+    scorers = steins_learn(qd['user'], "Naive Bayes")
+
+    item_it = c.execute("SELECT Items.*, Feeds.Language FROM Items INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Items.ItemID=?", (qd['id'], )).fetchone()
+    title = item_it['Title']
+    summary = item_it['Summary']
+
+    pipeline = scorers[item_it['Language']]
+    count_vect = pipeline.named_steps['vect']
+    analyzer = count_vect.build_analyzer()
+    preprocessor = count_vect.build_preprocessor()
+    tokenizer = count_vect.build_tokenizer()
+
+    table = list(count_vect.vocabulary_.keys())
+    coeffs = pipeline.predict_proba(table)
+    coeffs = 2. * coeffs - 1.
+    table = dict([(table[i], coeffs[i, 1], ) for i in range(len(table))])
+
+    coeffs_sort = sorted(coeffs[:, 1])
+    coeff_dislike = coeffs_sort[20]
+    coeff_like = coeffs_sort[-20]
+
+    new_title = ""
+    idx_left = 0
+    while True:
+        idx_right = title.find("<", idx_left)
+        section = title[idx_left:idx_right]
+        if idx_right == -1:
+            section = title[idx_left:]
+
+        for token_it in set(tokenizer(section)):
+            try:
+                coeff = table[preprocessor(token_it)]
+            except KeyError:
+                continue
+            if coeff < coeff_dislike or coeff >= coeff_like:
+                section = section.replace(token_it, "<mark>{}</mark>".format(token_it))
+        new_title += section
+
+        if idx_right == -1:
+            break
+        else:
+            idx_left = title.find(">", idx_right) + 1
+            new_title += title[idx_right:idx_left]
+
+    new_summary = ""
+    idx_left = 0
+    while True:
+        idx_right = summary.find("<", idx_left)
+        section = summary[idx_left:idx_right]
+        if idx_right == -1:
+            section = summary[idx_left:]
+
+        for token_it in set(tokenizer(section)):
+            try:
+                coeff = table[preprocessor(token_it)]
+            except KeyError:
+                continue
+            if coeff < coeff_dislike or coeff >= coeff_like:
+                section = section.replace(token_it, "<mark>{}</mark>".format(token_it))
+        new_summary += section
+
+        if idx_right == -1:
+            break
+        else:
+            idx_left = summary.find(">", idx_right) + 1
+            new_summary += summary[idx_right:idx_left]
+
+    return new_title + chr(0) + new_summary
+
 if __name__ == "__main__":
     clfs = steins_learn("hansolo", "Logistic Regression")
     clf = clfs['English']

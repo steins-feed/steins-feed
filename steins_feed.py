@@ -99,6 +99,29 @@ def steins_generate_page(user="nobody", lang="International", page_no=0, feed="F
     s += "}\n"
     s += "</script>\n"
 
+    # Highlight button.
+    s += "<script>\n"
+    s += "function highlight(user, button_id) {\n"
+    s += "    var xmlhttp = new XMLHttpRequest();\n"
+    s += "    xmlhttp.onreadystatechange = function() {\n"
+    s += "        if (this.readyState == 4 && this.status == 200) {\n"
+    #s += "            var summary = document.getElementById('summary_' + button_id);\n"
+    #s += "            summary.innerHTML = this.responseText;\n"
+    s += "            var resp = this.responseText;\n"
+    s += "            var resp_len = resp.length;\n"
+    s += "            var resp_idx = resp.indexOf(String.fromCharCode(0));\n"
+    s += "            var title = document.getElementById('title_' + button_id);\n"
+    s += "            title.innerHTML = resp.substring(0, resp_idx);\n"
+    s += "            var summary = document.getElementById('summary_' + button_id);\n"
+    s += "            summary.innerHTML = resp.substring(resp_idx+1, resp_len);\n"
+    s += "        }\n"
+    s += "    };\n"
+    s += "    xmlhttp.open(\"POST\", \"/steins-feed/highlight.php\", true);\n"
+    s += "    xmlhttp.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");\n"
+    s += "    xmlhttp.send(\"user=\" + user + \"&id=\" + button_id);\n"
+    s += "}\n"
+    s += "</script>\n"
+
     # Open menu.
     s += "<script>\n"
     s += "function open_menu() {\n"
@@ -195,14 +218,17 @@ def steins_generate_page(user="nobody", lang="International", page_no=0, feed="F
         items = sorted(items, key=lambda item_it: item_it['Score'], reverse=True)
 
     for item_it in items:
-        s += "<h2><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{}\">{}</a></h2>\n".format(unescape(item_it['Link']), unescape(item_it['Title']))
+        s += "<h2><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{}\"><span id=\"title_{}\">{}</span></a></h2>\n".format(unescape(item_it['Link']), item_it['ItemID'], unescape(item_it['Title']))
         if len(scorers) != 0:
             s += "<p>Source: {}. Published: {}. Score: {:.2f}.</p>\n".format(unescape(item_it['Source']), item_it['Published'], item_it['Score'])
         else:
             s += "<p>Source: {}. Published: {}.</p>\n".format(unescape(item_it['Source']), item_it['Published'])
+        s += "<div id=\"summary_{}\">\n".format(item_it['ItemID'])
         s += "{}\n".format(unescape(item_it['Summary']))
+        s += "</div>\n"
 
         s += "<p>\n"
+
         s += "<form target=\"foo\">\n"
         s += "<input type=\"hidden\" name=\"id\" value=\"{}\">\n".format(item_it['ItemID'])
         s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
@@ -220,11 +246,17 @@ def steins_generate_page(user="nobody", lang="International", page_no=0, feed="F
             s_temp = s_temp.replace("class=\"dislike\"", "class=\"disliked\"")
         s += s_temp
         s += "</form>\n"
+
+        s += "<form target=\"foo\">\n"
+        s += "<input type=\"submit\" value=\"Highlight\" onclick=\"highlight('{}', {})\">\n".format(user, item_it['ItemID'])
+        s += "</form>\n"
+
         s += "</p>\n"
 
         s += "<hr>\n"
 
     s += "<iframe name=\"foo\" style=\"display: none;\"></iframe>\n"
+
     s += "</div>\n"
     s += "</body>\n"
     s += "</html>\n"
