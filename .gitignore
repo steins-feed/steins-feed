@@ -6,6 +6,7 @@ steins.db-journal
 steins-*.html
 steins.log
 steins_feed.log
+steins_magic.log
 tmp_feeds.xml
 __pycache__/
 *.pickle

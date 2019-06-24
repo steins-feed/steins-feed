@@ -82,8 +82,11 @@ def steins_learn(user, classifier):
     #print([int(100 * (it[1] - it[0])) / 100. for it in predicted_proba[len(likes):]])
 
 def handle_analysis(user="nobody", clf="Naive Bayes"):
-    c = get_cursor()
-    clfs = steins_learn(user, clf)
+    user_path = dir_path + os.sep + user
+    clf_path = user_path + os.sep + clf
+    with open(clf_path + os.sep + "clfs.pickle", 'rb') as f:
+        clfs = pickle.load(f)
+    langs = clfs.keys()
 
     #--------------------------------------------------------------------------
 
@@ -112,20 +115,12 @@ def handle_analysis(user="nobody", clf="Naive Bayes"):
     body.append(div_it)
     div_it.append(E.HR())
 
-    langs = clfs.keys()
-
     #--------------------------------------------------------------------------
 
     tables = dict()
     for lang_it in langs:
-        pipeline = clfs[lang_it]
-        count_vect = pipeline.named_steps['vect']
-
-        table = list(count_vect.vocabulary_.keys())
-        coeffs = pipeline.predict_proba(table)
-        coeffs = 2. * coeffs - 1.
-        table = [(table[i], coeffs[i, 1], ) for i in range(len(table))]
-        tables[lang_it] = sorted(table, key=lambda row: row[1])
+        with open(clf_path + os.sep + "{}.pickle".format(lang_it), 'rb') as f:
+            tables[lang_it] = pickle.load(f)
 
     # Most favorite words.
     h_it = E.H2()
@@ -187,24 +182,8 @@ def handle_analysis(user="nobody", clf="Naive Bayes"):
 
     tables = dict()
     for lang_it in langs:
-        pipeline = clfs[lang_it]
-        count_vect = pipeline.named_steps['vect']
-
-        feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE Language=? AND Display.{}=1".format(user), (lang_it, )).fetchall()]
-        coeffs = []
-        for title_it in feeds:
-            articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? ORDER BY Published DESC LIMIT 100", (title_it, )).fetchall()]
-            if len(articles) == 0:
-                coeffs.append(0.)
-                continue
-            articles_proba = pipeline.predict_proba(articles)
-            articles_proba = np.log(articles_proba / (1. - articles_proba))
-            coeff = np.sum(articles_proba[:, 1]) / (articles_proba.shape[0] + 10.)
-            coeff = np.exp(coeff)
-            coeff = 2. * coeff / (1. + coeff) - 1.
-            coeffs.append(coeff)
-        table = [(feeds[i], coeffs[i], ) for i in range(len(feeds))]
-        tables[lang_it] = sorted(table, key=lambda row: row[1])
+        with open(clf_path + os.sep + "{}_feeds.pickle".format(lang_it), 'rb') as f:
+            tables[lang_it] = pickle.load(f)
 
     # Most favorite feeds.
     h_it = E.H2()

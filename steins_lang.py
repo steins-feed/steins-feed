@@ -59,7 +59,7 @@ lang_list = [
     "Slovenian",
     "Spanish",
     "Swahili",
-    "Swedish ",
+    "Swedish",
     "Tamil",
     "Tatar",
     "Telugu",

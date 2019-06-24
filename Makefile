@@ -17,6 +17,7 @@ clean:
 	-rm tmp_feeds.xml
 	-rm -r __pycache__/
 	-rm *.pyc
+	-find . -name "*.pickle" -print0 | xargs -0 rm
 
 .PHONY: distclean
 distclean:
@@ -27,3 +28,4 @@ distclean:
 	-rm steins.db-journal
 	-rm steins.log
 	-rm steins_feed.log
+	-rm steins_magic.log
