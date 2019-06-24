@@ -932,6 +932,33 @@
         <lang>English</lang>
     </feed>
 
+    <!-- Handelsblatt -->
+    <feed>
+        <title>Handelsblatt Politik</title>
+        <link>http://www.handelsblatt.com/contentexport/feed/politik</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Handelsblatt Unternehmen</title>
+        <link>http://www.handelsblatt.com/contentexport/feed/unternehmen</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Handelsblatt Technologie</title>
+        <link>http://www.handelsblatt.com/contentexport/feed/technologie</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Handelsblatt Finanzen</title>
+        <link>http://www.handelsblatt.com/contentexport/feed/finanzen</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Handelsblatt</title>
+        <link>http://www.handelsblatt.com/contentexport/feed/schlagzeilen</link>
+        <lang>German</lang>
+    </feed>
+
     <!-- Heise -->
     <feed>
         <title>Heise Autos</title>
@@ -2746,6 +2773,38 @@
         <title>WIRED</title>
         <link>https://www.wired.com/feed/rss</link>
         <lang>English</lang>
+    </feed>
+
+    <!-- WirtschaftsWoche -->
+    <feed>
+        <title>WirtschaftsWoche Unternehmen</title>
+        <link>https://www.wiwo.de/contentexport/feed/rss/unternehmen</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>WirtschaftsWoche Finanzen</title>
+        <link>https://www.wiwo.de/contentexport/feed/rss/finanzen</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>WirtschaftsWoche Erfolg</title>
+        <link>https://www.wiwo.de/contentexport/feed/rss/erfolg</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>WirtschaftsWoche Politik</title>
+        <link>https://www.wiwo.de/contentexport/feed/rss/politik</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>WirtschaftsWoche Technologie</title>
+        <link>https://www.wiwo.de/contentexport/feed/rss/technologie</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>WirtschaftsWoche</title>
+        <link>https://www.wiwo.de/contentexport/feed/rss/schlagzeilen</link>
+        <lang>German</lang>
     </feed>
 
     <!-- Die ZEIT -->
