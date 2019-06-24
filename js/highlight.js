@@ -1,4 +1,4 @@
-function highlight(user, button_id) {
+function highlight(button_id) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -15,5 +15,5 @@ function highlight(user, button_id) {
     };
     xmlhttp.open("POST", "/steins-feed/highlight.php", true);
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xmlhttp.send("user=" + user + "&id=" + button_id);
+    xmlhttp.send("user=" + USER + "&id=" + button_id);
 }

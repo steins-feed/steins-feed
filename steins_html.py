@@ -183,9 +183,9 @@ def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='N
 
     return tree
 
-def feed_node(user, item_id, score=None):
+def feed_node(user, item_id, like=0, score=None):
     c = get_cursor()
-    item_it = c.execute("SELECT *, Like.{} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE Items.ItemID=?".format(user), (item_id, )).fetchone()
+    item_it = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
 
     tree = E.DIV()
 
@@ -215,10 +215,10 @@ def feed_node(user, item_id, score=None):
     form_it.append(input_it)
     input_it = E.INPUT(type='hidden', name="user", value=user)
     form_it.append(input_it)
-    if item_it['{}'.format(user)] == 1:
-        input_it = E.INPUT(E.CLASS("liked"), type='submit', id="like_{0}".format(item_it['ItemID']), name="submit", value="Like", onclick="set_color_like({})".format(item_it['ItemID']))
+    if like == 1:
+        input_it = E.INPUT(E.CLASS("liked"), type='submit', id="like_{}".format(item_it['ItemID']), name="submit", value="Like", onclick="set_color_like({})".format(item_it['ItemID']))
     else:
-        input_it = E.INPUT(E.CLASS("like"), type='submit', id="like_{0}".format(item_it['ItemID']), name="submit", value="Like", onclick="set_color_like({})".format(item_it['ItemID']))
+        input_it = E.INPUT(E.CLASS("like"), type='submit', id="like_{}".format(item_it['ItemID']), name="submit", value="Like", onclick="set_color_like({})".format(item_it['ItemID']))
     form_it.append(input_it)
     p_it.append(form_it)
 
@@ -227,17 +227,16 @@ def feed_node(user, item_id, score=None):
     form_it.append(input_it)
     input_it = E.INPUT(type='hidden', name="user", value=user)
     form_it.append(input_it)
-    if item_it['{}'.format(user)] == 1:
-        input_it = E.INPUT(E.CLASS("disliked"), type='submit', id="dislike_{0}".format(item_it['ItemID']), name="submit", value="Dislike", onclick="set_color_dislike({})".format(item_it['ItemID']))
+    if like == -1:
+        input_it = E.INPUT(E.CLASS("disliked"), type='submit', id="dislike_{}".format(item_it['ItemID']), name="submit", value="Dislike", onclick="set_color_dislike({})".format(item_it['ItemID']))
     else:
-        input_it = E.INPUT(E.CLASS("dislike"), type='submit', id="dislike_{0}".format(item_it['ItemID']), name="submit", value="Dislike", onclick="set_color_dislike({})".format(item_it['ItemID']))
+        input_it = E.INPUT(E.CLASS("dislike"), type='submit', id="dislike_{}".format(item_it['ItemID']), name="submit", value="Dislike", onclick="set_color_dislike({})".format(item_it['ItemID']))
     form_it.append(input_it)
     p_it.append(form_it)
 
-    form_it = E.FORM(target="foo")
-    input_it = E.INPUT(type="submit", value="Highlight", onclick="highlight('{}', {})".format(user, item_it['ItemID']))
-    form_it.append(input_it)
-    p_it.append(form_it)
+    input_it = E.BUTTON(onclick="highlight({})".format(item_it['ItemID']))
+    input_it.text = "Highlight"
+    p_it.append(input_it)
 
     tree.append(p_it)
     return tree
