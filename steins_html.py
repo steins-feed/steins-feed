@@ -20,6 +20,19 @@ def select_lang(feed_id=None, selected='English'):
 
     return tree
 
+def top_nav(title):
+    tree = E.DIV(E.CLASS("topnav"))
+    h_it = E.H1()
+    h_it.text = title
+    span_it = E.SPAN(E.CLASS("scroll"))
+    h_it.append(span_it)
+    span_it = E.SPAN(E.CLASS("onclick"), onclick="open_menu()")
+    span_it.text = unescape("&#9776;")
+    h_it.append(span_it)
+    tree.append(h_it)
+
+    return tree
+
 def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='Naive Bayes', dates=[]):
     tree = E.DIV(E.CLASS("sidenav"), id="sidenav")
     c = get_cursor()

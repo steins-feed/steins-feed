@@ -8,7 +8,7 @@ import time
 import numpy as np
 import numpy.random as random
 
-from steins_html import side_nav
+from steins_html import side_nav, top_nav
 from steins_log import get_logger
 from steins_magic import build_feature, steins_learn
 from steins_manager import get_handler
@@ -144,16 +144,8 @@ def steins_generate_page(user="nobody", lang="International", page_no=0, feed="F
 
     #--------------------------------------------------------------------------
 
-    # Top navigation menu.
-    s += "<div class=\"topnav\"><h1>\n"
-    s += "{}\n".format(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))
-    s += "<span class=\"scroll\"></span>\n"
-    s += "<span class=\"onclick\" onclick=\"open_menu()\">&#9776;</span>\n"
-    s += "</h1></div>\n"
-
-    #--------------------------------------------------------------------------
-
-    # Side navigation menu.
+    # Top & side navigation menus.
+    s += html.tostring(top_nav(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d")))).decode('utf-8')
     s += html.tostring(side_nav(user, lang, page_no, feed, clf, dates)).decode('utf-8')
 
     #--------------------------------------------------------------------------

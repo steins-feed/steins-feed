@@ -11,7 +11,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 
-from steins_html import side_nav
+from steins_html import side_nav, top_nav
 from steins_sql import get_cursor
 
 def unescape(s):
@@ -111,15 +111,7 @@ def steins_generate_page(user="nobody", clf="Naive Bayes"):
     #--------------------------------------------------------------------------
 
     # Top navigation menu.
-    s += "<div class=\"topnav\"><h1>\n"
-    s += "{}\n".format(user)
-    s += "<span class=\"scroll\"></span>\n"
-    s += "<span class=\"onclick\" onclick=\"open_menu()\">&#9776;</span>\n"
-    s += "</h1></div>\n"
-
-    #--------------------------------------------------------------------------
-
-    # Side navigation menu.
+    s += lxml.html.tostring(top_nav(user)).decode('utf-8')
     s += lxml.html.tostring(side_nav(user=user, clf=clf)).decode('utf-8')
 
     #--------------------------------------------------------------------------
