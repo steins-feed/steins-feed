@@ -4,6 +4,7 @@ import os
 import time
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from lxml import html
 from urllib.parse import urlsplit, parse_qsl
 from xml.sax.saxutils import escape
 
@@ -97,7 +98,7 @@ def handle_settings(qd):
             s += "<input type=\"checkbox\" name=\"{}\"><a href={}>{}</a>\n".format(feed_it['ItemID'], feed_it['Link'], feed_it['Title'])
         else:
             s += "<input type=\"checkbox\" name=\"{}\" checked><a href={}>{}</a>\n".format(feed_it['ItemID'], feed_it['Link'], feed_it['Title'])
-        s += "{}\n".format(select_lang(feed_it['ItemID'], feed_it['Language']))
+        s += html.tostring(select_lang(feed_it['ItemID'], feed_it['Language'])).decode('utf-8')
         s += "<br>\n"
     s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
     s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/display_feeds.php\" value=\"Display feeds\"></p>\n"
@@ -115,7 +116,7 @@ def handle_settings(qd):
     s += "<input type=\"radio\" name=\"disp\" value=0> No\n"
     s += "</p>\n"
     s += "<p>Language:<br>\n"
-    s += "{}\n".format(select_lang())
+    s += html.tostring(select_lang()).decode('utf-8')
     s += "<p>Summary:<br>\n"
     s += "<input type=\"radio\" name=\"summary\" value=0> No abstract.\n"
     s += "<input type=\"radio\" name=\"summary\" value=1> First paragraph.\n"
