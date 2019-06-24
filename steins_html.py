@@ -1,10 +1,31 @@
 #!/usr/bin/env python3
 
 from html import unescape
+from lxml import html
 from lxml.html import builder as E
 
 from steins_lang import lang_list
 from steins_sql import get_cursor
+
+def preamble(title):
+    tree = E.HTML()
+
+    head = E.HEAD()
+    meta_it = E.META(charset="UTF-8")
+    head.append(meta_it)
+    meta_it = E.META(name="viewport", content="width=device-width, initial-scale=1.0")
+    head.append(meta_it)
+    link_it = E.LINK(rel="stylesheet", type="text/css", href="/steins-feed/index.css")
+    head.append(link_it)
+    title_it = E.TITLE()
+    title_it.text = title
+    head.append(title_it)
+
+    body = E.BODY()
+
+    tree.append(head)
+    tree.append(body)
+    return tree, head, body
 
 def select_lang(feed_id=None, selected='English'):
     tree = E.SELECT(name="lang")
@@ -160,4 +181,63 @@ def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='N
     p_it.append(a_it)
     tree.append(p_it)
 
+    return tree
+
+def feed_node(user, item_id, score=None):
+    c = get_cursor()
+    item_it = c.execute("SELECT *, Like.{} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE Items.ItemID=?".format(user), (item_id, )).fetchone()
+
+    tree = E.DIV()
+
+    h_it = E.H2()
+    a_it = E.A(target="_blank", rel="noopener noreferrer", href=unescape(item_it['Link']))
+    span_it = E.SPAN(id="title_{}".format(item_it['ItemID']))
+    span_it.text = unescape(item_it['Title'])
+    a_it.append(span_it)
+    h_it.append(a_it)
+    tree.append(h_it)
+
+    p_it = E.P()
+    if score is None:
+        p_it.text = "Source: {}. Published: {}.".format(unescape(item_it['Source']), item_it['Published'])
+    else:
+        p_it.text = "Source: {}. Published: {}. Score: {:.2f}.\n".format(unescape(item_it['Source']), item_it['Published'], score)
+    tree.append(p_it)
+
+    summary_it = E.DIV(id="summary_{}".format(item_it['ItemID']))
+    summary_it.append(html.fromstring(unescape(item_it['Summary'])))
+    tree.append(summary_it)
+
+    p_it = E.P()
+
+    form_it = E.FORM(target="foo", method="post", action="/steins-feed/like.php")
+    input_it = E.INPUT(type='hidden', name="id", value=str(item_it['ItemID']))
+    form_it.append(input_it)
+    input_it = E.INPUT(type='hidden', name="user", value=user)
+    form_it.append(input_it)
+    if item_it['{}'.format(user)] == 1:
+        input_it = E.INPUT(E.CLASS("liked"), type='submit', id="like_{0}".format(item_it['ItemID']), name="submit", value="Like", onclick="set_color_like({})".format(item_it['ItemID']))
+    else:
+        input_it = E.INPUT(E.CLASS("like"), type='submit', id="like_{0}".format(item_it['ItemID']), name="submit", value="Like", onclick="set_color_like({})".format(item_it['ItemID']))
+    form_it.append(input_it)
+    p_it.append(form_it)
+
+    form_it = E.FORM(target="foo", method="post", action="/steins-feed/like.php")
+    input_it = E.INPUT(type='hidden', name="id", value=str(item_it['ItemID']))
+    form_it.append(input_it)
+    input_it = E.INPUT(type='hidden', name="user", value=user)
+    form_it.append(input_it)
+    if item_it['{}'.format(user)] == 1:
+        input_it = E.INPUT(E.CLASS("disliked"), type='submit', id="dislike_{0}".format(item_it['ItemID']), name="submit", value="Dislike", onclick="set_color_dislike({})".format(item_it['ItemID']))
+    else:
+        input_it = E.INPUT(E.CLASS("dislike"), type='submit', id="dislike_{0}".format(item_it['ItemID']), name="submit", value="Dislike", onclick="set_color_dislike({})".format(item_it['ItemID']))
+    form_it.append(input_it)
+    p_it.append(form_it)
+
+    form_it = E.FORM(target="foo")
+    input_it = E.INPUT(type="submit", value="Highlight", onclick="highlight('{}', {})".format(user, item_it['ItemID']))
+    form_it.append(input_it)
+    p_it.append(form_it)
+
+    tree.append(p_it)
     return tree
