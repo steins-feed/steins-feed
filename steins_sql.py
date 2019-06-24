@@ -226,7 +226,7 @@ if __name__ == "__main__":
         pass
 
     try:
-        c.execute("CREATE TABLE Users (ItemID INTEGER PRIMARY KEY, User TINYTEXT NOT NULL UNIQUE)")
+        c.execute("CREATE TABLE Users (ItemID INTEGER PRIMARY KEY, Name TINYTEXT NOT NULL UNIQUE)")
         conn.commit()
         logger.warning("Create Users.")
     except OperationalError:

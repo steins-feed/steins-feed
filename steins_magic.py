@@ -4,6 +4,7 @@ import html
 import lxml
 from lxml.html import builder as E
 import os
+import pickle
 
 import numpy as np
 
@@ -82,7 +83,7 @@ def steins_learn(user, classifier):
 
 def handle_analysis(user="nobody", clf="Naive Bayes"):
     c = get_cursor()
-    scorers = steins_learn(user, clf)
+    clfs = steins_learn(user, clf)
 
     #--------------------------------------------------------------------------
 
@@ -111,13 +112,13 @@ def handle_analysis(user="nobody", clf="Naive Bayes"):
     body.append(div_it)
     div_it.append(E.HR())
 
-    langs = scorers.keys()
+    langs = clfs.keys()
 
     #--------------------------------------------------------------------------
 
     tables = dict()
     for lang_it in langs:
-        pipeline = scorers[lang_it]
+        pipeline = clfs[lang_it]
         count_vect = pipeline.named_steps['vect']
 
         table = list(count_vect.vocabulary_.keys())
@@ -186,7 +187,7 @@ def handle_analysis(user="nobody", clf="Naive Bayes"):
 
     tables = dict()
     for lang_it in langs:
-        pipeline = scorers[lang_it]
+        pipeline = clfs[lang_it]
         count_vect = pipeline.named_steps['vect']
 
         feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE Language=? AND Display.{}=1".format(user), (lang_it, )).fetchall()]
@@ -265,13 +266,13 @@ def handle_analysis(user="nobody", clf="Naive Bayes"):
 
 def handle_highlight(qd):
     c = get_cursor()
-    scorers = steins_learn(qd['user'], "Naive Bayes")
+    clfs = steins_learn(qd['user'], "Naive Bayes")
 
     item_it = c.execute("SELECT Items.*, Feeds.Language FROM Items INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Items.ItemID=?", (qd['id'], )).fetchone()
     title = item_it['Title']
     summary = item_it['Summary']
 
-    pipeline = scorers[item_it['Language']]
+    pipeline = clfs[item_it['Language']]
     count_vect = pipeline.named_steps['vect']
     analyzer = count_vect.build_analyzer()
     preprocessor = count_vect.build_preprocessor()
@@ -335,14 +336,65 @@ def handle_highlight(qd):
     return new_title + chr(0) + new_summary
 
 if __name__ == "__main__":
-    clfs = steins_learn("hansolo", "Logistic Regression")
-    clf = clfs['English']
-    count_vect = clf.named_steps['vect']
-    tfidf_transformer = clf.named_steps['tfidf']
-    lr_clf = clf.named_steps['clf']
-    table = count_vect.vocabulary_.items()
-    coeffs = lr_clf.coef_[0] * tfidf_transformer.idf_
-    table = [row + (coeffs[row[1]], ) for row in table]
-    table = sorted(table, key=lambda row: row[2])
-    print("Least favorite:", [row[0] for row in table[:10]])
-    print("Most favorite:", [row[0] for row in reversed(table[-10:])])
+    #clfs = steins_learn("hansolo", "Logistic Regression")
+    #clf = clfs['English']
+    #count_vect = clf.named_steps['vect']
+    #tfidf_transformer = clf.named_steps['tfidf']
+    #lr_clf = clf.named_steps['clf']
+    #table = count_vect.vocabulary_.items()
+    #coeffs = lr_clf.coef_[0] * tfidf_transformer.idf_
+    #table = [row + (coeffs[row[1]], ) for row in table]
+    #table = sorted(table, key=lambda row: row[2])
+    #print("Least favorite:", [row[0] for row in table[:10]])
+    #print("Most favorite:", [row[0] for row in reversed(table[-10:])])
+
+    c = get_cursor()
+    users = [e[0] for e in c.execute("SELECT Name FROM Users").fetchall()]
+
+    for user_it in users:
+        user_path = dir_path + os.sep + user_it
+        try:
+            os.mkdir(user_path)
+        except FileExistsError:
+            pass
+
+        for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
+            clf_path = user_path + os.sep + clf_it
+            try:
+                os.mkdir(clf_path)
+            except FileExistsError:
+                pass
+
+            clfs = steins_learn(user_it, clf_it)
+            with open(clf_path + os.sep + "clfs.pickle", 'wb') as f:
+                pickle.dump(clfs, f)
+
+                for lang_it in clfs.keys():
+                    pipeline = clfs[lang_it]
+                    count_vect = pipeline.named_steps['vect']
+
+                    # Words.
+                    table = list(count_vect.vocabulary_.keys())
+                    coeffs = pipeline.predict_proba(table)
+                    coeffs = 2. * coeffs - 1.
+                    table = [(table[i], coeffs[i, 1], ) for i in range(len(table))]
+                    with open(clf_path + os.sep + "{}.pickle".format(lang_it), 'wb') as f:
+                        pickle.dump(sorted(table, key=lambda row: row[1]), f)
+
+                    # Feeds.
+                    feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE Language=? AND Display.{}=1".format(user_it), (lang_it, )).fetchall()]
+                    coeffs = []
+                    for title_it in feeds:
+                        articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? ORDER BY Published DESC LIMIT 100", (title_it, )).fetchall()]
+                        if len(articles) == 0:
+                            coeffs.append(0.)
+                            continue
+                        articles_proba = pipeline.predict_proba(articles)
+                        articles_proba = np.log(articles_proba / (1. - articles_proba))
+                        coeff = np.sum(articles_proba[:, 1]) / (articles_proba.shape[0] + 10.)
+                        coeff = np.exp(coeff)
+                        coeff = 2. * coeff / (1. + coeff) - 1.
+                        coeffs.append(coeff)
+                    table = [(feeds[i], coeffs[i], ) for i in range(len(feeds))]
+                    with open(clf_path + os.sep + "{}_feeds.pickle".format(lang_it), 'wb') as f:
+                        pickle.dump(sorted(table, key=lambda row: row[1]), f)
