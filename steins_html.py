@@ -33,12 +33,10 @@ def top_nav(title):
 
     return tree
 
-def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='Naive Bayes', dates=[]):
-    tree = E.DIV(E.CLASS("sidenav"), id="sidenav")
-    c = get_cursor()
-
+def side_nav_nav(user, lang, page_no, dates):
     # Navigation.
     h_it = E.H1(E.CLASS("sidenav"))
+
     if len(dates) <= 1:
         h_it.text = unescape("&nbsp;")
     else:
@@ -64,17 +62,20 @@ def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='N
             input_it = E.INPUT(type='submit', formmethod="get", formaction="/steins-feed/index.php", value=unescape("&rarr;"))
             form_it.append(input_it)
             h_it.append(form_it)
+
     span_it = E.SPAN(E.CLASS("onclick"), onclick="close_menu()")
     span_it.text = unescape("&times;")
     h_it.append(span_it)
-    tree.append(h_it)
 
+    return h_it
+
+def side_nav_disp(user, lang, page_no, feed, clf):
     form_it = E.FORM()
 
     # Language.
     form_it.append(E.P("Language:"))
     langs = ['International']
-    langs += [e[0] for e in c.execute("SELECT DISTINCT Language FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE {}=1".format(user)).fetchall()]
+    langs += [e[0] for e in get_cursor().execute("SELECT DISTINCT Language FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE {}=1".format(user)).fetchall()]
     for lang_it in langs:
         input_it = E.INPUT(type='radio', name="lang", value=lang_it)
         if lang_it == lang:
@@ -113,12 +114,13 @@ def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='N
     p_it.append(input_it)
     form_it.append(p_it)
 
-    tree.append(form_it)
-    tree.append(E.HR())
-    form_it = E.FORM()
+    return form_it
 
+def side_nav_rep(user, clf):
     # Report.
+    form_it = E.FORM()
     p_it = E.P()
+
     select_it = E.SELECT(name="clf")
     for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
         option_it = E.OPTION(value=clf_it)
@@ -132,9 +134,16 @@ def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='N
     p_it.append(input_it)
     input_it = E.INPUT(type='submit', formmethod='get', formaction="/steins-feed/analysis.php", value="Report")
     p_it.append(input_it)
-    form_it.append(p_it)
 
-    tree.append(form_it)
+    form_it.append(p_it)
+    return form_it
+
+def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='Naive Bayes', dates=[]):
+    tree = E.DIV(E.CLASS("sidenav"), id="sidenav")
+    tree.append(side_nav_nav(user, lang, page_no, dates))
+    tree.append(side_nav_disp(user, lang, page_no, feed, clf))
+    tree.append(E.HR())
+    tree.append(side_nav_rep(user, clf))
     tree.append(E.HR())
 
     # Statistics.
