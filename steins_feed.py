@@ -43,9 +43,9 @@ def steins_read(title_pattern=""):
 
 def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf="Naive Bayes"):
     c = get_cursor()
-    scorers = []
+    clfs = []
     if not feed == "Full":
-        scorers = steins_learn(user, clf)
+        clfs = steins_learn(user, clf)
     surprise = -1
     if feed == "Surprise":
         surprise = 10
@@ -94,13 +94,13 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
         p_it.text = "{} articles. {} pages. Last updated: {}.\n".format(len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated()))
     div_it.append(p_it)
 
-    if len(scorers) != 0:
+    if len(clfs) != 0:
         scores = np.zeros(len(items))
         langs = set([e['Language'] for e in items])
 
         for lang_it in langs:
             try:
-                clf = scorers[lang_it]
+                clf = clfs[lang_it]
             except KeyError:
                 continue
 
@@ -120,10 +120,10 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
         probs /= np.sum(probs)
         sample = random.choice(scores.size, surprise, False, probs)
         items = [items[cnt] for cnt in sample]
-    elif len(scorers) != 0:
+    elif len(clfs) != 0:
         items = sorted(items, key=lambda item_it: item_it['Score'], reverse=True)
 
-    if len(scorers) == 0:
+    if len(clfs) == 0:
         for item_it in items:
             div_it.append(E.HR())
             div_it.append(feed_node(item_it['ItemID'], item_it[user]))
@@ -132,11 +132,7 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
             div_it.append(E.HR())
             div_it.append(feed_node(item_it['ItemID'], item_it[user], item_it['Score']))
 
-    iframe_it = E.IFRAME(name="foo", style="display:none")
-    div_it.append(iframe_it)
-
     body.append(div_it)
-
     return html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
 
 # Generate HTML.
