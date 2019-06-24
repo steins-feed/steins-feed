@@ -120,16 +120,7 @@ def steins_generate_page(user="nobody", clf="Naive Bayes"):
     #--------------------------------------------------------------------------
 
     # Side navigation menu.
-    s += "<div id=\"sidenav\" class=\"sidenav\">\n"
-
-    # Navigation.
-    s += "<h1 class=\"sidenav\">\n"
-    s += "<span class=\"onclick\" onclick=\"close_menu()\">&times;</span>\n"
-    s += "</h1>\n"
-
     s += lxml.html.tostring(side_nav(user=user, clf=clf)).decode('utf-8')
-
-    s += "</div>\n"
 
     #--------------------------------------------------------------------------
 

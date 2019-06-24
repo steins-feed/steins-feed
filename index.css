@@ -65,7 +65,6 @@ div.sidenav form, div.sidenav p, div.sidenav h1, div.sidenav h2 {
 
 h1.sidenav form, h2.sidenav form {
 	display: inline-block;
-	clear: below;
 }
 
 h1.sidenav span.onclick, h2.sidenav span.onclick {

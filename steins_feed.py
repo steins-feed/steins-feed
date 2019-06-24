@@ -154,30 +154,7 @@ def steins_generate_page(user="nobody", lang="International", page_no=0, feed="F
     #--------------------------------------------------------------------------
 
     # Side navigation menu.
-    s += "<div id=\"sidenav\" class=\"sidenav\">\n"
-
-    # Navigation.
-    s += "<h1 class=\"sidenav\">\n"
-    if not page_no == 0:
-        s += "<form>\n"
-        s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no-1)
-        s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
-        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-        s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"&larr;\">\n"
-        s += "</form>\n"
-    if not page_no == len(dates)-1:
-        s += "<form>\n"
-        s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no+1)
-        s += "<input type=\"hidden\" name=\"lang\" value=\"{}\">\n".format(lang)
-        s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-        s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"&rarr;\">\n"
-        s += "</form>\n"
-    s += "<span class=\"onclick\" onclick=\"close_menu()\">&times;</span>\n"
-    s += "</h1>\n"
-
-    s += html.tostring(side_nav(user, lang, page_no, feed, clf)).decode('utf-8')
-
-    s += "</div>\n"
+    s += html.tostring(side_nav(user, lang, page_no, feed, clf, dates)).decode('utf-8')
 
     #--------------------------------------------------------------------------
 
