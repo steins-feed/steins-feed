@@ -73,7 +73,7 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
     for js_it in ["like.js", "dislike.js", "highlight.js", "open_menu.js", "close_menu.js"]:
         script_it = E.SCRIPT()
         with open(dir_path + os.sep + "js" + os.sep + js_it, 'r') as f:
-            script_it.text = f.read().replace("USER", "\"{}\"".format(user))
+            script_it.text = f.read().replace("USER", user)
         head.append(script_it)
 
     #--------------------------------------------------------------------------
@@ -126,11 +126,11 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
     if len(scorers) == 0:
         for item_it in items:
             div_it.append(E.HR())
-            div_it.append(feed_node(user, item_it['ItemID'], item_it[user]))
+            div_it.append(feed_node(item_it['ItemID'], item_it[user]))
     else:
         for item_it in items:
             div_it.append(E.HR())
-            div_it.append(feed_node(user, item_it['ItemID'], item_it[user], item_it['Score']))
+            div_it.append(feed_node(item_it['ItemID'], item_it[user], item_it['Score']))
 
     iframe_it = E.IFRAME(name="foo", style="display:none")
     div_it.append(iframe_it)

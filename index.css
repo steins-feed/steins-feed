@@ -1,8 +1,8 @@
-input.liked {
+button.liked {
 	background-color: green;
 }
 
-input.disliked {
+button.disliked {
 	background-color: red;
 }
 
