@@ -86,13 +86,14 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
 
     # Body.
     div_it = E.DIV(E.CLASS("main"))
+    body.append(div_it)
 
     p_it = E.P()
+    div_it.append(p_it)
     if surprise > 0:
         p_it.text = "{} out of {} articles. {} pages. Last updated: {}.".format(surprise, len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated()))
     else:
         p_it.text = "{} articles. {} pages. Last updated: {}.\n".format(len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated()))
-    div_it.append(p_it)
 
     if len(clfs) != 0:
         scores = np.zeros(len(items))
@@ -132,7 +133,6 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
             div_it.append(E.HR())
             div_it.append(feed_node(item_it['ItemID'], item_it[user], item_it['Score']))
 
-    body.append(div_it)
     return html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
 
 # Generate HTML.

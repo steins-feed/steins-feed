@@ -2,6 +2,8 @@
 
 import html
 import lxml
+from lxml.html import builder as E
+import os
 
 import numpy as np
 
@@ -11,8 +13,10 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 
-from steins_html import side_nav, top_nav
+from steins_html import preamble, side_nav, top_nav
 from steins_sql import get_cursor
+
+dir_path = os.path.dirname(os.path.abspath(__file__))
 
 def unescape(s):
     return html.unescape(html.unescape(s))
@@ -76,49 +80,36 @@ def steins_learn(user, classifier):
     #print([int(100 * (it[1] - it[0])) / 100. for it in predicted_proba[:len(likes)]])
     #print([int(100 * (it[1] - it[0])) / 100. for it in predicted_proba[len(likes):]])
 
-def steins_generate_page(user="nobody", clf="Naive Bayes"):
+def handle_analysis(user="nobody", clf="Naive Bayes"):
     c = get_cursor()
     scorers = steins_learn(user, clf)
 
+    #--------------------------------------------------------------------------
+
     # Preamble.
-    s = "<!DOCTYPE html>\n"
-    s += "<html>\n"
-    s += "<head>\n"
-    s += "<meta charset=\"UTF-8\">\n"
-    s += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n"
-    s += "<link rel=\"stylesheet\" type=\"text/css\" href=\"/steins-feed/index.css\"/>\n"
-    s += "<title>Stein's Feed</title>\n"
-
-    # Open menu.
-    s += "<script>\n"
-    s += "function open_menu() {\n"
-    s += "    var stat = document.getElementById('sidenav');\n"
-    s += "    stat.style.width = \"250px\";\n"
-    s += "}\n"
-    s += "</script>\n"
-
-    # Close menu.
-    s += "<script>\n"
-    s += "function close_menu() {\n"
-    s += "    var stat = document.getElementById('sidenav');\n"
-    s += "    stat.style.width = \"0\";\n"
-    s += "}\n"
-    s += "</script>\n"
-
-    s += "</head>\n"
-    s += "<body>\n"
+    tree, head, body = preamble("Stein's Feed")
 
     #--------------------------------------------------------------------------
 
-    # Top navigation menu.
-    s += lxml.html.tostring(top_nav(user)).decode('utf-8')
-    s += lxml.html.tostring(side_nav(user=user, clf=clf)).decode('utf-8')
+    # Scripts.
+    for js_it in ["open_menu.js", "close_menu.js"]:
+        script_it = E.SCRIPT()
+        with open(dir_path + os.sep + "js" + os.sep + js_it, 'r') as f:
+            script_it.text = f.read()
+        head.append(script_it)
+
+    #--------------------------------------------------------------------------
+
+    # Top & side navigation menus.
+    body.append(top_nav(user))
+    body.append(side_nav(user=user, clf=clf))
 
     #--------------------------------------------------------------------------
 
     # Body.
-    s += "<div class=\"main\">\n"
-    s += "<hr>\n"
+    div_it = E.DIV(E.CLASS("main"))
+    body.append(div_it)
+    div_it.append(E.HR())
 
     langs = scorers.keys()
 
@@ -136,36 +127,60 @@ def steins_generate_page(user="nobody", clf="Naive Bayes"):
         tables[lang_it] = sorted(table, key=lambda row: row[1])
 
     # Most favorite words.
-    s += "<h2>Most favorite words</h2>\n"
-    s += "<table>\n"
-    s += "<tr>"
+    h_it = E.H2()
+    h_it.text = "Most favorite words"
+    div_it.append(h_it)
+
+    table_it = E.TABLE()
+    div_it.append(table_it)
+
+    tr_it = E.TR()
     for lang_it in langs:
-        s += "<th>{}</th>".format(lang_it)
-    s += "</tr>\n"
-    s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
+        td_it = E.TH()
+        td_it.text = lang_it
+        tr_it.append(td_it)
+    table_it.append(tr_it)
+
+    td_it = E.TD(colspan=str(len(langs)))
+    td_it.append(E.HR())
+    table_it.append(td_it)
+
     for i in reversed(range(-10, 0)):
-        s += "<tr>"
+        tr_it = E.TR()
         for lang_it in langs:
-            s += "<td>{} ({:.2f})</td>".format(tables[lang_it][i][0], tables[lang_it][i][1])
-        s += "</tr>\n"
-    s += "</table>\n"
+            td_it = E.TD()
+            td_it.text = "{} ({:.2f})".format(tables[lang_it][i][0], tables[lang_it][i][1])
+            tr_it.append(td_it)
+        table_it.append(tr_it)
 
     # Least favorite words.
-    s += "<h2>Least favorite words</h2>\n"
-    s += "<table>\n"
-    s += "<tr>"
-    for lang_it in langs:
-        s += "<th>{}</th>".format(lang_it)
-    s += "</tr>\n"
-    s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
-    for i in range(10):
-        s += "<tr>"
-        for lang_it in langs:
-            s += "<td>{} ({:.2f})</td>".format(tables[lang_it][i][0], tables[lang_it][i][1])
-        s += "</tr>\n"
-    s += "</table>\n"
+    h_it = E.H2()
+    h_it.text = "Least favorite words"
+    div_it.append(h_it)
 
-    s += "<hr>"
+    table_it = E.TABLE()
+    div_it.append(table_it)
+
+    tr_it = E.TR()
+    for lang_it in langs:
+        td_it = E.TH()
+        td_it.text = lang_it
+        tr_it.append(td_it)
+    table_it.append(tr_it)
+
+    td_it = E.TD(colspan=str(len(langs)))
+    td_it.append(E.HR())
+    table_it.append(td_it)
+
+    for i in range(10):
+        tr_it = E.TR()
+        for lang_it in langs:
+            td_it = E.TD()
+            td_it.text = "{} ({:.2f})".format(tables[lang_it][i][0], tables[lang_it][i][1])
+            tr_it.append(td_it)
+        table_it.append(tr_it)
+
+    div_it.append(E.HR())
 
     #--------------------------------------------------------------------------
 
@@ -191,45 +206,62 @@ def steins_generate_page(user="nobody", clf="Naive Bayes"):
         tables[lang_it] = sorted(table, key=lambda row: row[1])
 
     # Most favorite feeds.
-    s += "<h2>Most favorite feeds</h2>\n"
-    s += "<table>\n"
-    s += "<tr>"
+    h_it = E.H2()
+    h_it.text = "Most favorite feeds"
+    div_it.append(h_it)
+
+    table_it = E.TABLE()
+    div_it.append(table_it)
+
+    tr_it = E.TR()
     for lang_it in langs:
-        s += "<th>{}</th>".format(lang_it)
-    s += "</tr>\n"
-    s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
+        td_it = E.TH()
+        td_it.text = lang_it
+        tr_it.append(td_it)
+    table_it.append(tr_it)
+
+    td_it = E.TD(colspan=str(len(langs)))
+    td_it.append(E.HR())
+    table_it.append(td_it)
+
     for i in reversed(range(-5, 0)):
-        s += "<tr>"
+        tr_it = E.TR()
         for lang_it in langs:
-            s += "<td>{} ({:.2f})</td>".format(tables[lang_it][i][0], tables[lang_it][i][1])
-        s += "</tr>\n"
-    s += "</table>\n"
+            td_it = E.TD()
+            td_it.text = "{} ({:.2f})".format(tables[lang_it][i][0], tables[lang_it][i][1])
+            tr_it.append(td_it)
+        table_it.append(tr_it)
 
     # Least favorite feeds.
-    s += "<h2>Least favorite feeds</h2>\n"
-    s += "<table>\n"
-    s += "<tr>"
+    h_it = E.H2()
+    h_it.text = "Least favorite feeds"
+    div_it.append(h_it)
+
+    table_it = E.TABLE()
+    div_it.append(table_it)
+
+    tr_it = E.TR()
     for lang_it in langs:
-        s += "<th>{}</th>".format(lang_it)
-    s += "</tr>\n"
-    s += "<td colspan=\"{}\"><hr></td>\n".format(len(langs))
+        td_it = E.TH()
+        td_it.text = lang_it
+        tr_it.append(td_it)
+    table_it.append(tr_it)
+
+    td_it = E.TD(colspan=str(len(langs)))
+    td_it.append(E.HR())
+    table_it.append(td_it)
+
     for i in range(5):
-        s += "<tr>"
+        tr_it = E.TR()
         for lang_it in langs:
-            s += "<td>{} ({:.2f})</td>".format(tables[lang_it][i][0], tables[lang_it][i][1])
-        s += "</tr>\n"
-    s += "</table>\n"
+            td_it = E.TD()
+            td_it.text = "{} ({:.2f})".format(tables[lang_it][i][0], tables[lang_it][i][1])
+            tr_it.append(td_it)
+        table_it.append(tr_it)
 
     #--------------------------------------------------------------------------
 
-    s += "</div>\n"
-    s += "</body>\n"
-    s += "</html>\n"
-
-    return s
-
-def handle_analysis(qd):
-    print(steins_generate_page(qd['user'], qd['clf']))
+    return lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
 
 def handle_highlight(qd):
     c = get_cursor()
