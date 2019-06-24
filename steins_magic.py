@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import html
+import lxml
 
 import numpy as np
 
@@ -126,7 +127,7 @@ def steins_generate_page(user="nobody", clf="Naive Bayes"):
     s += "<span class=\"onclick\" onclick=\"close_menu()\">&times;</span>\n"
     s += "</h1>\n"
 
-    s += side_nav(user=user, clf=clf)
+    s += lxml.html.tostring(side_nav(user=user, clf=clf)).decode('utf-8')
 
     s += "</div>\n"
 

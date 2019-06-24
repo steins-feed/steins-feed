@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from html import unescape
+from lxml import html
 import os
 import time
 
@@ -174,7 +175,7 @@ def steins_generate_page(user="nobody", lang="International", page_no=0, feed="F
     s += "<span class=\"onclick\" onclick=\"close_menu()\">&times;</span>\n"
     s += "</h1>\n"
 
-    s += side_nav(user, lang, page_no, feed, clf)
+    s += html.tostring(side_nav(user, lang, page_no, feed, clf)).decode('utf-8')
 
     s += "</div>\n"
 

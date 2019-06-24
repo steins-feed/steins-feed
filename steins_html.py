@@ -19,68 +19,90 @@ def select_lang(feed_id=None, selected='English'):
 
     return tree
 
-def side_nav(user="nobody", lang="International", page_no=0, feed="Full", clf="Naive Bayes"):
-    s = "<form>\n"
+def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='Naive Bayes'):
     c = get_cursor()
 
+    tree = E.DIV()
+    form_it = E.FORM()
+
     # Language.
-    s += "<p>Language:</p>\n"
-    langs = ["International"]
+    form_it.append(E.P("Language:"))
+    langs = ['International']
     langs += [e[0] for e in c.execute("SELECT DISTINCT Language FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE {}=1".format(user)).fetchall()]
     for lang_it in langs:
-        t = "<input type=\"radio\" name=\"lang\" value=\"{0}\">{0}<br>\n".format(lang_it)
+        input_it = E.INPUT(type='radio', name="lang", value=lang_it)
         if lang_it == lang:
-            idx = t.find(">")
-            t = t[:idx] + " checked" + t[idx:]
-        s += t
+            input_it.set('checked')
+        input_it.tail = lang_it
+        form_it.append(input_it)
+        form_it.append(E.BR())
 
     # Feed.
-    s += "<p>Feed:</p>\n"
-    for feed_it in ["Full", "Magic", "Surprise"]:
-        t = "<input type=\"radio\" name=\"feed\" value=\"{0}\">{0}<br>\n".format(feed_it)
+    form_it.append(E.P("Feed:"))
+    for feed_it in ['Full', 'Magic', 'Surprise']:
+        input_it = E.INPUT(type='radio', name="feed", value=feed_it)
         if feed_it == feed:
-            idx = t.find(">")
-            t = t[:idx] + " checked" + t[idx:]
-        s += t
+            input_it.set('checked')
+        input_it.tail = feed_it
+        form_it.append(input_it)
+        form_it.append(E.BR())
 
     # Algorithm.
-    s += "<p>Algorithm:</p>\n"
-    for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
-        t = "<input type=\"radio\" name=\"clf\" value=\"{0}\">{0}<br>\n".format(clf_it)
+    form_it.append(E.P("Algorithm:"))
+    for clf_it in ['Naive Bayes', 'Logistic Regression', 'SVM', 'Linear SVM']:
+        input_it = E.INPUT(type='radio', name="clf", value=clf_it)
         if clf_it == clf:
-            idx = t.find(">")
-            t = t[:idx] + " checked" + t[idx:]
-        s += t
+            input_it.set('checked')
+        input_it.tail = clf_it
+        form_it.append(input_it)
+        form_it.append(E.BR())
 
     # Button.
-    s += "<p>\n"
-    s += "<input type=\"hidden\" name=\"page\" value=\"{}\">\n".format(page_no)
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/index.php\" value=\"Display\">\n"
-    s += "</p>\n"
+    p_it = E.P()
+    input_it = E.INPUT(type='hidden', name="page", value=str(page_no))
+    p_it.append(input_it)
+    input_it = E.INPUT(type='hidden', name="user", value=user)
+    p_it.append(input_it)
+    input_it = E.INPUT(type='submit', formmethod='get', formaction="/steins-feed/index.php", value="Display")
+    p_it.append(input_it)
+    form_it.append(p_it)
 
-    s += "</form>\n"
-
-    s += "<hr>\n"
+    tree.append(form_it)
+    tree.append(E.HR())
+    form_it = E.FORM()
 
     # Report.
-    s += "<form><p>\n"
-    s += "<select name=\"clf\">\n"
+    p_it = E.P()
+    select_it = E.SELECT(name="clf")
     for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
-        t = "<option value=\"{0}\">{0}</option>\n".format(clf_it)
+        option_it = E.OPTION(value=clf_it)
+        option_it.text = clf_it
         if clf_it == clf:
-            idx = t.find(">")
-            t = t[:idx] + " selected" + t[idx:]
-        s += t
-    s += "</select>\n"
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(user)
-    s += "<input type=\"submit\" formmethod=\"get\" formaction=\"/steins-feed/analysis.php\" value=\"Report\">\n"
-    s += "</p></form>\n"
+            option_it.set('selected')
+        select_it.append(option_it)
+    p_it.append(select_it)
 
-    s += "<hr>\n"
+    input_it = E.INPUT(type='hidden', name="user", value=user)
+    p_it.append(input_it)
+    input_it = E.INPUT(type='submit', formmethod='get', formaction="/steins-feed/analysis.php", value="Report")
+    p_it.append(input_it)
+    form_it.append(p_it)
 
-    # Statistics & Settings.
-    s += "<p><a href=\"/steins-feed/statistics.php?user={}\">Statistics</a></p>\n".format(user)
-    s += "<p><a href=\"/steins-feed/settings.php?user={}\">Settings</a></p>\n".format(user)
+    tree.append(form_it)
+    tree.append(E.HR())
 
-    return s
+    # Statistics.
+    p_it = E.P()
+    a_it = E.A(href="/steins-feed/statistics.php?user={}".format(user))
+    a_it.text = "Statistics"
+    p_it.append(a_it)
+    tree.append(p_it)
+
+    # Settings.
+    p_it = E.P()
+    a_it = E.A(href="/steins-feed/settings.php?user={}".format(user))
+    a_it.text = "Settings"
+    p_it.append(a_it)
+    tree.append(p_it)
+
+    return tree
