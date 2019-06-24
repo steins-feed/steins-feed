@@ -10,7 +10,6 @@ from xml.sax.saxutils import escape
 
 from steins_feed import handle_page
 from steins_html import select_lang
-from steins_magic import steins_learn
 from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds
 
 dir_path = os.path.dirname(os.path.abspath(__file__))

@@ -4,6 +4,7 @@ from html import unescape
 from lxml import html
 from lxml.html import builder as E
 import os
+import pickle
 import time
 
 import numpy as np
@@ -45,7 +46,10 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
     c = get_cursor()
     clfs = []
     if not feed == "Full":
-        clfs = steins_learn(user, clf)
+        user_path = dir_path + os.sep + user
+        clf_path = user_path + os.sep + clf
+        with open(clf_path + os.sep + "clfs.pickle", 'rb') as f:
+            clfs = pickle.load(f)
     surprise = -1
     if feed == "Surprise":
         surprise = 10

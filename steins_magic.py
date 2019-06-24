@@ -245,7 +245,10 @@ def handle_analysis(user="nobody", clf="Naive Bayes"):
 
 def handle_highlight(qd):
     c = get_cursor()
-    clfs = steins_learn(qd['user'], "Naive Bayes")
+    user_path = dir_path + os.sep + qd['user']
+    clf_path = user_path + os.sep + qd['clf']
+    with open(clf_path + os.sep + "clfs.pickle", 'rb') as f:
+        clfs = pickle.load(f)
 
     item_it = c.execute("SELECT Items.*, Feeds.Language FROM Items INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Items.ItemID=?", (qd['id'], )).fetchone()
     title = item_it['Title']
@@ -315,18 +318,6 @@ def handle_highlight(qd):
     return new_title + chr(0) + new_summary
 
 if __name__ == "__main__":
-    #clfs = steins_learn("hansolo", "Logistic Regression")
-    #clf = clfs['English']
-    #count_vect = clf.named_steps['vect']
-    #tfidf_transformer = clf.named_steps['tfidf']
-    #lr_clf = clf.named_steps['clf']
-    #table = count_vect.vocabulary_.items()
-    #coeffs = lr_clf.coef_[0] * tfidf_transformer.idf_
-    #table = [row + (coeffs[row[1]], ) for row in table]
-    #table = sorted(table, key=lambda row: row[2])
-    #print("Least favorite:", [row[0] for row in table[:10]])
-    #print("Most favorite:", [row[0] for row in reversed(table[-10:])])
-
     c = get_cursor()
     users = [e[0] for e in c.execute("SELECT Name FROM Users").fetchall()]
 

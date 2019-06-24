@@ -2,6 +2,9 @@
 if( !$_POST["user"] ) {
     $_POST["user"] = "nobody";
 }
+if( !$_POST["clf"] ) {
+    $_POST["clf"] = "Naive Bayes";
+}
 $post_query = http_build_query($_POST);
 $python_cmd = <<<EOT
 import sys
