@@ -40,7 +40,7 @@ def steins_read(title_pattern=""):
 
             add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
 
-def steins_generate_page(user="nobody", lang="International", page_no=0, feed="Full", clf="Naive Bayes"):
+def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf="Naive Bayes"):
     c = get_cursor()
     scorers = []
     if not feed == "Full":
@@ -240,7 +240,7 @@ def steins_write():
     dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items ORDER BY Published DESC").fetchall()
     for d_ctr in range(len(dates)):
         with open(dir_name+os.sep+"steins-{}.html".format(d_ctr), 'w') as f:
-            f.write(steins_generate_page(page=d_ctr))
+            f.write(handle_page(page=d_ctr))
 
 def steins_update(title_pattern="", read_mode=True, write_mode=False):
     if read_mode:

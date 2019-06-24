@@ -8,7 +8,7 @@ from lxml import html
 from urllib.parse import urlsplit, parse_qsl
 from xml.sax.saxutils import escape
 
-from steins_feed import steins_generate_page
+from steins_feed import handle_page
 from steins_html import select_lang
 from steins_magic import steins_learn
 from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds
@@ -243,7 +243,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
-            s = steins_generate_page(qd['user'], qd['lang'], qd['page'])
+            s = handle_page(qd['user'], qd['lang'], qd['page'])
             self.wfile.write(s.encode('utf-8'))
         elif self.path == "/favicon.ico":
             # Write header.

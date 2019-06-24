@@ -41,25 +41,25 @@ def side_nav_nav(user, lang, page_no, dates):
         h_it.text = unescape("&nbsp;")
     else:
         if not page_no <= 0:
-            form_it = E.FORM()
+            form_it = E.FORM(method="get", action="/steins-feed/index.php")
             input_it = E.INPUT(type='hidden', name="user", value=user)
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="lang", value=lang)
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="page", value=str(page_no-1))
             form_it.append(input_it)
-            input_it = E.INPUT(type='submit', formmethod="get", formaction="/steins-feed/index.php", value=unescape("&larr;"))
+            input_it = E.INPUT(type='submit', value=unescape("&larr;"))
             form_it.append(input_it)
             h_it.append(form_it)
         if not page_no >= len(dates) - 1:
-            form_it = E.FORM()
+            form_it = E.FORM(method="get", action="/steins-feed/index.php")
             input_it = E.INPUT(type='hidden', name="user", value=user)
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="lang", value=lang)
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="page", value=str(page_no+1))
             form_it.append(input_it)
-            input_it = E.INPUT(type='submit', formmethod="get", formaction="/steins-feed/index.php", value=unescape("&rarr;"))
+            input_it = E.INPUT(type='submit', value=unescape("&rarr;"))
             form_it.append(input_it)
             h_it.append(form_it)
 
@@ -70,7 +70,7 @@ def side_nav_nav(user, lang, page_no, dates):
     return h_it
 
 def side_nav_disp(user, lang, page_no, feed, clf):
-    form_it = E.FORM()
+    form_it = E.FORM(method='get', action="/steins-feed/index.php")
 
     # Language.
     form_it.append(E.P("Language:"))
@@ -110,7 +110,7 @@ def side_nav_disp(user, lang, page_no, feed, clf):
     p_it.append(input_it)
     input_it = E.INPUT(type='hidden', name="page", value=str(page_no))
     p_it.append(input_it)
-    input_it = E.INPUT(type='submit', formmethod='get', formaction="/steins-feed/index.php", value="Display")
+    input_it = E.INPUT(type='submit', value="Display")
     p_it.append(input_it)
     form_it.append(p_it)
 
@@ -118,7 +118,7 @@ def side_nav_disp(user, lang, page_no, feed, clf):
 
 def side_nav_rep(user, clf):
     # Report.
-    form_it = E.FORM()
+    form_it = E.FORM(method='get', action="/steins-feed/analysis.php")
     p_it = E.P()
 
     select_it = E.SELECT(name="clf")
@@ -132,7 +132,7 @@ def side_nav_rep(user, clf):
 
     input_it = E.INPUT(type='hidden', name="user", value=user)
     p_it.append(input_it)
-    input_it = E.INPUT(type='submit', formmethod='get', formaction="/steins-feed/analysis.php", value="Report")
+    input_it = E.INPUT(type='submit', value="Report")
     p_it.append(input_it)
 
     form_it.append(p_it)
