@@ -1,9 +1,5 @@
-button.liked {
-	background-color: green;
-}
-
-button.disliked {
-	background-color: red;
+span.liked, span.disliked {
+	color: blue;
 }
 
 div.main {

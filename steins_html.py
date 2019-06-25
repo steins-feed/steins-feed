@@ -20,6 +20,8 @@ def preamble(title):
     head.append(meta_it)
     link_it = E.LINK(rel="stylesheet", type="text/css", href="/steins-feed/index.css")
     head.append(link_it)
+    link_it = E.LINK(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
+    head.append(link_it)
     title_it = E.TITLE()
     title_it.text = title
     head.append(title_it)
@@ -72,8 +74,11 @@ def side_nav_nav(user, lang, page_no, dates):
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="page", value=str(page_no-1))
             form_it.append(input_it)
-            input_it = E.INPUT(type='submit', value=unescape("&larr;"))
-            form_it.append(input_it)
+            button_it = E.BUTTON(type='submit')
+            i_it = E.I(E.CLASS("material-icons"))
+            i_it.text = "fast_rewind"
+            button_it.append(i_it)
+            form_it.append(button_it)
             h_it.append(form_it)
         if not page_no >= len(dates) - 1:
             form_it = E.FORM(method="get", action="/steins-feed/index.php")
@@ -83,8 +88,11 @@ def side_nav_nav(user, lang, page_no, dates):
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="page", value=str(page_no+1))
             form_it.append(input_it)
-            input_it = E.INPUT(type='submit', value=unescape("&rarr;"))
-            form_it.append(input_it)
+            button_it = E.BUTTON(type='submit')
+            i_it = E.I(E.CLASS("material-icons"))
+            i_it.text = "fast_forward"
+            button_it.append(i_it)
+            form_it.append(button_it)
             h_it.append(form_it)
 
     span_it = E.SPAN(E.CLASS("onclick"), onclick="close_menu()")
@@ -213,22 +221,32 @@ def feed_node(item_id, like=0, score=None):
 
     p_it = E.P()
 
+    input_it = E.BUTTON(type="button", onclick="like({})".format(item_it['ItemID']))
+    i_it = E.I(E.CLASS("material-icons"))
     if like == 1:
-        input_it = E.BUTTON(E.CLASS("liked"), id="like_{}".format(item_it['ItemID']), onclick="like({})".format(item_it['ItemID']))
+        span_it = E.SPAN(E.CLASS("liked"), id="like_{}".format(item_it['ItemID']))
     else:
-        input_it = E.BUTTON(E.CLASS("like"), id="like_{}".format(item_it['ItemID']), onclick="like({})".format(item_it['ItemID']))
-    input_it.text = "Like"
+        span_it = E.SPAN(E.CLASS("like"), id="like_{}".format(item_it['ItemID']))
+    span_it.text = "thumb_up"
+    i_it.append(span_it)
+    input_it.append(i_it)
     p_it.append(input_it)
 
+    input_it = E.BUTTON(type="button", onclick="dislike({})".format(item_it['ItemID']))
+    i_it = E.I(E.CLASS("material-icons"))
     if like == -1:
-        input_it = E.BUTTON(E.CLASS("disliked"), id="dislike_{}".format(item_it['ItemID']), onclick="dislike({})".format(item_it['ItemID']))
+        span_it = E.SPAN(E.CLASS("disliked"), id="dislike_{}".format(item_it['ItemID']))
     else:
-        input_it = E.BUTTON(E.CLASS("dislike"), id="dislike_{}".format(item_it['ItemID']), onclick="dislike({})".format(item_it['ItemID']))
-    input_it.text = "Dislike"
+        span_it = E.SPAN(E.CLASS("dislike"), id="dislike_{}".format(item_it['ItemID']))
+    span_it.text = "thumb_down"
+    i_it.append(span_it)
+    input_it.append(i_it)
     p_it.append(input_it)
 
-    input_it = E.BUTTON(onclick="highlight({})".format(item_it['ItemID']))
-    input_it.text = "Highlight"
+    input_it = E.BUTTON(type="button", onclick="highlight({})".format(item_it['ItemID']))
+    i_it = E.I(E.CLASS("material-icons"))
+    i_it.text = "lightbulb_outline"
+    input_it.append(i_it)
     p_it.append(input_it)
 
     tree.append(p_it)
