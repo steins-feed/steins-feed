@@ -196,7 +196,10 @@ def handle_analysis(user, clf):
         tr_it = E.TR()
         for lang_it in langs:
             td_it = E.TD()
-            td_it.text = "{} ({:.2f})".format(tables[lang_it][i][0], tables[lang_it][i][1])
+            try:
+                td_it.text = "{} ({:.2f})".format(tables[lang_it][i][0], tables[lang_it][i][1])
+            except IndexError:
+                td_it.text = "-"
             tr_it.append(td_it)
         table_it.append(tr_it)
 
@@ -223,7 +226,10 @@ def handle_analysis(user, clf):
         tr_it = E.TR()
         for lang_it in langs:
             td_it = E.TD()
-            td_it.text = "{} ({:.2f})".format(tables[lang_it][i][0], tables[lang_it][i][1])
+            try:
+                td_it.text = "{} ({:.2f})".format(tables[lang_it][i][0], tables[lang_it][i][1])
+            except IndexError:
+                td_it.text = "-"
             tr_it.append(td_it)
         table_it.append(tr_it)
 
