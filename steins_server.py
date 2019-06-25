@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-import os
-import time
-
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import lxml
 from lxml.html import builder as E
+import os
+import time
 from urllib.parse import urlsplit, parse_qsl
 from xml.sax.saxutils import escape
 
@@ -49,20 +48,20 @@ def handle_display_feeds(qd):
 
         conn.commit()
 
-def handle_load_config(qd):
-    init_feeds(dir_path + os.sep + "tmp_feeds.xml", qd['user'])
+def handle_load_config(user):
+    init_feeds(dir_path + os.sep + "tmp_feeds.xml", user)
 
-def handle_export_config(qd):
+def handle_export_config(user):
     c = get_cursor()
 
     with open("tmp_feeds.xml", 'w', encoding='utf-8') as f:
         f.write("<?xml version=\"1.0\"?>\n\n")
         f.write("<root>\n")
-        for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID".format(qd['user'])).fetchall():
+        for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID".format(user)).fetchall():
             f.write("    <feed>\n")
             f.write("        <title>{}</title>\n".format(escape(feed_it['Title'])))
             f.write("        <link>{}</link>\n".format(escape(feed_it['Link'])))
-            f.write("        <disp>{}</disp>\n".format(feed_it[qd['user']]))
+            f.write("        <disp>{}</disp>\n".format(feed_it[user]))
             f.write("        <lang>{}</lang>\n".format(escape(feed_it['Language'])))
             f.write("        <summary>{}</summary>\n".format(feed_it['Summary']))
             f.write("    </feed>\n")
@@ -531,7 +530,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             file_path = dir_path + os.sep + file_name
             with open(file_path, 'w') as f:
                 f.write(qd['files'].values()[0])
-            handle_load_config(qd)
+            handle_load_config(qd['user'])
             self.send_response(204)
             self.end_headers()
 
@@ -547,7 +546,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
-            handle_export_config(qd)
+            handle_export_config(qd['user'])
             with open("tmp_feeds.xml", 'r', 'utf-8') as f:
                 self.wfile.write(f.read().encode('utf-8'))
         # Like.
