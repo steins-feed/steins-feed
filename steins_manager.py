@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
 import feedparser
-import time
-
 from lxml import html
 from lxml.etree import ParserError, strip_elements, strip_tags
+import time
 
 from steins_log import get_logger
 from steins_sql import get_cursor
@@ -50,16 +49,17 @@ class SteinsHandler:
             strip_elements(summary_tree, tag_it)
 
         # Remove leading and trailing <br>.
-        p_nodes = summary_tree.xpath("//" + "p")
-        for node_it in p_nodes:
-            if len(node_it) == 0:
-                continue
-            if node_it[0].tag == "br":
-                node_it.remove(node_it[0])
-            if len(node_it) == 0:
-                continue
-            if node_it[-1].tag == "br":
-                node_it.remove(node_it[-1])
+        for node_it in summary_tree.xpath("//p") + summary_tree.xpath("//h1") + summary_tree.xpath("//h2"):
+            while True:
+                if len(node_it) == 0:
+                    break
+                if node_it[0].tag == "br":
+                    node_it.remove(node_it[0])
+                    continue
+                if node_it[-1].tag == "br":
+                    node_it.remove(node_it[-1])
+                    continue
+                break
 
         # Strip.
         tags = ["strong", "hr"]

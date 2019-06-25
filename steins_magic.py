@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-import html
 import lxml
 from lxml.html import builder as E
+import numpy as np
 import os
 import pickle
-
-import numpy as np
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
@@ -14,13 +12,10 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 
-from steins_html import preamble, side_nav, top_nav
+from steins_html import preamble, side_nav, top_nav, unescape
 from steins_sql import get_cursor
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
-
-def unescape(s):
-    return html.unescape(html.unescape(s))
 
 def build_feature(row):
     title = row['Title'] + " " + row['Summary']
@@ -72,14 +67,6 @@ def steins_learn(user, classifier):
         clfs[lang_it] = clf
 
     return clfs
-
-    # Test on training data.
-    #predicted = text_clf.predict(titles)
-    #print(predicted[:len(likes)])
-    #print(predicted[len(likes):])
-    #predicted_proba = text_clf.predict_proba(titles)
-    #print([int(100 * (it[1] - it[0])) / 100. for it in predicted_proba[:len(likes)]])
-    #print([int(100 * (it[1] - it[0])) / 100. for it in predicted_proba[len(likes):]])
 
 def handle_analysis(user="nobody", clf="Naive Bayes"):
     user_path = dir_path + os.sep + user
@@ -243,14 +230,14 @@ def handle_analysis(user="nobody", clf="Naive Bayes"):
 
     return lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
 
-def handle_highlight(qd):
+def handle_highlight(user, clf, item_id):
     c = get_cursor()
-    user_path = dir_path + os.sep + qd['user']
-    clf_path = user_path + os.sep + qd['clf']
+    user_path = dir_path + os.sep + user
+    clf_path = user_path + os.sep + clf
     with open(clf_path + os.sep + "clfs.pickle", 'rb') as f:
         clfs = pickle.load(f)
 
-    item_it = c.execute("SELECT Items.*, Feeds.Language FROM Items INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Items.ItemID=?", (qd['id'], )).fetchone()
+    item_it = c.execute("SELECT Items.*, Feeds.Language FROM Items INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Items.ItemID=?", (item_id, )).fetchone()
     title = item_it['Title']
     summary = item_it['Summary']
 

@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
+from lxml import etree
 import os
 import sqlite3
 from sqlite3 import IntegrityError, OperationalError
 import time
-
-from lxml import etree
 
 from steins_log import get_logger
 

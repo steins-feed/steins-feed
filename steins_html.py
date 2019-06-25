@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
-from html import unescape
-from lxml import html
+import html
+import lxml
 from lxml.html import builder as E
 
 from steins_lang import lang_list
 from steins_sql import get_cursor
+
+def unescape(s):
+    return html.unescape(html.unescape(s))
 
 def preamble(title):
     tree = E.HTML()
@@ -205,7 +208,7 @@ def feed_node(item_id, like=0, score=None):
     tree.append(p_it)
 
     summary_it = E.DIV(id="summary_{}".format(item_it['ItemID']))
-    summary_it.append(html.fromstring(unescape(item_it['Summary'])))
+    summary_it.append(lxml.html.fromstring(unescape(item_it['Summary'])))
     tree.append(summary_it)
 
     p_it = E.P()

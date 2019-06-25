@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 
-from html import unescape
-from lxml import html
+import lxml
 from lxml.html import builder as E
+import numpy as np
+import numpy.random as random
 import os
 import pickle
 import time
 
-import numpy as np
-import numpy.random as random
-
-from steins_html import preamble, side_nav, top_nav, feed_node
+from steins_html import feed_node, preamble, side_nav, top_nav
 from steins_log import get_logger
 from steins_magic import build_feature, steins_learn
 from steins_manager import get_handler
@@ -137,7 +135,7 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
             div_it.append(E.HR())
             div_it.append(feed_node(item_it['ItemID'], item_it[user], item_it['Score']))
 
-    return html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
+    return lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
 
 # Generate HTML.
 def steins_write():
