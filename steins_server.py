@@ -4,12 +4,13 @@ import os
 import time
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from lxml import html
+import lxml
+from lxml.html import builder as E
 from urllib.parse import urlsplit, parse_qsl
 from xml.sax.saxutils import escape
 
 from steins_feed import handle_page
-from steins_html import select_lang
+from steins_html import preamble, side_nav, top_nav, select_lang
 from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
@@ -73,154 +74,330 @@ def handle_export_config(qd):
             f.write("    </feed>\n")
         f.write("</root>\n")
 
-def handle_settings(qd):
+def handle_settings(user):
     c = get_cursor()
 
-    s = ""
+    #--------------------------------------------------------------------------
 
-    # Write payload.
-    s += "<!DOCTYPE html>\n"
-    s += "<html>\n"
-    s += "<head>\n"
-    s += "<meta charset=\"UTF-8\">\n"
-    s += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n"
-    s += "<title>Settings</title>\n"
-    s += "</head>\n"
-    s += "<body>\n"
-    s += "<h1>{}</h1>\n".format(qd['user'])
+    # Preamble.
+    tree, head, body = preamble(user)
+
+    #--------------------------------------------------------------------------
+
+    # Scripts.
+    for js_it in ["open_menu.js", "close_menu.js"]:
+        script_it = E.SCRIPT()
+        with open(dir_path + os.sep + "js" + os.sep + js_it, 'r') as f:
+            script_it.text = f.read()
+        head.append(script_it)
+
+    #--------------------------------------------------------------------------
+
+    # Top & side navigation menus.
+    body.append(top_nav(user))
+    body.append(side_nav(user=user))
+
+    #--------------------------------------------------------------------------
+
+    # Body.
+    div_it = E.DIV(E.CLASS("main"))
+    body.append(div_it)
+    div_it.append(E.HR())
+
+    #--------------------------------------------------------------------------
 
     # Display feeds.
-    s += "<form>\n"
-    for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID ORDER BY Title COLLATE NOCASE".format(qd['user'])).fetchall():
-        if feed_it[qd['user']] == 0:
-            s += "<input type=\"checkbox\" name=\"{}\"><a href={}>{}</a>\n".format(feed_it['ItemID'], feed_it['Link'], feed_it['Title'])
-        else:
-            s += "<input type=\"checkbox\" name=\"{}\" checked><a href={}>{}</a>\n".format(feed_it['ItemID'], feed_it['Link'], feed_it['Title'])
-        s += html.tostring(select_lang(feed_it['ItemID'], feed_it['Language'])).decode('utf-8')
-        s += "<br>\n"
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/display_feeds.php\" value=\"Display feeds\"></p>\n"
-    s += "</form>\n"
-    s += "<hr>\n"
+    form_it = E.FORM(method="post", action="/steins-feed/display_feeds.php")
+    div_it.append(form_it)
+    div_it.append(E.HR())
+
+    for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID ORDER BY Title COLLATE NOCASE".format(user)).fetchall():
+        input_it = E.INPUT(type='checkbox', name=str(feed_it['ItemID']))
+        form_it.append(input_it)
+        if feed_it[user] != 0:
+            input_it.set('checked')
+
+        a_it = E.A(href=feed_it['Link'])
+        a_it.text = feed_it['Title']
+        a_it.tail = " "
+        form_it.append(a_it)
+
+        form_it.append(select_lang(feed_it['ItemID'], feed_it['Language']))
+        form_it.append(E.BR())
+
+    p_it = E.P()
+    form_it.append(p_it)
+    input_it = E.INPUT(type='hidden', name="user", value=user)
+    p_it.append(input_it)
+    input_it = E.INPUT(type='submit', value="Display feeds")
+    p_it.append(input_it)
+
+    #--------------------------------------------------------------------------
 
     # Add feed.
-    s += "<form>\n"
-    s += "<p>Title:<br>\n"
-    s += "<input type=\"text\" name=\"title\"></p>\n"
-    s += "<p>Link:<br>\n"
-    s += "<input type=\"text\" name=\"link\"></p>\n"
-    s += "<p>Display:<br>\n"
-    s += "<input type=\"radio\" name=\"disp\" value=1 checked> Yes\n"
-    s += "<input type=\"radio\" name=\"disp\" value=0> No\n"
-    s += "</p>\n"
-    s += "<p>Language:<br>\n"
-    s += html.tostring(select_lang()).decode('utf-8')
-    s += "<p>Summary:<br>\n"
-    s += "<input type=\"radio\" name=\"summary\" value=0> No abstract.\n"
-    s += "<input type=\"radio\" name=\"summary\" value=1> First paragraph.\n"
-    s += "<input type=\"radio\" name=\"summary\" value=2 checked> Full abstract.\n"
-    s += "</p>\n"
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/add_feed.php\" value=\"Add feed\"></p>\n"
-    s += "</form>\n"
-    s += "<hr>\n"
+    form_it = E.FORM(method='post', action="/steins-feed/add_feed.php")
+    div_it.append(form_it)
+    div_it.append(E.HR())
+
+    p_it = E.P()
+    p_it.text = "Title:"
+    p_it.append(E.BR())
+    input_it = E.INPUT(type='text', name="title")
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    p_it = E.P()
+    p_it.text = "Link:"
+    p_it.append(E.BR())
+    input_it = E.INPUT(type='text', name="link")
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    p_it = E.P()
+    p_it.text = "Display:"
+    p_it.append(E.BR())
+    input_it = E.INPUT(type='radio', name="disp", value=str(1))
+    input_it.set('checked')
+    input_it.tail = "Yes"
+    p_it.append(input_it)
+    input_it = E.INPUT(type='radio', name="disp", value=str(0))
+    input_it.tail = "No"
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    p_it = E.P()
+    p_it.text = "Language:"
+    p_it.append(E.BR())
+    p_it.append(select_lang())
+    form_it.append(p_it)
+
+    p_it = E.P()
+    p_it.text = "Summary:"
+    p_it.append(E.BR())
+    input_it = E.INPUT(type='radio', name="summary", value=str(0))
+    input_it.tail = "No abstract."
+    p_it.append(input_it)
+    input_it = E.INPUT(type='radio', name="summary", value=str(1))
+    input_it.tail = "First paragraph."
+    p_it.append(input_it)
+    input_it = E.INPUT(type='radio', name="summary", value=str(2))
+    input_it.set('checked')
+    input_it.tail = "Full abstract."
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    p_it = E.P()
+    input_it = E.INPUT(type='hidden', name="user", value=user)
+    p_it.append(input_it)
+    input_it = E.INPUT(type='submit', value="Add feed")
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    #--------------------------------------------------------------------------
 
     # Delete feed.
-    s += "<form>\n"
-    s += "<p><select name=\"feed\">\n"
+    form_it = E.FORM(method='post', action="/steins-feed/delete_feed.php")
+    div_it.append(form_it)
+    div_it.append(E.HR())
+
+    p_it = E.P()
+    select_it = E.SELECT(name="feed")
+    p_it.append(select_it)
+    form_it.append(p_it)
+
     for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title COLLATE NOCASE").fetchall():
-        s += "<option value=\"{}\">{}</option>\n".format(feed_it['ItemID'], feed_it['Title'])
-    s += "</select></p>\n"
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/delete_feed.php\" value=\"Delete feed\"></p>\n"
-    s += "</form>\n"
-    s += "<hr>\n"
+        option_it = E.OPTION(value=str(feed_it['ItemID']))
+        option_it.text = feed_it['Title']
+        select_it.append(option_it)
+
+    p_it = E.P()
+    input_it = E.INPUT(type='hidden', name="user", value=user)
+    p_it.append(input_it)
+    input_it = E.INPUT(type='submit', value="Delete feed")
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    #--------------------------------------------------------------------------
 
     # Load config.
-    s += "<form>\n"
-    s += "<p><input type=\"file\" name=\"feeds\" value=\"feeds\"></p>\n"
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/load_config.php\" formenctype=\"multipart/form-data\" value=\"Load config\"></p>\n"
-    s += "</form>\n"
-    s += "<hr>\n"
+    form_it = E.FORM(method='post', action="/steins-feed/load_config.php", enctype="multipart/form-data")
+    div_it.append(form_it)
+    div_it.append(E.HR())
+
+    p_it = E.P()
+    input_it = E.INPUT(type='file', name="feeds", value="feeds")
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    p_it = E.P()
+    input_it = E.INPUT(type='hidden', name="user", value=user)
+    p_it.append(input_it)
+    input_it = E.INPUT(type='submit', value="Load config")
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    #--------------------------------------------------------------------------
 
     # Export config.
-    s += "<form>\n"
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/export_config.php\" value=\"Export config\"></p>\n"
-    s += "</form>\n"
-    s += "<hr>\n"
+    form_it = E.FORM(method='post', action="/steins-feed/export_config.php")
+    div_it.append(form_it)
+    div_it.append(E.HR())
+
+    p_it = E.P()
+    input_it = E.INPUT(type='hidden', name="user", value=user)
+    p_it.append(input_it)
+    input_it = E.INPUT(type='submit', value="Export config")
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    #--------------------------------------------------------------------------
 
     # Add user.
-    s += "<form>\n"
-    s += "<p>Name:<br>\n"
-    s += "<input type=\"text\" name=\"name\"></p>\n"
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/add_user.php\" value=\"Add user\"></p>\n"
-    s += "</form>\n"
-    s += "<hr>\n"
+    form_it = E.FORM(method='post', action="/steins-feed/add_user.php")
+    div_it.append(form_it)
+    div_it.append(E.HR())
+
+    p_it = E.P()
+    p_it.text = "Name:"
+    p_it.append(E.BR())
+    input_it = E.INPUT(type="text", name="name")
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    p_it = E.P()
+    input_it = E.INPUT(type='submit', value="Add user")
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    #--------------------------------------------------------------------------
 
     # Rename user.
-    s += "<form>\n"
-    s += "<p>New name:<br>\n"
-    s += "<input type=\"text\" name=\"name\"></p>\n"
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/rename_user.php\" value=\"Rename user\"></p>\n"
-    s += "</form>\n"
-    s += "<hr>\n"
+    form_it = E.FORM(method='post', action="/steins-feed/rename_user.php")
+    div_it.append(form_it)
+    div_it.append(E.HR())
+
+    p_it = E.P()
+    p_it.text = "New name:"
+    p_it.append(E.BR())
+    input_it = E.INPUT(type="text", name="name")
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    p_it = E.P()
+    input_it = E.INPUT(type='hidden', name="user", value=user)
+    p_it.append(input_it)
+    input_it = E.INPUT(type='submit', value="Rename user")
+    p_it.append(input_it)
+    form_it.append(p_it)
+
+    #--------------------------------------------------------------------------
 
     # Delete user.
-    s += "<form>\n"
-    s += "<input type=\"hidden\" name=\"user\" value=\"{}\">\n".format(qd['user'])
-    s += "<p><input type=\"submit\" formmethod=\"post\" formaction=\"/steins-feed/delete_user.php\" value=\"Delete user\" style='background-color:red'></p>\n"
-    s += "</form>\n"
+    form_it = E.FORM(method='post', action="/steins-feed/delete_user.php")
+    div_it.append(form_it)
 
-    s += "</body>\n"
-    s += "</html>\n"
+    p_it = E.P()
+    input_it = E.INPUT(type='hidden', name="user", value=user)
+    p_it.append(input_it)
+    input_it = E.INPUT(type='submit', value="Delete user", style="background-color:red")
+    p_it.append(input_it)
+    form_it.append(p_it)
 
-    return s
+    #--------------------------------------------------------------------------
+
+    return lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
 
 def handle_statistics(user):
     c = get_cursor()
 
-    s = ""
+    #--------------------------------------------------------------------------
 
-    # Write payload.
-    s += "<!DOCTYPE html>\n"
-    s += "<html>\n"
-    s += "<head>\n"
-    s += "<meta charset=\"UTF-8\">"
-    s += "<title>Statistics</title>\n"
-    s += "</head>\n"
-    s += "<body>\n"
+    # Preamble.
+    tree, head, body = preamble(user)
+
+    #--------------------------------------------------------------------------
+
+    # Scripts.
+    for js_it in ["open_menu.js", "close_menu.js"]:
+        script_it = E.SCRIPT()
+        with open(dir_path + os.sep + "js" + os.sep + js_it, 'r') as f:
+            script_it.text = f.read()
+        head.append(script_it)
+
+    #--------------------------------------------------------------------------
+
+    # Top & side navigation menus.
+    body.append(top_nav(user))
+    body.append(side_nav(user))
+
+    #--------------------------------------------------------------------------
+
+    # Body.
+    div_it = E.DIV(E.CLASS("main"))
+    body.append(div_it)
+    div_it.append(E.HR())
+
+    #--------------------------------------------------------------------------
 
     # Likes.
     likes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=1 ORDER BY Published DESC".format(user, user)).fetchall()
 
-    s += "<h2>Likes</h2>\n"
-    s += "<p>{} likes.</p>\n".format(len(likes))
-    s += "<ul>\n"
+    h_it = E.H2()
+    h_it.text = "Likes"
+    div_it.append(h_it)
+
+    p_it = E.P()
+    p_it.text = "{} likes.".format(len(likes))
+    div_it.append(p_it)
+
+    ul_it = E.UL()
+    div_it.append(ul_it)
+
     for row_it in likes:
         datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it['Published'], "%Y-%m-%d %H:%M:%S GMT"))
-        s += "<li>{}: <a href={}>{}</a> ({})</li>".format(row_it['Source'], row_it['Link'], row_it['Title'], datestamp)
-    s += "</ul>\n"
 
-    s += "<hr>\n"
+        li_it = E.LI()
+        ul_it.append(li_it)
+        li_it.text = "{}: ".format(row_it['Source'])
+
+        a_it = E.A(href=row_it['Link'])
+        a_it.text = row_it['Title']
+        a_it.tail = " ({})".format(datestamp)
+        li_it.append(a_it)
+
+    div_it.append(E.HR())
+
+    #--------------------------------------------------------------------------
 
     # Dislikes.
     dislikes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=-1 ORDER BY Published DESC".format(user, user)).fetchall()
 
-    s += "<h2>Dislikes</h2>\n"
-    s += "<p>{} dislikes.</p>\n".format(len(dislikes))
-    s += "<ul>\n"
+    h_it = E.H2()
+    h_it.text = "Dislikes"
+    div_it.append(h_it)
+
+    p_it = E.P()
+    p_it.text = "{} dislikes.".format(len(dislikes))
+    div_it.append(p_it)
+
+    ul_it = E.UL()
+    div_it.append(ul_it)
+
     for row_it in dislikes:
         datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it['Published'], "%Y-%m-%d %H:%M:%S GMT"))
-        s += "<li>{}: <a href={}>{}</a> ({})</li>".format(row_it['Source'], row_it['Link'], row_it['Title'], datestamp)
-    s += "</ul>\n"
 
-    s += "</body>\n"
-    s += "</html>\n"
+        li_it = E.LI()
+        ul_it.append(li_it)
+        li_it.text = "{}: ".format(row_it['Source'])
 
-    return s
+        a_it = E.A(href=row_it['Link'])
+        a_it.text = row_it['Title']
+        a_it.tail = " ({})".format(datestamp)
+        li_it.append(a_it)
+
+    #--------------------------------------------------------------------------
+
+    return lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
 
 class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):

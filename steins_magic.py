@@ -78,7 +78,7 @@ def handle_analysis(user="nobody", clf="Naive Bayes"):
     #--------------------------------------------------------------------------
 
     # Preamble.
-    tree, head, body = preamble("Stein's Feed")
+    tree, head, body = preamble(user)
 
     #--------------------------------------------------------------------------
 
