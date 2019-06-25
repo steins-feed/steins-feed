@@ -5,6 +5,7 @@ from lxml.html import builder as E
 import numpy as np
 import os
 import pickle
+import re
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
@@ -270,7 +271,8 @@ def handle_highlight(user, clf, item_id):
             except KeyError:
                 continue
             if coeff < coeff_dislike or coeff >= coeff_like:
-                section = section.replace(token_it, "<mark>{}</mark>".format(token_it))
+                #section = section.replace(token_it, "<mark>{}</mark>".format(token_it))
+                section = re.sub(r"\b{}\b".format(token_it), "<mark>{}</mark>".format(token_it), section)
         new_title += section
 
         if idx_right == -1:
@@ -293,7 +295,8 @@ def handle_highlight(user, clf, item_id):
             except KeyError:
                 continue
             if coeff < coeff_dislike or coeff >= coeff_like:
-                section = section.replace(token_it, "<mark>{}</mark>".format(token_it))
+                #section = section.replace(token_it, "<mark>{}</mark>".format(token_it))
+                section = re.sub(r"\b{}\b".format(token_it), "<mark>{}</mark>".format(token_it), section)
         new_summary += section
 
         if idx_right == -1:
