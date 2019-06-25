@@ -16,20 +16,19 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 
 PORT = 8000
 
-def handle_like(qd):
+def handle_like(user, item_id, submit):
     conn = get_connection()
     c = conn.cursor()
 
-    item_id = int(qd['id'])
-    if qd['submit'] == "Like":
+    if submit == "Like":
         val = 1
-    if qd['submit'] == "Dislike":
+    if submit == "Dislike":
         val = -1
-    row_val = c.execute("SELECT {} FROM Like WHERE ItemID=?".format(qd['user']), (item_id, )).fetchone()[0]
+    row_val = c.execute("SELECT {} FROM Like WHERE ItemID=?".format(user), (item_id, )).fetchone()[0]
     if row_val == val:
-        c.execute("UPDATE Like SET {}=0 WHERE ItemID=?".format(qd['user']), (item_id, ))
+        c.execute("UPDATE Like SET {}=0 WHERE ItemID=?".format(user), (item_id, ))
     else:
-        c.execute("UPDATE Like SET {}=? WHERE ItemID=?".format(qd['user']), (val, item_id, ))
+        c.execute("UPDATE Like SET {}=? WHERE ItemID=?".format(user), (val, item_id, ))
 
     conn.commit()
 

@@ -15,5 +15,5 @@ function highlight(button_id) {
     };
     xmlhttp.open("POST", "/steins-feed/highlight.php", true);
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xmlhttp.send("user=USER" + "&id=" + button_id);
+    xmlhttp.send("user=USER" + "&id=" + button_id + "&clf=CLF");
 }

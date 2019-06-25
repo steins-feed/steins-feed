@@ -75,7 +75,10 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
     for js_it in ["like.js", "dislike.js", "highlight.js", "open_menu.js", "close_menu.js"]:
         script_it = E.SCRIPT()
         with open(dir_path + os.sep + "js" + os.sep + js_it, 'r') as f:
-            script_it.text = f.read().replace("USER", user)
+            f_temp = f.read()
+            f_temp = f_temp.replace("USER", user)
+            f_temp = f_temp.replace("CLF", clf.replace(" ", "+"))
+            script_it.text = f_temp
         head.append(script_it)
 
     #--------------------------------------------------------------------------
