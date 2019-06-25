@@ -1,12 +1,12 @@
 <?php
-if( !$_POST["page"] ) {
-    $_POST["page"] = 0;
+if( !$_POST["user"] ) {
+    $_POST["user"] = "nobody";
 }
 if( !$_POST["lang"] ) {
     $_POST["lang"] = "International";
 }
-if( !$_POST["user"] ) {
-    $_POST["user"] = "nobody";
+if( !$_POST["page"] ) {
+    $_POST["page"] = "0";
 }
 $post_query = http_build_query($_POST);
 $python_cmd = <<<EOT

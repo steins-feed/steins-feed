@@ -49,12 +49,6 @@ def handle_display_feeds(qd):
 
         conn.commit()
 
-def handle_add_feed(qd):
-    add_feed(qd['title'], qd['link'], qd['disp'], qd['lang'], qd['summary'], qd['user'])
-
-def handle_delete_feed(qd):
-    delete_feed(int(qd['feed']), qd['user'])
-
 def handle_load_config(qd):
     init_feeds(dir_path + os.sep + "tmp_feeds.xml", qd['user'])
 
@@ -95,7 +89,7 @@ def handle_settings(user):
 
     # Top & side navigation menus.
     body.append(top_nav(user))
-    body.append(side_nav(user=user))
+    body.append(side_nav(user))
 
     #--------------------------------------------------------------------------
 
@@ -511,7 +505,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qlen = int(self.headers.get('content-length'))
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
-            handle_add_feed(qd)
+            add_feed(qd['title'], qd['link'], qd['disp'], qd['lang'], qd['summary'], qd['user'])
             self.send_response(204)
             self.end_headers()
 
@@ -522,7 +516,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qlen = int(self.headers.get('content-length'))
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
-            handle_delete_feed(qd)
+            delete_feed(int(qd['feed']), qd['user'])
             self.send_response(204)
             self.end_headers()
 

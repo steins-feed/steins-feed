@@ -68,7 +68,7 @@ def steins_learn(user, classifier):
 
     return clfs
 
-def handle_analysis(user="nobody", clf="Naive Bayes"):
+def handle_analysis(user, clf):
     user_path = dir_path + os.sep + user
     clf_path = user_path + os.sep + clf
     with open(clf_path + os.sep + "clfs.pickle", 'rb') as f:
@@ -93,7 +93,7 @@ def handle_analysis(user="nobody", clf="Naive Bayes"):
 
     # Top & side navigation menus.
     body.append(top_nav(user))
-    body.append(side_nav(user=user, clf=clf))
+    body.append(side_nav(user))
 
     #--------------------------------------------------------------------------
 
