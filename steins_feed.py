@@ -12,7 +12,7 @@ from steins_html import feed_node, preamble, side_nav, top_nav
 from steins_log import get_logger
 from steins_magic import build_feature, steins_learn
 from steins_manager import get_handler
-from steins_sql import add_item, get_cursor, last_updated
+from steins_sql import add_item, get_cursor, last_update, last_updated
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -42,6 +42,8 @@ def steins_read(title_pattern=""):
 
 def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf="Naive Bayes"):
     c = get_cursor()
+    timestamp = last_updated()
+
     clfs = []
     if not feed == "Full":
         user_path = dir_path + os.sep + user
@@ -53,16 +55,16 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
         surprise = 10
 
     if lang == "International":
-        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) ORDER BY Published DESC".format(user)).fetchall()
+        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND Published<? ORDER BY Published DESC".format(user), (timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
     else:
-        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) ORDER BY Published DESC".format(user), (lang, )).fetchall()
+        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND Published<? ORDER BY Published DESC".format(user), (lang, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
     if page_no >= len(dates):
         return
     d_it = dates[page_no][0]
     if lang == "International":
-        items = c.execute("SELECT Items.*, Like.{0}, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC".format(user), (d_it, )).fetchall()
+        items = c.execute("SELECT Items.*, Like.{0}, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC".format(user), (d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
     else:
-        items = c.execute("SELECT Items.*, Like.{0}, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? ORDER BY Published DESC".format(user), (lang, d_it)).fetchall()
+        items = c.execute("SELECT Items.*, Like.{0}, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC".format(user), (lang, d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
 
     #--------------------------------------------------------------------------
 
@@ -96,9 +98,9 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
     p_it = E.P()
     div_it.append(p_it)
     if surprise > 0:
-        p_it.text = "{} out of {} articles. {} pages. Last updated: {}.".format(surprise, len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated()))
+        p_it.text = "{} out of {} articles. {} pages. Last updated: {}.".format(surprise, len(items), len(dates), timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"))
     else:
-        p_it.text = "{} articles. {} pages. Last updated: {}.\n".format(len(items), len(dates), time.strftime("%Y-%m-%d %H:%M:%S GMT", last_updated()))
+        p_it.text = "{} articles. {} pages. Last updated: {}.\n".format(len(items), len(dates), timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"))
 
     if len(clfs) != 0:
         scores = np.zeros(len(items))
@@ -150,6 +152,7 @@ def steins_write():
             f.write(handle_page(page=d_ctr))
 
 def steins_update(title_pattern="", read_mode=True, write_mode=False):
+    last_update()
     if read_mode:
         steins_read(title_pattern)
     if write_mode:

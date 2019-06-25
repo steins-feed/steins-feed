@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from datetime import datetime
 from lxml import etree
 import os
 import sqlite3
@@ -16,10 +17,14 @@ file_path = dir_path + os.sep + FILE_NAME
 
 logger = get_logger()
 
+def last_update():
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("INSERT INTO Updates(Record) VALUES (?)", (datetime.utcnow(), ))
+    conn.commit()
+
 def last_updated():
-    t = os.path.getmtime(db_path)
-    t = time.gmtime(t)
-    return t
+    return get_cursor().execute("SELECT Record FROM Updates ORDER BY ItemID DESC LIMIT 1").fetchone()[0]
 
 def have_connection():
     if "connection" in globals():
@@ -30,9 +35,8 @@ def have_connection():
 def get_connection():
     global connection
     if not have_connection():
-        connection = sqlite3.connect(db_path)
+        connection = sqlite3.connect(db_path, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
         connection.row_factory = sqlite3.Row
-        #connection = sqlite3.connect(db_path, isolation_level=None)
         logger.debug("Open {}.".format(db_path))
     return connection
 
@@ -228,6 +232,13 @@ if __name__ == "__main__":
         c.execute("CREATE TABLE Users (ItemID INTEGER PRIMARY KEY, Name TINYTEXT NOT NULL UNIQUE)")
         conn.commit()
         logger.warning("Create Users.")
+    except OperationalError:
+        pass
+
+    try:
+        c.execute("CREATE TABLE Updates (ItemID INTEGER PRIMARY KEY, Record TIMESTAMP NOT NULL)")
+        conn.commit()
+        logger.warning("Create Updates.")
     except OperationalError:
         pass
 
