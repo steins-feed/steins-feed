@@ -259,9 +259,11 @@ def handle_highlight(user, clf, item_id):
     coeffs = 2. * coeffs - 1.
     table = dict([(table[i], coeffs[i, 1], ) for i in range(len(table))])
 
-    coeffs_sort = sorted(coeffs[:, 1])
-    coeff_dislike = coeffs_sort[20]
-    coeff_like = coeffs_sort[-20]
+    #coeffs_sort = sorted(coeffs[:, 1])
+    #coeff_dislike = coeffs_sort[20]
+    #coeff_like = coeffs_sort[-20]
+    coeff_dislike = -0.5
+    coeff_like = 0.5
 
     new_title = ""
     idx_left = 0
@@ -277,7 +279,6 @@ def handle_highlight(user, clf, item_id):
             except KeyError:
                 continue
             if coeff < coeff_dislike or coeff >= coeff_like:
-                #section = section.replace(token_it, "<mark>{}</mark>".format(token_it))
                 section = re.sub(r"\b{}\b".format(token_it), "<mark>{}</mark>".format(token_it), section)
         new_title += section
 
@@ -301,7 +302,6 @@ def handle_highlight(user, clf, item_id):
             except KeyError:
                 continue
             if coeff < coeff_dislike or coeff >= coeff_like:
-                #section = section.replace(token_it, "<mark>{}</mark>".format(token_it))
                 section = re.sub(r"\b{}\b".format(token_it), "<mark>{}</mark>".format(token_it), section)
         new_summary += section
 
