@@ -2,9 +2,7 @@
 
 import lxml
 from lxml.html import builder as E
-from nltk.stem.snowball import SnowballStemmer
 import numpy as np
-#from scipy.sparse import csr_matrix, lil_matrix
 import os
 import pickle
 import re
@@ -16,39 +14,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 
 from steins_html import preamble, side_nav, top_nav, unescape
+from steins_nltk import NLTK_CountVectorizer
 from steins_sql import get_cursor
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
-
-#class NLTK_CountVectorizer(CountVectorizer):
-#    def __init__(self, lang):
-#        CountVectorizer.__init__(self)
-#        try:
-#            self.stemmer = SnowballStemmer(lang.lower())
-#        except ValueError:
-#            self.stemmer = lambda x: x
-#
-#    def nltk_transform(self, X):
-#        vocabs = set(range(len(self.vocabulary_)))
-#        for v_it in self.vocabulary_.items():
-#            if not v_it[1] in vocabs:
-#                continue
-#
-#            words = [w_it for w_it in self.vocabulary_.items() if self.stemmer.stem(w_it[0]) == self.stemmer.stem(v_it[0])]
-#            words.sort(key=lambda x: x[1])
-#            vocabs.remove(words[0][1])
-#            for w_it in words[1:]:
-#                X[:, words[0][1]] += X[:, w_it[1]]
-#                X[:, w_it[1]] = 0.
-#                vocabs.remove(w_it[1])
-#
-#        return X
-#
-#    def fit_transform(self, X, Y=None):
-#        return self.nltk_transform(super().fit_transform(X, Y))
-#
-#    def transform(self, X):
-#        return self.nltk_transform(super().transform(X))
 
 def build_feature(row):
     title = row['Title'] + " " + row['Summary']
@@ -66,10 +35,23 @@ def steins_learn(user, classifier):
     langs = [e[0] for e in c.execute("SELECT DISTINCT Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}!=0".format(user)).fetchall()]
 
     for lang_it in langs:
+        likes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=1 AND Language=?".format(user), (lang_it, )).fetchall()
+        dislikes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=-1 AND Language=?".format(user), (lang_it, )).fetchall()
+
+        titles = []
+        titles += [build_feature(row_it) for row_it in likes]
+        titles += [build_feature(row_it) for row_it in dislikes]
+
+        targets = []
+        targets += [1 for row_it in likes]
+        targets += [-1 for row_it in dislikes]
+
         # Build pipeline.
-        count_vect = ('vect', CountVectorizer())
-        #count_vect = ('vect', NLTK_CountVectorizer(lang_it))
+        #count_vect = ('vect', CountVectorizer())
+        count_vect = ('vect', NLTK_CountVectorizer(lang_it))
+
         tfidf_transformer = ('tfidf', TfidfTransformer())
+
         if classifier == 'Naive Bayes':
             clf = ('clf', MultinomialNB())
         elif classifier == 'Logistic Regression':
@@ -83,17 +65,6 @@ def steins_learn(user, classifier):
         text_clf = Pipeline([count_vect, tfidf_transformer, clf])
 
         # Train classifiers.
-        likes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=1 AND Language=?".format(user), (lang_it, )).fetchall()
-        dislikes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=-1 AND Language=?".format(user), (lang_it, )).fetchall()
-
-        titles = []
-        titles += [build_feature(row_it) for row_it in likes]
-        titles += [build_feature(row_it) for row_it in dislikes]
-
-        targets = []
-        targets += [1 for row_it in likes]
-        targets += [-1 for row_it in dislikes]
-
         try:
             clf = text_clf.fit(titles, targets)
         except ValueError:

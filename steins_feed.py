@@ -10,7 +10,7 @@ import time
 
 from steins_html import feed_node, preamble, side_nav, top_nav
 from steins_log import get_logger
-from steins_magic import build_feature, steins_learn
+from steins_magic import build_feature
 from steins_manager import get_handler
 from steins_sql import add_item, get_cursor, last_update, last_updated
 
