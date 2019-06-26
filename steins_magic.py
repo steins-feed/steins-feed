@@ -245,8 +245,8 @@ def handle_highlight(user, clf, item_id):
         clfs = pickle.load(f)
 
     item_it = c.execute("SELECT Items.*, Feeds.Language FROM Items INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Items.ItemID=?", (item_id, )).fetchone()
-    title = item_it['Title']
-    summary = item_it['Summary']
+    title = "<span>" + unescape(item_it['Title']) + "</span>"
+    summary = "<div>" + unescape(item_it['Summary']) + "</div>"
 
     pipeline = clfs[item_it['Language']]
     count_vect = pipeline.named_steps['vect']
