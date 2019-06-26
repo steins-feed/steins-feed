@@ -129,7 +129,7 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
         sample = random.choice(scores.size, surprise, False, probs)
         items = [items[cnt] for cnt in sample]
     elif len(clfs) != 0:
-        items = sorted(items, key=lambda item_it: item_it['Score'], reverse=True)
+        items.sort(key=lambda item_it: item_it['Score'], reverse=True)
 
     if len(clfs) == 0:
         for item_it in items:

@@ -7,6 +7,7 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 
 *   lxml
 *   feedparser
+*   nltk
 *   requests
 *   scikit-learn
 
