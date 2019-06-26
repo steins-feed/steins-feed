@@ -515,7 +515,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qlen = int(self.headers.get('content-length'))
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
-            delete_feed(int(qd['feed']), qd['user'])
+            delete_feed(int(qd['feed']))
             self.send_response(204)
             self.end_headers()
 

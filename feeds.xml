@@ -3091,6 +3091,11 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>Nikkei Asian Review</title>
+        <link>https://asia.nikkei.com/rss/feed/nar</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>The Onion</title>
         <link>https://www.theonion.com/rss</link>
         <lang>English</lang>
@@ -3102,6 +3107,11 @@
     </feed>
 
     <!-- Podcasts -->
+    <feed>
+        <title>The Economist Podcasts</title>
+        <link>https://www.economist.com/podcasts/rss.xml</link>
+        <lang>English</lang>
+    </feed>
     <feed>
         <title>Nature Podcast</title>
         <link>http://rss.acast.com/nature</link>
@@ -3121,11 +3131,6 @@
         <title>Slate Money</title>
         <link>http://feeds.megaphone.fm/slatemoney</link>
         <lang>English</lang>
-    </feed>
-    <feed>
-        <title>t3n Podcast</title>
-        <link>http://feeds.soundcloud.com/users/soundcloud:users:213461595/sounds.rss</link>
-        <lang>German</lang>
     </feed>
 
     <!-- Science -->

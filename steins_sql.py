@@ -74,7 +74,7 @@ def add_feed(title, link, lang, disp=1, summary=2, user='nobody'):
         conn.rollback()
         logger.error("Add feed -- {}.".format(title))
 
-def delete_feed(item_id, user='nobody'):
+def delete_feed(item_id):
     conn = get_connection()
     c = conn.cursor()
 
