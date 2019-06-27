@@ -37,6 +37,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 class NLTK_CountVectorizer(CountVectorizer):
     def __init__(self, lang):
         CountVectorizer.__init__(self)
+
         try:
             self.stemmer = SnowballStemmer(lang.lower()).stem
             self.vect = CountVectorizer()
@@ -46,3 +47,23 @@ class NLTK_CountVectorizer(CountVectorizer):
 
     def analyzer_nltk(self, x):
         return [self.stemmer(e) for e in self.vect.build_analyzer()(x)]
+
+    def fit_transform(self, x, y):
+        try:
+            self.vect.fit(x, y)
+            self.vocabulary_nltk = self.vect.vocabulary_.copy()
+            res = super().fit_transform(x, y)
+
+            for v_it in dict(self.vocabulary_nltk):
+                if not v_it in self.vocabulary_nltk:
+                    continue
+
+                words = [w_it for w_it in self.vocabulary_nltk if self.stemmer(w_it) == self.stemmer(v_it)]
+                words.sort()
+                for w_it in words[1:]:
+                    del self.vocabulary_nltk[w_it]
+        except AttributeError:
+            res = super().fit_transform(x, y)
+            self.vocabulary_nltk = self.vocabulary_.copy()
+
+        return res

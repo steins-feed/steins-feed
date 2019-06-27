@@ -50,7 +50,6 @@ def steins_learn(user, classifier):
         # Build pipeline.
         #count_vect = ('vect', CountVectorizer())
         count_vect = ('vect', NLTK_CountVectorizer(lang_it))
-
         tfidf_transformer = ('tfidf', TfidfTransformer())
 
         if classifier == 'Naive Bayes':
@@ -335,7 +334,8 @@ if __name__ == "__main__":
                 count_vect = pipeline.named_steps['vect']
 
                 # Words.
-                table = list(count_vect.vocabulary_.keys())
+                #table = list(count_vect.vocabulary_.keys())
+                table = list(count_vect.vocabulary_nltk.keys())
                 coeffs = pipeline.predict_proba(table)
                 coeffs = 2. * coeffs - 1.
                 table = [(table[i], coeffs[i, 1], ) for i in range(len(table))]
