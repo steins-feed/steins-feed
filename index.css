@@ -10,6 +10,23 @@ div.main form {
 	display: inline-block;
 }
 
+.tooltip {
+	position: relative;
+}
+
+.tooltip .tooltiptext {
+	visibility: hidden;
+	background-color: black;
+	color: white;
+	font-size: medium;
+	position: absolute;
+	z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
 span.onclick {
 	cursor: pointer;
 }

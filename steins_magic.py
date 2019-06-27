@@ -273,7 +273,7 @@ def handle_highlight(user, clf, item_id):
             expr = " ".join(analyzer(token_it))
             coeff = 2. * clf.predict_proba([expr])[0][1] - 1.
             if coeff < coeff_dislike or coeff >= coeff_like:
-                section = re.sub(r"\b{}\b".format(token_it), "<mark>{}</mark>".format(token_it), section)
+                section = re.sub(r"\b{}\b".format(token_it), "<span class=\"tooltip\"><mark>{}</mark><span class=\"tooltiptext\">{:.2f}</span></span>".format(token_it, coeff), section)
         new_title += section
 
         if idx_right == -1:
@@ -294,7 +294,7 @@ def handle_highlight(user, clf, item_id):
             expr = " ".join(analyzer(token_it))
             coeff = 2. * clf.predict_proba([expr])[0][1] - 1.
             if coeff < coeff_dislike or coeff >= coeff_like:
-                section = re.sub(r"\b{}\b".format(token_it), "<mark>{}</mark>".format(token_it), section)
+                section = re.sub(r"\b{}\b".format(token_it), "<span class=\"tooltip\"><mark>{}</mark><span class=\"tooltiptext\">{:.2f}</span></span>".format(token_it, coeff), section)
         new_summary += section
 
         if idx_right == -1:
