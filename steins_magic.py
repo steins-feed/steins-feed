@@ -253,20 +253,12 @@ def handle_highlight(user, clf, item_id):
     title = "<span>" + unescape(item_it['Title']) + "</span>"
     summary = "<div>" + unescape(item_it['Summary']) + "</div>"
 
-    pipeline = clfs[item_it['Language']]
-    count_vect = pipeline.named_steps['vect']
+    clf = clfs[item_it['Language']]
+    count_vect = clf.named_steps['vect']
     analyzer = count_vect.build_analyzer()
-    preprocessor = count_vect.build_preprocessor()
+    #preprocessor = count_vect.build_preprocessor()
     tokenizer = count_vect.build_tokenizer()
 
-    table = list(count_vect.vocabulary_.keys())
-    coeffs = pipeline.predict_proba(table)
-    coeffs = 2. * coeffs - 1.
-    table = dict([(table[i], coeffs[i, 1], ) for i in range(len(table))])
-
-    #coeffs_sort = sorted(coeffs[:, 1])
-    #coeff_dislike = coeffs_sort[20]
-    #coeff_like = coeffs_sort[-20]
     coeff_dislike = -0.5
     coeff_like = 0.5
 
@@ -279,10 +271,8 @@ def handle_highlight(user, clf, item_id):
             section = title[idx_left:]
 
         for token_it in set(tokenizer(section)):
-            try:
-                coeff = table[preprocessor(token_it)]
-            except KeyError:
-                continue
+            expr = " ".join(analyzer(token_it))
+            coeff = 2. * clf.predict_proba([expr])[0][1] - 1.
             if coeff < coeff_dislike or coeff >= coeff_like:
                 section = re.sub(r"\b{}\b".format(token_it), "<mark>{}</mark>".format(token_it), section)
         new_title += section
@@ -302,10 +292,8 @@ def handle_highlight(user, clf, item_id):
             section = summary[idx_left:]
 
         for token_it in set(tokenizer(section)):
-            try:
-                coeff = table[preprocessor(token_it)]
-            except KeyError:
-                continue
+            expr = " ".join(analyzer(token_it))
+            coeff = 2. * clf.predict_proba([expr])[0][1] - 1.
             if coeff < coeff_dislike or coeff >= coeff_like:
                 section = re.sub(r"\b{}\b".format(token_it), "<mark>{}</mark>".format(token_it), section)
         new_summary += section
