@@ -2,7 +2,7 @@
 
 import feedparser
 import lxml
-from lxml.etree import ParserError, strip_elements, strip_tags
+from lxml.etree import ParserError
 import time
 
 from steins_log import get_logger
@@ -37,18 +37,15 @@ class SteinsHandler:
         raise KeyError
 
     def read_summary(self, item_it):
-        div_tag = False
-        try:
-            summary_tree = lxml.html.fromstring(item_it['summary'])
-        except ParserError:
-            summary = "<div>" + item_it['summary'] + "</div>"
-            summary_tree = lxml.html.fromstring(summary)
-            div_tag = True
+        summary = "<div>" + item_it['summary'] + "</div>"
+        summary_tree = lxml.html.fromstring(summary)
 
         # Remove.
-        tags = ["img", "iframe"]
+        tags = ["img", "iframe", "script", "figure"]
         for tag_it in tags:
-            strip_elements(summary_tree, tag_it)
+            elems = summary_tree.xpath("//{}".format(tag_it))
+            for elem_it in elems:
+                elem_it.drop_tree()
 
         # Remove leading and trailing <br>.
         for node_it in summary_tree.xpath("//p") + summary_tree.xpath("//h1") + summary_tree.xpath("//h2"):
@@ -66,12 +63,12 @@ class SteinsHandler:
         # Strip.
         tags = ["strong", "hr"]
         for tag_it in tags:
-            strip_tags(summary_tree, tag_it)
+            elems = summary_tree.xpath("//{}".format(tag_it))
+            for elem_it in elems:
+                elem_it.drop_tag()
 
         res = lxml.html.tostring(summary_tree).decode('utf-8')
-        if div_tag:
-            res = res[len("<div>"):-len("</div>")]
-        return res
+        return res[len("<div>"):-len("</div>")]
 
     def read_time(self, item_it):
         try:
@@ -97,22 +94,15 @@ class SteinsHandler:
 class AbstractHandler(SteinsHandler):
     def read_summary(self, item_it):
         summary = super().read_summary(item_it)
-        div_tag = False
-        try:
-            summary_tree = lxml.html.fromstring(summary)
-        except ParserError:
-            summary = "<div>" + summary + "</div>"
-            summary_tree = lxml.html.fromstring(summary)
-            div_tag = True
+        summary = "<div>" + summary + "</div>"
+        summary_tree = lxml.html.fromstring(summary)
 
         p_nodes = summary_tree.xpath("//p")
         for node_it in p_nodes[1:]:
-            node_it.getparent().remove(node_it)
+            node_it.drop_tree()
 
         res = lxml.html.tostring(summary_tree).decode('utf-8')
-        if div_tag:
-            res = res[len("<div>"):-len("</div>")]
-        return res
+        return res[len("<div>"):-len("</div>")]
 
 class NoAbstractHandler(SteinsHandler):
     def read_summary(self, item_it):
@@ -123,7 +113,7 @@ class AtlanticHandler(SteinsHandler):
         tree = get_tree_from_session(feed_link)
         contents = tree.xpath("//content")
         for content_it in contents:
-            content_it.getparent().remove(content_it)
+            content_it.drop_tree()
         d = feedparser.parse(lxml.html.tostring(tree))
         return d
 
