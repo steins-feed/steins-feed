@@ -64,7 +64,7 @@ def steins_learn(user, classifier):
             raise KeyError
         text_clf = Pipeline([count_vect, tfidf_transformer, clf])
 
-        # Train classifiers.
+        # Train classifier.
         try:
             clf = text_clf.fit(titles, targets)
         except ValueError:

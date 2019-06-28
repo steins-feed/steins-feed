@@ -2965,6 +2965,23 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>fast.ai</title>
+        <link>https://www.fast.ai/atom.xml</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>GitHub</title>
+        <link>https://github.blog/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>GitLab</title>
+        <link>https://about.gitlab.com/blog/</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
         <title>Google</title>
         <link>https://www.blog.google/rss/</link>
         <lang>English</lang>
@@ -2973,6 +2990,11 @@
     <feed>
         <title>McKinsey Insights</title>
         <link>https://www.mckinsey.com/Insights/rss.aspx</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>OpenAI</title>
+        <link>https://openai.com/blog/rss/</link>
         <lang>English</lang>
     </feed>
 

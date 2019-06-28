@@ -56,6 +56,7 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 *   Bloomberg.
 *   Boston Globe.
 *   Business Insider.
+*   New York Magazine.
 *   The Tab.
 *   The Telegraph.
 *   The Times.
