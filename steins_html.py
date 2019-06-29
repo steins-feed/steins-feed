@@ -59,7 +59,7 @@ def top_nav(title):
 
     return tree
 
-def side_nav_nav(user, lang, page_no, dates):
+def side_nav_nav(user, lang, page_no, feed, clf, dates):
     # Navigation.
     h_it = E.H1(E.CLASS("sidenav"))
 
@@ -74,6 +74,10 @@ def side_nav_nav(user, lang, page_no, dates):
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="page", value=str(page_no-1))
             form_it.append(input_it)
+            input_it = E.INPUT(type='hidden', name="feed", value=feed)
+            form_it.append(input_it)
+            input_it = E.INPUT(type='hidden', name="clf", value=clf)
+            form_it.append(input_it)
             button_it = E.BUTTON(type='submit')
             i_it = E.I(E.CLASS("material-icons"))
             i_it.text = "fast_rewind"
@@ -87,6 +91,10 @@ def side_nav_nav(user, lang, page_no, dates):
             input_it = E.INPUT(type='hidden', name="lang", value=lang)
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="page", value=str(page_no+1))
+            form_it.append(input_it)
+            input_it = E.INPUT(type='hidden', name="feed", value=feed)
+            form_it.append(input_it)
+            input_it = E.INPUT(type='hidden', name="clf", value=clf)
             form_it.append(input_it)
             button_it = E.BUTTON(type='submit')
             i_it = E.I(E.CLASS("material-icons"))
@@ -120,6 +128,10 @@ def side_nav_disp(user, lang, page_no, feed, clf):
     form_it.append(E.P("Feed:"))
     for feed_it in ['Full', 'Magic', 'Surprise']:
         input_it = E.INPUT(type='radio', name="feed", value=feed_it)
+        if feed_it == 'Full':
+            input_it.set('onclick', "disable_clf()")
+        else:
+            input_it.set('onclick', "enable_clf()")
         if feed_it == feed:
             input_it.set('checked')
         input_it.tail = feed_it
@@ -128,10 +140,13 @@ def side_nav_disp(user, lang, page_no, feed, clf):
 
     # Algorithm.
     form_it.append(E.P("Algorithm:"))
-    for clf_it in ['Naive Bayes', 'Logistic Regression', 'SVM', 'Linear SVM']:
-        input_it = E.INPUT(type='radio', name="clf", value=clf_it)
+    #for clf_it in ['Naive Bayes', 'Logistic Regression', 'SVM', 'Linear SVM']:
+    for clf_it in ['Naive Bayes', 'Logistic Regression']:
+        input_it = E.INPUT(E.CLASS("clf"), type='radio', name="clf", value=clf_it)
         if clf_it == clf:
             input_it.set('checked')
+        if feed == "Full":
+            input_it.set('disabled')
         input_it.tail = clf_it
         form_it.append(input_it)
         form_it.append(E.BR())
@@ -154,7 +169,8 @@ def side_nav_rep(user, clf):
     p_it = E.P()
 
     select_it = E.SELECT(name="clf")
-    for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
+    #for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
+    for clf_it in ["Naive Bayes", "Logistic Regression"]:
         option_it = E.OPTION(value=clf_it)
         option_it.text = clf_it
         if clf_it == clf:
@@ -172,7 +188,7 @@ def side_nav_rep(user, clf):
 
 def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='Naive Bayes', dates=[]):
     tree = E.DIV(E.CLASS("sidenav"), id="sidenav")
-    tree.append(side_nav_nav(user, lang, page_no, dates))
+    tree.append(side_nav_nav(user, lang, page_no, feed, clf, dates))
     tree.append(side_nav_disp(user, lang, page_no, feed, clf))
     tree.append(E.HR())
     tree.append(side_nav_rep(user, clf))

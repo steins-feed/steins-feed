@@ -88,7 +88,7 @@ def handle_analysis(user, clf):
     #--------------------------------------------------------------------------
 
     # Scripts.
-    for js_it in ["open_menu.js", "close_menu.js"]:
+    for js_it in ["open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js"]:
         script_it = E.SCRIPT()
         with open(dir_path + os.sep + "js" + os.sep + js_it, 'r') as f:
             script_it.text = f.read()
@@ -258,8 +258,12 @@ def handle_highlight(user, clf, item_id):
     #preprocessor = count_vect.build_preprocessor()
     tokenizer = count_vect.build_tokenizer()
 
-    coeff_dislike = -0.5
-    coeff_like = 0.5
+    #coeff_dislike = -0.5
+    #coeff_like = 0.5
+    with open(clf_path + os.sep + "{}.pickle".format(item_it['Language']), 'rb') as f:
+        table = pickle.load(f)
+    coeff_dislike = table[20][1]
+    coeff_like = table[-20][1]
 
     new_title = ""
     idx_left = 0

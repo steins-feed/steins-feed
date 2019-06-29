@@ -74,7 +74,7 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
     #--------------------------------------------------------------------------
 
     # Scripts.
-    for js_it in ["like.js", "dislike.js", "highlight.js", "open_menu.js", "close_menu.js"]:
+    for js_it in ["like.js", "dislike.js", "highlight.js", "open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js"]:
         script_it = E.SCRIPT()
         with open(dir_path + os.sep + "js" + os.sep + js_it, 'r') as f:
             f_temp = f.read()

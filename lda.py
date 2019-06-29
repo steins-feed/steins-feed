@@ -16,7 +16,7 @@ user = "hansolo"
 clf = "Naive Bayes"
 lang = "English"
 no_topics = 10
-no_words = 10
+no_words = 5
 no_vocab = 100
 no_iter = 100
 perp_tol = 1.E-3
@@ -37,7 +37,9 @@ titles += [build_feature(row_it) for row_it in likes]
 #count_vect = ('vect', NLTK_CountVectorizer(lang))
 with open(clf_path + os.sep + "{}.pickle".format(lang), 'rb') as f:
     table = pickle.load(f)
-vocabs = [e[0] for e in table[-no_vocab:]]
+vocabs = []
+vocabs += [e[0] for e in table[-no_vocab:]]
+#vocabs += [e[0] for e in table[:no_vocab]]
 count_vect = ('vect', LDA_CountVectorizer(lang, vocabs))
 
 tfidf_trans = ('tfidf', TfidfTransformer(norm=None))

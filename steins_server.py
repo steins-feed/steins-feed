@@ -78,7 +78,7 @@ def handle_settings(user):
     #--------------------------------------------------------------------------
 
     # Scripts.
-    for js_it in ["open_menu.js", "close_menu.js"]:
+    for js_it in ["open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js"]:
         script_it = E.SCRIPT()
         with open(dir_path + os.sep + "js" + os.sep + js_it, 'r') as f:
             script_it.text = f.read()
@@ -311,7 +311,7 @@ def handle_statistics(user):
     #--------------------------------------------------------------------------
 
     # Scripts.
-    for js_it in ["open_menu.js", "close_menu.js"]:
+    for js_it in ["open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js"]:
         script_it = E.SCRIPT()
         with open(dir_path + os.sep + "js" + os.sep + js_it, 'r') as f:
             script_it.text = f.read()
