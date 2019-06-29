@@ -18,6 +18,8 @@ lang = "English"
 no_topics = 10
 no_words = 10
 no_vocab = 100
+no_iter = 100
+perp_tol = 1.E-3
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 user_path = dir_path + os.sep + user
@@ -40,8 +42,8 @@ count_vect = ('vect', LDA_CountVectorizer(lang, vocabs))
 
 tfidf_trans = ('tfidf', TfidfTransformer(norm=None))
 
-lda_trans = ('clf', LatentDirichletAllocation(n_components=no_topics, max_iter=100, evaluate_every=1, verbose=1))
-#lda_trans = ('clf', LatentDirichletAllocation(n_components=no_topics, learning_method='online', max_iter=100, evaluate_every=1, verbose=1))
+lda_trans = ('clf', LatentDirichletAllocation(n_components=no_topics, max_iter=no_iter, evaluate_every=1, perp_tol=perp_tol, verbose=1))
+#lda_trans = ('clf', LatentDirichletAllocation(n_components=no_topics, learning_method='online', max_iter=no_iter, evaluate_every=1, perp_tol=perp_tol, verbose=1))
 
 #pipeline = Pipeline([count_vect, lda_trans])
 pipeline = Pipeline([count_vect, tfidf_trans, lda_trans])
@@ -55,7 +57,8 @@ features = pipeline.named_steps['vect'].get_feature_names()
 for topic_ct in range(no_topics):
     print("Topic #{}:".format(topic_ct))
     topic = pipeline.named_steps['clf'].components_[topic_ct, :]
-    print(" ".join([features[i] for i in topic.argsort()[:-no_words-1:-1]]))
+    #print(" ".join([features[i] for i in topic.argsort()[:-no_words-1:-1]]))
+    print(" ".join([pipeline.named_steps['vect'].vocabulary_nltk[features[i]] for i in topic.argsort()[:-no_words-1:-1]]))
     #topic *= idf_factors
     #print(" ".join([features[i] for i in topic.argsort()[:-no_words-1:-1]]))
 

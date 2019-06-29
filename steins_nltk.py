@@ -31,9 +31,9 @@ class NLTK_CountVectorizer(CountVectorizer):
                 else:
                     vocabs[expr] = [v_it]
 
-            self.vocabulary_nltk = [min(words) for words in vocabs.values()]
+            self.vocabulary_nltk = dict([(e[0], min(e[1])) for e in vocabs.items()])
         except AttributeError:
-            self.vocabulary_nltk = self.vocabulary_.copy()
+            self.vocabulary_nltk = dict([(e, e) for e in self.vocabulary_])
 
         return res
 

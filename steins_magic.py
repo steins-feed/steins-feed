@@ -335,7 +335,7 @@ if __name__ == "__main__":
 
                 # Words.
                 #table = list(count_vect.vocabulary_.keys())
-                table = count_vect.vocabulary_nltk
+                table = list(count_vect.vocabulary_nltk.values())
                 coeffs = pipeline.predict_proba(table)
                 coeffs = 2. * coeffs - 1.
                 table = [(table[i], coeffs[i, 1], ) for i in range(len(table))]
