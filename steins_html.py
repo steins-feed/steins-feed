@@ -20,6 +20,8 @@ def preamble(title):
     head.append(meta_it)
     link_it = E.LINK(rel="stylesheet", type="text/css", href="/steins-feed/index.css")
     head.append(link_it)
+    link_it = E.LINK(rel="shortcut icon", type="image/png", href="/steins-feed/favicon.ico")
+    head.append(link_it)
     link_it = E.LINK(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
     head.append(link_it)
     title_it = E.TITLE()
@@ -205,6 +207,22 @@ def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='N
     p_it = E.P()
     a_it = E.A(href="/steins-feed/settings.php?user={}".format(user))
     a_it.text = "Settings"
+    p_it.append(a_it)
+    tree.append(p_it)
+
+    tree.append(E.HR())
+
+    # GitHub.
+    p_it = E.P()
+    a_it = E.A(href="https://github.com/hy144328/steins-feed".format(user))
+    a_it.text = "GitHub"
+    p_it.append(a_it)
+    tree.append(p_it)
+
+    # GitHub instructions.
+    p_it = E.P()
+    a_it = E.A(href="https://github.com/hy144328/steins-feed/blob/master/HOWTO.md".format(user))
+    a_it.text = "Instructions"
     p_it.append(a_it)
     tree.append(p_it)
 

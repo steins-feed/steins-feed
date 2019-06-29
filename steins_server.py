@@ -104,19 +104,24 @@ def handle_settings(user):
     div_it.append(form_it)
     div_it.append(E.HR())
 
-    for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID ORDER BY Title COLLATE NOCASE".format(user)).fetchall():
-        input_it = E.INPUT(type='checkbox', name=str(feed_it['ItemID']))
-        form_it.append(input_it)
-        if feed_it[user] != 0:
-            input_it.set('checked')
+    for lang_it in [e[0] for e in c.execute("SELECT DISTINCT Language FROM Feeds ORDER BY Language").fetchall()]:
+        h_it = E.H2()
+        h_it.text = "{} feeds".format(lang_it)
+        form_it.append(h_it)
 
-        a_it = E.A(href=feed_it['Link'])
-        a_it.text = feed_it['Title']
-        a_it.tail = " "
-        form_it.append(a_it)
+        for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE Language='{}' ORDER BY Title COLLATE NOCASE".format(user, lang_it)).fetchall():
+            input_it = E.INPUT(type='checkbox', name=str(feed_it['ItemID']))
+            form_it.append(input_it)
+            if feed_it[user] != 0:
+                input_it.set('checked')
 
-        form_it.append(select_lang(feed_it['ItemID'], feed_it['Language']))
-        form_it.append(E.BR())
+            a_it = E.A(href=feed_it['Link'])
+            a_it.text = feed_it['Title']
+            a_it.tail = " "
+            form_it.append(a_it)
+
+            #form_it.append(select_lang(feed_it['ItemID'], feed_it['Language']))
+            form_it.append(E.BR())
 
     p_it = E.P()
     form_it.append(p_it)

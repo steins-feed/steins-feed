@@ -11,7 +11,7 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 *   requests
 *   scikit-learn
 
-## Run on desktop.
+## Run on desktop
 
 1.  Enter `python3 steins_server.py` on command line.
 2.  Open browser, and enter `localhost:8000`.
@@ -19,7 +19,7 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 4.  Close browser.
 5.  Enter `^C` on command line.
 
-## Run on web server.
+## Run on web server
 
 1.  Enter git clone `git@github.com:hy144328/steins-feed` on command line.
 2.  Move to site on web server, e.g. `/var/www/html/steins-feed`.
@@ -45,13 +45,13 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 6.  Open browser, and enter URL to website.
 7.  Enjoy.
 
-## Feeds behind paywalls.
+## Feeds behind paywalls
 
 *   Financial Times.
 *   The Wall Street Journal.
 *   Die WELT.
 
-## No RSS.
+## No RSS
 
 *   Bloomberg.
 *   Boston Globe.
@@ -61,6 +61,6 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 *   The Telegraph.
 *   The Times.
 
-## GDPR.
+## GDPR
 
 *   LA Times.
