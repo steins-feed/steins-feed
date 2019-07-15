@@ -179,7 +179,7 @@ def handle_analysis(user, clf):
 
     # Most favorite feeds.
     h_it = E.H2()
-    h_it.text = "Most favorite feeds"
+    h_it.text = "Most recommended feeds"
     div_it.append(h_it)
 
     table_it = E.TABLE()
@@ -209,7 +209,7 @@ def handle_analysis(user, clf):
 
     # Least favorite feeds.
     h_it = E.H2()
-    h_it.text = "Least favorite feeds"
+    h_it.text = "Least recommended feeds"
     div_it.append(h_it)
 
     table_it = E.TABLE()

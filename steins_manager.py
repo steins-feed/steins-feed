@@ -41,7 +41,7 @@ class SteinsHandler:
         summary_tree = lxml.html.fromstring(summary)
 
         # Remove.
-        tags = ["img", "iframe", "script", "figure"]
+        tags = ["figure", "img", "iframe", "script", "svg"]
         for tag_it in tags:
             elems = summary_tree.xpath("//{}".format(tag_it))
             for elem_it in elems:

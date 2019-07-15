@@ -124,7 +124,7 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
     if surprise > 0:
         logit_scores = np.log((1. + scores) / (1. - scores))
         sigma = np.sqrt(np.sum(logit_scores**2) / scores.size)
-        probs = np.exp(-0.5 * logit_scores**2 / sigma**2) / (1. + scores) / (1. - scores) / sigma / np.sqrt(2. * np.pi)
+        probs = np.exp(-0.5 * logit_scores**2 / sigma**2) * (1. / (1. + scores) + 1. / (1. - scores)) / sigma / np.sqrt(2. * np.pi)
         probs /= np.sum(probs)
         sample = random.choice(scores.size, surprise, False, probs)
         items = [items[cnt] for cnt in sample]

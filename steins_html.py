@@ -68,13 +68,13 @@ def side_nav_nav(user, lang, page_no, feed, clf, dates):
     if len(dates) <= 1:
         h_it.text = unescape("&nbsp;")
     else:
-        if not page_no <= 0:
+        if not page_no >= len(dates) - 1:
             form_it = E.FORM(method="get", action="/steins-feed/index.php")
             input_it = E.INPUT(type='hidden', name="user", value=user)
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="lang", value=lang)
             form_it.append(input_it)
-            input_it = E.INPUT(type='hidden', name="page", value=str(page_no-1))
+            input_it = E.INPUT(type='hidden', name="page", value=str(page_no+1))
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="feed", value=feed)
             form_it.append(input_it)
@@ -86,13 +86,13 @@ def side_nav_nav(user, lang, page_no, feed, clf, dates):
             button_it.append(i_it)
             form_it.append(button_it)
             h_it.append(form_it)
-        if not page_no >= len(dates) - 1:
+        if not page_no <= 0:
             form_it = E.FORM(method="get", action="/steins-feed/index.php")
             input_it = E.INPUT(type='hidden', name="user", value=user)
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="lang", value=lang)
             form_it.append(input_it)
-            input_it = E.INPUT(type='hidden', name="page", value=str(page_no+1))
+            input_it = E.INPUT(type='hidden', name="page", value=str(page_no-1))
             form_it.append(input_it)
             input_it = E.INPUT(type='hidden', name="feed", value=feed)
             form_it.append(input_it)

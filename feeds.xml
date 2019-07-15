@@ -538,6 +538,14 @@
         <lang>English</lang>
     </feed>
 
+    <!-- European Union -->
+    <feed>
+        <title>European Commission Digital Single Market</title>
+        <link>https://ec.europa.eu/digital-single-market/rss.xml</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+
     <!-- Fast Company -->
     <feed>
         <title>Fast Company Co.Design</title>
@@ -1590,6 +1598,18 @@
         <lang>English</lang>
     </feed>
 
+    <!-- The Motley Fool -->
+    <feed>
+        <title>The Motley Fool Canada</title>
+        <link>https://www.fool.ca/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Motley Fool Deutschland</title>
+        <link>http://www.fool.de/feed/</link>
+        <lang>German</lang>
+    </feed>
+
     <!-- Netzpolitik.org -->
     <feed>
         <title>Netzpolitik.org Datenschutz</title>
@@ -1790,6 +1810,48 @@
     <feed>
         <title>The New Yorker</title>
         <link>https://www.newyorker.com/feed/everything</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- Pacific Standard -->
+    <feed>
+        <title>Pacific Standard Economics</title>
+        <link>https://psmag.com/.rss/excerpt/economics</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Pacific Standard Education</title>
+        <link>https://psmag.com/.rss/excerpt/education</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Pacific Standard Environment</title>
+        <link>https://psmag.com/.rss/excerpt/environment</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Pacific Standard Social Justice</title>
+        <link>https://psmag.com/.rss/excerpt/social-justice</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Pacific Standard Features &amp; Investigations</title>
+        <link>https://psmag.com/.rss/excerpt/tag/features-investigations</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Pacific Standard Ideas</title>
+        <link>https://psmag.com/.rss/excerpt/ideas</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Pacific Standard Audio</title>
+        <link>https://psmag.com/.rss/excerpt/audio-podcasts</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Pacific Standard</title>
+        <link>https://psmag.com/.rss/excerpt/</link>
         <lang>English</lang>
     </feed>
 
@@ -3123,9 +3185,19 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>Pornhub Insights</title>
+        <link>https://pornhub.com/insights/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>TED Ideas</title>
         <link>https://ideas.ted.com/feed/</link>
         <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Titanic</title>
+        <link>http://www.titanic-magazin.de/ich.war.bei.der.waffen.rss</link>
+        <lang>German</lang>
     </feed>
 
     <!-- Podcasts -->
