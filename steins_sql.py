@@ -116,29 +116,14 @@ def add_item(item_title, item_time, item_summary, item_source, item_link):
     if time.strptime(item_time, "%Y-%m-%d %H:%M:%S GMT") > time.gmtime():
         return
 
-    # Remove duplicates.
-    item_exists = False
-    for cand_it in c.execute("SELECT * FROM Items WHERE Title=?", (item_title, )).fetchall():
-        if not item_time[:10] == cand_it['Published'][:10]:
-            continue
-
-        idx0_item = item_link.find("//")
-        idx1_item = item_link.find("/", idx0_item + 2)
-        idx0_cand = cand_it['Link'].find("//")
-        idx1_cand = cand_it['Link'].find("/", idx0_cand + 2)
-
-        if item_link[:idx1_item] == cand_it['Link'][:idx1_cand]:
-            item_exists = True
-            break
-    if not item_exists:
-        try:
-            c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, item_source, item_link, ))
-            c.execute("INSERT INTO Like (ItemID) SELECT ItemID FROM Items WHERE Title=? AND Published=? AND Summary=? AND Source=? AND Link=?", (item_title, item_time, item_summary, item_source, item_link, ))
-            conn.commit()
-            logger.info("Add item -- {}.".format(item_title))
-        except IntegrityError:
-            conn.rollback()
-            logger.error("Add item -- {}.".format(item_title))
+    try:
+        c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, item_source, item_link, ))
+        c.execute("INSERT INTO Like (ItemID) SELECT ItemID FROM Items WHERE Title=? AND Published=? AND Summary=? AND Source=? AND Link=?", (item_title, item_time, item_summary, item_source, item_link, ))
+        conn.commit()
+        logger.info("Add item -- {}.".format(item_title))
+    except IntegrityError:
+        conn.rollback()
+        logger.error("Add item -- {}.".format(item_title))
 
 def delete_item(item_id):
     conn = get_connection()

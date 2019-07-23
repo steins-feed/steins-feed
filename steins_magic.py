@@ -16,9 +16,13 @@ from sklearn.svm import SVC
 from steins_html import preamble, side_nav, top_nav, unescape
 from steins_log import get_logger
 from steins_nltk import NLTK_CountVectorizer
-from steins_sql import get_cursor
+from steins_sql import get_cursor, last_updated
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
+
+no_words = 20
+no_feeds = 10
+no_articles = 100
 
 def build_feature(row):
     title = row['Title'] + " " + row['Summary']
@@ -31,13 +35,14 @@ def build_feature(row):
 
 def steins_learn(user, classifier):
     c = get_cursor()
+    timestamp = last_updated()
 
     clfs = dict()
     langs = [e[0] for e in c.execute("SELECT DISTINCT Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}!=0".format(user)).fetchall()]
 
     for lang_it in langs:
-        likes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=1 AND Language=?".format(user), (lang_it, )).fetchall()
-        dislikes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=-1 AND Language=?".format(user), (lang_it, )).fetchall()
+        likes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=1 AND Language=? AND Published<?".format(user), (lang_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
+        dislikes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=-1 AND Language=? AND Published<?".format(user), (lang_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
 
         titles = []
         titles += [build_feature(row_it) for row_it in likes]
@@ -56,10 +61,10 @@ def steins_learn(user, classifier):
             clf = ('clf', MultinomialNB())
         elif classifier == 'Logistic Regression':
             clf = ('clf', LogisticRegression())
-        elif classifier == 'SVM':
-            clf = ('clf', SVC(probability=True))
-        elif classifier == 'Linear SVM':
-            clf = ('clf', SVC(kernel='linear', probability=True))
+        #elif classifier == 'SVM':
+        #    clf = ('clf', SVC(probability=True))
+        #elif classifier == 'Linear SVM':
+        #    clf = ('clf', SVC(kernel='linear', probability=True))
         else:
             raise KeyError
         text_clf = Pipeline([count_vect, tfidf_transformer, clf])
@@ -74,6 +79,8 @@ def steins_learn(user, classifier):
     return clfs
 
 def handle_analysis(user, clf):
+    timestamp = last_updated()
+
     user_path = dir_path + os.sep + user
     clf_path = user_path + os.sep + clf
     with open(clf_path + os.sep + "clfs.pickle", 'rb') as f:
@@ -105,6 +112,9 @@ def handle_analysis(user, clf):
     # Body.
     div_it = E.DIV(E.CLASS("main"))
     body.append(div_it)
+    p_it = E.P()
+    div_it.append(p_it)
+    p_it.text = "Last updated: {}.".format(timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"))
     div_it.append(E.HR())
 
     #--------------------------------------------------------------------------
@@ -133,7 +143,7 @@ def handle_analysis(user, clf):
     td_it.append(E.HR())
     table_it.append(td_it)
 
-    for i in reversed(range(-10, 0)):
+    for i in reversed(range(-no_words, 0)):
         tr_it = E.TR()
         for lang_it in langs:
             td_it = E.TD()
@@ -160,7 +170,7 @@ def handle_analysis(user, clf):
     td_it.append(E.HR())
     table_it.append(td_it)
 
-    for i in range(10):
+    for i in range(no_words):
         tr_it = E.TR()
         for lang_it in langs:
             td_it = E.TD()
@@ -196,7 +206,7 @@ def handle_analysis(user, clf):
     td_it.append(E.HR())
     table_it.append(td_it)
 
-    for i in reversed(range(-5, 0)):
+    for i in reversed(range(-no_feeds, 0)):
         tr_it = E.TR()
         for lang_it in langs:
             td_it = E.TD()
@@ -226,7 +236,7 @@ def handle_analysis(user, clf):
     td_it.append(E.HR())
     table_it.append(td_it)
 
-    for i in range(5):
+    for i in range(no_feeds):
         tr_it = E.TR()
         for lang_it in langs:
             td_it = E.TD()
@@ -262,8 +272,8 @@ def handle_highlight(user, clf, item_id):
     #coeff_like = 0.5
     with open(clf_path + os.sep + "{}.pickle".format(item_it['Language']), 'rb') as f:
         table = pickle.load(f)
-    coeff_dislike = table[20][1]
-    coeff_like = table[-20][1]
+    coeff_dislike = table[no_words][1]
+    coeff_like = table[-no_words][1]
 
     new_title = ""
     idx_left = 0
@@ -312,8 +322,9 @@ def handle_highlight(user, clf, item_id):
 if __name__ == "__main__":
     c = get_cursor()
     logger = get_logger()
-    users = [e[0] for e in c.execute("SELECT Name FROM Users").fetchall()]
+    timestamp = last_updated()
 
+    users = [e[0] for e in c.execute("SELECT Name FROM Users").fetchall()]
     for user_it in users:
         user_path = dir_path + os.sep + user_it
         try:
@@ -321,7 +332,8 @@ if __name__ == "__main__":
         except FileExistsError:
             pass
 
-        for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
+        #for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
+        for clf_it in ["Naive Bayes", "Logistic Regression"]:
             clf_path = user_path + os.sep + clf_it
             try:
                 os.mkdir(clf_path)
@@ -351,7 +363,8 @@ if __name__ == "__main__":
                 feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE Language=? AND Display.{}=1".format(user_it), (lang_it, )).fetchall()]
                 coeffs = []
                 for title_it in feeds:
-                    articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? ORDER BY Published DESC LIMIT 100", (title_it, )).fetchall()]
+                    articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<? ORDER BY Published DESC", (title_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()]
+                    #articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<? ORDER BY Published DESC LIMIT ?", (title_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), no_articles, )).fetchall()]
                     if len(articles) == 0:
                         coeffs.append(0.)
                         continue
