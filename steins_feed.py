@@ -7,6 +7,7 @@ import numpy.random as random
 import os
 import pickle
 import time
+from urllib.parse import urlparse
 
 from steins_html import feed_node, preamble, side_nav, top_nav
 from steins_log import get_logger
@@ -67,13 +68,14 @@ def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf
         items = c.execute("SELECT Items.*, Like.{0}, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC".format(user), (lang, d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
 
     # Remove duplicates.
-    items_seen_links = set()
+    item_links = set()
     items_unique = []
     for item_it in reversed(items):
-        if item_it['Link'] in items_seen_links:
+        item_link = urlparse(item_it['Link'])
+        item_link = item_link._replace(params='', query='', fragment='')
+        if item_link in item_links:
             continue
-
-        items_seen_links.add(item_it['Link'])
+        item_links.add(item_link)
         items_unique.append(item_it)
     items = list(reversed(items_unique))
 
