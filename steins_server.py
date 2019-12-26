@@ -21,7 +21,7 @@ def handle_like(qd):
     c = conn.cursor()
 
     user = qd['user']
-    item_id = qd['item_id']
+    item_id = int(qd['id'])
     submit = qd['submit']
 
     if submit == "Like":
