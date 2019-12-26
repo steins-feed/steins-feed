@@ -425,6 +425,15 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qd = dict(parse_qsl(qs))
             s = handle_page(qd['user'], qd['lang'], qd['page'])
             self.wfile.write(s.encode('utf-8'))
+        elif "/index.css" in self.path:
+            # Write header.
+            self.send_response(200)
+            self.send_header("Content-type", "text/css")
+            self.end_headers()
+
+            file_path = dir_path + os.sep + self.path
+            with open(file_path, 'r') as f:
+                self.wfile.write(f.read().encode('utf-8'))
         elif self.path == "/favicon.ico":
             # Write header.
             self.send_response(200)
@@ -453,48 +462,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
             s = handle_statistics(qd)
-            self.wfile.write(s.encode('utf-8'))
-        elif "/naive_bayes.php" in self.path:
-            # Write header.
-            self.send_response(200)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-
-            qs = urlsplit(self.path).query
-            qd = dict(parse_qsl(qs))
-            s = handle_magic(qd)
-            self.wfile.write(s.encode('utf-8'))
-        elif "/naive_bayes_surprise.php" in self.path:
-            # Write header.
-            self.send_response(200)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-
-            qs = urlsplit(self.path).query
-            qd = dict(parse_qsl(qs))
-            #s = handle_surprise(qd)
-            s = handle_magic(qd)
-            self.wfile.write(s.encode('utf-8'))
-        elif "/logistic_regression.php" in self.path:
-            # Write header.
-            self.send_response(200)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-
-            qs = urlsplit(self.path).query
-            qd = dict(parse_qsl(qs))
-            s = handle_magic(qd, 'Logistic Regression')
-            self.wfile.write(s.encode('utf-8'))
-        elif "/logistic_regression_surprise.php" in self.path:
-            # Write header.
-            self.send_response(200)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-
-            qs = urlsplit(self.path).query
-            qd = dict(parse_qsl(qs))
-            #s = handle_surprise(qd, 'Logistic Regression')
-            s = handle_magic(qd, 'Logistic Regression')
             self.wfile.write(s.encode('utf-8'))
 
     def do_POST(self):
@@ -542,7 +509,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             file_path = dir_path + os.sep + file_name
             with open(file_path, 'w') as f:
                 f.write(qd['files'].values()[0])
-            handle_load_config(qd['user'])
+            handle_load_config(qd)
             self.send_response(204)
             self.end_headers()
 
@@ -558,7 +525,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
-            handle_export_config(qd['user'])
+            handle_export_config(qd)
             with open("tmp_feeds.xml", 'r', 'utf-8') as f:
                 self.wfile.write(f.read().encode('utf-8'))
         # Like.
@@ -569,14 +536,39 @@ class SteinsHandler(BaseHTTPRequestHandler):
             handle_like(qd)
             self.send_response(204)
             self.end_headers()
-        # Dislike.
-        elif "/dislike.php" in self.path:
+        # Add user.
+        elif "/add_user.php" in self.path:
             qlen = int(self.headers.get('content-length'))
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
-            handle_like(qd, -1)
+            add_user(qd['name'])
             self.send_response(204)
             self.end_headers()
+
+            self.path = "/settings.php?user={}".format(qd['name'])
+            self.do_GET()
+        # Rename user.
+        elif "/rename_user.php" in self.path:
+            qlen = int(self.headers.get('content-length'))
+            qs = self.rfile.read(qlen).decode('utf-8')
+            qd = dict(parse_qsl(qs))
+            rename_user(qd['user'], qd['name'])
+            self.send_response(204)
+            self.end_headers()
+
+            self.path = "/settings.php?user={}".format(qd['name'])
+            self.do_GET()
+        # Delete user.
+        elif "/delete_user.php" in self.path:
+            qlen = int(self.headers.get('content-length'))
+            qs = self.rfile.read(qlen).decode('utf-8')
+            qd = dict(parse_qsl(qs))
+            delete_user(qd['user'])
+            self.send_response(204)
+            self.end_headers()
+
+            self.path = "/index.php?user={}".format('nobody')
+            self.do_GET()
 
 def steins_run():
     global PORT
