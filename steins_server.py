@@ -52,11 +52,13 @@ def handle_display_feeds(qd):
 
         conn.commit()
 
-def handle_load_config(user):
-    init_feeds(dir_path + os.sep + "tmp_feeds.xml", user)
+def handle_load_config(qd):
+    init_feeds(dir_path + os.sep + "tmp_feeds.xml", qd['user'])
 
-def handle_export_config(user):
+def handle_export_config(qd):
     c = get_cursor()
+
+    user = qd['user']
 
     with open("tmp_feeds.xml", 'w', encoding='utf-8') as f:
         f.write("<?xml version=\"1.0\"?>\n\n")

@@ -7,7 +7,7 @@ from steins_server import handle_load_config, handle_settings
 from urllib.parse import parse_qsl
 
 qd = dict(parse_qsl(sys.argv[1]))
-handle_load_config(qd['user'])
+handle_load_config(qd)
 print(handle_settings(qd['user']))
 EOT;
 $bash_cmd = "env PYTHONIOENCODING=UTF-8 python3 -c \"$python_cmd\" \"$get_query\"";
