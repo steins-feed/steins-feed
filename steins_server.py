@@ -10,6 +10,7 @@ from xml.sax.saxutils import escape
 
 from steins_feed import handle_page
 from steins_html import preamble, side_nav, top_nav, select_lang
+from steins_magic import handle_analysis, handle_highlight
 from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds, add_user, rename_user, delete_user
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
@@ -469,6 +470,16 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qd = dict(parse_qsl(qs))
             s = handle_statistics(qd)
             self.wfile.write(s.encode('utf-8'))
+        elif "/analysis.php" in self.path:
+            # Write header.
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+
+            qs = urlsplit(self.path).query
+            qd = dict(parse_qsl(qs))
+            s = handle_analysis(qd)
+            self.wfile.write(s.encode('utf-8'))
 
     def do_POST(self):
         self.path = self.path.replace("/steins-feed", "")
@@ -532,6 +543,14 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
             handle_like(qd)
+            self.send_response(200)
+            self.end_headers()
+        # Highlight.
+        elif "/highlight.php" in self.path:
+            qlen = int(self.headers.get('content-length'))
+            qs = self.rfile.read(qlen).decode('utf-8')
+            qd = dict(parse_qsl(qs))
+            handle_highlight(qd)
             self.send_response(200)
             self.end_headers()
         # Add user.

@@ -7,7 +7,7 @@ from steins_magic import handle_highlight
 from urllib.parse import parse_qsl
 
 qd = dict(parse_qsl(sys.argv[1]))
-print(handle_highlight(qd['user'], qd['clf'], int(qd['id'])))
+print(handle_highlight(qd))
 EOT;
 $bash_cmd = "env PYTHONIOENCODING=UTF-8 python3 -c \"$python_cmd\" \"$post_query\"";
 // system($bash_cmd . ' > highlight.log 2>&1'); // DEBUG.

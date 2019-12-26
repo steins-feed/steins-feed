@@ -78,7 +78,9 @@ def steins_learn(user, classifier):
 
     return clfs
 
-def handle_analysis(user, clf):
+def handle_analysis(qd):
+    user = qd['user']
+    clf = qd['clf']
     timestamp = last_updated()
 
     user_path = dir_path + os.sep + user
@@ -253,6 +255,11 @@ def handle_analysis(user, clf):
 
 def handle_highlight(user, clf, item_id):
     c = get_cursor()
+
+    user = qd['user']
+    clf = qd['clf']
+    item_id = int(qd['id'])
+
     user_path = dir_path + os.sep + user
     clf_path = user_path + os.sep + clf
     with open(clf_path + os.sep + "clfs.pickle", 'rb') as f:
