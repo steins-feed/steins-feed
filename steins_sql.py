@@ -17,15 +17,17 @@ file_path = dir_path + os.sep + FILE_NAME
 
 logger = get_logger()
 
-def last_update():
+def last_update(record=None):
     conn = get_connection()
     c = conn.cursor()
-    c.execute("INSERT INTO Updates(Record) VALUES (?)", (datetime.utcnow(), ))
+    if record == None:
+        record = datetime.utcnow()
+    c.execute("INSERT INTO Updates(Record) VALUES (?)", (record, ))
     conn.commit()
     logger.info("Last update.")
 
 def last_updated():
-    return get_cursor().execute("SELECT Record FROM Updates ORDER BY ItemID DESC LIMIT 2").fetchall()[1][0]
+    return get_cursor().execute("SELECT Record FROM Updates ORDER BY ItemID DESC LIMIT 3").fetchone()[0]
 
 def have_connection():
     if "connection" in globals():

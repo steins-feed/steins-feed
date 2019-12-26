@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from datetime import datetime
 import lxml
 from lxml.html import builder as E
 import numpy as np
@@ -16,6 +17,8 @@ from steins_manager import get_handler
 from steins_sql import add_item, get_cursor, last_update, last_updated
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
+
+no_surprise = 10
 
 # Scrape feeds.
 def steins_read(title_pattern=""):
@@ -51,16 +54,20 @@ def handle_page(qd):
     feed = qd['feed']
     clf = qd['clf']
 
+    # Classifier.
     clfs = []
     if not feed == "Full":
         user_path = dir_path + os.sep + user
         clf_path = user_path + os.sep + clf
         with open(clf_path + os.sep + "clfs.pickle", 'rb') as f:
             clfs = pickle.load(f)
+
+    # Surprise.
     surprise = -1
     if feed == "Surprise":
-        surprise = 10
+        surprise = no_surprise
 
+    # Language.
     if lang == "International":
         dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND Published<? ORDER BY Published DESC".format(user), (timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
     else:
@@ -121,6 +128,7 @@ def handle_page(qd):
     else:
         p_it.text = "{} articles. {} pages. Last updated: {}.\n".format(len(items), len(dates), timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"))
 
+    # Classifier.
     if len(clfs) != 0:
         scores = np.zeros(len(items))
         langs = set([e['Language'] for e in items])
@@ -140,6 +148,7 @@ def handle_page(qd):
             items[item_ct] = dict(items[item_ct])
             items[item_ct]['Score'] = scores[item_ct]
 
+    # Surprise.
     if surprise > 0:
         logit_scores = np.log((1. + scores) / (1. - scores))
         sigma = np.sqrt(np.sum(logit_scores**2) / scores.size)
@@ -171,9 +180,11 @@ def steins_write():
             f.write(handle_page(page=d_ctr))
 
 def steins_update(title_pattern="", read_mode=True, write_mode=False):
-    last_update()
+    #last_update()
     if read_mode:
+        record = datetime.utcnow()
         steins_read(title_pattern)
+        last_update(record)
     if write_mode:
         steins_write()
 
