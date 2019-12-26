@@ -57,7 +57,6 @@ def handle_load_config(qd):
 
 def handle_export_config(qd):
     c = get_cursor()
-
     user = qd['user']
 
     with open("tmp_feeds.xml", 'w', encoding='utf-8') as f:
@@ -73,8 +72,9 @@ def handle_export_config(qd):
             f.write("    </feed>\n")
         f.write("</root>\n")
 
-def handle_settings(user):
+def handle_settings(qd):
     c = get_cursor()
+    user = qd['user']
 
     #--------------------------------------------------------------------------
 
@@ -311,8 +311,9 @@ def handle_settings(user):
 
     return lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
 
-def handle_statistics(user):
+def handle_statistics(qd):
     c = get_cursor()
+    user = qd['user']
 
     #--------------------------------------------------------------------------
 
