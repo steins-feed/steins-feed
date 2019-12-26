@@ -16,9 +16,13 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 
 PORT = 8000
 
-def handle_like(user, item_id, submit):
+def handle_like(qd):
     conn = get_connection()
     c = conn.cursor()
+
+    user = qd['user']
+    item_id = qd['item_id']
+    submit = qd['submit']
 
     if submit == "Like":
         val = 1

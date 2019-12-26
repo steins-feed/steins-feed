@@ -216,6 +216,7 @@ if __name__ == "__main__":
 
     try:
         c.execute("CREATE TABLE Users (ItemID INTEGER PRIMARY KEY, Name TINYTEXT NOT NULL UNIQUE)")
+        c.execute("INSERT INTO Users (Name) VALUES (?)", ("nobody", ))
         conn.commit()
         logger.warning("Create Users.")
     except OperationalError:

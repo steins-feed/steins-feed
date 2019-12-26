@@ -1,6 +1,7 @@
 .PHONY: run
 run:
-	python3 main.py
+	python3 steins_sql.py
+	python3 aux/main.py
 
 .PHONY: test
 test:
