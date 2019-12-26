@@ -422,6 +422,12 @@ class SteinsHandler(BaseHTTPRequestHandler):
         elif "/index.php?user=" in self.path and "&page" not in self.path:
             self.path += "&page=0"
             self.do_GET()
+        elif "/index.php?user=" in self.path and "&feed" not in self.path:
+            self.path += "&feed=Full"
+            self.do_GET()
+        elif "/index.php?user=" in self.path and "&clf" not in self.path:
+            self.path += "&clf=Naive+Bayes"
+            self.do_GET()
         elif "/index.php" in self.path:
             # Write header.
             self.send_response(200)
@@ -430,7 +436,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
-            s = handle_page(qd['user'], qd['lang'], qd['page'])
+            s = handle_page(qd)
             self.wfile.write(s.encode('utf-8'))
         elif self.path == "/index.css":
             # Write header.

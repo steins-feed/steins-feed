@@ -41,9 +41,15 @@ def steins_read(title_pattern=""):
 
             add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
 
-def handle_page(user="nobody", lang="International", page_no=0, feed="Full", clf="Naive Bayes"):
+def handle_page(qd):
     c = get_cursor()
     timestamp = last_updated()
+
+    user = qd['user']
+    lang = qd['lang']
+    page_no = int(qd['page'])
+    feed = qd['feed']
+    clf = qd['clf']
 
     clfs = []
     if not feed == "Full":
