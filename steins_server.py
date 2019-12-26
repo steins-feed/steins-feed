@@ -10,7 +10,7 @@ from xml.sax.saxutils import escape
 
 from steins_feed import handle_page
 from steins_html import preamble, side_nav, top_nav, select_lang
-from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds
+from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds, add_user, rename_user, delete_user
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -413,7 +413,13 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.path += "index.php"
             self.do_GET()
         elif self.path == "/index.php":
-            self.path += "?page=0"
+            self.path += "?user=nobody"
+            self.do_GET()
+        elif "/index.php?user=" in self.path and "&lang" not in self.path:
+            self.path += "&lang=International"
+            self.do_GET()
+        elif "/index.php?user=" in self.path and "&page" not in self.path:
+            self.path += "&page=0"
             self.do_GET()
         elif "/index.php" in self.path:
             # Write header.
@@ -425,7 +431,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qd = dict(parse_qsl(qs))
             s = handle_page(qd['user'], qd['lang'], qd['page'])
             self.wfile.write(s.encode('utf-8'))
-        elif "/index.css" in self.path:
+        elif self.path == "/index.css":
             # Write header.
             self.send_response(200)
             self.send_header("Content-type", "text/css")
@@ -443,7 +449,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             file_path = dir_path + os.sep + self.path
             with open(file_path, 'rb') as f:
                 self.wfile.write(f.read())
-        elif self.path == "/settings.php":
+        elif "/settings.php" in self.path:
             # Write header.
             self.send_response(200)
             self.send_header("Content-type", "text/html")
@@ -453,7 +459,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qd = dict(parse_qsl(qs))
             s = handle_settings(qd)
             self.wfile.write(s.encode('utf-8'))
-        elif self.path == "/statistics.php":
+        elif "/statistics.php" in self.path:
             # Write header.
             self.send_response(200)
             self.send_header("Content-type", "text/html")
@@ -468,37 +474,31 @@ class SteinsHandler(BaseHTTPRequestHandler):
         self.path = self.path.replace("/steins-feed", "")
 
         # Feeds.
-        if self.path == "/display_feeds.php":
+        if "/display_feeds.php" in self.path:
             qlen = int(self.headers.get('content-length'))
             qs = self.rfile.read(qlen).decode('utf-8')
-            qd = dict(parse_qsl(qs))
+            qd = dict(parse_qsl(qs, keep_blank_values=True))
             handle_display_feeds(qd)
-            self.send_response(204)
-            self.end_headers()
 
-            self.path = "/"
+            self.path = "/index.php?user={}".format(qd['user'])
             self.do_GET()
         # Add feed.
-        elif self.path == "/add_feed.php":
+        elif "/add_feed.php" in self.path:
             qlen = int(self.headers.get('content-length'))
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
-            add_feed(qd['title'], qd['link'], qd['disp'], qd['lang'], qd['summary'], qd['user'])
-            self.send_response(204)
-            self.end_headers()
+            add_feed(qd['title'], qd['link'], qd['lang'], qd['disp'], qd['summary'], qd['user'])
 
-            self.path = "/settings.php"
+            self.path = "/settings.php?user={}".format(qd['user'])
             self.do_GET()
         # Delete feed.
-        elif self.path == "/delete_feed.php":
+        elif "/delete_feed.php" in self.path:
             qlen = int(self.headers.get('content-length'))
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
             delete_feed(int(qd['feed']))
-            self.send_response(204)
-            self.end_headers()
 
-            self.path = "/settings.php"
+            self.path = "/settings.php?user={}".format(qd['user'])
             self.do_GET()
         # Load config.
         elif "/load_config.php" in self.path:
@@ -510,10 +510,8 @@ class SteinsHandler(BaseHTTPRequestHandler):
             with open(file_path, 'w') as f:
                 f.write(qd['files'].values()[0])
             handle_load_config(qd)
-            self.send_response(204)
-            self.end_headers()
 
-            self.path = "/settings.php"
+            self.path = "/settings.php?user={}".format(qd['user'])
             self.do_GET()
         # Export config.
         if "/export_config.php" in self.path:
@@ -534,7 +532,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
             handle_like(qd)
-            self.send_response(204)
+            self.send_response(200)
             self.end_headers()
         # Add user.
         elif "/add_user.php" in self.path:
@@ -542,8 +540,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
             add_user(qd['name'])
-            self.send_response(204)
-            self.end_headers()
 
             self.path = "/settings.php?user={}".format(qd['name'])
             self.do_GET()
@@ -553,8 +549,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
             rename_user(qd['user'], qd['name'])
-            self.send_response(204)
-            self.end_headers()
 
             self.path = "/settings.php?user={}".format(qd['name'])
             self.do_GET()
@@ -564,8 +558,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qs = self.rfile.read(qlen).decode('utf-8')
             qd = dict(parse_qsl(qs))
             delete_user(qd['user'])
-            self.send_response(204)
-            self.end_headers()
 
             self.path = "/index.php?user={}".format('nobody')
             self.do_GET()
