@@ -48,15 +48,15 @@ class SteinsHandler:
                 elem_it.drop_tree()
 
         # Remove leading and trailing <br>.
-        for node_it in summary_tree.xpath("//p") + summary_tree.xpath("//h1") + summary_tree.xpath("//h2"):
+        for node_it in summary_tree.xpath("//div"):
             while True:
                 if len(node_it) == 0:
                     break
                 if node_it[0].tag == "br":
-                    node_it.remove(node_it[0])
+                    node_it[0].drop_tag()
                     continue
                 if node_it[-1].tag == "br":
-                    node_it.remove(node_it[-1])
+                    node_it[-1].drop_tag()
                     continue
                 break
 

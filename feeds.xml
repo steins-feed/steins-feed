@@ -538,6 +538,43 @@
         <lang>English</lang>
     </feed>
 
+    <!-- Esquire -->
+    <feed>
+        <title>Esquire Entertainment</title>
+	<link>https://www.esquire.com/rss/entertainment.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Esquire Style</title>
+        <link>https://www.esquire.com/rss/style.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Esquire Food &amp; Drink</title>
+        <link>https://www.esquire.com/rss/food-drink.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Esquire Sports</title>
+        <link>https://www.esquire.com/rss/sports.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Esquire Lifestyle</title>
+        <link>https://www.esquire.com/rss/lifestyle.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Esquire News &amp; Politics</title>
+        <link>https://www.esquire.com/rss/news-politics.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Esquire</title>
+        <link>https://www.esquire.com/rss/all.xml</link>
+        <lang>English</lang>
+    </feed>
+
     <!-- European Union -->
     <feed>
         <title>European Commission Digital Single Market</title>
@@ -3000,6 +3037,11 @@
 
     <!-- Comics -->
     <feed>
+        <title>Buttersafe</title>
+        <link>http://feeds.feedburner.com/buttersafe</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>Existential Comics</title>
         <link>http://existentialcomics.com/rss.xml</link>
         <lang>English</lang>
@@ -3044,10 +3086,20 @@
         <summary>0</summary>
     </feed>
     <feed>
+        <title>Gründerszene</title>
+        <link>https://www.gruenderszene.de/feed/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
         <title>Google</title>
         <link>https://www.blog.google/rss/</link>
         <lang>English</lang>
         <summary>0</summary>
+    </feed>
+    <feed>
+        <title>IBM</title>
+        <link>https://developer.ibm.com/feed/</link>
+        <lang>English</lang>
     </feed>
     <feed>
         <title>McKinsey Insights</title>
@@ -3061,6 +3113,11 @@
     </feed>
 
     <!-- Literature reviews -->
+    <feed>
+        <title>The Believer</title>
+        <link>https://believermag.com/feed/</link>
+        <lang>English</lang>
+    </feed>
     <feed>
         <title>Five Books</title>
         <link>https://fivebooks.us8.list-manage.com/track/click?u=ce22475e3f1c122db90ab6515&amp;id=324682680e&amp;e=cfdb3b3199</link>
@@ -3142,6 +3199,16 @@
     </feed>
 
     <!-- Miscellaneous -->
+    <feed>
+        <title>Beautiful News Daily</title>
+        <link>http://feeds.feedburner.com/beautifulnewsdaily</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Center for Data Innovation</title>
+        <link>https://www.datainnovation.org/feed/</link>
+        <lang>English</lang>
+    </feed>
     <feed>
         <title>Electronic Frontier Foundation</title>
         <link>https://www.eff.org/rss/updates.xml</link>
@@ -3331,6 +3398,11 @@
     <feed>
         <title>TechRadar</title>
         <link>https://www.techradar.com/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TNW</title>
+        <link>http://feeds2.feedburner.com/thenextweb</link>
         <lang>English</lang>
     </feed>
     <feed>
