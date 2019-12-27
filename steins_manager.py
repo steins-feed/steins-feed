@@ -5,6 +5,7 @@ import lxml
 from lxml.etree import ParserError
 import time
 
+from steins_html import decode
 from steins_log import get_logger
 from steins_sql import get_cursor
 from steins_web import get_tree_from_session
@@ -67,7 +68,7 @@ class SteinsHandler:
             for elem_it in elems:
                 elem_it.drop_tag()
 
-        res = lxml.html.tostring(summary_tree).decode('utf-8')
+        res = decode(lxml.html.tostring(summary_tree))
         return res[len("<div>"):-len("</div>")]
 
     def read_time(self, item_it):
@@ -101,7 +102,7 @@ class AbstractHandler(SteinsHandler):
         for node_it in p_nodes[1:]:
             node_it.drop_tree()
 
-        res = lxml.html.tostring(summary_tree).decode('utf-8')
+        res = decode(lxml.html.tostring(summary_tree))
         return res[len("<div>"):-len("</div>")]
 
 class NoAbstractHandler(SteinsHandler):

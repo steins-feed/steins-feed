@@ -117,8 +117,18 @@
         <lang>English</lang>
     </feed>
     <feed>
-        <title>The Atlantic Ideas</title>
-        <link>https://www.theatlantic.com/feed/channel/ideas/</link>
+        <title>The Atlantic Health</title>
+        <link>https://www.theatlantic.com/feed/channel/health/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Atlantic Education</title>
+        <link>https://www.theatlantic.com/feed/channel/education/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Atlantic Family</title>
+        <link>https://www.theatlantic.com/feed/channel/family/</link>
         <lang>English</lang>
     </feed>
     <feed>
@@ -127,13 +137,18 @@
         <lang>English</lang>
     </feed>
     <feed>
-        <title>The Atlantic Books</title>
-        <link>https://www.theatlantic.com/feed/channel/books/</link>
+        <title>The Atlantic News</title>
+        <link>https://www.theatlantic.com/feed/channel/news/</link>
         <lang>English</lang>
     </feed>
     <feed>
-        <title>The Atlantic Family</title>
-        <link>https://www.theatlantic.com/feed/channel/family/</link>
+        <title>The Atlantic Newsletters</title>
+        <link>https://www.theatlantic.com/feed/channel/newsletters/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Atlantic Photo</title>
+        <link>http://feeds.feedburner.com/theatlantic/infocus</link>
         <lang>English</lang>
     </feed>
     <feed>
@@ -147,23 +162,43 @@
         <lang>English</lang>
     </feed>
     <feed>
-        <title>The Atlantic Health</title>
-        <link>https://www.theatlantic.com/feed/channel/health/</link>
+        <title>The Atlantic US</title>
+        <link>https://www.theatlantic.com/feed/channel/national/</link>
         <lang>English</lang>
     </feed>
     <feed>
-        <title>The Atlantic Education</title>
-        <link>https://www.theatlantic.com/feed/channel/education/</link>
+        <title>The Atlantic Video</title>
+        <link>https://www.theatlantic.com/feed/channel/video/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Atlantic Ideas</title>
+        <link>https://www.theatlantic.com/feed/channel/ideas/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Atlantic Books</title>
+        <link>https://www.theatlantic.com/feed/channel/books/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>The Atlantic Letters</title>
-        <link>https://www.theatlantic.com/feed/channel/education/</link>
+        <link>https://www.theatlantic.com/feed/channel/letters/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Atlantic Press Releases</title>
+        <link>https://www.theatlantic.com/feed/channel/press-releases/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>The Atlantic -- The Masthead</title>
         <link>https://www.theatlantic.com/feed/channel/membership/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Atlantic Notes</title>
+        <link>http://feeds.feedburner.com/TheAtlanticNotes</link>
         <lang>English</lang>
     </feed>
     <feed>

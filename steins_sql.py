@@ -88,7 +88,7 @@ def delete_feed(item_id):
     conn.commit()
 
 def init_feeds(file_path=file_path, user='nobody'):
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, 'r') as f:
         tree = etree.fromstring(f.read())
 
     logger.warning("Initialize feeds -- {}.".format(file_path))

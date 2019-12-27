@@ -10,7 +10,7 @@ import pickle
 import time
 from urllib.parse import urlparse
 
-from steins_html import feed_node, preamble, side_nav, top_nav
+from steins_html import decode, feed_node, preamble, side_nav, top_nav
 from steins_log import get_logger
 from steins_magic import build_feature
 from steins_manager import get_handler
@@ -168,7 +168,7 @@ def handle_page(qd):
             div_it.append(E.HR())
             div_it.append(feed_node(item_it['ItemID'], item_it[user], item_it['Score']))
 
-    return lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
+    return decode(lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
 # Generate HTML.
 def steins_write():

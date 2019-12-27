@@ -9,7 +9,7 @@ from urllib.parse import urlsplit, parse_qsl
 from xml.sax.saxutils import escape
 
 from steins_feed import handle_page
-from steins_html import preamble, side_nav, top_nav, select_lang
+from steins_html import decode, encode, preamble, side_nav, top_nav, select_lang
 from steins_magic import handle_analysis, handle_highlight
 from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds, add_user, rename_user, delete_user
 
@@ -60,7 +60,7 @@ def handle_export_config(qd):
     c = get_cursor()
     user = qd['user']
 
-    with open("tmp_feeds.xml", 'w', encoding='utf-8') as f:
+    with open("tmp_feeds.xml", 'w') as f:
         f.write("<?xml version=\"1.0\"?>\n\n")
         f.write("<root>\n")
         for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID".format(user)).fetchall():
@@ -310,7 +310,7 @@ def handle_settings(qd):
 
     #--------------------------------------------------------------------------
 
-    return lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
+    return decode(lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
 def handle_statistics(qd):
     c = get_cursor()
@@ -403,7 +403,7 @@ def handle_statistics(qd):
 
     #--------------------------------------------------------------------------
 
-    return lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
+    return decode(lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
 class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -416,16 +416,19 @@ class SteinsHandler(BaseHTTPRequestHandler):
         elif self.path == "/index.php":
             self.path += "?user=nobody"
             self.do_GET()
-        elif "/index.php?user=" in self.path and "&lang" not in self.path:
+        elif "/index.php" in self.path and "user=" not in self.path:
+            self.path += "&user=nobody"
+            self.do_GET()
+        elif "/index.php" in self.path and "lang=" not in self.path:
             self.path += "&lang=International"
             self.do_GET()
-        elif "/index.php?user=" in self.path and "&page" not in self.path:
+        elif "/index.php" in self.path and "page=" not in self.path:
             self.path += "&page=0"
             self.do_GET()
-        elif "/index.php?user=" in self.path and "&feed" not in self.path:
+        elif "/index.php" in self.path and "feed=" not in self.path:
             self.path += "&feed=Full"
             self.do_GET()
-        elif "/index.php?user=" in self.path and "&clf" not in self.path:
+        elif "/index.php" in self.path and "clf=" not in self.path:
             self.path += "&clf=Naive+Bayes"
             self.do_GET()
         elif "/index.php" in self.path:
@@ -437,7 +440,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
             s = handle_page(qd)
-            self.wfile.write(s.encode('utf-8'))
+            self.wfile.write(encode(s))
         elif self.path == "/index.css":
             # Write header.
             self.send_response(200)
@@ -446,7 +449,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
 
             file_path = dir_path + os.sep + self.path
             with open(file_path, 'r') as f:
-                self.wfile.write(f.read().encode('utf-8'))
+                self.wfile.write(encode(f.read()))
         elif self.path == "/favicon.ico":
             # Write header.
             self.send_response(200)
@@ -465,7 +468,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
             s = handle_settings(qd)
-            self.wfile.write(s.encode('utf-8'))
+            self.wfile.write(encode(s))
         elif "/statistics.php" in self.path:
             # Write header.
             self.send_response(200)
@@ -475,7 +478,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
             s = handle_statistics(qd)
-            self.wfile.write(s.encode('utf-8'))
+            self.wfile.write(encode(s))
         elif "/analysis.php" in self.path:
             # Write header.
             self.send_response(200)
@@ -485,7 +488,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qs = urlsplit(self.path).query
             qd = dict(parse_qsl(qs))
             s = handle_analysis(qd)
-            self.wfile.write(s.encode('utf-8'))
+            self.wfile.write(encode(s))
 
     def do_POST(self):
         self.path = self.path.replace("/steins-feed", "")
@@ -493,7 +496,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Feeds.
         if "/display_feeds.php" in self.path:
             qlen = int(self.headers.get('content-length'))
-            qs = self.rfile.read(qlen).decode('utf-8')
+            qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs, keep_blank_values=True))
             handle_display_feeds(qd)
 
@@ -502,7 +505,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Add feed.
         elif "/add_feed.php" in self.path:
             qlen = int(self.headers.get('content-length'))
-            qs = self.rfile.read(qlen).decode('utf-8')
+            qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs))
             add_feed(qd['title'], qd['link'], qd['lang'], qd['disp'], qd['summary'], qd['user'])
 
@@ -511,7 +514,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Delete feed.
         elif "/delete_feed.php" in self.path:
             qlen = int(self.headers.get('content-length'))
-            qs = self.rfile.read(qlen).decode('utf-8')
+            qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs))
             delete_feed(int(qd['feed']))
 
@@ -520,7 +523,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Load config.
         elif "/load_config.php" in self.path:
             qlen = int(self.headers.get('content-length'))
-            qs = self.rfile.read(qlen).decode('utf-8')
+            qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs))
             file_name = "tmp_feeds.xml"
             file_path = dir_path + os.sep + file_name
@@ -538,15 +541,15 @@ class SteinsHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Disposition", "attachment; filename=tmp_feeds.xml")
             self.end_headers()
 
-            qs = self.rfile.read(qlen).decode('utf-8')
+            qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs))
             handle_export_config(qd)
-            with open("tmp_feeds.xml", 'r', 'utf-8') as f:
-                self.wfile.write(f.read().encode('utf-8'))
+            with open("tmp_feeds.xml", 'r') as f:
+                self.wfile.write(encode(s))
         # Like.
         elif "/like.php" in self.path:
             qlen = int(self.headers.get('content-length'))
-            qs = self.rfile.read(qlen).decode('utf-8')
+            qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs))
             handle_like(qd)
             self.send_response(200)
@@ -554,7 +557,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Highlight.
         elif "/highlight.php" in self.path:
             qlen = int(self.headers.get('content-length'))
-            qs = self.rfile.read(qlen).decode('utf-8')
+            qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs))
             handle_highlight(qd)
             self.send_response(200)
@@ -562,7 +565,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Add user.
         elif "/add_user.php" in self.path:
             qlen = int(self.headers.get('content-length'))
-            qs = self.rfile.read(qlen).decode('utf-8')
+            qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs))
             add_user(qd['name'])
 
@@ -571,7 +574,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Rename user.
         elif "/rename_user.php" in self.path:
             qlen = int(self.headers.get('content-length'))
-            qs = self.rfile.read(qlen).decode('utf-8')
+            qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs))
             rename_user(qd['user'], qd['name'])
 
@@ -580,7 +583,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
         # Delete user.
         elif "/delete_user.php" in self.path:
             qlen = int(self.headers.get('content-length'))
-            qs = self.rfile.read(qlen).decode('utf-8')
+            qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs))
             delete_user(qd['user'])
 
