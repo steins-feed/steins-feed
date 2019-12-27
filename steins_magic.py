@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import lxml
-from lxml.html import builder as E
+from lxml.html import tostring, builder as E
 import numpy as np
 import os
 import pickle
@@ -251,7 +250,7 @@ def handle_analysis(qd):
 
     #--------------------------------------------------------------------------
 
-    return decode(lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
+    return decode(tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
 def handle_highlight(qd):
     c = get_cursor()

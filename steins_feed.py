@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 from datetime import datetime
-import lxml
-from lxml.html import builder as E
+from lxml.html import tostring, builder as E
 import numpy as np
 import numpy.random as random
 import os
@@ -168,7 +167,7 @@ def handle_page(qd):
             div_it.append(E.HR())
             div_it.append(feed_node(item_it['ItemID'], item_it[user], item_it['Score']))
 
-    return decode(lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
+    return decode(tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
 # Generate HTML.
 def steins_write():

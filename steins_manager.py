@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 import feedparser
-import lxml
 from lxml import etree
 from lxml.etree import ParserError
+from lxml.html import fromstring, tostring
 import time
 
 from steins_html import decode
@@ -40,7 +40,7 @@ class SteinsHandler:
 
     def read_summary(self, item_it):
         summary = "<div>" + item_it['summary'] + "</div>"
-        summary_tree = lxml.html.fromstring(summary)
+        summary_tree = fromstring(summary)
 
         # Remove.
         tags = ["figure", "img", "iframe", "script", "small", "svg"]
@@ -69,7 +69,7 @@ class SteinsHandler:
             for elem_it in elems:
                 elem_it.drop_tag()
 
-        res = decode(lxml.html.tostring(summary_tree))
+        res = decode(tostring(summary_tree))
         return res[len("<div>"):-len("</div>")]
 
     def read_time(self, item_it):
@@ -97,13 +97,13 @@ class AbstractHandler(SteinsHandler):
     def read_summary(self, item_it):
         summary = super().read_summary(item_it)
         summary = "<div>" + summary + "</div>"
-        summary_tree = lxml.html.fromstring(summary)
+        summary_tree = fromstring(summary)
 
         p_nodes = summary_tree.xpath("//p")
         for node_it in p_nodes[1:]:
             node_it.drop_tree()
 
-        res = decode(lxml.html.tostring(summary_tree))
+        res = decode(tostring(summary_tree))
         return res[len("<div>"):-len("</div>")]
 
 class NoAbstractHandler(SteinsHandler):

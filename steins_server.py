@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
-import lxml
-from lxml.html import builder as E
+from lxml.html import tostring, builder as E
 import os
 import time
 from urllib.parse import urlsplit, parse_qsl
@@ -310,7 +309,7 @@ def handle_settings(qd):
 
     #--------------------------------------------------------------------------
 
-    return decode(lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
+    return decode(tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
 def handle_statistics(qd):
     c = get_cursor()
@@ -403,7 +402,7 @@ def handle_statistics(qd):
 
     #--------------------------------------------------------------------------
 
-    return decode(lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
+    return decode(tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
 class SteinsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
