@@ -2,6 +2,7 @@
 
 import feedparser
 import lxml
+from lxml import etree
 from lxml.etree import ParserError
 import time
 
@@ -112,10 +113,10 @@ class NoAbstractHandler(SteinsHandler):
 class AtlanticHandler(SteinsHandler):
     def parse(self, feed_link):
         tree = get_tree_from_session(feed_link)
-        contents = tree.xpath("//content")
+        contents = tree.xpath("//foo:content", namespaces={'foo': tree.nsmap[None]})
         for content_it in contents:
-            content_it.drop_tree()
-        d = feedparser.parse(lxml.html.tostring(tree))
+            content_it.getparent().remove(content_it)
+        d = feedparser.parse(etree.tostring(tree))
         return d
 
 class GatesHandler(SteinsHandler):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from lxml import html
+from lxml import etree
 import requests
 
 from steins_html import encode
@@ -20,5 +20,5 @@ def get_session():
 def get_tree_from_session(item_link):
     session = get_session()
     page = session.get(item_link)
-    tree = html.fromstring(encode(page.text))
+    tree = etree.fromstring(encode(page.text))
     return tree
