@@ -351,12 +351,6 @@
         <summary>0</summary>
     </feed>
     <feed>
-        <title>The Conversation (UK) Brexit</title>
-        <link>https://theconversation.com/uk/brexit/articles.atom</link>
-        <lang>English</lang>
-        <summary>0</summary>
-    </feed>
-    <feed>
         <title>The Conversation (UK)</title>
         <link>https://theconversation.com/uk/articles.atom</link>
         <lang>English</lang>
@@ -426,7 +420,7 @@
         <lang>English</lang>
     </feed>
     <feed>
-        <title>Daily Mail U.S.</title>
+        <title>Daily Mail US</title>
         <link>https://www.dailymail.co.uk/ushome/index.rss</link>
         <lang>English</lang>
     </feed>
@@ -483,13 +477,33 @@
 
     <!-- The Economist -->
     <feed>
+        <title>The Economist Letters</title>
+        <link>https://www.economist.com/letters/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>The Economist Leaders</title>
         <link>https://www.economist.com/leaders/rss.xml</link>
         <lang>English</lang>
     </feed>
     <feed>
-        <title>The Economist Briefing</title>
+        <title>The Economist Briefings</title>
         <link>https://www.economist.com/briefing/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Economist Special Reports</title>
+        <link>https://www.economist.com/special-report/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Economist Britain</title>
+        <link>https://www.economist.com/britain/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Economist Europe</title>
+        <link>https://www.economist.com/europe/rss.xml</link>
         <lang>English</lang>
     </feed>
     <feed>
@@ -503,6 +517,11 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>The Economist Middle East &amp; Africa</title>
+        <link>https://www.economist.com/middle-east-and-africa/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>The Economist Asia</title>
         <link>https://www.economist.com/asia/rss.xml</link>
         <lang>English</lang>
@@ -510,21 +529,6 @@
     <feed>
         <title>The Economist China</title>
         <link>https://www.economist.com/china/rss.xml</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>The Economist Middle East &amp; Africa</title>
-        <link>https://www.economist.com/middle-east-and-africa/rss.xml</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>The Economist Europe</title>
-        <link>https://www.economist.com/europe/rss.xml</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>The Economist Britain</title>
-        <link>https://www.economist.com/britain/rss.xml</link>
         <lang>English</lang>
     </feed>
     <feed>
@@ -553,23 +557,23 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>The Economist Obituaries</title>
+        <link>https://www.economist.com/obituary/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>The Economist Graphic Detail</title>
         <link>https://www.economist.com/graphic-detail/rss.xml</link>
         <lang>English</lang>
     </feed>
     <feed>
-        <title>The Economist Obituary</title>
-        <link>https://www.economist.com/obituary/rss.xml</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>The Economist Special Reports</title>
-        <link>https://www.economist.com/special-report/rss.xml</link>
+        <title>The Economist Indicators</title>
+        <link>https://www.economist.com/economic-and-financial-indicators/rss.xml</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>The Economist</title>
-        <link>https://www.economist.com/latest/rss.xml</link>
+        <link>https://www.economist.com/the-world-this-week/rss.xml</link>
         <lang>English</lang>
     </feed>
 

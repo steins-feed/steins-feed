@@ -112,6 +112,9 @@ class NoAbstractHandler(SteinsHandler):
 
 class AtlanticHandler(SteinsHandler):
     def parse(self, feed_link):
+        if "feedburner.com" in feed_link:
+            return super().parse(feed_link)
+
         tree = get_tree_from_session(feed_link)
         contents = tree.xpath("//foo:content", namespaces={'foo': tree.nsmap[None]})
         for content_it in contents:
