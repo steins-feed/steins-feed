@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import html
-from lxml.html import builder as E
+from lxml.html import fromstring, builder as E
 
 from steins_lang import lang_list
 from steins_sql import get_cursor
@@ -244,7 +244,7 @@ def feed_node(item_id, like=0, score=None):
     h_it = E.H2()
     a_it = E.A(target="_blank", rel="noopener noreferrer", href=unescape(item_it['Link']))
     span_it = E.SPAN(id="title_{}".format(item_it['ItemID']))
-    span_it.text = unescape(item_it['Title'])
+    span_it.append(fromstring("<span>" + unescape(item_it['Title']) + "</span>"))
     a_it.append(span_it)
     h_it.append(a_it)
     tree.append(h_it)
@@ -257,7 +257,7 @@ def feed_node(item_id, like=0, score=None):
     tree.append(p_it)
 
     summary_it = E.DIV(id="summary_{}".format(item_it['ItemID']))
-    summary_it.text = unescape(item_it['Summary'])
+    summary_it.append(fromstring("<div>" + unescape(item_it['Summary']) + "</div>"))
     tree.append(summary_it)
 
     p_it = E.P()
