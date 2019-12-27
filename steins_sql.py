@@ -201,7 +201,7 @@ if __name__ == "__main__":
     c = conn.cursor()
 
     try:
-        c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2)")
+        c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2)")
         c.execute("CREATE TABLE Display (ItemID INTEGER PRIMARY KEY, nobody INTEGER DEFAULT 1)")
         conn.commit()
         logger.warning("Create Feeds.")
