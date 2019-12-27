@@ -7,6 +7,14 @@ from lxml.html import builder as E
 from steins_lang import lang_list
 from steins_sql import get_cursor
 
+ENCODING = 'utf-8'
+
+def encode(s):
+    return s.encode(ENCODING)
+
+def decode(s):
+    return s.decode(ENCODING)
+
 def unescape(s):
     return html.unescape(html.unescape(s))
 

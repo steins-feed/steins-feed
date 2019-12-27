@@ -13,7 +13,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 
-from steins_html import preamble, side_nav, top_nav, unescape
+from steins_html import decode, preamble, side_nav, top_nav, unescape
 from steins_log import get_logger
 from steins_nltk import NLTK_CountVectorizer
 from steins_sql import get_cursor, last_updated
@@ -251,7 +251,7 @@ def handle_analysis(qd):
 
     #--------------------------------------------------------------------------
 
-    return lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
+    return decode(lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
 def handle_highlight(user, clf, item_id):
     c = get_cursor()

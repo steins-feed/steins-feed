@@ -3,6 +3,8 @@
 from lxml import html
 import requests
 
+from steins_html import encode
+
 def have_session():
     if "session" in globals():
         return True
@@ -18,5 +20,5 @@ def get_session():
 def get_tree_from_session(item_link):
     session = get_session()
     page = session.get(item_link)
-    tree = html.fromstring(page.text.encode('utf-16'))
+    tree = html.fromstring(encode(page.text))
     return tree
