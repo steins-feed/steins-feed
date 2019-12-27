@@ -253,7 +253,7 @@ def handle_analysis(qd):
 
     return lxml.html.tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True).decode('utf-8')
 
-def handle_highlight(user, clf, item_id):
+def handle_highlight(qd):
     c = get_cursor()
 
     user = qd['user']
