@@ -13,7 +13,7 @@ from steins_html import decode, feed_node, preamble, side_nav, top_nav
 from steins_log import get_logger
 from steins_magic import build_feature
 from steins_manager import get_handler
-from steins_sql import add_item, get_cursor, last_update, last_updated
+from steins_sql import add_item, get_connection, get_cursor, last_update, last_updated
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -166,7 +166,8 @@ def handle_page(qd):
 
 # Scrape feeds.
 def steins_read(title_pattern=""):
-    c = get_cursor()
+    conn = get_connection()
+    c = conn.cursor()
     logger = get_logger()
 
     for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
@@ -187,6 +188,8 @@ def steins_read(title_pattern=""):
                 continue
 
             add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
+
+    conn.commit()
 
 # Generate HTML.
 def steins_write():

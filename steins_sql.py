@@ -84,8 +84,7 @@ def delete_feed(item_id):
     conn.commit()
 
 def add_item(item_title, item_time, item_summary, item_source, item_link):
-    conn = get_connection()
-    c = conn.cursor()
+    c = get_cursor()
 
     # Punish cheaters.
     if time.strptime(item_time, "%Y-%m-%d %H:%M:%S GMT") > time.gmtime():
@@ -94,10 +93,8 @@ def add_item(item_title, item_time, item_summary, item_source, item_link):
     try:
         c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, item_source, item_link, ))
         c.execute("INSERT INTO Like (ItemID) SELECT ItemID FROM Items WHERE Title=? AND Published=? AND Summary=? AND Source=? AND Link=?", (item_title, item_time, item_summary, item_source, item_link, ))
-        conn.commit()
         logger.info("Add item -- {}.".format(item_title))
     except IntegrityError:
-        conn.rollback()
         logger.error("Add item -- {}.".format(item_title))
 
 def delete_item(item_id):
