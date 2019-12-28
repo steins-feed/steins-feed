@@ -1,7 +1,11 @@
 .PHONY: run
-run:
-	python3 steins_sql.py
-	python3 aux/main.py
+run: steins.db
+	python3 aux/init_feeds.py
+	python3 aux/update_db.py
+	python3 aux/run_server.py
+
+steins.db:
+	python3 aux/init_db.py
 
 .PHONY: test
 test:
@@ -24,7 +28,6 @@ clean:
 distclean:
 	make clean
 	-rm steins.db
-	-rm steins.db.0
 	-rm steins.db-journal
 	-rm steins.log
 	-rm steins_feed.log

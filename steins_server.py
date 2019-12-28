@@ -10,7 +10,8 @@ from xml.sax.saxutils import escape
 from steins_feed import handle_page
 from steins_html import decode, encode, preamble, side_nav, top_nav, select_lang
 from steins_magic import handle_analysis, handle_highlight
-from steins_sql import get_connection, get_cursor, add_feed, delete_feed, init_feeds, add_user, rename_user, delete_user
+from steins_sql import get_connection, get_cursor, add_feed, delete_feed, add_user, rename_user, delete_user
+from steins_xml import handle_load_config, handle_export_config
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -51,26 +52,6 @@ def handle_display_feeds(qd):
             c.execute("UPDATE Feeds SET Language=? WHERE ItemID=?", (qd["lang_{}".format(feed_it[0])], feed_it[0]))
 
     conn.commit()
-
-def handle_load_config(qd):
-    init_feeds(dir_path + os.sep + "tmp_feeds.xml", qd['user'])
-
-def handle_export_config(qd):
-    c = get_cursor()
-    user = qd['user']
-
-    with open("tmp_feeds.xml", 'w') as f:
-        f.write("<?xml version=\"1.0\"?>\n\n")
-        f.write("<root>\n")
-        for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID".format(user)).fetchall():
-            f.write("    <feed>\n")
-            f.write("        <title>{}</title>\n".format(escape(feed_it['Title'])))
-            f.write("        <link>{}</link>\n".format(escape(feed_it['Link'])))
-            f.write("        <disp>{}</disp>\n".format(feed_it[user]))
-            f.write("        <lang>{}</lang>\n".format(escape(feed_it['Language'])))
-            f.write("        <summary>{}</summary>\n".format(feed_it['Summary']))
-            f.write("    </feed>\n")
-        f.write("</root>\n")
 
 def handle_settings(qd):
     c = get_cursor()
@@ -606,9 +587,3 @@ def steins_run():
         server.server_close()
 
     PORT = port
-
-if __name__ == "__main__":
-    from steins_sql import close_connection
-
-    steins_run()
-    close_connection()

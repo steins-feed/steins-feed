@@ -19,30 +19,6 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 
 no_surprise = 10
 
-# Scrape feeds.
-def steins_read(title_pattern=""):
-    c = get_cursor()
-    logger = get_logger()
-
-    for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
-        handler = get_handler(feed_it['Title'])
-        d = handler.parse(feed_it['Link'])
-        try:
-            logger.info("{} -- {}.".format(feed_it['Title'], d.status))
-        except AttributeError:
-            logger.info("{}.".format(feed_it['Title']))
-
-        for item_it in d['items']:
-            try:
-                item_title = handler.read_title(item_it)
-                item_time = handler.read_time(item_it)
-                item_summary = handler.read_summary(item_it)
-                item_link = handler.read_link(item_it)
-            except KeyError:
-                continue
-
-            add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
-
 def handle_page(qd):
     c = get_cursor()
     timestamp = last_updated()
@@ -188,6 +164,30 @@ def handle_page(qd):
 
     return decode(tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
+# Scrape feeds.
+def steins_read(title_pattern=""):
+    c = get_cursor()
+    logger = get_logger()
+
+    for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
+        handler = get_handler(feed_it['Title'])
+        d = handler.parse(feed_it['Link'])
+        try:
+            logger.info("{} -- {}.".format(feed_it['Title'], d.status))
+        except AttributeError:
+            logger.info("{}.".format(feed_it['Title']))
+
+        for item_it in d['items']:
+            try:
+                item_title = handler.read_title(item_it)
+                item_time = handler.read_time(item_it)
+                item_summary = handler.read_summary(item_it)
+                item_link = handler.read_link(item_it)
+            except KeyError:
+                continue
+
+            add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
+
 # Generate HTML.
 def steins_write():
     c = get_cursor()
@@ -205,13 +205,3 @@ def steins_update(title_pattern="", read_mode=True, write_mode=False):
         last_update(record)
     if write_mode:
         steins_write()
-
-if __name__ == "__main__":
-    import sys
-    from steins_sql import close_connection
-
-    title_pattern = ""
-    if len(sys.argv) > 1:
-        title_pattern = sys.argv[1]
-    steins_update(title_pattern)
-    close_connection()

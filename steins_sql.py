@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from datetime import datetime
-from lxml import etree
 import os
 import sqlite3
 from sqlite3 import IntegrityError, OperationalError
@@ -12,8 +11,6 @@ from steins_log import get_logger
 dir_path = os.path.dirname(os.path.abspath(__file__))
 DB_NAME = "steins.db"
 db_path = dir_path + os.sep + DB_NAME
-FILE_NAME = "feeds.xml"
-file_path = dir_path + os.sep + FILE_NAME
 
 logger = get_logger()
 
@@ -93,29 +90,6 @@ def delete_feed(item_id):
     logger.info("Delete feed -- {}.".format(title))
 
     conn.commit()
-
-def init_feeds(file_path=file_path, user='nobody'):
-    with open(file_path, 'r') as f:
-        tree = etree.fromstring(f.read())
-
-    logger.warning("Initialize feeds -- {}.".format(file_path))
-    feed_list = tree.xpath("//feed")
-    for feed_it in feed_list:
-        title = feed_it.xpath("./title")[0].text
-        link = feed_it.xpath("./link")[0].text
-        try:
-            disp = feed_it.xpath("./disp")[0].text
-        except IndexError:
-            disp = 1
-        try:
-            lang = feed_it.xpath("./lang")[0].text
-        except IndexError:
-            lang = 'English'
-        try:
-            summary = feed_it.xpath("./summary")[0].text
-        except IndexError:
-            summary = 2
-        add_feed(title, link, lang, disp, summary, user)
 
 def add_item(item_title, item_time, item_summary, item_source, item_link):
     conn = get_connection()
@@ -203,7 +177,7 @@ def delete_user(name):
     logger.warning("Delete user -- {}.".format(name))
     conn.commit()
 
-if __name__ == "__main__":
+def create_feeds():
     conn = get_connection()
     c = conn.cursor()
 
@@ -215,6 +189,10 @@ if __name__ == "__main__":
     except OperationalError:
         pass
 
+def create_items():
+    conn = get_connection()
+    c = conn.cursor()
+
     try:
         c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL)")
         c.execute("CREATE TABLE Like (ItemID INTEGER PRIMARY KEY, nobody INTEGER DEFAULT 0)")
@@ -222,6 +200,10 @@ if __name__ == "__main__":
         logger.warning("Create Items.")
     except OperationalError:
         pass
+
+def create_users():
+    conn = get_connection()
+    c = conn.cursor()
 
     try:
         c.execute("CREATE TABLE Users (ItemID INTEGER PRIMARY KEY, Name TINYTEXT NOT NULL UNIQUE)")
@@ -231,12 +213,13 @@ if __name__ == "__main__":
     except OperationalError:
         pass
 
+def create_updates():
+    conn = get_connection()
+    c = conn.cursor()
+
     try:
         c.execute("CREATE TABLE Updates (ItemID INTEGER PRIMARY KEY, Record TIMESTAMP NOT NULL)")
         conn.commit()
         logger.warning("Create Updates.")
     except OperationalError:
         pass
-
-    init_feeds()
-    close_connection()

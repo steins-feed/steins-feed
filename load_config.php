@@ -3,7 +3,8 @@ $get_query = http_build_query($_GET);
 $python_cmd = <<<EOT
 import sys
 
-from steins_server import handle_load_config, handle_settings
+from steins_server import handle_settings
+from steins_xml import handle_load_config
 from urllib.parse import parse_qsl
 
 qd = dict(parse_qsl(sys.argv[1]))
