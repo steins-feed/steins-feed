@@ -24,10 +24,12 @@ def last_update(record=None):
         record = datetime.utcnow()
     c.execute("INSERT INTO Updates(Record) VALUES (?)", (record, ))
     conn.commit()
-    logger.info("Last update: {} .".format(record))
+    logger.info("Last update: {}.".format(record))
 
 def last_updated():
-    return get_cursor().execute("SELECT Record FROM Updates ORDER BY ItemID DESC LIMIT 3").fetchone()[0]
+    c = get_cursor()
+    record = c.execute("SELECT Record FROM Updates ORDER BY ItemID DESC LIMIT 3").fetchone()
+    return record[0]
 
 def have_connection():
     if "connection" in globals():
