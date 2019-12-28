@@ -235,10 +235,8 @@ def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='N
 
     return tree
 
-def feed_node(item_id, like=0, score=None):
+def feed_node(item_it, like=0, score=None):
     c = get_cursor()
-    item_it = c.execute("SELECT * FROM Items WHERE ItemID=?", (item_id, )).fetchone()
-
     tree = E.DIV()
 
     h_it = E.H2()

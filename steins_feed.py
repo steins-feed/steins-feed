@@ -161,11 +161,11 @@ def handle_page(qd):
     if len(clfs) == 0:
         for item_it in items:
             div_it.append(E.HR())
-            div_it.append(feed_node(item_it['ItemID'], item_it[user]))
+            div_it.append(feed_node(item_it, item_it[user]))
     else:
         for item_it in items:
             div_it.append(E.HR())
-            div_it.append(feed_node(item_it['ItemID'], item_it[user], item_it['Score']))
+            div_it.append(feed_node(item_it, item_it[user], item_it['Score']))
 
     return decode(tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
