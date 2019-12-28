@@ -12,6 +12,9 @@ from steins_sql import get_cursor
 from steins_web import get_tree_from_session
 
 class SteinsHandler:
+    def __init__(self):
+        self.logger = get_logger()
+
     def read_title(self, item_it):
         try:
             item_title = item_it['title']
@@ -19,7 +22,7 @@ class SteinsHandler:
         except KeyError:
             pass
 
-        get_logger().error("No title.")
+        self.logger.error("No title.")
         raise KeyError
 
     def read_link(self, item_it):
@@ -35,7 +38,7 @@ class SteinsHandler:
         except KeyError:
             pass
 
-        get_logger().error("No link for '{}'.".format(self.read_title(item_it)))
+        self.logger.error("No link for '{}'.".format(self.read_title(item_it)))
         raise KeyError
 
     def read_summary(self, item_it):
@@ -87,7 +90,7 @@ class SteinsHandler:
         except (KeyError, TypeError, ValueError):
             pass
 
-        get_logger().error("No time for '{}'.".format(self.read_title(item_it)))
+        self.logger.error("No time for '{}'.".format(self.read_title(item_it)))
         raise KeyError
 
     def parse(self, feed_link):
@@ -132,7 +135,7 @@ class GatesHandler(SteinsHandler):
         except (KeyError, TypeError, ValueError):
             pass
 
-        get_logger().error("No time for '{}'.".format(self.read_title(item_it)))
+        self.logger.error("No time for '{}'.".format(self.read_title(item_it)))
         raise KeyError
 
 class MediumHandler(SteinsHandler):
