@@ -71,7 +71,12 @@ def add_feed(title, link, lang, disp=1, summary=2, user='nobody'):
     try:
         c.execute("INSERT INTO Feeds (Title, Link, Language, Summary) VALUES (?, ?, ?, ?)", (title, link, lang, summary, ))
         c.execute("INSERT INTO Display (ItemID) SELECT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?", (title, link, lang, summary, ))
-        c.execute("UPDATE Display SET {}=? WHERE ItemID IN (SELECT DISTINCT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?)".format(user), (disp, title, link, lang, summary, ))
+        c.execute(
+            "WITH ItemIDs AS (SELECT DISTINCT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?)"
+            "UPDATE Display SET {}=? WHERE ItemID IN ItemIDs"
+            .format(user),
+            (title, link, lang, summary, disp, )
+        )
         conn.commit()
         logger.info("Add feed -- {}.".format(title))
     except IntegrityError:

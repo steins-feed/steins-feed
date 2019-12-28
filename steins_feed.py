@@ -68,16 +68,40 @@ def handle_page(qd):
 
     # Language.
     if lang == "International":
-        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND Published<? ORDER BY Published DESC".format(user), (timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
+        dates = c.execute(
+            "WITH Titles AS (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID),"
+            "Sources AS (SELECT Title FROM Titles WHERE {0}=1)"
+            "SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN Sources AND Published<? ORDER BY Published DESC"
+            .format(user),
+            (timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )
+        ).fetchall()
     else:
-        dates = c.execute("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND Published<? ORDER BY Published DESC".format(user), (lang, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
+        dates = c.execute(
+            "WITH Titles AS (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID),"
+            "Sources AS (SELECT Title FROM Titles WHERE {0}=1 AND Language=?)"
+            "SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN Sources AND Published<? ORDER BY Published DESC"
+            .format(user),
+            (lang, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )
+        ).fetchall()
     if page_no >= len(dates):
         return
     d_it = dates[page_no][0]
     if lang == "International":
-        items = c.execute("SELECT Items.*, Like.{0} AS Like, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC".format(user), (d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
+        items = c.execute(
+            "WITH Titles AS (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID),"
+            "Sources AS (SELECT Title FROM Titles WHERE {0}=1)"
+            "SELECT Items.*, Like.{0} AS Like, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN Sources AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC"
+            .format(user),
+            (d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )
+        ).fetchall()
     else:
-        items = c.execute("SELECT Items.*, Like.{0} AS Like, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC".format(user), (lang, d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
+        items = c.execute(
+            "With Titles AS (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID),"
+            "Sources AS (SELECT Title FROM Titles WHERE {0}=1 AND Language=?)"
+            "SELECT Items.*, Like.{0} AS Like, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN Sources AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC"
+            .format(user),
+            (lang, d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )
+        ).fetchall()
 
     # Remove duplicates.
     item_links = set()
