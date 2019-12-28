@@ -75,9 +75,9 @@ def handle_page(qd):
         return
     d_it = dates[page_no][0]
     if lang == "International":
-        items = c.execute("SELECT Items.*, Like.{0}, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC".format(user), (d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
+        items = c.execute("SELECT Items.*, Like.{0} AS Like, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1) AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC".format(user), (d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
     else:
-        items = c.execute("SELECT Items.*, Like.{0}, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC".format(user), (lang, d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
+        items = c.execute("SELECT Items.*, Like.{0} AS Like, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN (SELECT Title FROM (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID) WHERE {0}=1 AND Language=?) AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC".format(user), (lang, d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
 
     # Remove duplicates.
     item_links = set()
@@ -158,14 +158,9 @@ def handle_page(qd):
     elif len(clfs) != 0:
         items.sort(key=lambda item_it: item_it['Score'], reverse=True)
 
-    if len(clfs) == 0:
-        for item_it in items:
-            div_it.append(E.HR())
-            div_it.append(feed_node(item_it, item_it[user]))
-    else:
-        for item_it in items:
-            div_it.append(E.HR())
-            div_it.append(feed_node(item_it, item_it[user], item_it['Score']))
+    for item_it in items:
+        div_it.append(E.HR())
+        div_it.append(feed_node(item_it))
 
     return decode(tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 

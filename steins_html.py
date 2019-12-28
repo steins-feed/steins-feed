@@ -236,7 +236,7 @@ def side_nav(user='nobody', lang='International', page_no=0, feed='Full', clf='N
 
     return tree
 
-def feed_node(item_it, like=0, score=None):
+def feed_node(item_it):
     c = get_cursor()
     tree = E.DIV()
 
@@ -249,10 +249,10 @@ def feed_node(item_it, like=0, score=None):
     tree.append(h_it)
 
     p_it = E.P()
-    if score is None:
-        p_it.text = "Source: {}. Published: {}.".format(unescape(item_it['Source']), item_it['Published'])
+    if 'Score' in item_it:
+        p_it.text = "Source: {}. Published: {}. Score: {:.2f}.\n".format(unescape(item_it['Source']), item_it['Published'], item_it['Score'])
     else:
-        p_it.text = "Source: {}. Published: {}. Score: {:.2f}.\n".format(unescape(item_it['Source']), item_it['Published'], score)
+        p_it.text = "Source: {}. Published: {}.".format(unescape(item_it['Source']), item_it['Published'])
     tree.append(p_it)
 
     summary_it = E.DIV(id="summary_{}".format(item_it['ItemID']))
@@ -263,7 +263,7 @@ def feed_node(item_it, like=0, score=None):
 
     input_it = E.BUTTON(type="button", onclick="like({})".format(item_it['ItemID']))
     i_it = E.I(E.CLASS("material-icons"))
-    if like == 1:
+    if item_it['Like'] == 1:
         span_it = E.SPAN(E.CLASS("liked"), id="like_{}".format(item_it['ItemID']))
     else:
         span_it = E.SPAN(E.CLASS("like"), id="like_{}".format(item_it['ItemID']))
@@ -274,7 +274,7 @@ def feed_node(item_it, like=0, score=None):
 
     input_it = E.BUTTON(type="button", onclick="dislike({})".format(item_it['ItemID']))
     i_it = E.I(E.CLASS("material-icons"))
-    if like == -1:
+    if item_it['Like'] == -1:
         span_it = E.SPAN(E.CLASS("disliked"), id="dislike_{}".format(item_it['ItemID']))
     else:
         span_it = E.SPAN(E.CLASS("dislike"), id="dislike_{}".format(item_it['ItemID']))

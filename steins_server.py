@@ -50,7 +50,7 @@ def handle_display_feeds(qd):
         if "lang_{}".format(feed_it[0]) in qd_keys:
             c.execute("UPDATE Feeds SET Language=? WHERE ItemID=?", (qd["lang_{}".format(feed_it[0])], feed_it[0]))
 
-        conn.commit()
+    conn.commit()
 
 def handle_load_config(qd):
     init_feeds(dir_path + os.sep + "tmp_feeds.xml", qd['user'])
