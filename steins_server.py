@@ -386,10 +386,6 @@ def handle_statistics(qd):
     return decode(tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
 class SteinsHandler(BaseHTTPRequestHandler):
-    def __init__(self):
-        self.conn = get_connection()
-        self.c = get_cursor()
-
     def do_GET(self):
         self.path = self.path.replace("/steins-feed", "")
 
@@ -492,7 +488,7 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs))
             add_feed(qd['title'], qd['link'], qd['lang'], qd['disp'], qd['summary'], qd['user'])
-            self.conn.commit()
+            get_connection().commit()
 
             self.path = "/settings.php?user={}".format(qd['user'])
             self.do_GET()
