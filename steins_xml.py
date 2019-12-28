@@ -4,11 +4,13 @@ from lxml import etree
 import os
 
 from steins_log import get_logger
-from steins_sql import get_cursor, add_feed
+from steins_sql import get_connection, get_cursor, add_feed
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
 logger = get_logger()
+conn = get_connection()
+c = get_cursor()
 
 def load_config(file_path, user='nobody'):
     logger.warning("Initialize feeds -- {}.".format(file_path))
@@ -32,10 +34,9 @@ def load_config(file_path, user='nobody'):
         except IndexError:
             summary = 2
         add_feed(title, link, lang, disp, summary, user)
+    conn.commit()
 
 def export_config(file_path, user):
-    c = get_cursor()
-
     with open(file_path, 'w') as f:
         f.write("<?xml version=\"1.0\"?>\n\n")
         f.write("<root>\n")

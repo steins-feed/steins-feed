@@ -62,22 +62,14 @@ def get_cursor():
     return cursor
 
 def add_feed(title, link, lang, disp=1, summary=2, user='nobody'):
-    conn = get_connection()
-    c = conn.cursor()
+    c = get_cursor()
 
     try:
         c.execute("INSERT INTO Feeds (Title, Link, Language, Summary) VALUES (?, ?, ?, ?)", (title, link, lang, summary, ))
-        c.execute("INSERT INTO Display (ItemID) SELECT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?", (title, link, lang, summary, ))
-        c.execute(
-            "WITH ItemIDs AS (SELECT DISTINCT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?)"
-            "UPDATE Display SET {}=? WHERE ItemID IN ItemIDs"
-            .format(user),
-            (title, link, lang, summary, disp, )
-        )
-        conn.commit()
+        item_id = c.execute("SELECT DISTINCT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?", (title, link, lang, summary, )).fetchone()[0]
+        c.execute("INSERT INTO Display (ItemID, {}) VALUES (?, ?)".format(user), (item_id, disp, ))
         logger.info("Add feed -- {}.".format(title))
     except IntegrityError:
-        conn.rollback()
         logger.error("Add feed -- {}.".format(title))
 
 def delete_feed(item_id):

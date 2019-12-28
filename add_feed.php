@@ -4,11 +4,12 @@ $python_cmd = <<<EOT
 import sys
 
 from steins_server import handle_settings
-from steins_sql import add_feed
+from steins_sql import get_connection, add_feed
 from urllib.parse import parse_qsl
 
 qd = dict(parse_qsl(sys.argv[1], keep_blank_values=True))
 add_feed(qd['title'], qd['link'], qd['disp'], qd['lang'], qd['summary'], qd['user'])
+get_connection().commit()
 print(handle_settings(qd['user']))
 EOT;
 $bash_cmd = "env PYTHONIOENCODING=UTF-8 python3 -c \"$python_cmd\" \"$post_query\"";
