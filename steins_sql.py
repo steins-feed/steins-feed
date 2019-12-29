@@ -61,6 +61,113 @@ def get_cursor():
         cursor = conn.cursor()
     return cursor
 
+def create_table_with_users(name, users=['nobody'], vals=[0]):
+    conn = get_connection()
+    c = conn.cursor()
+
+    statement = "CREATE TABLE {} (ItemID INTEGER PRIMARY KEY".format(name)
+    for user_ct in range(len(users)):
+        statement += ", {} INTEGER DEFAULT {}".format(users[user_ct], vals[user_ct])
+    statement += ")"
+    c.execute(statement)
+    conn.commit()
+
+def alter_table_with_users(table, old_name, new_name):
+    conn = get_connection()
+    c = conn.cursor()
+
+    table_info = c.execute("PRAGMA table_info({})".format(table)).fetchall()[1:]
+    e_old = [e for e in table_info if e[1] == old_name][0]
+    val_old = e_old[4]
+    table_info.remove(e_old)
+    name_list = [e[1] for e in table_info]
+    old_name_list = name_list + [old_name]
+    new_name_list = name_list + [new_name]
+    val_list = [e[4] for e in table_info] + [val_old]
+
+    c.execute("ALTER TABLE {0} RENAME TO {0}_old".format(table))
+    create_table_with_users(table, new_name_list, val_list)
+    c.execute("INSERT INTO {0} (ItemID, {1}) SELECT ItemID, {2} FROM {0}_old".format(table, ", ".join(new_name_list), ", ".join(old_name_list)))
+    c.execute("DROP TABLE {}_old".format(table))
+
+    conn.commit()
+
+def trim_table_with_users(table, name):
+    conn = get_connection()
+    c = conn.cursor()
+
+    table_info = c.execute("PRAGMA table_info({})".format(table)).fetchall()
+    table_info = [e for e in table_info[1:] if not e[1] == name]
+    name_list = [e[1] for e in table_info]
+    val_list = [e[4] for e in table_info]
+
+    c.execute("ALTER TABLE {0} RENAME TO {0}_old".format(table))
+    create_table_with_users(table, name_list, val_list)
+    c.execute("INSERT INTO {0} ({1}) SELECT {1} FROM {0}_old".format(table, ", ".join(name_list)))
+    c.execute("DROP TABLE {}_old".format(table))
+
+    conn.commit()
+
+def create_feeds():
+    conn = get_connection()
+    c = conn.cursor()
+
+    try:
+        c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2, UNIQUE(Title, Link))")
+        conn.commit()
+        logger.warning("Create Feeds.")
+    except OperationalError:
+        pass
+
+def create_display(users=['nobody'], vals=[0]):
+    try:
+        create_table_with_users("Display", users, vals)
+        logger.warning("Create Display.")
+    except OperationalError:
+        pass
+
+def create_items():
+    conn = get_connection()
+    c = conn.cursor()
+
+    try:
+        c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, UNIQUE(Title, Published, Source, Link))")
+        conn.commit()
+        logger.warning("Create Items.")
+    except OperationalError:
+        pass
+
+def create_like(users=['nobody'], vals=[0]):
+    try:
+        create_table_with_users("Like", users, vals)
+        logger.warning("Create Like.")
+    except OperationalError:
+        pass
+
+def create_users(users=['nobody']):
+    conn = get_connection()
+    c = conn.cursor()
+
+    try:
+        c.execute("CREATE TABLE Users (ItemID INTEGER PRIMARY KEY, Name TINYTEXT NOT NULL UNIQUE)")
+        for user in users:
+            c.execute("INSERT INTO Users (Name) VALUES (?)", (user, ))
+        conn.commit()
+        logger.warning("Create Users.")
+    except OperationalError:
+        pass
+
+def create_updates():
+    conn = get_connection()
+    c = conn.cursor()
+
+    try:
+        c.execute("CREATE TABLE Updates (ItemID INTEGER PRIMARY KEY, Record TIMESTAMP NOT NULL)")
+        conn.commit()
+        logger.warning("Create Updates.")
+    except OperationalError:
+        pass
+
 def add_feed(title, link, lang, disp=1, summary=2, user='nobody'):
     c = get_cursor()
 
@@ -124,114 +231,15 @@ def rename_user(old_name, new_name):
     c = conn.cursor()
 
     c.execute("UPDATE Users SET Name=? WHERE Name=?", (new_name, old_name, ))
-
-    name_list = [e[1] for e in c.execute("PRAGMA table_info(Display)").fetchall()]
-    name_list.remove(old_name)
-    c.execute("ALTER TABLE Display RENAME TO Display_old")
-    c.execute("CREATE TABLE Display AS SELECT {} FROM Display_old".format(", ".join(name_list)))
-    c.execute("ALTER TABLE Display ADD COLUMN {} INTERGER DEFAULT 0".format(new_name))
-    c.execute("UPDATE Display SET {}=(SELECT {} FROM Display_old WHERE ItemID=Display.ItemID)".format(new_name, old_name))
-    c.execute("DROP TABLE Display_old")
-
-    name_list = [e[1] for e in c.execute("PRAGMA table_info(Like)").fetchall()]
-    name_list.remove(old_name)
-    c.execute("ALTER TABLE Like RENAME TO Like_old")
-    c.execute("CREATE TABLE Like AS SELECT {} FROM Like_old".format(", ".join(name_list)))
-    c.execute("ALTER TABLE Like ADD COLUMN {} INTERGER DEFAULT 0".format(new_name))
-    c.execute("UPDATE Like SET {}=(SELECT {} FROM Like_old WHERE ItemID=Like.ItemID)".format(new_name, old_name))
-    c.execute("DROP TABLE Like_old")
-
+    alter_table_with_users("Display", old_name, new_name)
+    alter_table_with_users("Like", old_name, new_name)
     logger.warning("Rename user -- {} to {}.".format(old_name, new_name))
-    conn.commit()
 
 def delete_user(name):
     conn = get_connection()
     c = conn.cursor()
 
     c.execute("DELETE FROM Users WHERE Name=?", (name, ))
-
-    name_list = [e[1] for e in c.execute("PRAGMA table_info(Display)").fetchall()]
-    name_list.remove(name)
-    c.execute("ALTER TABLE Display RENAME TO Display_old")
-    c.execute("CREATE TABLE Display AS SELECT {} FROM Display_old".format(", ".join(name_list)))
-    c.execute("DROP TABLE Display_old")
-
-    name_list = [e[1] for e in c.execute("PRAGMA table_info(Like)").fetchall()]
-    name_list.remove(name)
-    c.execute("ALTER TABLE Like RENAME TO Like_old")
-    c.execute("CREATE TABLE Like AS SELECT {} FROM Like_old".format(", ".join(name_list)))
-    c.execute("DROP TABLE Like_old")
-
+    trim_table_with_users("Display", name)
+    trim_table_with_users("Like", name)
     logger.warning("Delete user -- {}.".format(name))
-    conn.commit()
-
-def create_table_with_users(name, users, val):
-    conn = get_connection()
-    c = conn.cursor()
-
-    statement = "CREATE TABLE {} (ItemID INTEGER PRIMARY KEY".format(name)
-    for user in users:
-        statement += ", {} INTEGER DEFAULT {}".format(user, val)
-    statement += ")"
-    c.execute(statement)
-    conn.commit()
-
-def create_feeds():
-    conn = get_connection()
-    c = conn.cursor()
-
-    try:
-        c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2, UNIQUE(Title, Link))")
-        conn.commit()
-        logger.warning("Create Feeds.")
-    except OperationalError:
-        pass
-
-def create_display(users=['nobody']):
-    try:
-        create_table_with_users("Display", users, 1)
-        logger.warning("Create Display.")
-    except OperationalError:
-        pass
-
-def create_items():
-    conn = get_connection()
-    c = conn.cursor()
-
-    try:
-        c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, UNIQUE(Title, Published, Source, Link))")
-        conn.commit()
-        logger.warning("Create Items.")
-    except OperationalError:
-        pass
-
-def create_like(users=['nobody']):
-    try:
-        create_table_with_users("Like", users, 0)
-        logger.warning("Create Like.")
-    except OperationalError:
-        pass
-
-def create_users(users=['nobody']):
-    conn = get_connection()
-    c = conn.cursor()
-
-    try:
-        c.execute("CREATE TABLE Users (ItemID INTEGER PRIMARY KEY, Name TINYTEXT NOT NULL UNIQUE)")
-        for user in users:
-            c.execute("INSERT INTO Users (Name) VALUES (?)", (user, ))
-        conn.commit()
-        logger.warning("Create Users.")
-    except OperationalError:
-        pass
-
-def create_updates():
-    conn = get_connection()
-    c = conn.cursor()
-
-    try:
-        c.execute("CREATE TABLE Updates (ItemID INTEGER PRIMARY KEY, Record TIMESTAMP NOT NULL)")
-        conn.commit()
-        logger.warning("Create Updates.")
-    except OperationalError:
-        pass
