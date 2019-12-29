@@ -119,7 +119,7 @@ def create_feeds():
     except OperationalError:
         pass
 
-def create_display(users=['nobody'], vals=[0]):
+def create_display(users=['nobody'], vals=[1]):
     try:
         create_table_with_users("Display", users, vals)
         logger.warning("Create Display.")
