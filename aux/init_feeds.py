@@ -17,5 +17,3 @@ if len(sys.argv) > 1:
     file_name = sys.argv[1]
 file_path = dir_path + os.sep + file_name
 load_config(file_path)
-#import cProfile
-#cProfile.run("load_config(file_path)")
