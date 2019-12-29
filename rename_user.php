@@ -9,7 +9,9 @@ from urllib.parse import parse_qsl
 
 qd = dict(parse_qsl(sys.argv[1]))
 rename_user(qd['user'], qd['name'])
-print(handle_settings(qd['name']))
+qd['user'] = qd['name']
+del qd['name']
+print(handle_settings(qd))
 EOT;
 $bash_cmd = "env PYTHONIOENCODING=UTF-8 python3 -c \"$python_cmd\" \"$post_query\"";
 // system($bash_cmd . ' > rename_user.log 2>&1'); // DEBUG.

@@ -103,7 +103,7 @@ def trim_table_with_users(table, name):
 
     c.execute("ALTER TABLE {0} RENAME TO {0}_old".format(table))
     create_table_with_users(table, name_list, val_list)
-    c.execute("INSERT INTO {0} ({1}) SELECT {1} FROM {0}_old".format(table, ", ".join(name_list)))
+    c.execute("INSERT INTO {0} (ItemID, {1}) SELECT ItemID, {1} FROM {0}_old".format(table, ", ".join(name_list)))
     c.execute("DROP TABLE {}_old".format(table))
 
     conn.commit()

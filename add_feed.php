@@ -10,7 +10,7 @@ from urllib.parse import parse_qsl
 qd = dict(parse_qsl(sys.argv[1], keep_blank_values=True))
 add_feed(qd['title'], qd['link'], qd['disp'], qd['lang'], qd['summary'], qd['user'])
 get_connection().commit()
-print(handle_settings(qd['user']))
+print(handle_settings(qd))
 EOT;
 $bash_cmd = "env PYTHONIOENCODING=UTF-8 python3 -c \"$python_cmd\" \"$post_query\"";
 // system($bash_cmd . ' > add_feed.log 2>&1'); // DEBUG.
