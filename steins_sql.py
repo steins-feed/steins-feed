@@ -66,8 +66,7 @@ def add_feed(title, link, lang, disp=1, summary=2, user='nobody'):
 
     try:
         c.execute("INSERT INTO Feeds (Title, Link, Language, Summary) VALUES (?, ?, ?, ?)", (title, link, lang, summary, ))
-        item_id = c.execute("SELECT DISTINCT ItemID FROM Feeds WHERE Title=? AND Link=? AND Language=? AND Summary=?", (title, link, lang, summary, )).fetchone()[0]
-        c.execute("INSERT INTO Display (ItemID, {}) VALUES (?, ?)".format(user), (item_id, disp, ))
+        c.execute("INSERT INTO Display ({}) VALUES (?)".format(user), (disp, ))
         logger.info("Add feed -- {}.".format(title))
     except IntegrityError:
         logger.error("Add feed -- {}.".format(title))
@@ -92,7 +91,7 @@ def add_item(item_title, item_time, item_summary, item_source, item_link):
 
     try:
         c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, item_source, item_link, ))
-        c.execute("INSERT INTO Like (ItemID) SELECT ItemID FROM Items WHERE Title=? AND Published=? AND Summary=? AND Source=? AND Link=?", (item_title, item_time, item_summary, item_source, item_link, ))
+        c.execute("INSERT INTO Like DEFAULT VALUES")
         logger.info("Add item -- {}.".format(item_title))
     except IntegrityError:
         logger.error("Add item -- {}.".format(item_title))
