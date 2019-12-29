@@ -189,7 +189,7 @@ def steins_read(title_pattern=""):
 
             add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
 
-    conn.commit()
+        conn.commit()
 
 # Generate HTML.
 def steins_write():
