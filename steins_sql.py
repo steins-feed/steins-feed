@@ -170,7 +170,7 @@ def create_feeds():
     c = conn.cursor()
 
     try:
-        c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2)")
+        c.execute("CREATE TABLE Feeds (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Language TEXT DEFAULT '', Summary INTEGER DEFAULT 2, UNIQUE(Title, Link))")
         c.execute("CREATE TABLE Display (ItemID INTEGER PRIMARY KEY, nobody INTEGER DEFAULT 1)")
         conn.commit()
         logger.warning("Create Feeds.")
@@ -182,7 +182,7 @@ def create_items():
     c = conn.cursor()
 
     try:
-        c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL)")
+        c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Published DATETIME NOT NULL, Summary MEDIUMTEXT, Source TEXT NOT NULL, Link TEXT NOT NULL, UNIQUE(Title, Published, Source, Link))")
         c.execute("CREATE TABLE Like (ItemID INTEGER PRIMARY KEY, nobody INTEGER DEFAULT 0)")
         conn.commit()
         logger.warning("Create Items.")
