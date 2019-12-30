@@ -540,9 +540,9 @@ class SteinsHandler(BaseHTTPRequestHandler):
             qlen = int(self.headers.get('content-length'))
             qs = decode(self.rfile.read(qlen))
             qd = dict(parse_qsl(qs))
-            handle_highlight(qd)
             self.send_response(200)
             self.end_headers()
+            self.wfile.write(encode(handle_highlight(qd)))
         # Add user.
         elif "/add_user.php" in self.path:
             qlen = int(self.headers.get('content-length'))
