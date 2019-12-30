@@ -91,7 +91,7 @@ def handle_settings(qd):
     div_it.append(form_it)
     div_it.append(E.HR())
 
-    for lang_it in [e[0] for e in c.execute("SELECT DISTINCT Language FROM Feeds ORDER BY Language").fetchall()]:
+    for lang_it in [e[0] for e in c.execute("SELECT DISTINCT Language FROM Feeds ORDER BY Language")]:
         h_it = E.H2()
         h_it.text = "{} feeds".format(lang_it)
         form_it.append(h_it)

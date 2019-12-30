@@ -20,7 +20,7 @@ c = get_cursor()
 logger = get_logger()
 timestamp = last_updated()
 
-users = [e[0] for e in c.execute("SELECT Name FROM Users").fetchall()]
+users = [e[0] for e in c.execute("SELECT Name FROM Users")]
 for user_it in users:
     user_path = dir_path + os.sep + user_it
     try:
@@ -56,11 +56,11 @@ for user_it in users:
                 logger.info("Learn {} about {} ({} words).".format(clf_it, user_it, lang_it))
 
             # Feeds.
-            feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE Language=? AND Display.{}=1".format(user_it), (lang_it, )).fetchall()]
+            feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE Language=? AND Display.{}=1".format(user_it), (lang_it, ))]
             coeffs = []
             for title_it in feeds:
-                articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<? ORDER BY Published DESC", (title_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()]
-                #articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<? ORDER BY Published DESC LIMIT ?", (title_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), no_articles, )).fetchall()]
+                articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<?", (title_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), ))]
+                #articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<? ORDER BY Published DESC LIMIT ?", (title_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), no_articles, ))]
                 if len(articles) == 0:
                     coeffs.append(0.)
                     continue

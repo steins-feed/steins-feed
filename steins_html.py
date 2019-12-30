@@ -125,7 +125,7 @@ def side_nav_disp(user, lang, page_no, feed, clf):
     # Language.
     form_it.append(E.P("Language:"))
     langs = ['International']
-    langs += [e[0] for e in c.execute("SELECT DISTINCT Language FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE {}=1".format(user)).fetchall()]
+    langs += [e[0] for e in c.execute("SELECT DISTINCT Language FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE {}=1".format(user))]
     for lang_it in langs:
         input_it = E.INPUT(type='radio', name="lang", value=lang_it)
         if lang_it == lang:
