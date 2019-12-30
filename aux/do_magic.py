@@ -16,6 +16,18 @@ from steins_log import get_logger
 from steins_magic import build_feature, steins_learn
 from steins_sql import get_cursor, last_updated
 
+def kullback_leibler(q, p):
+    ev_q = np.sum(list(q.values()))
+    for k in q:
+        q[k] /= ev_q
+
+    ev_p = np.sum(list(p.values()))
+    for k in p:
+        p[k] /= ev_p
+
+    res = np.sum([p[k] * np.log2(p[k] / q[k]) if k in p else 0. for k in q])
+    return res
+
 c = get_cursor()
 logger = get_logger()
 timestamp = last_updated()
@@ -51,6 +63,16 @@ for user_it in users:
             coeffs = pipeline.predict_proba(table)
             coeffs = 2. * coeffs - 1.
             table = [(table[i], coeffs[i, 1], ) for i in range(len(table))]
+
+            try:
+                with open(clf_path + os.sep + "{}.pickle".format(lang_it), 'rb') as f:
+                    table_old = pickle.load(f)
+                    div = kullback_leibler(dict(table_old), dict(table))
+                    logger.info("Kullback-Leibler divergence of {}, {}, {}: {}.".format(user_it, clf_it, lang_it, div))
+                    continue
+            except FileNotFoundError:
+                pass
+
             with open(clf_path + os.sep + "{}.pickle".format(lang_it), 'wb') as f:
                 pickle.dump(sorted(table, key=lambda row: row[1]), f)
                 logger.info("Learn {} about {} ({} words).".format(clf_it, user_it, lang_it))
