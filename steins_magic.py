@@ -26,6 +26,8 @@ def build_feature(row):
     idx1 = title.find("<")
     while not idx1 == -1:
         idx2 = title.find(">", idx1)
+        if idx2 == -1:
+            break
         title = title[:idx1] + title[idx2+1:]
         idx1 = title.find("<")
     return unescape(title)
