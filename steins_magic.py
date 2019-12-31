@@ -42,6 +42,8 @@ def steins_learn(user, classifier):
     for lang_it in langs:
         likes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=1 AND Language=? AND Published<?".format(user), (lang_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
         dislikes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=-1 AND Language=? AND Published<?".format(user), (lang_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
+        if len(likes) == 0 or len(dislikes) == 0:
+            continue
 
         titles = []
         titles += [build_feature(row_it) for row_it in likes]
