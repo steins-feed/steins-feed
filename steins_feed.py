@@ -111,7 +111,7 @@ def handle_page(qd):
     #--------------------------------------------------------------------------
 
     # Top & side navigation menus.
-    body.append(top_nav(time.strftime("%A, %d %B %Y", time.strptime(d_it, "%Y-%m-%d"))))
+    body.append(top_nav(time.strftime("%a, %d %b %Y", time.strptime(d_it, "%Y-%m-%d"))))
     body.append(side_nav(user, lang, page_no, feed, clf, dates))
 
     #--------------------------------------------------------------------------

@@ -37,7 +37,7 @@ def kullback_leibler(q, p):
             continue
         q[k] /= ev_q
         p[k] /= ev_p
-        res += p[k] * np.log2(p[k] / q[k])
+        res += p[k] * np.log(p[k] / q[k])
 
     return res
 
@@ -78,7 +78,8 @@ for user_it in users:
                     table_old = pickle.load(f)
                     div = kullback_leibler(dict(table), dict(table_old))
                     logger.info("Kullback-Leibler divergence of {}, {}, {}: {}.".format(user_it, clf_it, lang_it, div))
-                    continue
+                    if abs(div) < 0.5:
+                        continue
             except FileNotFoundError:
                 pass
 
