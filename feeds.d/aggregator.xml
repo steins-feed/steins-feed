@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<root>
+    <feed>
+        <title>Hacker News</title>
+        <link>https://news.ycombinator.com/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Slashdot</title>
+        <link>http://rss.slashdot.org/Slashdot/slashdotMain</link>
+        <lang>English</lang>
+    </feed>
+</root>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<root>
+    <feed>
+        <title>Chalkdust</title>
+        <link>http://chalkdustmagazine.com/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Nautilus</title>
+        <link>http://nautil.us/rss/all</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Physics Today</title>
+        <link>https://physicstoday.scitation.org/feed/most-recent</link>
+        <lang>English</lang>
+    </feed>
+
+</root>

@@ -301,6 +301,38 @@
         <lang>German</lang>
     </feed>
 
+    <!-- CNET -->
+    <feed>
+        <title>CNET Reviews</title>
+        <link>http://feed.cnet.com/feed/reviews</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>CNET News</title>
+        <link>http://feed.cnet.com/feed/news</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>CNET How To</title>
+        <link>http://feed.cnet.com/feed/how-to</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>CNET Smart Home</title>
+        <link>http://feed.cnet.com/feed/smart-home</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>CNET Roadshow</title>
+	<link>http://feed.cnet.com/feed/roadshow/all</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>CNET</title>
+        <link>http://feed.cnet.com/feed/all</link>
+        <lang>English</lang>
+    </feed>
+
     <!-- The Conversation (UK) -->
     <feed>
         <title>The Conversation (UK) Arts + Culture</title>
@@ -472,6 +504,63 @@
     <feed>
         <title>Daily Mail</title>
         <link>https://www.dailymail.co.uk/home/index.rss</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- Digital Trends -->
+    <feed>
+        <title>Digital Trends Computing</title>
+        <link>https://www.digitaltrends.com/computing/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Digital Trends Gaming</title>
+        <link>https://www.digitaltrends.com/gaming/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Digital Trends Mobile</title>
+        <link>https://www.digitaltrends.com/mobile/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Digital Trends Social Media</title>
+        <link>https://www.digitaltrends.com/social-media/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Digital Trends Sports</title>
+        <link>https://www.digitaltrends.com/sports/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Digital Trends Cars</title>
+        <link>https://www.digitaltrends.com/cars/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Digital Trends Cool Tech</title>
+        <link>https://www.digitaltrends.com/cool-tech/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Digital Trends Home Theater</title>
+        <link>https://www.digitaltrends.com/home-theater/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Digital Trends Photography</title>
+        <link>https://www.digitaltrends.com/photography/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Digital Trends Home</title>
+        <link>https://www.digitaltrends.com/home/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Digital Trends</title>
+	<link>https://www.digitaltrends.com/feed/</link>
         <lang>English</lang>
     </feed>
 
@@ -1135,6 +1224,112 @@
         <title>Heise</title>
         <link>https://www.heise.de/rss/heise-top-atom.xml</link>
         <lang>German</lang>
+    </feed>
+
+    <!-- The Hill -->
+    <feed>
+        <title>The Hill Administration</title>
+        <link>http://thehill.com/taxonomy/term/1132/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Senate</title>
+        <link>http://thehill.com/taxonomy/term/1130/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill House</title>
+        <link>http://thehill.com/taxonomy/term/1131/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Polls</title>
+        <link>http://thehill.com/taxonomy/term/1630/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill -- Sunday Talk Shows</title>
+        <link>http://thehill.com/taxonomy/term/1778/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill</title>
+        <link>http://thehill.com/taxonomy/term/19110/feed</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- The Hill Policy -->
+    <feed>
+        <title>The Hill Policy -- Defense</title>
+        <link>http://thehill.com/taxonomy/term/39/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Policy -- Energy &amp; Environment</title>
+        <link>http://thehill.com/taxonomy/term/28/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Policy -- Finance</title>
+        <link>http://thehill.com/taxonomy/term/30/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Policy -- Healthcare</title>
+        <link>http://thehill.com/taxonomy/term/33/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Policy -- Technology</title>
+        <link>http://thehill.com/taxonomy/term/27/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Policy -- Transportation</title>
+        <link>http://thehill.com/taxonomy/term/38/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Policy -- International</title>
+        <link>http://thehill.com/taxonomy/term/43/feed</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- The Hill Regulation -->
+    <feed>
+        <title>The Hill Regulation -- Defense</title>
+        <link>http://thehill.com/taxonomy/term/25206/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Regulation -- Energy &amp; Environment</title>
+        <link>http://thehill.com/taxonomy/term/2003/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Regulation -- Finance</title>
+        <link>http://thehill.com/taxonomy/term/2005/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Regulation -- Healthcare</title>
+        <link>http://thehill.com/taxonomy/term/2002/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Regulation -- Technology</title>
+        <link>http://thehill.com/taxonomy/term/2004/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Regulation -- Transportation</title>
+        <link>http://thehill.com/taxonomy/term/25207/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Hill Regulation -- International</title>
+        <link>http://thehill.com/taxonomy/term/25208/feed</link>
+        <lang>English</lang>
     </feed>
 
     <!-- Medium Arts & Entertainment -->
@@ -2033,6 +2228,63 @@
 
     <!-- The New York Times -->
     <feed>
+        <title>The New York Times Columnists -- Charles M. Blow</title>
+        <link>http://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/charles-m-blow/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The New York Times Columnists -- David Brooks</title>
+        <link>http://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/david-brooks/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The New York Times Columnists -- Frank Bruni</title>
+        <link>http://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/frank-bruni/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The New York Times Columnists -- Roger Cohen</title>
+        <link>http://topics.nytimes.com/top/news/international/columns/rogercohen/index.html?rss=1</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The New York Times Columnists -- Gail Collins</title>
+        <link>http://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/gail-collins/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The New York Times Columnists -- Ross Douthat</title>
+        <link>http://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/ross-douthat/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The New York Times Columnists -- Maureen Dowd</title>
+        <link>http://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/maureen-dowd/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The New York Times Columnists -- Thomas L. Friedman</title>
+        <link>http://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/thomas-l-friedman/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The New York Times Columnists -- Nicholas D. Kristof</title>
+        <link>http://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/nicholas-kristof/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The New York Times Columnists -- Charles M. Blow</title>
+        <link>http://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/paul-krugman/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- The New York Times -->
+    <feed>
+        <title>The New York Times -- New York</title>
+        <link>https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>The New York Times Health</title>
         <link>https://rss.nytimes.com/services/xml/rss/nyt/Health.xml</link>
         <lang>English</lang>
@@ -2085,6 +2337,33 @@
         <lang>English</lang>
     </feed>
 
+    <!-- The Onion -->
+    <feed>
+        <title>The Onion Politics</title>
+        <link>https://politics.theonion.com/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Onion Sports</title>
+        <link>https://sports.theonion.com/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Onion Local</title>
+        <link>https://local.theonion.com/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Onion Entertainment</title>
+        <link>https://entertainment.theonion.com/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Onion</title>
+        <link>https://www.theonion.com/rss</link>
+        <lang>English</lang>
+    </feed>
+
     <!-- Pacific Standard -->
     <feed>
         <title>Pacific Standard Economics</title>
@@ -2124,6 +2403,43 @@
     <feed>
         <title>Pacific Standard</title>
         <link>https://psmag.com/.rss/excerpt/</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- Politico -->
+    <feed>
+        <title>Politico Congress</title>
+        <link>http://www.politico.com/rss/congress.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Politico Health Care</title>
+        <link>http://www.politico.com/rss/healthcare.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Politico Defense</title>
+        <link>http://www.politico.com/rss/defense.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Politico Economy</title>
+        <link>http://www.politico.com/rss/economy.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Politico Energy &amp; Environment</title>
+        <link>http://www.politico.com/rss/energy.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Politico Politics</title>
+        <link>http://www.politico.com/rss/politics08.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Politico</title>
+        <link>https://www.politico.com/rss/politicopicks.xml</link>
         <lang>English</lang>
     </feed>
 
@@ -2331,6 +2647,212 @@
     <feed>
         <title>Salon.com</title>
         <link>https://www.salon.com/feed</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- Scientific American -->
+    <feed>
+        <title>Scientific American Mind</title>
+        <link>http://rss.sciam.com/sciam/mind-and-brain</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Health</title>
+        <link>http://rss.sciam.com/sciam/health-and-medicine</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Tech</title>
+        <link>http://rss.sciam.com/sciam/technology</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Sustainability</title>
+        <link>http://rss.sciam.com/sciam/energy-and-sustainability</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American</title>
+        <link>http://rss.sciam.com/ScientificAmerican-Global</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- Scientific American Sciences -->
+    <feed>
+        <title>Scientific American Sciences -- Biology</title>
+        <link>http://rss.sciam.com/sciam/biology</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Sciences -- Chemistry</title>
+        <link>http://rss.sciam.com/sciam/chemistry</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Sciences -- Evolution</title>
+        <link>http://rss.sciam.com/sciam/evolution</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Sciences -- Math</title>
+        <link>http://rss.sciam.com/sciam/math</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Sciences -- Physics</title>
+        <link>http://rss.sciam.com/sciam/physics</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Sciences -- Space</title>
+        <link>http://rss.sciam.com/sciam/space</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- Scientific American Blogs -->
+    <feed>
+        <title>Scientific American Blogs -- Anecdotes from the Archive</title>
+        <link>http://rss.sciam.com/anecdotes-from-the-archive/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Anthropology in Practice</title>
+        <link>http://rss.sciam.com/anthropology-in-practice/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Beautiful Minds</title>
+        <link>http://rss.sciam.com/beautiful-minds/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Budding Scientist</title>
+        <link>http://rss.sciam.com/budding-scientist/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Compound Eye</title>
+        <link>http://rss.sciam.com/compound-eye/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Cross-Check</title>
+        <link>http://rss.sciam.com/cross-check/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Dark Star Diaries</title>
+        <link>http://rss.sciam.com/dark-star-diaries/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Dog Spies</title>
+        <link>http://rss.sciam.com/dog-spies/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Expeditions</title>
+        <link>http://rss.sciam.com/expeditions/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Extinction Countdown</title>
+        <link>http://rss.sciam.com/extinction-countdown/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Food Matters</title>
+        <link>http://rss.sciam.com/food-matters/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Frontiers for Young Minds</title>
+        <link>http://rss.sciam.com/frontiers-for-young-minds/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Guest Blog</title>
+	<link>http://rss.sciam.com/guest-blog/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Illusion Chasers</title>
+        <link>http://rss.sciam.com/illusion-chasers/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Life, Unbounded</title>
+        <link>http://rss.sciam.com/life-unbounded/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- MIND Guest Blog</title>
+        <link>http://rss.sciam.com/mind-guest-blog/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Not Bad Science</title>
+        <link>http://rss.sciam.com/not-bad-science/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Observations</title>
+        <link>http://rss.sciam.com/observations/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- PsySociety</title>
+        <link>http://rss.sciam.com/psysociety/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Roots of Unity</title>
+        <link>http://rss.sciam.com/roots-of-unity/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Rosetta Stones</title>
+        <link>http://rss.sciam.com/rosetta-stones/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Running Ponies</title>
+        <link>http://rss.sciam.com/running-ponies/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- SA Visual</title>
+        <link>http://rss.sciam.com/sa-visual/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Symbiartic</title>
+        <link>http://rss.sciam.com/symbiartic/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Tetrapod Zoology</title>
+        <link>http://rss.sciam.com/tetrapod-zoology/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- The Artful Amoeba</title>
+        <link>http://rss.sciam.com/artful-amoeba/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- The Urban Scientist</title>
+        <link>http://rss.sciam.com/urban-scientist/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blogs -- Voices</title>
+        <link>http://rss.sciam.com/voices/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Scientific American Blog</title>
+        <link>http://rss.sciam.com/at-scientific-american/feed</link>
         <lang>English</lang>
     </feed>
 
@@ -2570,6 +3092,328 @@
         <title>taz</title>
         <link>https://taz.de/!s=&amp;ExportStatus=Intern&amp;SuchRahmen=Online;rss/</link>
         <lang>German</lang>
+    </feed>
+
+    <!-- TechCrunch -->
+    <feed>
+        <title>TechCrunch Startups</title>
+        <link>http://feeds.feedburner.com/TechCrunch/startups</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechCrunch Fundings and Exits</title>
+        <link>http://feeds.feedburner.com/TechCrunch/fundings-exits</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechCrunch Social</title>
+        <link>http://feeds.feedburner.com/TechCrunch/social</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechCrunch Mobile</title>
+        <link>http://feeds.feedburner.com/Mobilecrunch</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechCrunch Gadgets</title>
+        <link>http://feeds.feedburner.com/crunchgear</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechCrunch Europe</title>
+        <link>http://feeds.feedburner.com/TechCrunch/europe</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechCrunch Enterprise</title>
+        <link>http://feeds.feedburner.com/TechCrunchIT</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechCrunch GreenTech</title>
+        <link>http://feeds.feedburner.com/TechCrunch/greentech</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechCrunch</title>
+        <link>http://feeds.feedburner.com/TechCrunch/</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- TechRadar -->
+    <feed>
+        <title>TechRadar Computing</title>
+        <link>https://www.techradar.com/rss/news/computing</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Computing Components</title>
+        <link>https://www.techradar.com/rss/news/computing-components</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Digital Home</title>
+        <link>https://www.techradar.com/rss/news/digital-home</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Gaming</title>
+        <link>https://www.techradar.com/rss/news/gaming</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Audio</title>
+        <link>https://www.techradar.com/rss/news/audio</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Home Cinema</title>
+        <link>https://www.techradar.com/rss/news/home-cinema</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Internet</title>
+        <link>https://www.techradar.com/rss/news/internet</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Mobile Computing</title>
+        <link>https://www.techradar.com/rss/news/mobile-computing</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Networking</title>
+        <link>https://www.techradar.com/rss/news/networking</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Photography &amp; Video Capture</title>
+        <link>https://www.techradar.com/rss/news/photography-video-capture</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Portable Devices</title>
+        <link>https://www.techradar.com/rss/news/portable-devices</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Software</title>
+        <link>https://www.techradar.com/rss/news/software</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Phone &amp; Communications</title>
+        <link>https://www.techradar.com/rss/news/phone-and-communications</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Television</title>
+        <link>https://www.techradar.com/rss/news/television</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Video</title>
+        <link>https://www.techradar.com/rss/news/video</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar World of Tech</title>
+        <link>https://www.techradar.com/rss/news/world-of-tech</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar</title>
+        <link>https://www.techradar.com/rss</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- TechRadar Reviews -->
+    <feed>
+        <title>TechRadar Reviews -- PC &amp; Mac</title>
+	<link>https://www.techradar.com/rss/reviews/pc-mac</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Reviews -- Cameras &amp; Camcorders</title>
+	<link>https://www.techradar.com/rss/reviews/cameras-and-camcorders</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Reviews -- Gadgets</title>
+	<link>https://www.techradar.com/rss/reviews/gadgets</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Reviews -- Phones</title>
+	<link>https://www.techradar.com/deals/iphone-8-deals</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Reviews -- Gaming</title>
+	<link>https://www.techradar.com/rss/reviews/gaming</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Reviews -- Audio Visual</title>
+	<link>https://www.techradar.com/rss/reviews/audio-visual</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TechRadar Reviews</title>
+        <link>https://www.techradar.com/rss/reviews</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- Titanic -->
+    <feed>
+        <title>Titanic -- Startcartoons</title>
+	<link>http://www.titanic-magazin.de/sc.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Titanic -- Briefe an die Leser</title>
+	<link>http://www.titanic-magazin.de/badl.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Titanic -- Vom Fachmann für Kenner</title>
+	<link>http://www.titanic-magazin.de/vffk.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Titanic -- Das schreiben die anderen</title>
+	<link>http://www.titanic-magazin.de/dsda.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Titanic</title>
+	<link>http://www.titanic-magazin.de/ich.war.bei.der.waffen.rss</link>
+        <lang>German</lang>
+    </feed>
+
+    <!-- TNW -->
+    <feed>
+        <title>TNW Hard Fork</title>
+	<link>https://thenextweb.com/hardfork/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TNW Plugged</title>
+	<link>https://thenextweb.com/plugged/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TNW Fundamentals</title>
+	<link>https://thenextweb.com/adobe-fundamentals/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TNW Work 2030</title>
+	<link>https://thenextweb.com/work2030/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>TNW</title>
+	<link>https://thenextweb.com/feed/</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- VentureBeat -->
+    <feed>
+        <title>VentureBeat GamesBeat</title>
+        <link>https://venturebeat.com/category/games/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat AI</title>
+        <link>https://venturebeat.com/category/ai/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat AR &amp; VR</title>
+        <link>https://venturebeat.com/category/arvr/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Big Data</title>
+        <link>https://venturebeat.com/category/big-data/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Business</title>
+        <link>https://venturebeat.com/category/business/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Cloud</title>
+        <link>https://venturebeat.com/category/cloud/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Commerce</title>
+        <link>https://venturebeat.com/category/commerce/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Dev</title>
+        <link>https://venturebeat.com/category/dev/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Enterprise</title>
+        <link>https://venturebeat.com/category/enterprise/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Entrepreneur</title>
+        <link>https://venturebeat.com/category/entrepreneur/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat E-Sports</title>
+        <link>https://venturebeat.com/category/esports/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Marketing</title>
+        <link>https://venturebeat.com/category/marketing/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Media</title>
+        <link>https://venturebeat.com/category/media/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Mobile</title>
+        <link>https://venturebeat.com/category/mobile/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat PC Gaming</title>
+        <link>https://venturebeat.com/category/pc-gaming/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Security</title>
+        <link>https://venturebeat.com/category/security/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Social</title>
+        <link>https://venturebeat.com/category/social/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat Transportation</title>
+        <link>https://venturebeat.com/category/transportation/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>VentureBeat</title>
+        <link>https://feeds.feedburner.com/venturebeat/SZYF</link>
+        <lang>English</lang>
     </feed>
 
     <!-- The Verge -->
@@ -2973,6 +3817,170 @@
         <title>WirtschaftsWoche</title>
         <link>https://www.wiwo.de/contentexport/feed/rss/schlagzeilen</link>
         <lang>German</lang>
+    </feed>
+
+    <!-- ZDNet -->
+    <feed>
+        <title>ZDNet Apple</title>
+        <link>https://www.zdnet.com/topic/apple/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Collaboration</title>
+        <link>https://www.zdnet.com/topic/collaboration/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Enterprise Software</title>
+        <link>https://www.zdnet.com/topic/enterprise-software/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Google</title>
+        <link>https://www.zdnet.com/topic/google/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Great Debate</title>
+        <link>https://www.zdnet.com/topic/great-debate/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Hardware</title>
+        <link>https://www.zdnet.com/topic/hardware/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet IBM</title>
+        <link>https://www.zdnet.com/topic/ibm/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet iOS</title>
+        <link>https://www.zdnet.com/topic/ios/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet iPhone</title>
+        <link>https://www.zdnet.com/topic/iphone/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet iPad</title>
+        <link>https://www.zdnet.com/topic/ipad/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet IT Priorities</title>
+        <link>https://www.zdnet.com/topic/it-priorities/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Laptops</title>
+        <link>https://www.zdnet.com/topic/laptops/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Legal</title>
+        <link>https://www.zdnet.com/topic/legal/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Linux</title>
+        <link>https://www.zdnet.com/topic/linux/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Microsoft</title>
+        <link>https://www.zdnet.com/topic/microsoft/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Mobile OS</title>
+        <link>https://www.zdnet.com/topic/mobile-os/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Mobility</title>
+        <link>https://www.zdnet.com/topic/mobility/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Networking</title>
+        <link>https://www.zdnet.com/topic/networking/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Oracle</title>
+        <link>https://www.zdnet.com/topic/oracle/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Processors</title>
+        <link>https://www.zdnet.com/topic/processors/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Samsung</title>
+        <link>https://www.zdnet.com/topic/samsung/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Security</title>
+        <link>https://www.zdnet.com/topic/security/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Small Business</title>
+        <link>https://www.zdnet.com/topic/small-business-going-big-on-mobility/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Small Business</title>
+        <link>https://www.zdnet.com/topic/small-business-going-big-on-mobility/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet</title>
+        <link>https://www.zdnet.com/news/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- ZDNet Blogs -->
+    <feed>
+        <title>ZDNet Blogs -- Laptops &amp; Desktops</title>
+        <link>https://www.zdnet.com/blog/computers/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Blogs -- The Mobile Gadgeteer</title>
+        <link>https://www.zdnet.com/blog/mobile-gadgeteer/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Blogs -- Smartphones &amp; Cell Phones</title>
+        <link>https://www.zdnet.com/blog/cell-phones/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Blogs -- Business Bargain Hunter</title>
+        <link>https://www.zdnet.com/blog/business-bargain-hunter/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Blogs -- Education</title>
+        <link>https://www.zdnet.com/blog/education/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Blogs -- Healthcare</title>
+        <link>https://www.zdnet.com/blog/healthcare/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>ZDNet Blogs -- Government</title>
+        <link>https://www.zdnet.com/blog/government/rss.xml</link>
+        <lang>English</lang>
     </feed>
 
     <!-- Die ZEIT -->
