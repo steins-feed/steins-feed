@@ -17,26 +17,6 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 
 PORT = 8000
 
-def handle_like(qd):
-    conn = get_connection()
-    c = conn.cursor()
-
-    user = qd['user']
-    item_id = int(qd['id'])
-    submit = qd['submit']
-
-    if submit == "Like":
-        val = 1
-    if submit == "Dislike":
-        val = -1
-    row_val = c.execute("SELECT {} FROM Like WHERE ItemID=?".format(user), (item_id, )).fetchone()[0]
-    if row_val == val:
-        c.execute("UPDATE Like SET {}=0 WHERE ItemID=?".format(user), (item_id, ))
-    else:
-        c.execute("UPDATE Like SET {}=? WHERE ItemID=?".format(user), (val, item_id, ))
-
-    conn.commit()
-
 def handle_display_feeds(qd):
     conn = get_connection()
     c = conn.cursor()
@@ -527,14 +507,6 @@ class SteinsHandler(BaseHTTPRequestHandler):
             handle_export_config(qd)
             with open("tmp_feeds.xml", 'r') as f:
                 self.wfile.write(encode(s))
-        # Like.
-        elif "/like.php" in self.path:
-            qlen = int(self.headers.get('content-length'))
-            qs = decode(self.rfile.read(qlen))
-            qd = dict(parse_qsl(qs))
-            handle_like(qd)
-            self.send_response(200)
-            self.end_headers()
         # Highlight.
         elif "/highlight.php" in self.path:
             qlen = int(self.headers.get('content-length'))

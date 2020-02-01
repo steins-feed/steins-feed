@@ -1,15 +1,35 @@
 <?php
-$post_query = http_build_query($_POST);
-$python_cmd = <<<EOT
-import sys
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
-from steins_server import handle_like
-from urllib.parse import parse_qsl
+$db = new SQLite3("steins.db");
 
-qd = dict(parse_qsl(sys.argv[1]))
-handle_like(qd)
-EOT;
-$bash_cmd = "env PYTHONIOENCODING=UTF-8 python3 -c \"$python_cmd\" \"$post_query\"";
-// system($bash_cmd . ' >> like.log 2>&1'); // DEBUG.
-system($bash_cmd);
+$user = $_POST["user"];
+$item_id = $_POST['id'];
+$submit = $_POST['submit'];
+
+if ($submit == "Like") {
+    $val = 1;
+}
+if ($submit == "Dislike") {
+    $val = -1;
+}
+
+$stmt = sprintf("SELECT %s FROM Like WHERE ItemID=:ItemID", $user);
+$stmt = $db->prepare($stmt);
+$stmt->bindValue(":ItemID", $item_id, SQLITE3_INTEGER);
+$row_val = $stmt->execute()->fetcharray()[0];
+
+$stmt = sprintf("UPDATE Like SET %s=:Like WHERE ItemID=:ItemID", $user);
+$stmt = $db->prepare($stmt);
+$stmt->bindValue(":ItemID", $item_id, SQLITE3_INTEGER);
+if ($row_val == $val) {
+    $stmt->bindValue(":Like", 0, SQLITE3_INTEGER);
+} else {
+    $stmt->bindValue(":Like", $val, SQLITE3_INTEGER);
+}
+$stmt->execute();
+
+$db->close();
 ?>
