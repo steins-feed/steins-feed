@@ -29,6 +29,7 @@ def get_connection():
     if not have_connection():
         connection = sqlite3.connect(db_path, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
         connection.row_factory = sqlite3.Row
+        connection.execute("PRAGMA foreign_keys = ON")
         logger.debug("Open {}.".format(db_path))
     return connection
 
@@ -84,7 +85,7 @@ def create_items():
     c = conn.cursor()
 
     try:
-        c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Published DATETIME NOT NULL, FeedID INTEGER NOT NULL, Summary MEDIUMTEXT, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID), UNIQUE(Title, Link, Published, FeedID))")
+        c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Published DATETIME NOT NULL, FeedID INTEGER NOT NULL, Summary MEDIUMTEXT, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(Title, Link, Published, FeedID))")
         conn.commit()
         logger.info("Create Items.")
     except OperationalError:
@@ -95,7 +96,7 @@ def create_display():
     c = conn.cursor()
 
     try:
-        c.execute("CREATE TABLE Display (UserID INTEGER NOT NULL, FeedID INTEGER NOT NULL, FOREIGN KEY (UserID) REFERENCES Users (UserID), FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID), UNIQUE(UserID, FeedID))")
+        c.execute("CREATE TABLE Display (UserID INTEGER NOT NULL, FeedID INTEGER NOT NULL, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, FeedID))")
         conn.commit()
         logger.info("Create Display.")
     except OperationalError:
@@ -106,7 +107,7 @@ def create_like():
     c = conn.cursor()
 
     try:
-        c.execute("CREATE TABLE Like (UserID INTEGER NOT NULL, FeedID INTEGER NOT NULL, Score INTEGER NOT NULL, Added DATETIME DEFAULT CURRENT_TIMESTAMP, Updated DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID), FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID), UNIQUE(UserID, FeedID))")
+        c.execute("CREATE TABLE Like (UserID INTEGER NOT NULL, FeedID INTEGER NOT NULL, Score INTEGER NOT NULL, Added DATETIME DEFAULT CURRENT_TIMESTAMP, Updated DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, FeedID))")
         conn.commit()
         logger.info("Create Like.")
     except OperationalError:
@@ -116,78 +117,57 @@ def create_like():
 # Modify tables.
 ###############################################################################
 
-def add_feed(title, link, lang, disp=1, summary=2, user='nobody'):
-    c = get_cursor()
-
-    try:
-        c.execute("INSERT INTO Feeds (Title, Link, Language, Summary) VALUES (?, ?, ?, ?)", (title, link, lang, summary, ))
-        c.execute("INSERT INTO Display ({}) VALUES (?)".format(user), (disp, ))
-        logger.info("Add feed -- {}.".format(title))
-    except IntegrityError:
-        logger.error("Add feed -- {}.".format(title))
-
-def delete_feed(item_id):
+def add_user(name):
     conn = get_connection()
     c = conn.cursor()
 
-    title = c.execute("Select Title FROM Feeds WHERE ItemID=?", (item_id, )).fetchone()[0]
-    c.execute("DELETE FROM Feeds WHERE ItemID=?", (item_id, ))
-    c.execute("DELETE FROM Display WHERE ItemID=?", (item_id, ))
-    logger.info("Delete feed -- {}.".format(title))
+    c.execute("INSERT OR IGNORE INTO Users (Name) VALUES (?)", (name, ))
+    logger.info("Add user -- {}.".format(name))
 
     conn.commit()
 
-def add_item(item_title, item_time, item_summary, item_source, item_link):
+def delete_user(user_id):
+    conn = get_connection()
+    c = conn.cursor()
+
+    for user_it in c.execute("SELECT * FROM Users WHERE ItemID=?", (user_id, )).fetchall():
+        c.execute("DELETE FROM Users WHERE UserID=?", (user_id, ))
+        logger.warning("Delete user -- {}.".format(user_it['Name']))
+
+    conn.commit()
+
+def add_feed(title, link, lang='', summary=2):
+    c = get_cursor()
+
+    c.execute("INSERT OR IGNORE INTO Feeds (Title, Link, Language, Summary) VALUES (?, ?, ?, ?)", (title, link, lang, summary, ))
+    logger.debug("Add feed -- {}.".format(title))
+
+def delete_feed(feed_id):
+    conn = get_connection()
+    c = conn.cursor()
+
+    for feed_it in c.execute("SELECT * FROM Feeds WHERE FeedID=?", (feed_id, )).fetchall():
+        c.execute("DELETE FROM Feeds WHERE FeedID=?", (feed_id, ))
+        logger.info("Delete feed -- {}.".format(feed_it['Title']))
+
+    conn.commit()
+
+def add_item(item_title, item_link, item_time, feed_id, item_summary=""):
     c = get_cursor()
 
     # Punish cheaters.
     if time.strptime(item_time, "%Y-%m-%d %H:%M:%S GMT") > time.gmtime():
         return
 
-    try:
-        c.execute("INSERT INTO Items (Title, Published, Summary, Source, Link) VALUES (?, ?, ?, ?, ?)", (item_title, item_time, item_summary, item_source, item_link, ))
-        c.execute("INSERT INTO Like DEFAULT VALUES")
-        logger.info("Add item -- {}.".format(item_title))
-    except IntegrityError:
-        logger.error("Add item -- {}.".format(item_title))
+    c.execute("INSERT OR IGNORE INTO Items (Title, Link, Published, FeedID, Summary) VALUES (?, ?, ?, ?, ?)", (item_title, item_link, item_time, feed_id, item_summary, ))
+    logger.debug("Add item -- {}.".format(item_title))
 
 def delete_item(item_id):
     conn = get_connection()
     c = conn.cursor()
 
-    title = c.execute("Select Title FROM Items WHERE ItemID=?", (item_id, )).fetchone()[0]
-    c.execute("DELETE FROM Items WHERE ItemID=?", (item_id, ))
-    c.execute("DELETE FROM Like WHERE ItemID=?", (item_id, ))
-    logger.info("Delete item -- {}.".format(title))
+    for item_it in c.execute("Select * FROM Items WHERE ItemID=?", (item_id, )).fetchall():
+        c.execute("DELETE FROM Items WHERE ItemID=?", (item_id, ))
+        logger.info("Delete item -- {}.".format(item_it['Title']))
 
     conn.commit()
-
-def add_user(name):
-    conn = get_connection()
-    c = conn.cursor()
-
-    c.execute("INSERT INTO Users (Name) VALUES (?)", (name, ))
-    c.execute("ALTER TABLE Display ADD COLUMN {} INTEGER DEFAULT 0".format(name))
-    c.execute("UPDATE Display SET {}=1".format(name))
-    c.execute("ALTER TABLE Like ADD COLUMN {} INTEGER DEFAULT 0".format(name))
-    logger.warning("Add user -- {}.".format(name))
-
-    conn.commit()
-
-def rename_user(old_name, new_name):
-    conn = get_connection()
-    c = conn.cursor()
-
-    c.execute("UPDATE Users SET Name=? WHERE Name=?", (new_name, old_name, ))
-    alter_table_with_users("Display", old_name, new_name)
-    alter_table_with_users("Like", old_name, new_name)
-    logger.warning("Rename user -- {} to {}.".format(old_name, new_name))
-
-def delete_user(name):
-    conn = get_connection()
-    c = conn.cursor()
-
-    c.execute("DELETE FROM Users WHERE Name=?", (name, ))
-    trim_table_with_users("Display", name)
-    trim_table_with_users("Like", name)
-    logger.warning("Delete user -- {}.".format(name))

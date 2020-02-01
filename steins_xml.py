@@ -8,12 +8,13 @@ from steins_sql import get_connection, get_cursor, add_feed
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
-logger = get_logger()
-conn = get_connection()
-c = get_cursor()
-
 def load_config(file_path, user='nobody'):
-    logger.warning("Initialize feeds -- {}.".format(file_path))
+    logger = get_logger()
+    logger.info("Initialize feeds -- {}.".format(file_path))
+
+    conn = get_connection()
+    c = get_cursor()
+
     with open(file_path, 'r') as f:
         tree = etree.fromstring(f.read())
 
@@ -33,7 +34,8 @@ def load_config(file_path, user='nobody'):
             summary = feed_it.xpath("./summary")[0].text
         except IndexError:
             summary = 2
-        add_feed(title, link, lang, disp, summary, user)
+        add_feed(title, link, lang, summary)
+
     conn.commit()
 
 def export_config(file_path, user):
