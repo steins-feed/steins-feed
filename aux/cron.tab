@@ -20,6 +20,6 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-00 */3 * * * python3 /var/www/html/steins-feed/aux/update_db.py > /var/www/html/steins-feed/steins_feed.log 2>&1
-00 01 * * * python3 /var/www/html/steins-feed/aux/do_magic.py > /var/www/html/steins-feed/steins_magic.log 2>&1
+00 06-21/3 * * * python3 /var/www/html/steins-feed/aux/update_db.py > /var/www/html/steins-feed/steins_feed.log 2>&1
+00 00 * * * python3 /var/www/html/steins-feed/aux/do_magic.py > /var/www/html/steins-feed/steins_magic.log 2>&1
 
