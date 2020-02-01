@@ -14,7 +14,7 @@ sys.path.append(dir_path)
 
 from steins_log import get_logger
 from steins_magic import build_feature, steins_learn
-from steins_sql import get_cursor, last_updated
+from steins_sql import get_cursor
 
 c = get_cursor()
 logger = get_logger()

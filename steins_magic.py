@@ -13,7 +13,7 @@ from sklearn.svm import SVC
 
 from steins_html import decode, preamble, side_nav, top_nav, unescape
 from steins_nltk import NLTK_CountVectorizer
-from steins_sql import get_cursor, last_updated
+from steins_sql import get_cursor
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 

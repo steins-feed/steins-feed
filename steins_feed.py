@@ -13,7 +13,7 @@ from steins_html import decode, feed_node, preamble, side_nav, top_nav
 from steins_log import get_logger
 from steins_magic import build_feature
 from steins_manager import get_handler
-from steins_sql import add_item, get_connection, get_cursor, last_update, last_updated
+from steins_sql import add_item, get_connection, get_cursor
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
