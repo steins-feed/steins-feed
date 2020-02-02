@@ -74,3 +74,11 @@ lang_list = [
     "Welsh",
     "Xhosa"
 ]
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import MultinomialNB
+
+clf_dict = {
+    'Logistic Regression': LogisticRegression,
+    'Naive Bayes': MultinomialNB
+}

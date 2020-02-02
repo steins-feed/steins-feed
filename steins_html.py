@@ -3,7 +3,7 @@
 import html
 from lxml.html import fromstring, builder as E
 
-from steins_lang import lang_list
+from steins_config import lang_list
 from steins_sql import get_cursor
 
 ENCODING = 'utf-8'

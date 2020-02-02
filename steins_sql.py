@@ -16,7 +16,7 @@ logger = get_logger()
 ###############################################################################
 
 def have_connection():
-    if "connection" in globals():
+    if 'connection' in globals():
         return True
     else:
         return False
@@ -37,7 +37,7 @@ def close_connection():
         logger.debug("Close {}.".format(db_path))
 
 def have_cursor():
-    if "cursor" in globals():
+    if 'cursor' in globals():
         return True
     else:
         return False
@@ -125,8 +125,8 @@ def delete_user(user_id):
     conn = get_connection()
     c = conn.cursor()
 
-    for user_it in c.execute("SELECT Name FROM Users WHERE ItemID=?", (user_id, )).fetchall():
-        c.execute("DELETE FROM Users WHERE UserID=?", (user_id, ))
+    for user_it in c.execute("SELECT Name FROM Users WHERE UserID=?", (user_id, )).fetchall():
+        c.execute("DELETE FROM Users WHERE UserID=? AND Name=?", (user_id, user_it['Name'], ))
         logger.info("Delete user -- {}.".format(user_it['Name']))
 
     conn.commit()
@@ -142,7 +142,7 @@ def delete_feed(feed_id):
     c = conn.cursor()
 
     for feed_it in c.execute("SELECT Title FROM Feeds WHERE FeedID=?", (feed_id, )).fetchall():
-        c.execute("DELETE FROM Feeds WHERE FeedID=?", (feed_id, ))
+        c.execute("DELETE FROM Feeds WHERE FeedID=? AND Title=?", (feed_id, feed_it['Title'], ))
         logger.info("Delete feed -- {}.".format(feed_it['Title']))
 
     conn.commit()
@@ -162,7 +162,7 @@ def delete_item(item_id):
     c = conn.cursor()
 
     for item_it in c.execute("SELECT Title FROM Items WHERE ItemID=?", (item_id, )).fetchall():
-        c.execute("DELETE FROM Items WHERE ItemID=?", (item_id, ))
+        c.execute("DELETE FROM Items WHERE ItemID=? AND Title=?", (item_id, item_it['Title'], ))
         logger.info("Delete item -- {}.".format(item_it['Title']))
 
     conn.commit()
@@ -182,21 +182,30 @@ def reset_magic(user_id, clf):
 
 def get_user_id(name):
     c = get_cursor()
-    user_id = c.execute("SELECT UserID FROM Users WHERE Name=?", (name, )).fetchone()[0]
+    user_it = c.execute("SELECT UserID FROM Users WHERE Name=?", (name, )).fetchone()
+
+    user_id = None
+    if user_it is not None:
+        user_id = user_it['UserID']
+
     return user_id
 
 def last_updated():
     c = get_cursor()
-
     timestamp_it = c.execute("SELECT MIN(Updated) FROM Feeds").fetchone()
-    timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
+
+    timestamp = None
+    if timestamp_it is not None:
+        timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
 
     return timestamp
 
 def last_liked(user_id):
     c = get_cursor()
-
     timestamp_it = c.execute("SELECT MAX(Updated) FROM Like WHERE UserID=?", (user_id, )).fetchone()
-    timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
+
+    timestamp = None
+    if timestamp_it is not None:
+        timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
 
     return timestamp

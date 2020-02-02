@@ -169,7 +169,7 @@ def steins_read(title_pattern=""):
     c = conn.cursor()
 
     for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
-        handler = get_handler(feed_it['Title'])
+        handler = get_handler(feed_it['FeedID'])
         d = handler.parse(feed_it['Link'])
         try:
             logger.info("{} -- {}.".format(feed_it['Title'], d.status))

@@ -8,7 +8,7 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 log_path = dir_path + os.sep + LOG_NAME
 
 def have_logger():
-    if "logger" in globals():
+    if 'logger' in globals():
         return True
     else:
         return False
