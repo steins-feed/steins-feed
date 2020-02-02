@@ -15,7 +15,7 @@ from steins_log import get_logger
 logger = get_logger()
 from steins_magic import build_feature
 from steins_manager import get_handler
-from steins_sql import add_item, get_connection, get_cursor
+from steins_sql import *
 
 no_surprise = 10
 
@@ -27,9 +27,8 @@ def handle_page(qd):
     clf = qd['clf']
 
     c = get_cursor()
-    user_id = c.execute("SELECT UserID FROM Users WHERE Name=?", (user, )).fetchone()[0]
-    timestamp_it = c.execute("SELECT MIN(Updated) FROM Feeds WHERE FeedID IN (SELECT FeedID FROM Display WHERE UserID=?)", (user_id, )).fetchone()
-    timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
+    user_id = get_user_id(user)
+    timestamp = last_updated(user_id)
 
     # Classifier.
     clfs = []
@@ -64,7 +63,7 @@ def handle_page(qd):
         items = c.execute(
             "WITH MyFeeds AS (SELECT Feeds.* FROM Display LEFT JOIN Feeds ON Feeds.FeedID=Display.FeedID WHERE UserID=?),"
             "MyLikes AS (SELECT * FROM Like WHERE UserID=?)"
-            "SELECT Items.*, MyFeeds.Title AS Feed, MyFeeds.Language, IFNULL(MyLikes.Score, 0) AS Like FROM (Items INNER JOIN MyFeeds ON Items.FeedID=MyFeeds.FeedID) LEFT JOIN MyLikes ON Items.ItemID=MyLikes.ItemID WHERE SUBSTR(Published, 1, 10)=SUBSTR(?, 1, 10) AND Published<? ORDER BY Published DESC",
+            "SELECT Items.*, MyFeeds.Title AS Feed, MyFeeds.Language AS Language, IFNULL(MyLikes.Score, 0) AS Like FROM (Items INNER JOIN MyFeeds ON Items.FeedID=MyFeeds.FeedID) LEFT JOIN MyLikes ON Items.ItemID=MyLikes.ItemID WHERE SUBSTR(Published, 1, 10)=SUBSTR(?, 1, 10) AND Published<? ORDER BY Published DESC",
             (user_id, user_id, d_it, timestamp, )
         ).fetchall()
     else:
@@ -185,6 +184,7 @@ def steins_read(title_pattern=""):
 
             add_item(item_title, item_link, item_time, feed_it['FeedID'], item_summary)
 
+        c.execute("UPDATE Feeds SET Updated=(SELECT datetime('now')) WHERE FeedID=?", (feed_it['FeedID'], ))
         conn.commit()
 
 # Generate HTML.

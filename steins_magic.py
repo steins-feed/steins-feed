@@ -13,7 +13,7 @@ from sklearn.svm import SVC
 
 from steins_html import decode, preamble, side_nav, top_nav, unescape
 from steins_nltk import NLTK_CountVectorizer
-from steins_sql import get_cursor
+from steins_sql import *
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -34,14 +34,15 @@ def build_feature(row):
 
 def steins_learn(user, classifier):
     c = get_cursor()
-    timestamp = last_updated()
+    user_id = get_user_id(user)
+    timestamp = last_updated(user_id)
 
     clfs = dict()
-    langs = [e[0] for e in c.execute("SELECT DISTINCT Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}!=0".format(user))]
+    langs = [e[0] for e in c.execute("SELECT DISTINCT Feeds.Language FROM (Items INNER JOIN Feeds ON Items.FeedID=Feeds.FeedID) INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE UserID=? AND Published<? AND Score!=0", (user_id, timestamp, ))]
 
     for lang_it in langs:
-        likes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=1 AND Language=? AND Published<?".format(user), (lang_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
-        dislikes = c.execute("SELECT Items.* FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE {0}=-1 AND Language=? AND Published<?".format(user), (lang_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )).fetchall()
+        likes = c.execute("SELECT Items.* FROM (Items INNER JOIN Feeds ON Items.FeedID=Feeds.FeedID) INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE UserID=? AND Language=? AND Published<? AND Score=1", (user_id, lang_it, timestamp, )).fetchall()
+        dislikes = c.execute("SELECT Items.* FROM (Items INNER JOIN Feeds ON Items.FeedID=Feeds.FeedID) INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE UserID=? AND Language=? AND Published<? AND Score=-1", (user_id, lang_it, timestamp, )).fetchall()
         if len(likes) == 0 or len(dislikes) == 0:
             continue
 

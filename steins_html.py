@@ -250,7 +250,7 @@ def feed_node(item_it):
 
     p_it = E.P()
     if 'Score' in item_it:
-        p_it.text = "Source: {}. Published: {}. Score: {:.2f}.\n".format(unescape(item_it['Source']), item_it['Published'], item_it['Score'])
+        p_it.text = "Source: {}. Published: {}. Score: {:.2f}.\n".format(unescape(item_it['Feed']), item_it['Published'], item_it['Score'])
     else:
         p_it.text = "Source: {}. Published: {}.".format(unescape(item_it['Feed']), item_it['Published'])
     tree.append(p_it)

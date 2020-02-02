@@ -13,12 +13,10 @@ dir_path = os.path.abspath(dir_path)
 sys.path.append(dir_path)
 
 from steins_log import get_logger
-from steins_magic import build_feature, steins_learn
-from steins_sql import get_cursor
-
-c = get_cursor()
 logger = get_logger()
-timestamp = last_updated()
+from steins_magic import build_feature, steins_learn
+from steins_sql import *
+c = get_cursor()
 
 def kullback_leibler(q, p):
     ev_q = 0.
@@ -48,6 +46,9 @@ for user_it in users:
         os.mkdir(user_path)
     except FileExistsError:
         pass
+
+    user_id = get_user_id(user_it)
+    timestamp = last_updated(user_id)
 
     #for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
     for clf_it in ["Naive Bayes", "Logistic Regression"]:
@@ -88,11 +89,11 @@ for user_it in users:
                 logger.info("Learn {} about {} ({} words).".format(clf_it, user_it, lang_it))
 
             # Feeds.
-            feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE Language=? AND Display.{}=1".format(user_it), (lang_it, ))]
+            feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.FeedID=Display.FeedID WHERE Language=? AND UserID=?", (lang_it, user_id, ))]
             coeffs = []
             for title_it in feeds:
-                articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<?", (title_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), ))]
-                #articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<? ORDER BY Published DESC LIMIT ?", (title_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), no_articles, ))]
+                articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<?", (title_it, timestamp, ))]
+                #articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<? ORDER BY Published DESC LIMIT ?", (title_it, timestamp, no_articles, ))]
                 if len(articles) == 0:
                     coeffs.append(0.)
                     continue

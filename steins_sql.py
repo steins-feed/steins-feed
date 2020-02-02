@@ -93,7 +93,7 @@ def create_like():
     conn = get_connection()
     c = conn.cursor()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Like (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score INTEGER NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Feeds (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))")
+    c.execute("CREATE TABLE IF NOT EXISTS Like (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score INTEGER NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))")
 
     conn.commit()
     logger.info("Create Like.")
@@ -156,3 +156,23 @@ def delete_item(item_id):
         logger.info("Delete item -- {}.".format(item_it['Title']))
 
     conn.commit()
+
+###############################################################################
+# Convenience functions.
+###############################################################################
+
+def get_user_id(name):
+    c = get_cursor()
+    user_id = c.execute("SELECT UserID FROM Users WHERE Name=?", (name, )).fetchone()[0]
+    return user_id
+
+def last_updated(user_id=None):
+    c = get_cursor()
+
+    if user_id is None:
+        timestamp_it = c.execute("SELECT MIN(Updated) FROM Feeds", (user_id, )).fetchone()
+    else:
+        timestamp_it = c.execute("SELECT MIN(Updated) FROM Feeds INNER JOIN Display WHERE UserID=?", (user_id, )).fetchone()
+    timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
+
+    return timestamp
