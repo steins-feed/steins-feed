@@ -3,15 +3,12 @@
 from datetime import datetime
 import os
 import sqlite3
-from sqlite3 import IntegrityError, OperationalError
-import time
-
-from steins_log import get_logger
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 DB_NAME = "steins.db"
 db_path = dir_path + os.sep + DB_NAME
 
+from steins_log import get_logger
 logger = get_logger()
 
 ###############################################################################
@@ -56,62 +53,50 @@ def get_cursor():
 # Create tables.
 ###############################################################################
 
-def create_users(users=['nobody']):
+def create_users():
     conn = get_connection()
     c = conn.cursor()
 
-    try:
-        c.execute("CREATE TABLE Users (UserID INTEGER PRIMARY KEY, Name TINYTEXT NOT NULL UNIQUE)")
-        for user in users:
-            c.execute("INSERT INTO Users (Name) VALUES (?)", (user, ))
-        conn.commit()
-        logger.info("Create Users.")
-    except OperationalError:
-        pass
+    c.execute("CREATE TABLE IF NOT EXISTS Users (UserID INTEGER PRIMARY KEY, Name TINYTEXT NOT NULL UNIQUE)")
+
+    conn.commit()
+    logger.info("Create Users.")
 
 def create_feeds():
     conn = get_connection()
     c = conn.cursor()
 
-    try:
-        c.execute("CREATE TABLE Feeds (FeedID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL UNIQUE, Language TINYTEXT DEFAULT '', Summary INTEGER DEFAULT 2, Added DATETIME DEFAULT CURRENT_TIMESTAMP, Updated DATETIME DEFAULT CURRENT_TIMESTAMP)")
-        conn.commit()
-        logger.info("Create Feeds.")
-    except OperationalError:
-        pass
+    c.execute("CREATE TABLE IF NOT EXISTS Feeds (FeedID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL UNIQUE, Language TINYTEXT DEFAULT '', Summary INTEGER DEFAULT 2, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+
+    conn.commit()
+    logger.info("Create Feeds.")
 
 def create_items():
     conn = get_connection()
     c = conn.cursor()
 
-    try:
-        c.execute("CREATE TABLE Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Published DATETIME NOT NULL, FeedID INTEGER NOT NULL, Summary MEDIUMTEXT, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(Title, Link, Published, FeedID))")
-        conn.commit()
-        logger.info("Create Items.")
-    except OperationalError:
-        pass
+    c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Published TIMESTAMP NOT NULL, FeedID INTEGER NOT NULL, Summary MEDIUMTEXT, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(Title, Link, Published, FeedID))")
+
+    conn.commit()
+    logger.info("Create Items.")
 
 def create_display():
     conn = get_connection()
     c = conn.cursor()
 
-    try:
-        c.execute("CREATE TABLE Display (UserID INTEGER NOT NULL, FeedID INTEGER NOT NULL, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, FeedID))")
-        conn.commit()
-        logger.info("Create Display.")
-    except OperationalError:
-        pass
+    c.execute("CREATE TABLE IF NOT EXISTS Display (UserID INTEGER NOT NULL, FeedID INTEGER NOT NULL, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, FeedID))")
+
+    conn.commit()
+    logger.info("Create Display.")
 
 def create_like():
     conn = get_connection()
     c = conn.cursor()
 
-    try:
-        c.execute("CREATE TABLE Like (UserID INTEGER NOT NULL, FeedID INTEGER NOT NULL, Score INTEGER NOT NULL, Added DATETIME DEFAULT CURRENT_TIMESTAMP, Updated DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, FeedID))")
-        conn.commit()
-        logger.info("Create Like.")
-    except OperationalError:
-        pass
+    c.execute("CREATE TABLE IF NOT EXISTS Like (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score INTEGER NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Feeds (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))")
+
+    conn.commit()
+    logger.info("Create Like.")
 
 ###############################################################################
 # Modify tables.
@@ -122,17 +107,17 @@ def add_user(name):
     c = conn.cursor()
 
     c.execute("INSERT OR IGNORE INTO Users (Name) VALUES (?)", (name, ))
-    logger.info("Add user -- {}.".format(name))
 
     conn.commit()
+    logger.info("Add user -- {}.".format(name))
 
 def delete_user(user_id):
     conn = get_connection()
     c = conn.cursor()
 
-    for user_it in c.execute("SELECT * FROM Users WHERE ItemID=?", (user_id, )).fetchall():
+    for user_it in c.execute("SELECT Name FROM Users WHERE ItemID=?", (user_id, )).fetchall():
         c.execute("DELETE FROM Users WHERE UserID=?", (user_id, ))
-        logger.warning("Delete user -- {}.".format(user_it['Name']))
+        logger.info("Delete user -- {}.".format(user_it['Name']))
 
     conn.commit()
 
@@ -146,7 +131,7 @@ def delete_feed(feed_id):
     conn = get_connection()
     c = conn.cursor()
 
-    for feed_it in c.execute("SELECT * FROM Feeds WHERE FeedID=?", (feed_id, )).fetchall():
+    for feed_it in c.execute("SELECT Title FROM Feeds WHERE FeedID=?", (feed_id, )).fetchall():
         c.execute("DELETE FROM Feeds WHERE FeedID=?", (feed_id, ))
         logger.info("Delete feed -- {}.".format(feed_it['Title']))
 
@@ -156,7 +141,7 @@ def add_item(item_title, item_link, item_time, feed_id, item_summary=""):
     c = get_cursor()
 
     # Punish cheaters.
-    if time.strptime(item_time, "%Y-%m-%d %H:%M:%S GMT") > time.gmtime():
+    if item_time > datetime.utcnow():
         return
 
     c.execute("INSERT OR IGNORE INTO Items (Title, Link, Published, FeedID, Summary) VALUES (?, ?, ?, ?, ?)", (item_title, item_link, item_time, feed_id, item_summary, ))
@@ -166,7 +151,7 @@ def delete_item(item_id):
     conn = get_connection()
     c = conn.cursor()
 
-    for item_it in c.execute("Select * FROM Items WHERE ItemID=?", (item_id, )).fetchall():
+    for item_it in c.execute("SELECT Title FROM Items WHERE ItemID=?", (item_id, )).fetchall():
         c.execute("DELETE FROM Items WHERE ItemID=?", (item_id, ))
         logger.info("Delete item -- {}.".format(item_it['Title']))
 

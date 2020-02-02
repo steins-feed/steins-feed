@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from datetime import datetime
 import feedparser
 from lxml import etree
 from lxml.etree import ParserError
@@ -78,14 +79,14 @@ class SteinsHandler:
     def read_time(self, item_it):
         try:
             item_time = item_it['published_parsed']
-            item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
+            item_time = datetime(*item_time[:6])
             return item_time
         except (KeyError, TypeError, ValueError):
             pass
 
         try:
             item_time = item_it['updated_parsed']
-            item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
+            item_time = datetime(*item_time[:6])
             return item_time
         except (KeyError, TypeError, ValueError):
             pass
@@ -129,8 +130,7 @@ class GatesHandler(SteinsHandler):
     def read_time(self, item_it):
         try:
             item_time = item_it['published']
-            item_time = time.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
-            item_time = time.strftime("%Y-%m-%d %H:%M:%S GMT", item_time)
+            item_time = datetime.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
             return item_time
         except (KeyError, TypeError, ValueError):
             pass

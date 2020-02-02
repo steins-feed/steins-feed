@@ -6,28 +6,30 @@ import numpy as np
 import numpy.random as random
 import os
 import pickle
-import time
 from urllib.parse import urlparse
+
+dir_path = os.path.dirname(os.path.abspath(__file__))
 
 from steins_html import decode, feed_node, preamble, side_nav, top_nav
 from steins_log import get_logger
+logger = get_logger()
 from steins_magic import build_feature
 from steins_manager import get_handler
 from steins_sql import add_item, get_connection, get_cursor
 
-dir_path = os.path.dirname(os.path.abspath(__file__))
-
 no_surprise = 10
 
 def handle_page(qd):
-    c = get_cursor()
-    timestamp = last_updated()
-
     user = qd['user']
     lang = qd['lang']
     page_no = int(qd['page'])
     feed = qd['feed']
     clf = qd['clf']
+
+    c = get_cursor()
+    user_id = c.execute("SELECT UserID FROM Users WHERE Name=?", (user, )).fetchone()[0]
+    timestamp_it = c.execute("SELECT MIN(Updated) FROM Feeds WHERE FeedID IN (SELECT FeedID FROM Display WHERE UserID=?)", (user_id, )).fetchone()
+    timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
 
     # Classifier.
     clfs = []
@@ -45,38 +47,33 @@ def handle_page(qd):
     # Language.
     if lang == "International":
         dates = c.execute(
-            "WITH Titles AS (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID),"
-            "Sources AS (SELECT Title FROM Titles WHERE {0}=1)"
-            "SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN Sources AND Published<? ORDER BY Published DESC"
-            .format(user),
-            (timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )
+            "WITH MyFeeds AS (SELECT Feeds.* FROM Display LEFT JOIN Feeds ON Feeds.FeedID=Display.FeedID WHERE UserID=?)"
+            "SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE FeedID IN (SELECT FeedID FROM MyFeeds) AND Published<? ORDER BY Published DESC",
+            (user_id, timestamp, )
         ).fetchall()
     else:
         dates = c.execute(
-            "WITH Titles AS (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID),"
-            "Sources AS (SELECT Title FROM Titles WHERE {0}=1 AND Language=?)"
-            "SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE Source IN Sources AND Published<? ORDER BY Published DESC"
-            .format(user),
-            (lang, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )
+            "WITH MyFeeds AS (SELECT Feeds.* FROM Display LEFT JOIN Feeds ON Feeds.FeedID=Display.FeedID WHERE UserID=? AND Language=?)"
+            "SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE FeedID IN (SELECT FeedID FROM MyFeeds) AND Published<? ORDER BY Published DESC",
+            (user_id, lang, timestamp, )
         ).fetchall()
     if page_no >= len(dates):
         return
-    d_it = dates[page_no][0]
+    d_it = datetime.strptime(dates[page_no][0], "%Y-%m-%d")
     if lang == "International":
         items = c.execute(
-            "WITH Titles AS (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID),"
-            "Sources AS (SELECT Title FROM Titles WHERE {0}=1)"
-            "SELECT Items.*, Like.{0} AS Like, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN Sources AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC"
-            .format(user),
-            (d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )
+            "WITH MyFeeds AS (SELECT Feeds.* FROM Display LEFT JOIN Feeds ON Feeds.FeedID=Display.FeedID WHERE UserID=?),"
+            "MyLikes AS (SELECT * FROM Like WHERE UserID=?)"
+            "SELECT Items.*, MyFeeds.Title AS Feed, MyFeeds.Language, IFNULL(MyLikes.Score, 0) AS Like FROM (Items INNER JOIN MyFeeds ON Items.FeedID=MyFeeds.FeedID) LEFT JOIN MyLikes ON Items.ItemID=MyLikes.ItemID WHERE SUBSTR(Published, 1, 10)=SUBSTR(?, 1, 10) AND Published<? ORDER BY Published DESC",
+            (user_id, user_id, d_it, timestamp, )
         ).fetchall()
     else:
         items = c.execute(
-            "With Titles AS (SELECT Feeds.*, Display.{0} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID),"
-            "Sources AS (SELECT Title FROM Titles WHERE {0}=1 AND Language=?)"
-            "SELECT Items.*, Like.{0} AS Like, Feeds.Language FROM (Items INNER JOIN Like ON Items.ItemID=Like.ItemID) INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Source IN Sources AND SUBSTR(Published, 1, 10)=? AND Published<? ORDER BY Published DESC"
+            "With MyFeeds AS (SELECT Feeds.* FROM Display LEFT JOIN Feeds ON Feeds.FeedID=Display.FeedID WHERE UserID=? AND Language=?),"
+            "MyLikes AS (SELECT * FROM Like WHERE UserID=?)"
+            "SELECT Items.*, MyFeeds.Title AS Feed, MyFeeds.Language, IFNULL(MyLikes.Score, 0) AS Like FROM (Items INNER JOIN MyFeeds ON Items.FeedID=MyFeeds.FeedID) LEFT JOIN MyLikes ON Items.ItemID=MyLikes.ItemID WHERE SUBSTR(Published, 1, 10)=SUBSTR(?, 1, 10) AND Published<? ORDER BY Published DESC"
             .format(user),
-            (lang, d_it, timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"), )
+            (user_id, lang, user_id, d_it, timestamp, )
         ).fetchall()
 
     # Remove duplicates.
@@ -111,7 +108,7 @@ def handle_page(qd):
     #--------------------------------------------------------------------------
 
     # Top & side navigation menus.
-    body.append(top_nav(time.strftime("%a, %d %b %Y", time.strptime(d_it, "%Y-%m-%d"))))
+    body.append(top_nav(d_it.strftime("%a, %d %b %Y")))
     body.append(side_nav(user, lang, page_no, feed, clf, dates))
 
     #--------------------------------------------------------------------------
@@ -168,7 +165,6 @@ def handle_page(qd):
 def steins_read(title_pattern=""):
     conn = get_connection()
     c = conn.cursor()
-    logger = get_logger()
 
     for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
         handler = get_handler(feed_it['Title'])
@@ -181,13 +177,13 @@ def steins_read(title_pattern=""):
         for item_it in d['items']:
             try:
                 item_title = handler.read_title(item_it)
+                item_link = handler.read_link(item_it)
                 item_time = handler.read_time(item_it)
                 item_summary = handler.read_summary(item_it)
-                item_link = handler.read_link(item_it)
             except KeyError:
                 continue
 
-            add_item(item_title, item_time, item_summary, feed_it['Title'], item_link)
+            add_item(item_title, item_link, item_time, feed_it['FeedID'], item_summary)
 
         conn.commit()
 
@@ -201,10 +197,9 @@ def steins_write():
             f.write(handle_page(page=d_ctr))
 
 def steins_update(title_pattern="", read_mode=True, write_mode=False):
-    #last_update()
+    logger.info("Update feeds.")
+
     if read_mode:
-        record = datetime.utcnow()
         steins_read(title_pattern)
-        last_update(record)
     if write_mode:
         steins_write()

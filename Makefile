@@ -1,16 +1,18 @@
 .PHONY: run
 run: steins.db
-	python3 aux/init_feeds.py
-	python3 aux/update_db.py
-	python3 aux/run_server.py
+	cd ..; php -S localhost:8000
 
 steins.db:
 	python3 aux/init_db.py
+	python3 aux/init_feeds.py
+	python3 aux/update_db.py
 
 .PHONY: test
 test:
 	make distclean
-	make
+	make steins.db
+	python3 aux/add_nobody.py
+	make run
 
 README.pdf: README.md
 	pandoc -o README.pdf README.md

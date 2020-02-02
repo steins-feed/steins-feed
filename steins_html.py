@@ -125,7 +125,7 @@ def side_nav_disp(user, lang, page_no, feed, clf):
     # Language.
     form_it.append(E.P("Language:"))
     langs = ['International']
-    langs += [e[0] for e in c.execute("SELECT DISTINCT Language FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE {}=1".format(user))]
+    langs += [e[0] for e in c.execute("SELECT DISTINCT Language FROM Feeds WHERE FeedID IN (SELECT FeedID FROM Display WHERE UserID=(SELECT UserID FROM Users WHERE Name=?))", (user, ))]
     for lang_it in langs:
         input_it = E.INPUT(type='radio', name="lang", value=lang_it)
         if lang_it == lang:
@@ -252,7 +252,7 @@ def feed_node(item_it):
     if 'Score' in item_it:
         p_it.text = "Source: {}. Published: {}. Score: {:.2f}.\n".format(unescape(item_it['Source']), item_it['Published'], item_it['Score'])
     else:
-        p_it.text = "Source: {}. Published: {}.".format(unescape(item_it['Source']), item_it['Published'])
+        p_it.text = "Source: {}. Published: {}.".format(unescape(item_it['Feed']), item_it['Published'])
     tree.append(p_it)
 
     summary_it = E.DIV(id="summary_{}".format(item_it['ItemID']))

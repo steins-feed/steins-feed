@@ -3,22 +3,22 @@
 from lxml import etree
 import os
 
-from steins_log import get_logger
-from steins_sql import get_connection, get_cursor, add_feed
-
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
-def load_config(file_path, user='nobody'):
-    logger = get_logger()
+from steins_log import get_logger
+logger = get_logger()
+from steins_sql import get_connection, get_cursor, add_feed
+
+def load_config(file_path):
     logger.info("Initialize feeds -- {}.".format(file_path))
+
+    with open(file_path, 'r') as f:
+        tree = etree.fromstring(f.read())
+    feed_list = tree.xpath("//feed")
 
     conn = get_connection()
     c = get_cursor()
 
-    with open(file_path, 'r') as f:
-        tree = etree.fromstring(f.read())
-
-    feed_list = tree.xpath("//feed")
     for feed_it in feed_list:
         title = feed_it.xpath("./title")[0].text
         link = feed_it.xpath("./link")[0].text
