@@ -10,7 +10,7 @@ dir_path = os.path.abspath(dir_path)
 
 sys.path.append(dir_path)
 
-from steins_sql import create_feeds, create_display, create_items, create_like, create_users
+from steins_sql import *
 
 # Create tables.
 create_users()
@@ -18,3 +18,4 @@ create_feeds()
 create_items()
 create_display()
 create_like()
+create_magic()

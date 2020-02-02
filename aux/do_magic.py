@@ -48,20 +48,26 @@ for user_it in users:
         pass
 
     user_id = get_user_id(user_it)
-    timestamp = last_updated(user_id)
+    timestamp = last_updated()
+    timestamp_like = last_liked(user_id)
 
-    #for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
-    for clf_it in ["Naive Bayes", "Logistic Regression"]:
+    for clf_it in ["NaiveBayes", "LogisticRegression"]:
         clf_path = user_path + os.sep + clf_it
         try:
             os.mkdir(clf_path)
         except FileExistsError:
             pass
 
-        clfs = steins_learn(user_it, clf_it)
-        with open(clf_path + os.sep + "clfs.pickle", 'wb') as f:
-            pickle.dump(clfs, f)
-            logger.info("Learn {} about {}.".format(clf_it, user_it))
+        file_path = clf_path + os.sep + "clfs.pickle"
+        if os.path.exists(file_path) and datetime.fromtimestamp(os.stat(file_path).st_mtime) < timestamp_like:
+            with open(clf_path + os.sep + "clfs.pickle", 'rb') as f:
+                clfs = pickle.load(f)
+        else:
+            clfs = steins_learn(user_it, clf_it)
+            reset_magic(user_it, clf_it)
+            with open(clf_path + os.sep + "clfs.pickle", 'wb') as f:
+                pickle.dump(clfs, f)
+                logger.info("Learn {} about {}.".format(clf_it, user_it))
 
         for lang_it in clfs.keys():
             pipeline = clfs[lang_it]
@@ -92,7 +98,7 @@ for user_it in users:
             feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.FeedID=Display.FeedID WHERE Language=? AND UserID=?", (lang_it, user_id, ))]
             coeffs = []
             for title_it in feeds:
-                articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<?", (title_it, timestamp, ))]
+                articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE FeedID=(SELECT FeedID FROM Feeds WHERE Title=?) AND Published<?", (title_it, timestamp, ))]
                 #articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<? ORDER BY Published DESC LIMIT ?", (title_it, timestamp, no_articles, ))]
                 if len(articles) == 0:
                     coeffs.append(0.)

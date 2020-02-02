@@ -98,6 +98,16 @@ def create_like():
     conn.commit()
     logger.info("Create Like.")
 
+def create_magic():
+    conn = get_connection()
+    c = conn.cursor()
+
+    for clf_it in ['NaiveBayes', 'LogisticRegression']:
+        c.execute("CREATE TABLE IF NOT EXISTS {} (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score FLOAT NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))".format(clf_it))
+
+    conn.commit()
+    logger.info("Create Magic.")
+
 ###############################################################################
 # Modify tables.
 ###############################################################################
@@ -157,6 +167,15 @@ def delete_item(item_id):
 
     conn.commit()
 
+def reset_magic(user_id, clf):
+    conn = get_connection()
+    c = conn.cursor()
+
+    c.execute("DELETE FROM {} WHERE UserID=?".format(clf, ), (user_id, ))
+
+    conn.commit()
+    logger.info("Reset {}.".format(clf))
+
 ###############################################################################
 # Convenience functions.
 ###############################################################################
@@ -166,13 +185,18 @@ def get_user_id(name):
     user_id = c.execute("SELECT UserID FROM Users WHERE Name=?", (name, )).fetchone()[0]
     return user_id
 
-def last_updated(user_id=None):
+def last_updated():
     c = get_cursor()
 
-    if user_id is None:
-        timestamp_it = c.execute("SELECT MIN(Updated) FROM Feeds", (user_id, )).fetchone()
-    else:
-        timestamp_it = c.execute("SELECT MIN(Updated) FROM Feeds INNER JOIN Display WHERE UserID=?", (user_id, )).fetchone()
+    timestamp_it = c.execute("SELECT MIN(Updated) FROM Feeds").fetchone()
+    timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
+
+    return timestamp
+
+def last_liked(user_id):
+    c = get_cursor()
+
+    timestamp_it = c.execute("SELECT MAX(Updated) FROM Like WHERE UserID=?", (user_id, )).fetchone()
     timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
 
     return timestamp

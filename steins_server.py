@@ -327,7 +327,7 @@ def handle_statistics(qd):
     #--------------------------------------------------------------------------
 
     # Likes.
-    likes = c.execute("SELECT Items.* FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE UserID=(SELECT UserID FROM Users WHERE Name=?) AND Score=1 ORDER BY Published DESC", (user, )).fetchall()
+    likes = c.execute("SELECT Items.*, Feeds.Title AS Feed FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Like USING (ItemID) WHERE UserID=(SELECT UserID FROM Users WHERE Name=?) AND Score=1 ORDER BY Published DESC", (user, )).fetchall()
 
     h_it = E.H2()
     h_it.text = "Likes"
@@ -345,7 +345,7 @@ def handle_statistics(qd):
 
         li_it = E.LI()
         ul_it.append(li_it)
-        li_it.text = "{}: ".format(row_it['Source'])
+        li_it.text = "{}: ".format(row_it['Feed'])
 
         a_it = E.A(href=row_it['Link'])
         a_it.text = row_it['Title']
@@ -357,7 +357,7 @@ def handle_statistics(qd):
     #--------------------------------------------------------------------------
 
     # Dislikes.
-    dislikes = c.execute("SELECT Items.* FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE UserID=(SELECT UserID FROM Users WHERE Name=?) AND Score=-1 ORDER BY Published DESC", (user, )).fetchall()
+    dislikes = c.execute("SELECT Items.*, Feeds.Title AS Feed FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Like USING (ItemID) WHERE UserID=(SELECT UserID FROM Users WHERE Name=?) AND Score=-1 ORDER BY Published DESC", (user, )).fetchall()
 
     h_it = E.H2()
     h_it.text = "Dislikes"
@@ -375,7 +375,7 @@ def handle_statistics(qd):
 
         li_it = E.LI()
         ul_it.append(li_it)
-        li_it.text = "{}: ".format(row_it['Source'])
+        li_it.text = "{}: ".format(row_it['Feed'])
 
         a_it = E.A(href=row_it['Link'])
         a_it.text = row_it['Title']

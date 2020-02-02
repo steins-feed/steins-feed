@@ -152,7 +152,7 @@ def side_nav_disp(user, lang, page_no, feed, clf):
     form_it.append(E.P("Algorithm:"))
     #for clf_it in ['Naive Bayes', 'Logistic Regression', 'SVM', 'Linear SVM']:
     for clf_it in ['Naive Bayes', 'Logistic Regression']:
-        input_it = E.INPUT(E.CLASS("clf"), type='radio', name="clf", value=clf_it)
+        input_it = E.INPUT(E.CLASS("clf"), type='radio', name="clf", value=clf_it.replace(" ", ""))
         if clf_it == clf:
             input_it.set('checked')
         if feed == "Full":

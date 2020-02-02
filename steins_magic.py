@@ -35,7 +35,7 @@ def build_feature(row):
 def steins_learn(user, classifier):
     c = get_cursor()
     user_id = get_user_id(user)
-    timestamp = last_updated(user_id)
+    timestamp = last_updated()
 
     clfs = dict()
     langs = [e[0] for e in c.execute("SELECT DISTINCT Feeds.Language FROM (Items INNER JOIN Feeds ON Items.FeedID=Feeds.FeedID) INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE UserID=? AND Published<? AND Score!=0", (user_id, timestamp, ))]
@@ -59,9 +59,9 @@ def steins_learn(user, classifier):
         count_vect = ('vect', NLTK_CountVectorizer(lang_it))
         tfidf_transformer = ('tfidf', TfidfTransformer())
 
-        if classifier == 'Naive Bayes':
+        if classifier == 'NaiveBayes':
             clf = ('clf', MultinomialNB())
-        elif classifier == 'Logistic Regression':
+        elif classifier == 'LogisticRegression':
             clf = ('clf', LogisticRegression())
         #elif classifier == 'SVM':
         #    clf = ('clf', SVC(probability=True))

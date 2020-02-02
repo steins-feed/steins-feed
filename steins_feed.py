@@ -26,9 +26,10 @@ def handle_page(qd):
     feed = qd['feed']
     clf = qd['clf']
 
-    c = get_cursor()
+    conn = get_connection()
+    c = conn.cursor()
     user_id = get_user_id(user)
-    timestamp = last_updated(user_id)
+    timestamp = last_updated()
 
     # Classifier.
     clfs = []
@@ -130,18 +131,20 @@ def handle_page(qd):
 
         for lang_it in langs:
             try:
-                clf = clfs[lang_it]
+                clf_it = clfs[lang_it]
             except KeyError:
                 continue
 
             idx = [i for i in range(len(items)) if items[i]['Language'] == lang_it]
             new_titles = [build_feature(items[i]) for i in idx]
-            predicted_proba = clf.predict_proba(new_titles)
+            predicted_proba = clf_it.predict_proba(new_titles)
             scores[idx] = [it[1] - it[0] for it in predicted_proba]
 
         for item_ct in range(len(items)):
             items[item_ct] = dict(items[item_ct])
             items[item_ct]['Score'] = scores[item_ct]
+            c.execute("INSERT OR IGNORE INTO {} (UserID, ItemID, Score) VALUES (?, ?, ?)".format(clf), (user_id, items[item_ct]['ItemID'], items[item_ct]['Score'], ))
+        conn.commit()
 
     # Surprise.
     if surprise > 0:
