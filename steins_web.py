@@ -3,10 +3,8 @@
 from lxml import etree
 import requests
 
-from steins_html import encode
-
 def have_session():
-    if "session" in globals():
+    if 'session' in globals():
         return True
     else:
         return False
@@ -20,5 +18,5 @@ def get_session():
 def get_tree_from_session(item_link):
     session = get_session()
     page = session.get(item_link)
-    tree = etree.fromstring(encode(page.text))
+    tree = etree.fromstring(page.text.encode())
     return tree

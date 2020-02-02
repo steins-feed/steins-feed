@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 
+from datetime import datetime
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from lxml.html import tostring, builder as E
 import os
-import time
 from urllib.parse import urlsplit, parse_qsl
 from xml.sax.saxutils import escape
 
 from steins_feed import handle_page
 from steins_html import decode, encode, preamble, side_nav, top_nav, select_lang
 from steins_magic import handle_analysis, handle_highlight
-from steins_sql import get_connection, get_cursor, add_feed, delete_feed, add_user, rename_user, delete_user
+from steins_sql import get_connection, get_cursor, add_feed, delete_feed, add_user, delete_user
 from steins_xml import handle_load_config, handle_export_config
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
@@ -76,10 +76,11 @@ def handle_settings(qd):
         h_it.text = "{} feeds".format(lang_it)
         form_it.append(h_it)
 
-        for feed_it in c.execute("SELECT Feeds.*, Display.{} FROM Feeds INNER JOIN Display ON Feeds.ItemID=Display.ItemID WHERE Language='{}' ORDER BY Title COLLATE NOCASE".format(user, lang_it)).fetchall():
-            input_it = E.INPUT(type='checkbox', name=str(feed_it['ItemID']))
+        displayed = set([e['FeedID'] for e in c.execute("SELECT FeedID FROM Display WHERE UserID=(SELECT UserID FROM Users WHERE Name=?)", (user, ))])
+        for feed_it in c.execute("SELECT * FROM Feeds WHERE Language=? ORDER BY Title COLLATE NOCASE", (lang_it, )).fetchall():
+            input_it = E.INPUT(type='checkbox', name=str(feed_it['FeedID']))
             form_it.append(input_it)
-            if feed_it[user] != 0:
+            if feed_it['FeedID'] in displayed:
                 input_it.set('checked')
 
             a_it = E.A(href=feed_it['Link'])
@@ -171,7 +172,7 @@ def handle_settings(qd):
     form_it.append(p_it)
 
     for feed_it in c.execute("SELECT * FROM Feeds ORDER BY Title COLLATE NOCASE").fetchall():
-        option_it = E.OPTION(value=str(feed_it['ItemID']))
+        option_it = E.OPTION(value=str(feed_it['FeedID']))
         option_it.text = feed_it['Title']
         select_it.append(option_it)
 
@@ -306,7 +307,7 @@ def handle_statistics(qd):
     #--------------------------------------------------------------------------
 
     # Likes.
-    likes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=1 ORDER BY Published DESC".format(user, user)).fetchall()
+    likes = c.execute("SELECT Items.*, Feeds.Title AS Feed FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Like USING (ItemID) WHERE UserID=(SELECT UserID FROM Users WHERE Name=?) AND Score=1 ORDER BY Published DESC", (user, )).fetchall()
 
     h_it = E.H2()
     h_it.text = "Likes"
@@ -320,11 +321,11 @@ def handle_statistics(qd):
     div_it.append(ul_it)
 
     for row_it in likes:
-        datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it['Published'], "%Y-%m-%d %H:%M:%S GMT"))
+        datestamp = row_it['Published'].strftime("%A, %d %B %Y")
 
         li_it = E.LI()
         ul_it.append(li_it)
-        li_it.text = "{}: ".format(row_it['Source'])
+        li_it.text = "{}: ".format(row_it['Feed'])
 
         a_it = E.A(href=row_it['Link'])
         a_it.text = row_it['Title']
@@ -336,7 +337,7 @@ def handle_statistics(qd):
     #--------------------------------------------------------------------------
 
     # Dislikes.
-    dislikes = c.execute("SELECT Items.*, Like.{0} FROM Items INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE {0}=-1 ORDER BY Published DESC".format(user, user)).fetchall()
+    dislikes = c.execute("SELECT Items.*, Feeds.Title AS Feed FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Like USING (ItemID) WHERE UserID=(SELECT UserID FROM Users WHERE Name=?) AND Score=-1 ORDER BY Published DESC", (user, )).fetchall()
 
     h_it = E.H2()
     h_it.text = "Dislikes"
@@ -350,11 +351,11 @@ def handle_statistics(qd):
     div_it.append(ul_it)
 
     for row_it in dislikes:
-        datestamp = time.strftime("%A, %d %B %Y", time.strptime(row_it['Published'], "%Y-%m-%d %H:%M:%S GMT"))
+        datestamp = row_it['Published'].strftime("%A, %d %B %Y")
 
         li_it = E.LI()
         ul_it.append(li_it)
-        li_it.text = "{}: ".format(row_it['Source'])
+        li_it.text = "{}: ".format(row_it['Feed'])
 
         a_it = E.A(href=row_it['Link'])
         a_it.text = row_it['Title']
