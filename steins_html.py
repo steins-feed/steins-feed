@@ -3,7 +3,7 @@
 import html
 from lxml.html import fromstring, builder as E
 
-from steins_config import lang_list
+from steins_config import lang_list, clf_dict
 from steins_sql import get_cursor
 
 ENCODING = 'utf-8'
@@ -150,9 +150,8 @@ def side_nav_disp(user, lang, page_no, feed, clf):
 
     # Algorithm.
     form_it.append(E.P("Algorithm:"))
-    #for clf_it in ['Naive Bayes', 'Logistic Regression', 'SVM', 'Linear SVM']:
-    for clf_it in ['Naive Bayes', 'Logistic Regression']:
-        input_it = E.INPUT(E.CLASS("clf"), type='radio', name="clf", value=clf_it.replace(" ", ""))
+    for clf_it in clf_dict:
+        input_it = E.INPUT(E.CLASS("clf"), type='radio', name="clf", value=clf_it)
         if clf_it == clf:
             input_it.set('checked')
         if feed == "Full":
@@ -179,8 +178,7 @@ def side_nav_rep(user, clf):
     p_it = E.P()
 
     select_it = E.SELECT(name="clf")
-    #for clf_it in ["Naive Bayes", "Logistic Regression", "SVM", "Linear SVM"]:
-    for clf_it in ["Naive Bayes", "Logistic Regression"]:
+    for clf_it in clf_dict:
         option_it = E.OPTION(value=clf_it)
         option_it.text = clf_it
         if clf_it == clf:

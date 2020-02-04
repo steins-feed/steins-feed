@@ -8,6 +8,7 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 DB_NAME = "steins.db"
 db_path = dir_path + os.sep + DB_NAME
 
+from steins_config import clf_dict
 from steins_log import get_logger
 logger = get_logger()
 
@@ -102,8 +103,8 @@ def create_magic():
     conn = get_connection()
     c = conn.cursor()
 
-    for clf_it in ['NaiveBayes', 'LogisticRegression']:
-        c.execute("CREATE TABLE IF NOT EXISTS {} (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score FLOAT NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))".format(clf_it))
+    for clf_it in clf_dict:
+        c.execute("CREATE TABLE IF NOT EXISTS {} (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score FLOAT NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))".format(clf_it.replace(" ", "")))
 
     conn.commit()
     logger.info("Create Magic.")

@@ -30,6 +30,7 @@ clean:
 distclean:
 	make clean
 	-rm steins.db
+	-rm steins.db.?
 	-rm steins.db-journal
 	-rm steins.log
 	-rm steins_feed.log
