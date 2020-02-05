@@ -11,7 +11,7 @@ $submit = $_POST['submit'];
 
 if ($submit == "Like") {
     $val = 1;
-} elseif ($submit == "Dislike") {
+} else if ($submit == "Dislike") {
     $val = -1;
 }
 

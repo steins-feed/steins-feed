@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
-from steins_html import decode, feed_node, preamble, side_nav, top_nav
+from steins_html import decode
 from steins_log import get_logger
 logger = get_logger()
 from steins_magic import build_feature
@@ -20,17 +20,6 @@ from steins_sql import *
 no_surprise = 10
 
 def handle_page(qd):
-    user = qd['user']
-    lang = qd['lang']
-    page_no = int(qd['page'])
-    feed = qd['feed']
-    clf = qd['clf']
-
-    conn = get_connection()
-    c = conn.cursor()
-    user_id = get_user_id(user)
-    timestamp = last_updated()
-
     # Classifier.
     clfs = []
     if not feed == "Full":
@@ -43,38 +32,6 @@ def handle_page(qd):
     surprise = -1
     if feed == "Surprise":
         surprise = no_surprise
-
-    # Language.
-    if lang == "International":
-        dates = c.execute(
-            "WITH MyFeeds AS (SELECT Feeds.* FROM Display LEFT JOIN Feeds ON Feeds.FeedID=Display.FeedID WHERE UserID=?)"
-            "SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE FeedID IN (SELECT FeedID FROM MyFeeds) AND Published<? ORDER BY Published DESC",
-            (user_id, timestamp, )
-        ).fetchall()
-    else:
-        dates = c.execute(
-            "WITH MyFeeds AS (SELECT Feeds.* FROM Display LEFT JOIN Feeds ON Feeds.FeedID=Display.FeedID WHERE UserID=? AND Language=?)"
-            "SELECT DISTINCT SUBSTR(Published, 1, 10) FROM Items WHERE FeedID IN (SELECT FeedID FROM MyFeeds) AND Published<? ORDER BY Published DESC",
-            (user_id, lang, timestamp, )
-        ).fetchall()
-    if page_no >= len(dates):
-        return
-    d_it = datetime.strptime(dates[page_no][0], "%Y-%m-%d")
-    if lang == "International":
-        items = c.execute(
-            "WITH MyFeeds AS (SELECT Feeds.* FROM Display LEFT JOIN Feeds ON Feeds.FeedID=Display.FeedID WHERE UserID=?),"
-            "MyLikes AS (SELECT * FROM Like WHERE UserID=?)"
-            "SELECT Items.*, MyFeeds.Title AS Feed, MyFeeds.Language AS Language, IFNULL(MyLikes.Score, 0) AS Like FROM (Items INNER JOIN MyFeeds ON Items.FeedID=MyFeeds.FeedID) LEFT JOIN MyLikes ON Items.ItemID=MyLikes.ItemID WHERE SUBSTR(Published, 1, 10)=SUBSTR(?, 1, 10) AND Published<? ORDER BY Published DESC",
-            (user_id, user_id, d_it, timestamp, )
-        ).fetchall()
-    else:
-        items = c.execute(
-            "With MyFeeds AS (SELECT Feeds.* FROM Display LEFT JOIN Feeds ON Feeds.FeedID=Display.FeedID WHERE UserID=? AND Language=?),"
-            "MyLikes AS (SELECT * FROM Like WHERE UserID=?)"
-            "SELECT Items.*, MyFeeds.Title AS Feed, MyFeeds.Language, IFNULL(MyLikes.Score, 0) AS Like FROM (Items INNER JOIN MyFeeds ON Items.FeedID=MyFeeds.FeedID) LEFT JOIN MyLikes ON Items.ItemID=MyLikes.ItemID WHERE SUBSTR(Published, 1, 10)=SUBSTR(?, 1, 10) AND Published<? ORDER BY Published DESC"
-            .format(user),
-            (user_id, lang, user_id, d_it, timestamp, )
-        ).fetchall()
 
     # Remove duplicates.
     item_links = set()
@@ -90,39 +47,11 @@ def handle_page(qd):
 
     #--------------------------------------------------------------------------
 
-    # Preamble.
-    tree, head, body = preamble("Stein's Feed")
-
-    #--------------------------------------------------------------------------
-
-    # Scripts.
-    for js_it in ["like.js", "dislike.js", "highlight.js", "open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js"]:
-        script_it = E.SCRIPT()
-        with open(dir_path + os.sep + "js" + os.sep + js_it, 'r') as f:
-            f_temp = f.read()
-            f_temp = f_temp.replace("USER", user)
-            f_temp = f_temp.replace("CLF", clf.replace(" ", "+"))
-            script_it.text = f_temp
-        head.append(script_it)
-
-    #--------------------------------------------------------------------------
-
-    # Top & side navigation menus.
-    body.append(top_nav(d_it.strftime("%a, %d %b %Y")))
-    body.append(side_nav(user, lang, page_no, feed, clf, dates))
-
-    #--------------------------------------------------------------------------
-
     # Body.
-    div_it = E.DIV(E.CLASS("main"))
-    body.append(div_it)
-
     p_it = E.P()
     div_it.append(p_it)
     if surprise > 0:
         p_it.text = "{} out of {} articles. {} pages. Last updated: {}.".format(surprise, len(items), len(dates), timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"))
-    else:
-        p_it.text = "{} articles. {} pages. Last updated: {}.\n".format(len(items), len(dates), timestamp.strftime("%Y-%m-%d %H:%M:%S GMT"))
 
     # Classifier.
     if len(clfs) != 0:
@@ -156,12 +85,6 @@ def handle_page(qd):
         items = [items[cnt] for cnt in sample]
     elif len(clfs) != 0:
         items.sort(key=lambda item_it: item_it['Score'], reverse=True)
-
-    for item_it in items:
-        div_it.append(E.HR())
-        div_it.append(feed_node(item_it))
-
-    return decode(tostring(tree, doctype="<!DOCTYPE html>", pretty_print=True))
 
 # Scrape feeds.
 def steins_read(title_pattern=""):
