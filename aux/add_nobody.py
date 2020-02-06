@@ -15,7 +15,7 @@ from steins_sql import get_connection, get_cursor
 conn = get_connection()
 c = get_cursor()
 
-c.execute("INSERT INTO Users (Name) VALUES (?)", ('nobody', ))
-c.execute("INSERT INTO Display SELECT (SELECT UserID FROM Users WHERE Name=?), FeedID FROM Feeds", ('nobody', ))
+c.execute("INSERT OR IGNORE INTO Users (Name) VALUES (?)", ('nobody', ))
+c.execute("INSERT OR IGNORE INTO Display SELECT (SELECT UserID FROM Users WHERE Name=?), FeedID FROM Feeds", ('nobody', ))
 
 conn.commit()

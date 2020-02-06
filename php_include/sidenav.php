@@ -1,9 +1,7 @@
 <div id="sidenav" class="sidenav">
 <h1 class="sidenav">
 <?php 
-if (count($dates) == 1):
-    echo "&#160;";
-else:
+if (count($dates) >= 1):
     if ($page < count($dates) - 1):
 ?>
 <form action="/steins-feed/index.php" method="get">
@@ -32,6 +30,8 @@ else:
 </form>
 <?php
     endif;
+else:
+    echo "&#160;";
 endif;
 ?>
 <span onclick="close_menu()" class="onclick">&#215;&nbsp;</span>

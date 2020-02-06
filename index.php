@@ -1,9 +1,9 @@
-<?php $db = new SQLite3("steins.db");?>
-<?php include "php_include/user.php";?>
-<?php include "php_include/langs.php";?>
-<?php include "php_include/page.php";?>
-<?php include "php_include/feed.php";?>
-<?php include "php_include/clf.php";?>
+<?php $db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/steins.db");?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";?>
 <?php
 // Last updated.
 $stmt = $db->prepare("SELECT MIN(Updated) From Feeds");
@@ -58,7 +58,7 @@ foreach ($f_list as $f_it):
 ?>
 <script>
 <?php
-    $s = file_get_contents("js/" . $f_it);
+    $s = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/js/" . $f_it);
     $s = str_replace("USER", $user, $s);
     $s = str_replace("CLF", str_replace(" ", "+", $clf), $s);
     echo $s;
@@ -68,10 +68,10 @@ foreach ($f_list as $f_it):
 </head>
 <body>
 <?php
-include "php_include/topnav.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
 topnav($date_it->format("D, d M Y"));
 ?>
-<?php include "php_include/sidenav.php";?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";?>
 <div class="main">
 <p>
 <?php echo count($items);?> articles.
@@ -122,6 +122,7 @@ Published: <?php echo $item_it['Published'];?>.
 </p>
 </div>
 <?php endforeach;?>
+<hr>
 </div>
 </body>
 </html>

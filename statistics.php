@@ -1,5 +1,9 @@
 <?php $db = new SQLite3("steins.db");?>
 <?php include "php_include/user.php";?>
+<?php include "php_include/langs.php";?>
+<?php include "php_include/page.php";?>
+<?php include "php_include/feed.php";?>
+<?php include "php_include/clf.php";?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,7 +55,7 @@ for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
 <a href="<?php echo $row_it['Link'];?>">
 <?php echo $row_it['Title'];?>
 </a>
-<?php $timestamp = new DateTime(row_it['Published']);?>
+<?php $timestamp = new DateTime($row_it['Published']);?>
 (<?php echo $timestamp->format("D, d M Y");?>).
 </li>
 <?php endforeach;?>
@@ -77,7 +81,7 @@ for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
 <a href="<?php echo $row_it['Link'];?>">
 <?php echo $row_it['Title'];?>
 </a>
-<?php $timestamp = new DateTime(row_it['Published']);?>
+<?php $timestamp = new DateTime($row_it['Published']);?>
 (<?php echo $timestamp->format("D, d M Y");?>).
 </li>
 <?php endforeach;?>
