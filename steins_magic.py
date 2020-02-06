@@ -8,7 +8,6 @@ import re
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.pipeline import Pipeline
 
-from steins_html import decode, unescape
 from steins_nltk import NLTK_CountVectorizer
 from steins_sql import *
 

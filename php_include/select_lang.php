@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
-
-lang_list = [
+<?php
+$all_langs = array(
     "Afrikanns",
     "Albanian",
     "Arabic",
@@ -72,13 +71,16 @@ lang_list = [
     "Uzbek",
     "Vietnamese",
     "Welsh",
-    "Xhosa"
-]
-
-from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import MultinomialNB
-
-clf_dict = {
-    'Logistic Regression': LogisticRegression,
-    'Naive Bayes': MultinomialNB
-}
+    "Xhosa");
+?>
+<select name="lang">
+<?php foreach ($all_langs as $lang_it):?>
+<?php if ($lang_it == 'English'):?>
+<option value="<?php echo $lang_it;?>" selected>
+<?php else:?>
+<option value="<?php echo $lang_it;?>">
+<?php endif;?>
+<?php echo $lang_it, PHP_EOL;?>
+</option>
+<?php endforeach;?>
+</select>

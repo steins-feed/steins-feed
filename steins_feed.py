@@ -1,19 +1,10 @@
 #!/usr/bin/env python3
 
-from datetime import datetime
-from lxml.html import tostring, builder as E
-import numpy as np
-import numpy.random as random
 import os
-import pickle
-from urllib.parse import urlparse
-
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
-from steins_html import decode
 from steins_log import get_logger
 logger = get_logger()
-from steins_magic import build_feature
 from steins_manager import get_handler
 from steins_sql import *
 
@@ -37,7 +28,7 @@ def handle_page(qd):
     item_links = set()
     items_unique = []
     for item_it in reversed(items):
-        item_link = urlparse(item_it['Link'])
+        item_link = urllib.urlparse(item_it['Link'])
         item_link = item_link._replace(params='', query='', fragment='')
         if item_link in item_links:
             continue

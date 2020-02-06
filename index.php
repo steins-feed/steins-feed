@@ -82,7 +82,7 @@ Last updated: <?php echo $last_updated, " GMT";?>.
 <hr>
 <div>
 <h2>
-<a href="<?php echo $item_it['Link']?>" rel="noopener noreferrer" target="_blank">
+<a href="<?php echo htmlentities($item_it['Link'])?>" rel="noopener noreferrer" target="_blank">
 <span id="title_<?php echo $item_it['ItemID'];?>">
 <span><?php echo $item_it['Title'];?></span>
 </span>
