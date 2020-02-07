@@ -1,9 +1,9 @@
-<?php $db = new SQLite3("steins.db");?>
-<?php include "php_include/user.php";?>
-<?php include "php_include/langs.php";?>
-<?php include "php_include/page.php";?>
-<?php include "php_include/feed.php";?>
-<?php include "php_include/clf.php";?>
+<?php $db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/steins.db");?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +19,7 @@ foreach ($f_list as $f_it):
 ?>
 <script>
 <?php
-    $s = file_get_contents("js/" . $f_it);
+    $s = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/js/" . $f_it);
     $s = str_replace("USER", $user, $s);
     $s = str_replace("CLF", str_replace(" ", "+", $clf), $s);
     echo $s;
@@ -29,10 +29,10 @@ foreach ($f_list as $f_it):
 </head>
 <body>
 <?php
-include "php_include/topnav.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
 topnav($user);
 ?>
-<?php include "php_include/sidenav.php";?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";?>
 <div class="main">
 <hr>
 <form method="post" action="/steins-feed/php_settings/display_feeds.php">
@@ -95,7 +95,7 @@ Link:<br>
 </p>
 <p>
 Language:<br>
-<?php include "php_include/select_lang.php";?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/select_lang.php";?>
 </p>
 <p>
 Summary:<br>
@@ -133,7 +133,7 @@ foreach ($feeds as $row_it):
 <input type="submit" value="Delete feed">
 </form>
 <hr>
-<form method="post" action="/steins-feed/load_config.php" enctype="multipart/form-data">
+<form method="post" action="/steins-feed/php_settings/load_config.php" enctype="multipart/form-data">
 <p>
 <input type="file" name="feeds" value="feeds">
 </p>
@@ -142,7 +142,7 @@ foreach ($feeds as $row_it):
 <input type="submit" value="Load config">
 </form>
 <hr>
-<form method="post" action="/steins-feed/export_config.php">
+<form method="post" action="/steins-feed/php_settings/export_config.php">
 <p>
 <input type="hidden" name="user" value=<?php echo $user;?>>
 <input type="submit" value="Export config">
