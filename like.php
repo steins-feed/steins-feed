@@ -1,13 +1,15 @@
 <?php
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
-
-$db = new SQLite3("steins.db");
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
+$db = steins_db(SQLITE3_OPEN_READWRITE);
 
 $user = $_POST['user'];
 $item_id = $_POST['id'];
 $submit = $_POST['submit'];
+
+$stmt = $db->prepare("SELECT UserID FROM Users WHERE Name=:Name");
+$stmt->bindValue(":Name", $user, SQLITE3_TEXT);
+$res = $stmt->execute()->fetcharray();
+$user_id = $res['UserID'];
 
 if ($submit == "Like") {
     $val = 1;
@@ -15,24 +17,15 @@ if ($submit == "Like") {
     $val = -1;
 }
 
-$stmt = $db->prepare("SELECT UserID FROM Users WHERE Name=:Name");
-$stmt->bindValue(":Name", $user, SQLITE3_TEXT);
-$res = $stmt->execute()->fetcharray();
-if ($res) {
-    $user_id = $res['UserID'];
-}
-
 $stmt = $db->prepare("SELECT Score FROM Like WHERE UserID=:UserID AND ItemID=:ItemID");
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
 $stmt->bindValue(":ItemID", $item_id, SQLITE3_INTEGER);
 $res = $stmt->execute()->fetcharray();
+
 $score = 0;
 if ($res) {
     $score = $res['Score'];
-}
-
-if ($res) {
-    $stmt = $db->prepare("UPDATE Like SET Score=:Score WHERE UserID=:UserID AND ItemID=:ItemID");
+    $stmt = $db->prepare("UPDATE Like SET Score=:Score, Updated=datetime('now') WHERE UserID=:UserID AND ItemID=:ItemID");
 } else {
     $stmt = $db->prepare("INSERT INTO Like (UserID, ItemID, Score) VALUES (:UserID, :ItemID, :Score)");
 }

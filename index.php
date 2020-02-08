@@ -1,10 +1,13 @@
-<?php $db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/steins.db");?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";?>
 <?php
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
+$db = steins_db(SQLITE3_OPEN_READONLY);
+
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
+
 // Last updated.
 $stmt = $db->prepare("SELECT MIN(Updated) From Feeds");
 $res = $stmt->execute()->fetcharray();
@@ -70,8 +73,8 @@ foreach ($f_list as $f_it):
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
 topnav($date_it->format("D, d M Y"));
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";?>
 <div class="main">
 <p>
 <?php echo count($items);?> articles.
@@ -126,3 +129,4 @@ Published: <?php echo $item_it['Published'];?>.
 </div>
 </body>
 </html>
+<?php $db->close();?>

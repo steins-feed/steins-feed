@@ -83,7 +83,7 @@ def steins_read(title_pattern=""):
     c = conn.cursor()
 
     for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
-        handler = get_handler(feed_it['FeedID'])
+        handler = get_handler(feed_it)
         d = handler.parse(feed_it['Link'])
         try:
             logger.info("{} -- {}.".format(feed_it['Title'], d.status))
@@ -101,7 +101,7 @@ def steins_read(title_pattern=""):
 
             add_item(item_title, item_link, item_time, feed_it['FeedID'], item_summary)
 
-        c.execute("UPDATE Feeds SET Updated=(SELECT datetime('now')) WHERE FeedID=?", (feed_it['FeedID'], ))
+        c.execute("UPDATE Feeds SET Updated=datetime('now') WHERE FeedID=?", (feed_it['FeedID'], ))
         conn.commit()
 
 # Generate HTML.

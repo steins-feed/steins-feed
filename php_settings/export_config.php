@@ -1,7 +1,12 @@
-<?php $db = new SQLite3("../steins.db");?>
-<?php $_GET = $_POST;?>
-<?php include "../php_include/user.php";?>
 <?php
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
+$db = steins_db(SQLITE3_OPEN_READWRITE);
+
+$stmt = $db->prepare("SELECT UserID FROM Users WHERE Name=:Name");
+$stmt->bindValue(":Name", $_POST['user'], SQLITE3_TEXT);
+$res = $stmt->execute()->fetcharray();
+$user_id = $res['UserID'];
+
 header("Content-Description: File Transfer");
 header("Content-Type: application/xml");
 header("Content-Disposition: attachment; filename=feeds.xml");
@@ -19,8 +24,13 @@ for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()):
 <feed>
 <title><?php echo htmlentities($row_it['Title'], $flags=ENT_XML1);?></title>
 <link><?php echo htmlentities($row_it['Link']);?></link>
-<lang><?php if ($row_it['Language']) echo $row_it['Language'];?></lang>
-<summary><?php if ($row_it['Summary']) echo $row_it['Summary'];?></summary>
+<?php if ($row_it['Language']):?>
+<lang><?php echo $row_it['Language'];?></lang>
+<?php endif;?>
+<?php if ($row_it['Summary']):?>
+<summary><?php echo $row_it['Summary'];?></summary>
+<?php endif;?>
 </feed>
 <?php endfor;?>
 </root>
+<?php $db->close();?>

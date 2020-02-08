@@ -1,9 +1,13 @@
-<?php $db = new SQLite3("steins.db");?>
-<?php include "php_include/user.php";?>
-<?php include "php_include/langs.php";?>
-<?php include "php_include/page.php";?>
-<?php include "php_include/feed.php";?>
-<?php include "php_include/clf.php";?>
+<?php
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
+$db = steins_db(SQLITE3_OPEN_READONLY);
+
+include "php_include/user.php";
+include "php_include/langs.php";
+include "php_include/page.php";
+include "php_include/feed.php";
+include "php_include/clf.php";
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,8 +35,8 @@ foreach ($f_list as $f_it):
 <?php
 include "php_include/topnav.php";
 topnav($user);
+include "php_include/sidenav.php";
 ?>
-<?php include "php_include/sidenav.php";?>
 <div class="main">
 <hr>
 <?php
@@ -90,3 +94,4 @@ for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
 </div>
 </body>
 </html>
+<?php $db->close();?>

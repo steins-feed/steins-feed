@@ -66,7 +66,7 @@ def create_feeds():
     conn = get_connection()
     c = conn.cursor()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Feeds (FeedID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL UNIQUE, Language TINYTEXT DEFAULT '', Summary INTEGER DEFAULT 2, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+    c.execute("CREATE TABLE IF NOT EXISTS Feeds (FeedID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL UNIQUE, Language TINYTEXT, Summary INTEGER DEFAULT 2, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
 
     conn.commit()
     logger.info("Create Feeds.")
@@ -111,41 +111,6 @@ def create_magic():
 ###############################################################################
 # Modify tables.
 ###############################################################################
-
-def add_user(name):
-    conn = get_connection()
-    c = conn.cursor()
-
-    c.execute("INSERT OR IGNORE INTO Users (Name) VALUES (?)", (name, ))
-
-    conn.commit()
-    logger.info("Add user -- {}.".format(name))
-
-def delete_user(user_id):
-    conn = get_connection()
-    c = conn.cursor()
-
-    for user_it in c.execute("SELECT Name FROM Users WHERE UserID=?", (user_id, )).fetchall():
-        c.execute("DELETE FROM Users WHERE UserID=? AND Name=?", (user_id, user_it['Name'], ))
-        logger.info("Delete user -- {}.".format(user_it['Name']))
-
-    conn.commit()
-
-def add_feed(title, link, lang='', summary=2):
-    c = get_cursor()
-
-    c.execute("INSERT OR IGNORE INTO Feeds (Title, Link, Language, Summary) VALUES (?, ?, ?, ?)", (title, link, lang, summary, ))
-    logger.debug("Add feed -- {}.".format(title))
-
-def delete_feed(feed_id):
-    conn = get_connection()
-    c = conn.cursor()
-
-    for feed_it in c.execute("SELECT Title FROM Feeds WHERE FeedID=?", (feed_id, )).fetchall():
-        c.execute("DELETE FROM Feeds WHERE FeedID=? AND Title=?", (feed_id, feed_it['Title'], ))
-        logger.info("Delete feed -- {}.".format(feed_it['Title']))
-
-    conn.commit()
 
 def add_item(item_title, item_link, item_time, feed_id, item_summary=""):
     c = get_cursor()

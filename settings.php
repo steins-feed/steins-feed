@@ -1,9 +1,13 @@
-<?php $db = new SQLite3($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/steins.db");?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";?>
+<?php
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
+$db = steins_db(SQLITE3_OPEN_READONLY);
+
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,8 +35,8 @@ foreach ($f_list as $f_it):
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
 topnav($user);
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";?>
 <div class="main">
 <hr>
 <form method="post" action="/steins-feed/php_settings/display_feeds.php">
@@ -84,7 +88,7 @@ foreach ($langs as $lang_it):
 </p>
 </form>
 <hr>
-<form method="post" action="/steins-feed/add_feed.php">
+<form method="post" action="/steins-feed/php_settings/add_feed.php">
 <p>
 Title:<br>
 <input type="text" name="title">
@@ -110,7 +114,7 @@ Full abstract
 <input type="submit" value="Add feed">
 </form>
 <hr>
-<form method="post" action="/steins-feed/delete_feed.php">
+<form method="post" action="/steins-feed/php_settings/delete_feed.php">
 <p>
 <select name="feed">
 <?php
@@ -148,16 +152,21 @@ foreach ($feeds as $row_it):
 <input type="submit" value="Export config">
 </form>
 <hr>
-<form method="post" action="/steins-feed/add_user.php">
+<form method="post" action="/steins-feed/php_settings/add_user.php">
 <p>
 Name:<br>
 <input type="text" name="name">
 </p>
 <p>
+Language:<br>
+<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/select_lang.php";?>
+</p>
+<p>
+<input type="hidden" name="user" value=<?php echo $user;?>>
 <input type="submit" value="Add user">
 </form>
 <hr>
-<form method="post" action="/steins-feed/rename_user.php">
+<form method="post" action="/steins-feed/php_settings/rename_user.php">
 <p>
 New name:<br>
 <input type="text" name="name">
@@ -167,7 +176,7 @@ New name:<br>
 <input type="submit" value="Rename user">
 </form>
 <hr>
-<form method="post" action="/steins-feed/delete_user.php">
+<form method="post" action="/steins-feed/php_settings/delete_user.php">
 <p>
 <input type="hidden" name="user" value=<?php echo $user;?>>
 <input type="submit" value="Delete user" style="background-color:red">
@@ -176,3 +185,4 @@ New name:<br>
 </div>
 </body>
 </html>
+<?php $db->close();?>

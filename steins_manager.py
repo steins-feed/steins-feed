@@ -7,7 +7,6 @@ import time
 
 from steins_log import get_logger
 logger = get_logger()
-from steins_sql import get_cursor
 from steins_web import get_tree_from_session
 
 class SteinsHandler:
@@ -139,13 +138,8 @@ class MediumHandler(SteinsHandler):
         return feedparser.parse(feed_link)
 
 # Static factory.
-def get_handler(feed_id):
-    c = get_cursor()
-    feed_it = c.execute("SELECT * FROM Feeds WHERE FeedID=?", (feed_id, )).fetchone()
-    if feed_it is None:
-        return None
+def get_handler(feed_it):
     title = feed_it['Title']
-
     if "The Atlantic" in title:
         global atlantic_handler
         if not "atlantic_handler" in globals():

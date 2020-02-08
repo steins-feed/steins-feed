@@ -1,11 +1,12 @@
-<?php $db = new SQLite3("../steins.db");?>
-<?php $_GET = $_POST;?>
-<?php include "../php_include/user.php";?>
-<?php include "../php_include/langs.php";?>
-<?php include "../php_include/page.php";?>
-<?php include "../php_include/feed.php";?>
-<?php include "../php_include/clf.php";?>
 <?php
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
+$db = steins_db(SQLITE3_OPEN_READWRITE);
+
+$stmt = $db->prepare("SELECT UserID FROM Users WHERE Name=:Name");
+$stmt->bindValue(":Name", $_POST['user'], SQLITE3_TEXT);
+$res = $stmt->execute()->fetcharray();
+$user_id = $res['UserID'];
+
 $stmt = $db->prepare("SELECT FeedID FROM Feeds");
 $res = $stmt->execute();
 $feeds = array();
@@ -25,5 +26,7 @@ foreach ($feeds as $feed_it) {
     $stmt->execute();
 }
 
+$db->close();
+$_GET = $_POST;
 include "../index.php";
 ?>
