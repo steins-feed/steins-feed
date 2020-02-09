@@ -31,7 +31,12 @@ if ($page >= count($dates)) return;
 $date_it = new DateTime($dates[$page]);
 
 // Items.
-$stmt = sprintf("SELECT Items.*, Feeds.Title AS Feed, Feeds.Language, IFNULL(Like.Score, 0) AS Like FROM ((Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID)) LEFT JOIN Like USING (UserID, ItemID) WHERE UserID=:UserID AND (%s) AND SUBSTR(Published, 1, 10)=:Date AND Published<:Time ORDER BY Published DESC", $stmt_lang);
+$clf_dict = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/json/steins_magic.json"), true);
+if ($feed == 'Surprise') {
+    $stmt = sprintf("SELECT Items.*, Feeds.Title AS Feed, Feeds.Language, IFNULL(Like.Score, 0) AS Like, %s.Score FROM (((Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID)) LEFT JOIN Like USING (UserID, ItemID)) LEFT JOIN %s USING (UserID, ItemID) WHERE UserID=:UserID AND (%s) AND SUBSTR(Published, 1, 10)=:Date AND Published<:Time ORDER BY RANDOM() LIMIT 10", $clf_dict[$clf]['table'], $clf_dict[$clf]['table'], $stmt_lang);
+} else {
+    $stmt = sprintf("SELECT Items.*, Feeds.Title AS Feed, Feeds.Language, IFNULL(Like.Score, 0) AS Like, %s.Score FROM (((Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID)) LEFT JOIN Like USING (UserID, ItemID)) LEFT JOIN %s USING (UserID, ItemID) WHERE UserID=:UserID AND (%s) AND SUBSTR(Published, 1, 10)=:Date AND Published<:Time ORDER BY Published DESC", $clf_dict[$clf]['table'], $clf_dict[$clf]['table'], $stmt_lang);
+}
 $stmt = $db->prepare($stmt);
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
 for ($i = 0; $i < count($langs); $i++) {
@@ -41,9 +46,45 @@ $stmt->bindValue(":Date", $date_it->format("Y-m-d"), SQLITE3_TEXT);
 $stmt->bindValue(":Time", $last_updated, SQLITE3_TEXT);
 $res = $stmt->execute();
 
-$items = array();
+$items_temp = array();
 for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-    $items[] = $row_it;
+    $items_temp[] = $row_it;
+}
+
+$items = array();
+$links = array();
+$unclassified = array();
+foreach (array_reverse($items_temp) as $row_it) {
+    $link_it = parse_url($row_it['Link'], PHP_URL_HOST) . parse_url($row_it['Link'], PHP_URL_PATH);
+    if (!in_array($link_it, $links)) {
+        $links[] = $link_it;
+        $items[] = $row_it;
+    } else {
+        continue;
+    }
+
+    if (is_null($row_it['Score'])) {
+        $unclassified[] = $row_it['ItemID'];
+    }
+}
+$items = array_reverse($items);
+
+// Classifiers.
+if ($feed != 'Full') {
+    if (!empty($unclassified)) {
+        $bash_cmd = "python3 " . $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/aux/apply_magic.py " . escapeshellarg($user_id) . " " . escapeshellarg($clf) . " " . escapeshellarg(json_encode($unclassified));
+        $res = shell_exec($bash_cmd);
+        $classified = json_decode($res, true);
+
+        for ($i = 0; $i < count($unclassified); $i++) {
+            $j = array_search($unclassified[$i], array_column($items, 'ItemID'));
+            $items[$j]['Score'] = $classified[$i];
+        }
+    }
+
+    if ($feed == 'Magic') {
+        array_multisort(array_column($items, 'Score'), SORT_DESC, $items);
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -94,6 +135,11 @@ Last updated: <?php echo $last_updated, " GMT";?>.
 <p>
 Source: <?php echo $item_it['Feed'];?>.
 Published: <?php echo $item_it['Published'];?>.
+<?php
+if ($feed != 'Full'):
+?>
+Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
+<?php endif;?>
 </p>
 <div id="summary_<?php echo $item_it['ItemID'];?>">
 <div>

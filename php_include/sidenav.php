@@ -1,7 +1,7 @@
 <div id="sidenav" class="sidenav">
 <h1 class="sidenav">
 <?php 
-if (count($dates) >= 1):
+if (count($dates) >= 2):
     if ($page < count($dates) - 1):
 ?>
 <form action="/steins-feed/index.php" method="get">
@@ -68,7 +68,8 @@ endforeach;
 ?>
 <p>Algorithm:</p>
 <?php
-foreach (array("Logistic Regression", "Naive Bayes") as $clf_it):
+$clf_dict = json_decode(file_get_contents("json/steins_magic.json"), true);
+foreach ($clf_dict as $clf_it => $clf_val):
     if ($feed == "Full"):
         if ($clf_it == $clf):
 ?>
@@ -99,7 +100,7 @@ endforeach;
 <p>
 <select name="clf">
 <?php
-foreach (array("Logistic Regression", "Naive Bayes") as $clf_it):
+foreach ($clf_dict as $clf_it => $clf_val):
     if ($clf_it == $clf):
 ?>
 <option value="<?php echo $clf_it;?>" selected><?php echo $clf_it;?></option>

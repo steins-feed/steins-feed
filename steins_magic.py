@@ -15,7 +15,6 @@ from steins_nltk import NLTK_CountVectorizer
 from steins_sql import *
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
-
 with open(dir_path + os.sep + "json/steins_magic.json", 'r') as f:
     clf_dict = json.load(f)
 
@@ -77,6 +76,36 @@ def steins_learn(user_id, classifier):
         clfs[lang_it] = clf
 
     return clfs
+
+def steins_predict(user_id, classifier, items):
+    conn = get_connection()
+    c = conn.cursor()
+
+    user_path = dir_path + os.sep + str(user_id)
+    clf_path = user_path + os.sep + classifier
+    file_path = clf_path + os.sep + "clfs.pickle"
+
+    clfs = []
+    try:
+        with open(file_path, 'rb') as f:
+            clfs = pickle.load(f)
+    except:
+        pass
+
+    articles_proba = []
+    for i in items:
+        row = c.execute("SELECT *, Feeds.Language FROM Items INNER JOIN Feeds USING (FeedID) WHERE ItemID=?", (i, )).fetchone()
+        article = build_feature(row)
+        try:
+            pipeline = clfs[row['Language']]
+            article_proba = pipeline.predict_proba([article])[0][1]
+        except:
+            article_proba = 0.5
+        c.execute("INSERT INTO {} (UserID, ItemID, Score) VALUES (?, ?, ?)".format(clf_dict[classifier]['table']), (user_id, i, article_proba, ))
+        articles_proba.append(article_proba)
+
+    conn.commit()
+    return articles_proba
 
 def kullback_leibler(q, p):
     ev_q = np.sum(list(q.values()))

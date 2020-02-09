@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
 from datetime import datetime
+import json
 import os
 import sqlite3
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 DB_NAME = "steins.db"
 db_path = dir_path + os.sep + DB_NAME
+with open(dir_path + os.sep + "json/steins_magic.json", 'r') as f:
+    clf_dict = json.load(f)
 
 from steins_log import get_logger
 logger = get_logger()
@@ -107,8 +110,8 @@ def create_magic():
     conn = get_connection()
     c = conn.cursor()
 
-    for clf_it in ["Naive Bayes", "Logistic Regression"]:
-        c.execute("CREATE TABLE IF NOT EXISTS {} (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score FLOAT NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))".format(clf_it.replace(" ", "")))
+    for clf_it in clf_dict:
+        c.execute("CREATE TABLE IF NOT EXISTS {} (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score FLOAT NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))".format(clf_dict[clf_it]['table']))
 
     conn.commit()
     logger.info("Create Magic.")
@@ -141,7 +144,8 @@ def reset_magic(user_id, clf):
     conn = get_connection()
     c = conn.cursor()
 
-    c.execute("DELETE FROM {} WHERE UserID=?".format(clf.replace(" ", ""), ), (user_id, ))
+    for clf_it in clf_dict:
+        c.execute("DELETE FROM {} WHERE UserID=?".format(clf_dict[clf_it]['table'], ), (user_id, ))
 
     conn.commit()
     logger.info("Reset {}.".format(clf))

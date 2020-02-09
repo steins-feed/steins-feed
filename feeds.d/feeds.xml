@@ -2273,17 +2273,12 @@
         <lang>English</lang>
     </feed>
     <feed>
-        <title>The New York Times Columnists -- Charles M. Blow</title>
+        <title>The New York Times Columnists -- Paul Krugman</title>
         <link>http://www.nytimes.com/svc/collections/v1/publish/www.nytimes.com/column/paul-krugman/rss.xml</link>
         <lang>English</lang>
     </feed>
 
     <!-- The New York Times -->
-    <feed>
-        <title>The New York Times -- New York</title>
-        <link>https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml</link>
-        <lang>English</lang>
-    </feed>
     <feed>
         <title>The New York Times Health</title>
         <link>https://rss.nytimes.com/services/xml/rss/nyt/Health.xml</link>
@@ -3743,7 +3738,7 @@
     </feed>
     <feed>
         <title>WIRED Gear</title>
-        <link>https://www.wired.com/feed/category/culture/latest/rss</link>
+        <link>https://www.wired.com/feed/category/gear/latest/rss</link>
         <lang>English</lang>
     </feed>
     <feed>
@@ -3928,11 +3923,6 @@
     <feed>
         <title>ZDNet Security</title>
         <link>https://www.zdnet.com/topic/security/rss.xml</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>ZDNet Small Business</title>
-        <link>https://www.zdnet.com/topic/small-business-going-big-on-mobility/rss.xml</link>
         <lang>English</lang>
     </feed>
     <feed>

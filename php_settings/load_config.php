@@ -9,6 +9,7 @@ $user_id = $res['UserID'];
 
 $feeds = simplexml_load_file($_FILES["feeds"]["tmp_name"]);
 
+$db->exec("BEGIN TRANSACTION");
 foreach ($feeds->feed as $feed_it) {
     $title = $feed_it->title;
     $link = $feed_it->link;
@@ -46,6 +47,7 @@ foreach ($feeds->feed as $feed_it) {
         $stmt->execute();
     }
 }
+$db->exec("END TRANSACTION");
 
 $db->close();
 $_GET = $_POST;
