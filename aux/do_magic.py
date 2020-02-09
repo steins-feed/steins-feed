@@ -14,44 +14,25 @@ sys.path.append(dir_path)
 
 from steins_log import get_logger
 logger = get_logger()
-from steins_magic import build_feature, steins_learn
+from steins_magic import build_feature, clf_dict, kullback_leibler, steins_learn
 from steins_sql import *
 c = get_cursor()
 
-def kullback_leibler(q, p):
-    ev_q = 0.
-    for k in q:
-        q[k] = 0.5 * (1. + q[k])
-        ev_q += q[k]
-
-    ev_p = 0.
-    for k in p:
-        p[k] = 0.5 * (1. + p[k])
-        ev_p += p[k]
-
-    res = 0.
-    for k in p:
-        if k not in q:
-            continue
-        q[k] /= ev_q
-        p[k] /= ev_p
-        res += p[k] * np.log(p[k] / q[k])
-
-    return res
-
-users = [e[0] for e in c.execute("SELECT Name FROM Users")]
+users = c.execute("SELECT * FROM Users").fetchall()
 for user_it in users:
-    user_path = dir_path + os.sep + user_it
+    user = user_it['Name']
+    user_id = user_it['UserID']
+
+    user_path = dir_path + os.sep + str(user_id)
     try:
         os.mkdir(user_path)
     except FileExistsError:
         pass
 
-    user_id = get_user_id(user_it)
     timestamp = last_updated()
     timestamp_like = last_liked(user_id)
 
-    for clf_it in ["NaiveBayes", "LogisticRegression"]:
+    for clf_it in clf_dict:
         clf_path = user_path + os.sep + clf_it
         try:
             os.mkdir(clf_path)
@@ -59,57 +40,67 @@ for user_it in users:
             pass
 
         file_path = clf_path + os.sep + "clfs.pickle"
-        if os.path.exists(file_path) and datetime.fromtimestamp(os.stat(file_path).st_mtime) < timestamp_like:
-            with open(clf_path + os.sep + "clfs.pickle", 'rb') as f:
+        if os.path.exists(file_path) and datetime.fromtimestamp(os.stat(file_path).st_mtime) > timestamp_like:
+            with open(file_path, 'rb') as f:
                 clfs = pickle.load(f)
         else:
-            clfs = steins_learn(user_it, clf_it)
-            reset_magic(user_it, clf_it)
-            with open(clf_path + os.sep + "clfs.pickle", 'wb') as f:
+            clfs = steins_learn(user_id, clf_it)
+            reset_magic(user_id, clf_it)
+            with open(file_path, 'wb') as f:
                 pickle.dump(clfs, f)
-                logger.info("Learn {} about {}.".format(clf_it, user_it))
+                logger.info("Learn {} about {}.".format(clf_it, user))
 
-        for lang_it in clfs.keys():
+        for lang_it in clfs:
             pipeline = clfs[lang_it]
             count_vect = pipeline.named_steps['vect']
 
             # Words.
-            #table = list(count_vect.vocabulary_.keys())
-            table = list(count_vect.vocabulary_nltk.values())
-            coeffs = pipeline.predict_proba(table)
-            coeffs = 2. * coeffs - 1.
-            table = [(table[i], coeffs[i, 1], ) for i in range(len(table))]
+            #words = list(count_vect.vocabulary_.keys())
+            words = list(count_vect.vocabulary_nltk.values())
+            coeffs = pipeline.predict_proba(words)
+            coeffs = coeffs[:, 1]
+            table = dict(zip(words, coeffs))
 
+            # If KL divergence below threshold, do not prepare analysis.
             try:
-                with open(clf_path + os.sep + "{}.pickle".format(lang_it), 'rb') as f:
+                file_path = clf_path + os.sep + "{}.pickle".format(lang_it)
+                with open(file_path, 'rb') as f:
                     table_old = pickle.load(f)
-                    div = kullback_leibler(dict(table), dict(table_old))
-                    logger.info("Kullback-Leibler divergence of {}, {}, {}: {}.".format(user_it, clf_it, lang_it, div))
+                    div = kullback_leibler(table, table_old)
+                    logger.info("Kullback-Leibler divergence of {}, {}, {}: {}.".format(user, clf_it, lang_it, div))
+
                     if abs(div) < 0.5:
                         continue
             except FileNotFoundError:
                 pass
 
-            with open(clf_path + os.sep + "{}.pickle".format(lang_it), 'wb') as f:
-                pickle.dump(sorted(table, key=lambda row: row[1]), f)
-                logger.info("Learn {} about {} ({} words).".format(clf_it, user_it, lang_it))
+            with open(file_path, 'wb') as f:
+                pickle.dump(table, f)
+                logger.info("Learn {} about {} ({} words).".format(clf_it, user, lang_it))
 
             # Feeds.
-            feeds = [row[0] for row in c.execute("SELECT Title FROM Feeds INNER JOIN Display ON Feeds.FeedID=Display.FeedID WHERE Language=? AND UserID=?", (lang_it, user_id, ))]
+            feeds = [row['FeedID'] for row in c.execute("SELECT FeedID FROM Feeds INNER JOIN Display USING (FeedID) WHERE UserID=? AND Language=?", (user_id, lang_it, ))]
+
             coeffs = []
-            for title_it in feeds:
-                articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE FeedID=(SELECT FeedID FROM Feeds WHERE Title=?) AND Published<?", (title_it, timestamp, ))]
-                #articles = [build_feature(row) for row in c.execute("SELECT * FROM Items WHERE Source=? AND Published<? ORDER BY Published DESC LIMIT ?", (title_it, timestamp, no_articles, ))]
+            for feed_id in feeds:
+                articles = [build_feature(row) for row in c.execute("SELECT * FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID) WHERE FeedID=? AND Published<?", (feed_id, timestamp, ))]
+
                 if len(articles) == 0:
-                    coeffs.append(0.)
+                    coeffs.append(0.5)
                     continue
+
                 articles_proba = pipeline.predict_proba(articles)
-                articles_proba = np.log(articles_proba / (1. - articles_proba))
-                coeff = np.sum(articles_proba[:, 1]) / (articles_proba.shape[0] + 10.)
-                coeff = np.exp(coeff)
-                coeff = 2. * coeff / (1. + coeff) - 1.
+                articles_proba = articles_proba[:, 1] / (1. - articles_proba[:, 1])
+                articles_proba = np.log(articles_proba)
+
+                coeff = np.sum(articles_proba) / (articles_proba.size + 10.)
                 coeffs.append(coeff)
-            table = [(feeds[i], coeffs[i], ) for i in range(len(feeds))]
-            with open(clf_path + os.sep + "{}_feeds.pickle".format(lang_it), 'wb') as f:
-                pickle.dump(sorted(table, key=lambda row: row[1]), f)
-                logger.info("Learn {} about {} ({} feeds).".format(clf_it, user_it, lang_it))
+
+            coeffs = np.exp(coeffs)
+            coeffs = coeffs / (1. + coeffs)
+            table = dict(zip(feeds, coeffs))
+
+            file_path = clf_path + os.sep + "{}_feeds.pickle".format(lang_it)
+            with open(file_path, 'wb') as f:
+                pickle.dump(table, f)
+                logger.info("Learn {} about {} ({} feeds).".format(clf_it, user, lang_it))

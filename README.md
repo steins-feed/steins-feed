@@ -5,11 +5,18 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 
 ## Packages
 
+Python:
+
 *   lxml
 *   feedparser
 *   nltk
 *   requests
 *   scikit-learn
+
+PHP:
+
+*   SimpleXML
+*   SQLite3
 
 ## Run on desktop
 

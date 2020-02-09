@@ -53,11 +53,16 @@ def get_cursor():
 # Create tables.
 ###############################################################################
 
-def create_users():
+def create_users(users=None):
     conn = get_connection()
     c = conn.cursor()
 
     c.execute("CREATE TABLE IF NOT EXISTS Users (UserID INTEGER PRIMARY KEY, Name TINYTEXT NOT NULL UNIQUE)")
+    if users is None:
+        c.execute("INSERT INTO Users (Name) VALUES (?)", ('nobody', ))
+    else:
+        for user_it in users:
+            c.execute("INSERT INTO Users (Name) VALUES (?)", (user_it, ))
 
     conn.commit()
     logger.info("Create Users.")
@@ -136,7 +141,7 @@ def reset_magic(user_id, clf):
     conn = get_connection()
     c = conn.cursor()
 
-    c.execute("DELETE FROM {} WHERE UserID=?".format(clf, ), (user_id, ))
+    c.execute("DELETE FROM {} WHERE UserID=?".format(clf.replace(" ", ""), ), (user_id, ))
 
     conn.commit()
     logger.info("Reset {}.".format(clf))
@@ -145,22 +150,12 @@ def reset_magic(user_id, clf):
 # Convenience functions.
 ###############################################################################
 
-def get_user_id(name):
-    c = get_cursor()
-    user_it = c.execute("SELECT UserID FROM Users WHERE Name=?", (name, )).fetchone()
-
-    user_id = None
-    if user_it is not None:
-        user_id = user_it['UserID']
-
-    return user_id
-
 def last_updated():
     c = get_cursor()
     timestamp_it = c.execute("SELECT MIN(Updated) FROM Feeds").fetchone()
 
-    timestamp = None
-    if timestamp_it is not None:
+    timestamp = datetime.fromtimestamp(0)
+    if timestamp_it[0] is not None:
         timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
 
     return timestamp
@@ -169,8 +164,8 @@ def last_liked(user_id):
     c = get_cursor()
     timestamp_it = c.execute("SELECT MAX(Updated) FROM Like WHERE UserID=?", (user_id, )).fetchone()
 
-    timestamp = None
-    if timestamp_it is not None:
+    timestamp = datetime.fromtimestamp(0)
+    if timestamp_it[0] is not None:
         timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
 
     return timestamp

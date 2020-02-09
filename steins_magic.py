@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-from lxml.html import tostring, builder as E
+import html
+import importlib
+import json
+import numpy as np
 import os
 import pickle
 import re
@@ -13,12 +16,17 @@ from steins_sql import *
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
+with open(dir_path + os.sep + "json/steins_magic.json", 'r') as f:
+    clf_dict = json.load(f)
+
 no_words = 20
 no_feeds = 10
 no_articles = 100
 
 def build_feature(row):
     title = row['Title'] + " " + row['Summary']
+    title = html.unescape(title)
+
     idx1 = title.find("<")
     while not idx1 == -1:
         idx2 = title.find(">", idx1)
@@ -26,19 +34,18 @@ def build_feature(row):
             break
         title = title[:idx1] + title[idx2+1:]
         idx1 = title.find("<")
-    return unescape(title)
 
-def steins_learn(user, classifier):
+    return title
+
+def steins_learn(user_id, classifier):
     c = get_cursor()
-    user_id = get_user_id(user)
-    timestamp = last_updated()
 
     clfs = dict()
-    langs = [e[0] for e in c.execute("SELECT DISTINCT Feeds.Language FROM (Items INNER JOIN Feeds ON Items.FeedID=Feeds.FeedID) INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE UserID=? AND Published<? AND Score!=0", (user_id, timestamp, ))]
+    langs = [e[0] for e in c.execute("SELECT DISTINCT Feeds.Language FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Like USING (ItemID) WHERE UserID=? AND Score!=0", (user_id, ))]
 
     for lang_it in langs:
-        likes = c.execute("SELECT Items.* FROM (Items INNER JOIN Feeds ON Items.FeedID=Feeds.FeedID) INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE UserID=? AND Language=? AND Published<? AND Score=1", (user_id, lang_it, timestamp, )).fetchall()
-        dislikes = c.execute("SELECT Items.* FROM (Items INNER JOIN Feeds ON Items.FeedID=Feeds.FeedID) INNER JOIN Like ON Items.ItemID=Like.ItemID WHERE UserID=? AND Language=? AND Published<? AND Score=-1", (user_id, lang_it, timestamp, )).fetchall()
+        likes = c.execute("SELECT Items.* FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Like USING (ItemID) WHERE UserID=? AND Language=? AND Score=1", (user_id, lang_it, )).fetchall()
+        dislikes = c.execute("SELECT Items.* FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Like USING (ItemID) WHERE UserID=? AND Language=? AND Score=-1", (user_id, lang_it, )).fetchall()
         if len(likes) == 0 or len(dislikes) == 0:
             continue
 
@@ -55,16 +62,11 @@ def steins_learn(user, classifier):
         count_vect = ('vect', NLTK_CountVectorizer(lang_it))
         tfidf_transformer = ('tfidf', TfidfTransformer())
 
-        if classifier == 'NaiveBayes':
-            clf = ('clf', MultinomialNB())
-        elif classifier == 'LogisticRegression':
-            clf = ('clf', LogisticRegression())
-        #elif classifier == 'SVM':
-        #    clf = ('clf', SVC(probability=True))
-        #elif classifier == 'Linear SVM':
-        #    clf = ('clf', SVC(kernel='linear', probability=True))
-        else:
-            raise KeyError
+        classifier_it = clf_dict[classifier]
+        module_ = importlib.import_module(classifier_it['module'])
+        class_ = getattr(module_, classifier_it['class'])
+        clf = ('clf', class_())
+
         text_clf = Pipeline([count_vect, tfidf_transformer, clf])
 
         # Train classifier.
@@ -75,6 +77,18 @@ def steins_learn(user, classifier):
         clfs[lang_it] = clf
 
     return clfs
+
+def kullback_leibler(q, p):
+    ev_q = np.sum(list(q.values()))
+    ev_p = np.sum(list(p.values()))
+
+    res = 0.
+    for k in set(p) & set(q):
+        pq = q[k] / ev_q
+        pp = p[k] / ev_p
+        res += pp * np.log(pp / pq)
+
+    return res
 
 def handle_analysis(qd):
     user = qd['user']

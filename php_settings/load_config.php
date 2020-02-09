@@ -27,7 +27,7 @@ foreach ($feeds->feed as $feed_it) {
         $stmt = $db->prepare($stmt);
         $stmt->bindValue(":Title", $title, SQLITE3_TEXT);
         $stmt->bindValue(":Link", $link, SQLITE3_TEXT);
-        $stmt->bindValue(":Language", $lang, SQLITE3_INTEGER);
+        $stmt->bindValue(":Language", $lang, SQLITE3_TEXT);
     }
     $res = $stmt->execute();
 
@@ -49,5 +49,5 @@ foreach ($feeds->feed as $feed_it) {
 
 $db->close();
 $_GET = $_POST;
-include "../settings.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/settings.php";
 ?>

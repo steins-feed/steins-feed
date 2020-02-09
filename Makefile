@@ -4,14 +4,12 @@ run: steins.db
 
 steins.db:
 	python3 aux/init_db.py
-	python3 aux/init_feeds.py
+	php -f aux/init_feeds.php
 	python3 aux/update_db.py
 
 .PHONY: test
 test:
 	make distclean
-	make steins.db
-	python3 aux/add_nobody.py
 	make run
 
 README.pdf: README.md
