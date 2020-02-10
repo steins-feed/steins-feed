@@ -92,20 +92,26 @@ def steins_predict(user_id, classifier, items):
     except:
         pass
 
-    articles_proba = []
-    for i in items:
-        row = c.execute("SELECT *, Feeds.Language FROM Items INNER JOIN Feeds USING (FeedID) WHERE ItemID=?", (i, )).fetchone()
-        article = build_feature(row)
-        try:
-            pipeline = clfs[row['Language']]
-            article_proba = pipeline.predict_proba([article])[0][1]
-        except:
-            article_proba = 0.5
-        c.execute("INSERT INTO {} (UserID, ItemID, Score) VALUES (?, ?, ?)".format(clf_dict[classifier]['table']), (user_id, i, article_proba, ))
-        articles_proba.append(article_proba)
+    articles = c.execute("SELECT *, Feeds.Language FROM Items INNER JOIN Feeds USING (FeedID) WHERE ItemID IN ({})".format(", ".join(map(str, items)))).fetchall()
+    articles = [next(a_it for a_it in articles if a_it['ItemID'] == item_it) for item_it in items]
+    articles_proba = np.full(len(items), 0.5)
 
-    conn.commit()
-    return articles_proba
+    for lang_it in clfs:
+        idx_it = []
+        articles_it = []
+        for i in range(len(articles)):
+            if articles[i]['Language'] == lang_it:
+                idx_it.append(i)
+                articles_it.append(build_feature(articles[i]))
+
+        proba_it = clfs[lang_it].predict_proba(articles_it)
+        for i in range(len(idx_it)):
+            c.execute("INSERT INTO {} (UserID, ItemID, Score) VALUES (?, ?, ?)".format(clf_dict[classifier]['table']), (user_id, items[idx_it[i]], proba_it[i][1], ))
+            articles_proba[idx_it[i]] = proba_it[i][1]
+
+        conn.commit()
+
+    return articles_proba.tolist()
 
 def kullback_leibler(q, p):
     ev_q = np.sum(list(q.values()))
