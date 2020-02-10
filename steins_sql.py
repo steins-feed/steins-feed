@@ -62,10 +62,10 @@ def create_users(users=None):
 
     c.execute("CREATE TABLE IF NOT EXISTS Users (UserID INTEGER PRIMARY KEY, Name TINYTEXT NOT NULL UNIQUE)")
     if users is None:
-        c.execute("INSERT INTO Users (Name) VALUES (?)", ('nobody', ))
+        c.execute("INSERT OR IGNORE INTO Users (Name) VALUES (?)", ('nobody', ))
     else:
         for user_it in users:
-            c.execute("INSERT INTO Users (Name) VALUES (?)", (user_it, ))
+            c.execute("INSERT OR IGNORE INTO Users (Name) VALUES (?)", (user_it, ))
 
     conn.commit()
     logger.info("Create Users.")
@@ -75,6 +75,7 @@ def create_feeds():
     c = conn.cursor()
 
     c.execute("CREATE TABLE IF NOT EXISTS Feeds (FeedID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL UNIQUE, Language TINYTEXT, Summary INTEGER DEFAULT 2, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+    c.execute("CREATE INDEX IF NOT EXISTS index_Items_Published ON Items (Published)")
 
     conn.commit()
     logger.info("Create Feeds.")
@@ -112,6 +113,7 @@ def create_magic():
 
     for clf_it in clf_dict:
         c.execute("CREATE TABLE IF NOT EXISTS {} (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score FLOAT NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))".format(clf_dict[clf_it]['table']))
+    c.execute("CREATE INDEX IF NOT EXISTS index_{:0}_Score ON {:0} (Score)".format(clf_dict[clf_it]['table']))
 
     conn.commit()
     logger.info("Create Magic.")
@@ -144,8 +146,7 @@ def reset_magic(user_id, clf):
     conn = get_connection()
     c = conn.cursor()
 
-    for clf_it in clf_dict:
-        c.execute("DELETE FROM {} WHERE UserID=?".format(clf_dict[clf_it]['table'], ), (user_id, ))
+    c.execute("DELETE FROM {} WHERE UserID=?".format(clf_dict[clf]['table'], ), (user_id, ))
 
     conn.commit()
     logger.info("Reset {}.".format(clf))

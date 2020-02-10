@@ -32,10 +32,12 @@ $date_it = new DateTime($dates[$page]);
 
 // Items.
 $clf_dict = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/json/steins_magic.json"), true);
-if ($feed == 'Surprise') {
-    $stmt = sprintf("SELECT Items.*, Feeds.Title AS Feed, Feeds.Language, IFNULL(Like.Score, 0) AS Like, %s.Score FROM (((Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID)) LEFT JOIN Like USING (UserID, ItemID)) LEFT JOIN %s USING (UserID, ItemID) WHERE UserID=:UserID AND (%s) AND SUBSTR(Published, 1, 10)=:Date AND Published<:Time ORDER BY RANDOM() LIMIT 10", $clf_dict[$clf]['table'], $clf_dict[$clf]['table'], $stmt_lang);
-} else {
-    $stmt = sprintf("SELECT Items.*, Feeds.Title AS Feed, Feeds.Language, IFNULL(Like.Score, 0) AS Like, %s.Score FROM (((Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID)) LEFT JOIN Like USING (UserID, ItemID)) LEFT JOIN %s USING (UserID, ItemID) WHERE UserID=:UserID AND (%s) AND SUBSTR(Published, 1, 10)=:Date AND Published<:Time ORDER BY Published DESC", $clf_dict[$clf]['table'], $clf_dict[$clf]['table'], $stmt_lang);
+if ($feed == 'Full') {
+    $stmt = sprintf("SELECT Items.*, Feeds.Title AS Feed, Feeds.Language, IFNULL(Like.Score, 0) AS Like FROM ((Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID)) LEFT JOIN Like USING (UserID, ItemID) WHERE UserID=:UserID AND (%s) AND SUBSTR(Published, 1, 10)=:Date AND Published<:Time ORDER BY Published DESC", $stmt_lang);
+} else if ($feed == 'Magic') {
+    $stmt = sprintf("SELECT Items.*, Feeds.Title AS Feed, Feeds.Language, IFNULL(Like.Score, 0) AS Like, %s.Score FROM (((Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID)) LEFT JOIN Like USING (UserID, ItemID)) LEFT JOIN %s USING (UserID, ItemID) WHERE UserID=:UserID AND (%s) AND SUBSTR(Published, 1, 10)=:Date AND Published<:Time ORDER BY %s.Score DESC", $clf_dict[$clf]['table'], $clf_dict[$clf]['table'], $stmt_lang, $clf_dict[$clf]['table']);
+} else if ($feed == 'Surprise') {
+    $stmt = sprintf("SELECT Items.*, Feeds.Title AS Feed, Feeds.Language, IFNULL(Like.Score, 0) AS Like, %s.Score FROM (((Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID)) LEFT JOIN Like USING (UserID, ItemID)) LEFT JOIN %s USING (UserID, ItemID) WHERE UserID=:UserID AND (%s) AND SUBSTR(Published, 1, 10)=:Date AND Published<:Time", $clf_dict[$clf]['table'], $clf_dict[$clf]['table'], $stmt_lang);
 }
 $stmt = $db->prepare($stmt);
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
@@ -69,6 +71,14 @@ foreach (array_reverse($items_temp) as $row_it) {
 }
 $items = array_reverse($items);
 
+if ($feed == 'Surprise') {
+    $items_temp = array();
+    foreach (array_rand($items, 10) as $item_ct) {
+        $items_temp[] = $items[$item_ct];
+    }
+    $items = $items_temp;
+}
+
 // Classifiers.
 if ($feed != 'Full') {
     if (!empty($unclassified)) {
@@ -80,10 +90,10 @@ if ($feed != 'Full') {
             $j = array_search($unclassified[$i], array_column($items, 'ItemID'));
             $items[$j]['Score'] = $classified[$i];
         }
-    }
 
-    if ($feed == 'Magic') {
-        array_multisort(array_column($items, 'Score'), SORT_DESC, $items);
+        if ($feed == 'Magic') {
+            array_multisort(array_column($items, 'Score'), SORT_DESC, $items);
+        }
     }
 }
 ?>
