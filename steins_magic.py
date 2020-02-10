@@ -45,7 +45,7 @@ def steins_learn(user_id, classifier):
     for lang_it in langs:
         likes = c.execute("SELECT Items.* FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Like USING (ItemID) WHERE UserID=? AND Language=? AND Score=1", (user_id, lang_it, )).fetchall()
         dislikes = c.execute("SELECT Items.* FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Like USING (ItemID) WHERE UserID=? AND Language=? AND Score=-1", (user_id, lang_it, )).fetchall()
-        if len(likes) == 0 or len(dislikes) == 0:
+        if not likes or not dislikes:
             continue
 
         titles = []
@@ -103,6 +103,8 @@ def steins_predict(user_id, classifier, items):
             if articles[i]['Language'] == lang_it:
                 idx_it.append(i)
                 articles_it.append(build_feature(articles[i]))
+        if not idx_it:
+            continue
 
         proba_it = clfs[lang_it].predict_proba(articles_it)
         for i in range(len(idx_it)):

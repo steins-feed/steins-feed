@@ -65,7 +65,7 @@ foreach (array_reverse($items_temp) as $row_it) {
         continue;
     }
 
-    if (is_null($row_it['Score'])) {
+    if ($feed != 'Full' and is_null($row_it['Score'])) {
         $unclassified[] = $row_it['ItemID'];
     }
 }
