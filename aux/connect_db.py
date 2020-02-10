@@ -10,7 +10,6 @@ dir_path = os.path.abspath(dir_path)
 
 sys.path.append(dir_path)
 
-from steins_sql import get_connection, get_cursor
-
+from steins_sql import get_connection
 conn = get_connection()
-c = get_cursor()
+c = conn.cursor()

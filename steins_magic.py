@@ -12,7 +12,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.pipeline import Pipeline
 
 from steins_nltk import NLTK_CountVectorizer
-from steins_sql import *
+from steins_sql import get_connection, get_cursor
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 with open(dir_path + os.sep + "json/steins_magic.json", 'r') as f:
@@ -106,7 +106,7 @@ def steins_predict(user_id, classifier, items):
 
         proba_it = clfs[lang_it].predict_proba(articles_it)
         for i in range(len(idx_it)):
-            c.execute("INSERT INTO {} (UserID, ItemID, Score) VALUES (?, ?, ?)".format(clf_dict[classifier]['table']), (user_id, items[idx_it[i]], proba_it[i][1], ))
+            c.execute("INSERT OR IGNORE INTO {} (UserID, ItemID, Score) VALUES (?, ?, ?)".format(clf_dict[classifier]['table']), (user_id, items[idx_it[i]], proba_it[i][1], ))
             articles_proba[idx_it[i]] = proba_it[i][1]
 
         conn.commit()

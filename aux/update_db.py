@@ -10,9 +10,16 @@ dir_path = os.path.abspath(dir_path)
 
 sys.path.append(dir_path)
 
-from steins_feed import steins_update
+from steins_feed import steins_read
+from steins_sql import get_connection
+conn = get_connection()
+from steins_log import get_logger
+logger = get_logger()
 
 title_pattern = ""
 if len(sys.argv) > 1:
     title_pattern = sys.argv[1]
-steins_update(title_pattern)
+steins_read(title_pattern)
+logger.info("Update feeds.")
+
+conn.close()

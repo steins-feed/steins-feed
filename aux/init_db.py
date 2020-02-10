@@ -11,6 +11,7 @@ dir_path = os.path.abspath(dir_path)
 sys.path.append(dir_path)
 
 from steins_sql import *
+conn = get_connection()
 
 # Create tables.
 create_users()
@@ -19,3 +20,5 @@ create_items()
 create_display()
 create_like()
 create_magic()
+
+conn.close()

@@ -6,7 +6,7 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 from steins_log import get_logger
 logger = get_logger()
 from steins_manager import get_handler
-from steins_sql import *
+from steins_sql import get_connection, get_cursor, add_item
 
 # Scrape feeds.
 def steins_read(title_pattern=""):
@@ -43,11 +43,3 @@ def steins_write():
     for d_ctr in range(len(dates)):
         with open(dir_path+os.sep+"steins-{}.html".format(d_ctr), 'w') as f:
             f.write(handle_page(page=d_ctr))
-
-def steins_update(title_pattern="", read_mode=True, write_mode=False):
-    logger.info("Update feeds.")
-
-    if read_mode:
-        steins_read(title_pattern)
-    if write_mode:
-        steins_write()

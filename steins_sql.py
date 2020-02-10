@@ -75,7 +75,6 @@ def create_feeds():
     c = conn.cursor()
 
     c.execute("CREATE TABLE IF NOT EXISTS Feeds (FeedID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL UNIQUE, Language TINYTEXT, Summary INTEGER DEFAULT 2, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
-    c.execute("CREATE INDEX IF NOT EXISTS index_Items_Published ON Items (Published)")
 
     conn.commit()
     logger.info("Create Feeds.")
@@ -85,6 +84,7 @@ def create_items():
     c = conn.cursor()
 
     c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Published TIMESTAMP NOT NULL, FeedID INTEGER NOT NULL, Summary MEDIUMTEXT, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(Title, Link, Published, FeedID))")
+    c.execute("CREATE INDEX IF NOT EXISTS index_Items_Published ON Items (Published)")
 
     conn.commit()
     logger.info("Create Items.")
@@ -113,7 +113,7 @@ def create_magic():
 
     for clf_it in clf_dict:
         c.execute("CREATE TABLE IF NOT EXISTS {} (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score FLOAT NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))".format(clf_dict[clf_it]['table']))
-    c.execute("CREATE INDEX IF NOT EXISTS index_{:0}_Score ON {:0} (Score)".format(clf_dict[clf_it]['table']))
+        c.execute("CREATE INDEX IF NOT EXISTS index_{0}_Score ON {0} (Score)".format(clf_dict[clf_it]['table']))
 
     conn.commit()
     logger.info("Create Magic.")
