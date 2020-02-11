@@ -9,7 +9,7 @@ $all_langs = array(
     "Bulgarian",
     "Catalan",
     "Cambodian",
-    "Chinese (Mandarin)",
+    "Chinese",
     "Croation",
     "Czech",
     "Danish",

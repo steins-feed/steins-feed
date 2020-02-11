@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+from collections import OrderedDict
+from datetime import datetime
+import json
 import numpy as np
 import os
 import pickle
@@ -58,15 +61,14 @@ for user_it in users:
             # Words.
             #words = list(count_vect.vocabulary_.keys())
             words = list(count_vect.vocabulary_nltk.values())
-            coeffs = pipeline.predict_proba(words)
-            coeffs = coeffs[:, 1]
-            table = dict(zip(words, coeffs))
+            coeffs = pipeline.predict_proba(words)[:, 1]
+            table = OrderedDict(sorted(zip(words, coeffs), key=lambda x: x[1]))
 
             # If KL divergence below threshold, do not prepare analysis.
             try:
-                file_path = clf_path + os.sep + "{}.pickle".format(lang_it)
-                with open(file_path, 'rb') as f:
-                    table_old = pickle.load(f)
+                file_path = clf_path + os.sep + "{}_words.json".format(lang_it)
+                with open(file_path, 'r') as f:
+                    table_old = json.load(f)
                     div = kullback_leibler(table, table_old)
                     logger.info("Kullback-Leibler divergence of {}, {}, {}: {}.".format(user, clf_it, lang_it, div))
 
@@ -75,8 +77,8 @@ for user_it in users:
             except FileNotFoundError:
                 pass
 
-            with open(file_path, 'wb') as f:
-                pickle.dump(table, f)
+            with open(file_path, 'w') as f:
+                json.dump(table, f)
                 logger.info("Learn {} about {} ({} words).".format(clf_it, user, lang_it))
 
             # Feeds.
@@ -91,24 +93,23 @@ for user_it in users:
                     coeffs.append(0.5)
                     continue
 
-                articles_proba = pipeline.predict_proba(articles)
-                articles_proba = articles_proba[:, 1]
+                articles_proba = pipeline.predict_proba(articles)[:, 1]
                 for i in range(len(articles)):
                     c.execute("INSERT OR IGNORE INTO {} (UserID, ItemID, Score) VALUES (?, ?, ?)".format(clf_dict[clf_it]['table']), (user_id, articles_raw[i]['ItemID'], articles_proba[i], ))
                 conn.commit()
 
-                articles_proba = articles_proba / (1. - articles_proba)
+                articles_proba /= (1. - articles_proba)
                 articles_proba = np.log(articles_proba)
                 coeff = np.sum(articles_proba) / (articles_proba.size + 10.)
                 coeffs.append(coeff)
 
             coeffs = np.exp(coeffs)
-            coeffs = coeffs / (1. + coeffs)
-            table = dict(zip(feeds, coeffs))
+            coeffs /= (1. + coeffs)
+            table = OrderedDict(sorted(zip(feeds, coeffs), key=lambda x: x[1]))
 
-            file_path = clf_path + os.sep + "{}_feeds.pickle".format(lang_it)
-            with open(file_path, 'wb') as f:
-                pickle.dump(table, f)
+            file_path = clf_path + os.sep + "{}_feeds.json".format(lang_it)
+            with open(file_path, 'w') as f:
+                json.dump(table, f)
                 logger.info("Learn {} about {} ({} feeds).".format(clf_it, user, lang_it))
 
 conn.close()
