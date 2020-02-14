@@ -18,9 +18,9 @@ sys.path.append(dir_path)
 from steins_log import get_logger
 logger = get_logger()
 from steins_magic import build_feature, clf_dict, kullback_leibler, steins_learn
-from steins_sql import get_connection, last_updated, last_liked, reset_magic
+from steins_sql import *
 conn = get_connection()
-c = conn.cursor()
+c = get_cursor()
 
 users = c.execute("SELECT * FROM Users").fetchall()
 for user_it in users:
@@ -112,4 +112,4 @@ for user_it in users:
                 json.dump(table, f)
                 logger.info("Learn {} about {} ({} feeds).".format(clf_it, user, lang_it))
 
-conn.close()
+close_connection()

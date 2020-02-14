@@ -12,8 +12,7 @@ dir_path = os.path.abspath(dir_path)
 sys.path.append(dir_path)
 
 from steins_magic import steins_predict
-from steins_sql import get_connection
-conn = get_connection()
+from steins_sql import close_connection
 
 user_id = sys.argv[1]
 classifier = sys.argv[2]
@@ -21,4 +20,5 @@ items = json.loads(sys.argv[3])
 
 res = steins_predict(user_id, classifier, items)
 print(json.dumps(res))
-conn.close()
+
+close_connection()

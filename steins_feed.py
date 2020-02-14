@@ -11,7 +11,7 @@ from steins_sql import get_connection, get_cursor, add_item
 # Scrape feeds.
 def steins_read(title_pattern=""):
     conn = get_connection()
-    c = conn.cursor()
+    c = get_cursor()
 
     for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
         handler = get_handler(feed_it)

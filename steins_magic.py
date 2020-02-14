@@ -79,7 +79,7 @@ def steins_learn(user_id, classifier):
 
 def steins_predict(user_id, classifier, items):
     conn = get_connection()
-    c = conn.cursor()
+    c = get_cursor()
 
     user_path = dir_path + os.sep + str(user_id)
     clf_path = user_path + os.sep + classifier

@@ -11,8 +11,7 @@ dir_path = os.path.abspath(dir_path)
 sys.path.append(dir_path)
 
 from steins_feed import steins_read
-from steins_sql import get_connection
-conn = get_connection()
+from steins_sql import close_connection
 from steins_log import get_logger
 logger = get_logger()
 
@@ -23,4 +22,4 @@ if len(sys.argv) > 1:
 logger.info("Update feeds.")
 steins_read(title_pattern)
 
-conn.close()
+close_connection()
