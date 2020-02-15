@@ -17,18 +17,15 @@ include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
 <link href="/steins-feed/favicon.ico" rel="shortcut icon" type="image/png">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <title>Stein's Feed</title>
+<script type="text/javascript">
+var user="<?php echo $user;?>";
+var clf="<?php echo $clf;?>";
+</script>
 <?php
 $f_list = array("open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js");
 foreach ($f_list as $f_it):
 ?>
-<script>
-<?php
-    $s = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/js/" . $f_it);
-    $s = str_replace("USER", $user, $s);
-    $s = str_replace("CLF", str_replace(" ", "+", $clf), $s);
-    echo $s;
-?>
-</script>
+<script type="text/javascript" src="/steins-feed/js/<?php echo $f_it;?>"></script>
 <?php endforeach;?>
 </head>
 <body>

@@ -8,5 +8,5 @@ steins_feed.log
 steins_magic.log
 tmp_feeds.xml
 __pycache__/
-*.pickle
 *.pyc
+[0-9]*/

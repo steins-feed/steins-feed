@@ -14,7 +14,19 @@ $res = $stmt->execute()->fetcharray();
 $last_updated = $res[0];
 
 // Dates.
-$stmt = sprintf("SELECT DISTINCT SUBSTR(Published, 1, 10) FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID) WHERE UserID=:UserID AND (%s) AND Published<:Published ORDER BY Published DESC", $stmt_lang);
+$stmt = sprintf("SELECT DISTINCT
+                     SUBSTR(Published, 1, 10)
+                 FROM
+                     (Items
+                     INNER JOIN Feeds USING (FeedID))
+                     INNER JOIN Display USING (FeedID)
+                 WHERE
+                     UserID=:UserID
+                     AND (%s)
+                     AND Published<:Published
+                 ORDER BY
+                     Published DESC",
+                $stmt_lang);
 $stmt = $db->prepare($stmt);
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
 for ($i = 0; $i < count($langs); $i++) {
@@ -33,43 +45,94 @@ $date_it = new DateTime($dates[$page]);
 // Items.
 $clf_dict = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/json/steins_magic.json"), true);
 if ($feed == 'Full') {
-    $stmt = sprintf("SELECT Items.*, Feeds.Title AS Feed, Feeds.Language, IFNULL(Like.Score, 0) AS Like FROM ((Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID)) LEFT JOIN Like USING (UserID, ItemID) WHERE UserID=:UserID AND (%s) AND SUBSTR(Published, 1, 10)=:Date AND Published<:Time ORDER BY Published DESC", $stmt_lang);
+    $stmt = sprintf("SELECT
+                         Items.*,
+                         MIN(Feeds.Title) AS Feed,
+                         IFNULL(Like.Score, 0) AS Like
+                     FROM
+                         ((Items
+                         INNER JOIN Feeds USING (FeedID))
+                         INNER JOIN Display USING (FeedID))
+                         LEFT JOIN Like USING (UserID, ItemID)
+                     WHERE
+                         UserID=:UserID
+                         AND (%s)
+                         AND Published BETWEEN :Start AND :Finish
+                         AND Published<:Time
+                     GROUP BY
+                         Items.Title,
+                         Published
+                     ORDER BY
+                         Published DESC",
+                    $stmt_lang);
 } else if ($feed == 'Magic') {
-    $stmt = sprintf("SELECT Items.*, Feeds.Title AS Feed, Feeds.Language, IFNULL(Like.Score, 0) AS Like, %s.Score FROM (((Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID)) LEFT JOIN Like USING (UserID, ItemID)) LEFT JOIN %s USING (UserID, ItemID) WHERE UserID=:UserID AND (%s) AND SUBSTR(Published, 1, 10)=:Date AND Published<:Time ORDER BY %s.Score DESC", $clf_dict[$clf]['table'], $clf_dict[$clf]['table'], $stmt_lang, $clf_dict[$clf]['table']);
+    $stmt = sprintf("SELECT
+                         Items.*,
+                         MIN(Feeds.Title) AS Feed,
+                         IFNULL(Like.Score, 0) AS Like,
+                         %s.Score
+                     FROM
+                         (((Items
+                         INNER JOIN Feeds USING (FeedID))
+                         INNER JOIN Display USING (FeedID))
+                         LEFT JOIN Like USING (UserID, ItemID))
+                         LEFT JOIN %s USING (UserID, ItemID)
+                     WHERE
+                         UserID=:UserID
+                         AND (%s)
+                         AND Published BETWEEN :Start AND :Finish
+                         AND Published<:Time
+                     GROUP BY
+                         Items.Title,
+                         Published
+                     ORDER BY
+                         %s.Score DESC",
+                    $clf_dict[$clf]['table'],
+                    $clf_dict[$clf]['table'],
+                    $stmt_lang,
+                    $clf_dict[$clf]['table']);
 } else if ($feed == 'Surprise') {
-    $stmt = sprintf("SELECT Items.*, Feeds.Title AS Feed, Feeds.Language, IFNULL(Like.Score, 0) AS Like, %s.Score FROM (((Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID)) LEFT JOIN Like USING (UserID, ItemID)) LEFT JOIN %s USING (UserID, ItemID) WHERE UserID=:UserID AND (%s) AND SUBSTR(Published, 1, 10)=:Date AND Published<:Time", $clf_dict[$clf]['table'], $clf_dict[$clf]['table'], $stmt_lang);
+    $stmt = sprintf("SELECT
+                         Items.*,
+                         MIN(Feeds.Title) AS Feed,
+                         IFNULL(Like.Score, 0) AS Like,
+                         %s.Score
+                     FROM
+                         (((Items
+                         INNER JOIN Feeds USING (FeedID))
+                         INNER JOIN Display USING (FeedID))
+                         LEFT JOIN Like USING (UserID, ItemID))
+                         LEFT JOIN %s USING (UserID, ItemID)
+                     WHERE
+                         UserID=:UserID
+                         AND (%s)
+                         AND Published BETWEEN :Start AND :Finish
+                         AND Published<:Time
+                     GROUP BY
+                         Items.Title,
+                         Published",
+                    $clf_dict[$clf]['table'],
+                    $clf_dict[$clf]['table'],
+                    $stmt_lang);
 }
 $stmt = $db->prepare($stmt);
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
 for ($i = 0; $i < count($langs); $i++) {
     $stmt->bindValue(":Language_" . $i, $langs[$i], SQLITE3_TEXT);
 }
-$stmt->bindValue(":Date", $date_it->format("Y-m-d"), SQLITE3_TEXT);
+$stmt->bindValue(":Start", $date_it->format("Y-m-d") . " 00:00:00", SQLITE3_TEXT);
+$stmt->bindValue(":Finish", $date_it->format("Y-m-d") . " 23:59:59", SQLITE3_TEXT);
 $stmt->bindValue(":Time", $last_updated, SQLITE3_TEXT);
 $res = $stmt->execute();
 
-$items_temp = array();
-for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-    $items_temp[] = $row_it;
-}
-
 $items = array();
-$links = array();
 $unclassified = array();
-foreach (array_reverse($items_temp) as $row_it) {
-    $link_it = parse_url($row_it['Link'], PHP_URL_HOST) . parse_url($row_it['Link'], PHP_URL_PATH);
-    if (!in_array($link_it, $links)) {
-        $links[] = $link_it;
-        $items[] = $row_it;
-    } else {
-        continue;
-    }
-
+for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
+    $items[] = $row_it;
     if ($feed != 'Full' and is_null($row_it['Score'])) {
         $unclassified[] = $row_it['ItemID'];
     }
 }
-$items = array_reverse($items);
 
 if ($feed == 'Surprise') {
     $items_temp = array();
@@ -80,20 +143,18 @@ if ($feed == 'Surprise') {
 }
 
 // Classifiers.
-if ($feed != 'Full') {
-    if (!empty($unclassified)) {
-        $bash_cmd = "python3 " . $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/aux/apply_magic.py " . escapeshellarg($user_id) . " " . escapeshellarg($clf) . " " . escapeshellarg(json_encode($unclassified));
-        $res = shell_exec($bash_cmd);
-        $classified = json_decode($res, true);
+if (!empty($unclassified)) {
+    $bash_cmd = "python3 " . $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/aux/apply_magic.py " . escapeshellarg($user_id) . " " . escapeshellarg($clf) . " " . escapeshellarg(json_encode($unclassified));
+    $res = shell_exec($bash_cmd);
+    $classified = json_decode($res, true);
 
-        for ($i = 0; $i < count($unclassified); $i++) {
-            $j = array_search($unclassified[$i], array_column($items, 'ItemID'));
-            $items[$j]['Score'] = $classified[$i];
-        }
+    for ($i = 0; $i < count($unclassified); $i++) {
+        $j = array_search($unclassified[$i], array_column($items, 'ItemID'));
+        $items[$j]['Score'] = $classified[$i];
+    }
 
-        if ($feed == 'Magic') {
-            array_multisort(array_column($items, 'Score'), SORT_DESC, $items);
-        }
+    if ($feed == 'Magic') {
+        array_multisort(array_column($items, 'Score'), SORT_DESC, $items);
     }
 }
 ?>
@@ -106,18 +167,15 @@ if ($feed != 'Full') {
 <link href="/steins-feed/favicon.ico" rel="shortcut icon" type="image/png">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <title>Stein's Feed</title>
+<script type="text/javascript">
+var user="<?php echo $user;?>";
+var clf="<?php echo $clf;?>";
+</script>
 <?php
 $f_list = array("like.js", "dislike.js", "highlight.js", "open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js");
 foreach ($f_list as $f_it):
 ?>
-<script>
-<?php
-    $s = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/js/" . $f_it);
-    $s = str_replace("USER", $user, $s);
-    $s = str_replace("CLF", str_replace(" ", "+", $clf), $s);
-    echo $s;
-?>
-</script>
+<script type="text/javascript" src="/steins-feed/js/<?php echo $f_it;?>"></script>
 <?php endforeach;?>
 </head>
 <body>

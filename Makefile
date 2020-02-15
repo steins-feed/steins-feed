@@ -22,7 +22,7 @@ clean:
 	-rm tmp_feeds.xml
 	-rm -r __pycache__/
 	-rm *.pyc
-	-find . -name "*.pickle" -print0 | xargs -0 rm
+	-rm [0-9]*
 
 .PHONY: distclean
 distclean:

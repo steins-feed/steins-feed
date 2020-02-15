@@ -14,5 +14,5 @@ function like(button_id) {
     };
     xmlhttp.open("POST", "/steins-feed/like.php", true);
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xmlhttp.send("user=USER" + "&id=" + button_id + "&submit=Like");
+    xmlhttp.send("user=" + user + "&id=" + button_id + "&submit=Like");
 }
