@@ -1,5 +1,5 @@
 <?php
-if( $_GET["feed"] ) {
+if( isset($_GET["feed"]) ) {
     $feed = $_GET["feed"];
 } else {
     $feed = "Full";

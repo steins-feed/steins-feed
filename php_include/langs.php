@@ -9,7 +9,7 @@ for ($res_it = $res->fetcharray(); $res_it; $res_it = $res->fetcharray()) {
 
 $langs = array();
 for ($i = 0; $i < count($langs_disp); $i++) {
-    if ($_GET["lang_" . $i]) {
+    if (isset($_GET["lang_" . $i])) {
         $langs[] = $_GET["lang_" . $i];
     }
 }

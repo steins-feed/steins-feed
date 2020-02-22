@@ -1,5 +1,5 @@
 <?php
-if( $_GET["clf"] ) {
+if( isset($_GET["clf"]) ) {
     $clf = $_GET["clf"];
 } else {
     $clf_dict = json_decode(file_get_contents("json/steins_magic.json"), true);
