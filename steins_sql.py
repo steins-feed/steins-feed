@@ -104,6 +104,16 @@ def create_display():
     conn.commit()
     logger.info("Create Display.")
 
+def create_tags():
+    conn = get_connection()
+    c = get_cursor()
+
+    c.execute("CREATE TABLE IF NOT EXISTS Tags (TagID INTEGER PRIMARY KEY, UserID INTEGER NOT NULL, Name TINYTEXT NOT NULL, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, Name))")
+    c.execute("CREATE TABLE IF NOT EXISTS Tags2Feeds (TagID INTEGER NOT NULL, FeedID INTEGER NOT NULL, FOREIGN KEY (TagID) REFERENCES Tags (TagID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(TagID, FeedID))")
+
+    conn.commit()
+    logger.info("Create Tags.")
+
 def create_like():
     conn = get_connection()
     c = get_cursor()

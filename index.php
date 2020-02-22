@@ -7,6 +7,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/tags.php";
 
 // Last updated.
 $stmt = $db->prepare("SELECT MIN(Updated) From Feeds");
@@ -44,85 +45,71 @@ $date_it = new DateTime($dates[$page]);
 
 // Items.
 $clf_dict = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/json/steins_magic.json"), true);
+$stmt = "
+SELECT
+    Items.*,
+    MIN(Feeds.Title) AS Feed,
+    IFNULL(Like.Score, 0) AS Like";
+if ($feed != 'Full') {
+    $stmt .= sprintf(",
+    %s.Score", $clf_dict[$clf]['table']);
+}
+$stmt .= "
+FROM";
+$temp = "
+    ((Items
+    INNER JOIN Feeds USING (FeedID))
+    INNER JOIN Display USING (FeedID))
+    LEFT JOIN Like USING (UserID, ItemID)";
+if ($feed != 'Full') {
+    $temp = "(" . $temp . ")";
+    $temp .= sprintf("
+    LEFT JOIN %s USING (UserID, ItemID)", $clf_dict[$clf]['table']);
+}
+if (!empty($tags)) {
+    $temp = "(" . $temp . ")";
+    $temp .= "
+    LEFT JOIN Tags2Feeds USING (FeedID)";
+    $temp = "(" . $temp . ")";
+    $temp .= "
+    LEFT JOIN Tags USING (TagID, UserID)";
+}
+$stmt .= $temp;
+$stmt .= "
+WHERE
+    UserID=:UserID
+    AND (%s)
+    AND Published BETWEEN :Start AND :Finish
+    AND Published<:Time";
+$stmt = sprintf($stmt, $stmt_lang);
+if (!empty($tags)) {
+    $stmt .= sprintf("
+    AND (%s) ", $stmt_tag);
+}
+$stmt .= "
+GROUP BY
+    Items.Title,
+    Published";
 if ($feed == 'Full') {
-    $stmt = sprintf("SELECT
-                         Items.*,
-                         MIN(Feeds.Title) AS Feed,
-                         IFNULL(Like.Score, 0) AS Like
-                     FROM
-                         ((Items
-                         INNER JOIN Feeds USING (FeedID))
-                         INNER JOIN Display USING (FeedID))
-                         LEFT JOIN Like USING (UserID, ItemID)
-                     WHERE
-                         UserID=:UserID
-                         AND (%s)
-                         AND Published BETWEEN :Start AND :Finish
-                         AND Published<:Time
-                     GROUP BY
-                         Items.Title,
-                         Published
-                     ORDER BY
-                         Published DESC",
-                    $stmt_lang);
+    $stmt .= "
+ORDER BY
+    Published DESC";
 } else if ($feed == 'Magic') {
-    $stmt = sprintf("SELECT
-                         Items.*,
-                         MIN(Feeds.Title) AS Feed,
-                         IFNULL(Like.Score, 0) AS Like,
-                         %s.Score
-                     FROM
-                         (((Items
-                         INNER JOIN Feeds USING (FeedID))
-                         INNER JOIN Display USING (FeedID))
-                         LEFT JOIN Like USING (UserID, ItemID))
-                         LEFT JOIN %s USING (UserID, ItemID)
-                     WHERE
-                         UserID=:UserID
-                         AND (%s)
-                         AND Published BETWEEN :Start AND :Finish
-                         AND Published<:Time
-                     GROUP BY
-                         Items.Title,
-                         Published
-                     ORDER BY
-                         %s.Score DESC",
-                    $clf_dict[$clf]['table'],
-                    $clf_dict[$clf]['table'],
-                    $stmt_lang,
-                    $clf_dict[$clf]['table']);
-} else if ($feed == 'Surprise') {
-    $stmt = sprintf("SELECT
-                         Items.*,
-                         MIN(Feeds.Title) AS Feed,
-                         IFNULL(Like.Score, 0) AS Like,
-                         %s.Score
-                     FROM
-                         (((Items
-                         INNER JOIN Feeds USING (FeedID))
-                         INNER JOIN Display USING (FeedID))
-                         LEFT JOIN Like USING (UserID, ItemID))
-                         LEFT JOIN %s USING (UserID, ItemID)
-                     WHERE
-                         UserID=:UserID
-                         AND (%s)
-                         AND Published BETWEEN :Start AND :Finish
-                         AND Published<:Time
-                     GROUP BY
-                         Items.Title,
-                         Published",
-                    $clf_dict[$clf]['table'],
-                    $clf_dict[$clf]['table'],
-                    $stmt_lang);
+    $stmt .= sprintf("
+ORDER BY
+    %s.Score DESC", $clf_dict[$clf]['table']);
 }
 $stmt = $db->prepare($stmt);
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
-for ($i = 0; $i < count($langs); $i++) {
-    $stmt->bindValue(":Language_" . $i, $langs[$i], SQLITE3_TEXT);
-}
 $stmt->bindValue(":Start", $date_it->format("Y-m-d") . " 00:00:00", SQLITE3_TEXT);
 $stmt->bindValue(":Finish", $date_it->format("Y-m-d") . " 23:59:59", SQLITE3_TEXT);
 $stmt->bindValue(":Time", $last_updated, SQLITE3_TEXT);
+for ($i = 0; $i < count($langs); $i++) {
+    $stmt->bindValue(":Language_" . $i, $langs[$i], SQLITE3_TEXT);
+}
+for ($i = 0; $i < count($tags); $i++) {
+    $stmt->bindValue(":Tag_" . $i, $tags[$i], SQLITE3_TEXT);
+}
 $res = $stmt->execute();
 
 $items = array();

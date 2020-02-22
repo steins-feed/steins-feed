@@ -17,6 +17,7 @@ create_users()
 create_feeds()
 create_items()
 create_display()
+create_tags()
 create_like()
 create_magic()
 

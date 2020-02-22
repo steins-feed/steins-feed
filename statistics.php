@@ -7,6 +7,7 @@ include "php_include/langs.php";
 include "php_include/page.php";
 include "php_include/feed.php";
 include "php_include/clf.php";
+include "php_include/tags.php";
 ?>
 <!DOCTYPE html>
 <html>

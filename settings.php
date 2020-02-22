@@ -7,6 +7,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/tags.php";
 ?>
 <!DOCTYPE html>
 <html>
@@ -132,6 +133,38 @@ foreach ($feeds as $row_it):
 </p>
 <input type="hidden" name="user" value=<?php echo $user;?>>
 <input type="submit" value="Delete feed">
+</form>
+<hr>
+<form method="post" action="/steins-feed/php_settings/add_tag.php">
+<p>
+<input type="text" name="tag">
+<input type="hidden" name="user" value=<?php echo $user;?>>
+<input type="submit" value="Add tag">
+</p>
+</form>
+<hr>
+<form method="post" action="/steins-feed/php_settings/delete_tag.php">
+<p>
+<select name="tag">
+<?php
+$stmt = $db->prepare("SELECT * FROM Tags WHERE UserID=:UserID ORDER BY Name COLLATE NOCASE");
+$stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
+$res = $stmt->execute();
+$tags = array();
+for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
+    $tags[] = $row_it;
+}
+
+foreach ($tags as $row_it):
+?>
+<option value="<?php echo $row_it['TagID'];?>">
+<?php echo $row_it['Name'], PHP_EOL;?>
+</option>
+<?php endforeach;?>
+</select>
+</p>
+<input type="hidden" name="user" value=<?php echo $user;?>>
+<input type="submit" value="Delete tag">
 </form>
 <hr>
 <form method="post" action="/steins-feed/php_settings/load_config.php" enctype="multipart/form-data">

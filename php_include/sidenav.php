@@ -9,6 +9,9 @@ if (count($dates) >= 2):
 <?php foreach ($langs as $lang_ct => $lang_it):?>
 <input name="lang_<?php echo $lang_ct;?>" value="<?php echo $lang_it;?>" type="hidden">
 <?php endforeach;?>
+<?php foreach ($tags as $tag_ct => $tag_it):?>
+<input name="tag_<?php echo $tag_ct;?>" value="<?php echo $tag_it;?>" type="hidden">
+<?php endforeach;?>
 <input name="page" value="<?php echo $page + 1;?>" type="hidden">
 <input name="feed" value="<?php echo $feed;?>" type="hidden">
 <input name="clf" value="<?php echo $clf;?>" type="hidden">
@@ -37,7 +40,21 @@ endif;
 <span onclick="close_menu()" class="onclick">&#215;&nbsp;</span>
 </h1>
 <form action="/steins-feed/index.php" method="get">
-<p>Language:</p>
+<?php if (count($tags_disp)):?>
+<p>Tags:</p>
+<?php
+    foreach ($tags_disp as $tag_ct => $tag_it):
+        if (in_array($tag_it, $tags)):
+?>
+<input name="tag_<?php echo $tag_ct;?>" value="<?php echo $tag_it;?>" type="checkbox" checked><?php echo $tag_it;?><br>
+<?php   else:?>
+<input name="tag_<?php echo $tag_ct;?>" value="<?php echo $tag_it;?>" type="checkbox"><?php echo $tag_it;?><br>
+<?php
+        endif;
+    endforeach;
+endif;
+?>
+<p>Languages:</p>
 <?php
 foreach ($langs_disp as $lang_ct => $lang_it):
     if (in_array($lang_it, $langs)):
