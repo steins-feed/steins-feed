@@ -134,14 +134,6 @@ for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
     }
 }
 
-if ($feed == 'Surprise') {
-    $items_temp = array();
-    foreach (array_rand($items, 10) as $item_ct) {
-        $items_temp[] = $items[$item_ct];
-    }
-    $items = $items_temp;
-}
-
 // Classifiers.
 if (!empty($unclassified)) {
     $bash_cmd = "python3 " . $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/aux/apply_magic.py " . escapeshellarg($user_id) . " " . escapeshellarg($clf) . " " . escapeshellarg(json_encode($unclassified));
@@ -156,6 +148,46 @@ if (!empty($unclassified)) {
     if ($feed == 'Magic') {
         array_multisort(array_column($items, 'Score'), SORT_DESC, $items);
     }
+}
+
+// Surprise.
+function choice($probs_partial, $val) {
+    $low = 0;
+    $high = count($probs_partial) - 1;
+
+    while (true) {
+        if ($high == $low + 1) {
+            break;
+        }
+
+        $temp = intdiv($low + $high, 2);
+        if ($probs_partial[$temp] <= $val) {
+            $low = $temp;
+        } else {
+            $high = $temp;
+        }
+    }
+
+    return $low;
+}
+
+if ($feed == 'Surprise') {
+    $probs_partial = array();
+    $probs_partial[] = 0.;
+    for ($item_ct = 0; $item_ct < count($items); $item_ct++) {
+        $item_it = $items[$item_ct];
+        $log_score = log($item_it['Score'] / (1. - $item_it['Score']));
+        $probs_partial[] = $probs_partial[$item_ct] + exp(-$log_score * $log_score);
+    }
+    $probs_total = $probs_partial[count($items)];
+
+    $items_temp = array();
+    for ($i = 0; $i < 10; $i++) {
+        $val = rand() / getrandmax() * $probs_total;
+        $idx = choice($probs_partial, $val);
+        $items_temp[] = $items[$idx];
+    }
+    $items = $items_temp;
 }
 ?>
 <!DOCTYPE html>
