@@ -57,22 +57,26 @@ if ($feed != 'Full') {
 $stmt .= "
 FROM";
 $temp = "
-    ((Items
-    INNER JOIN Feeds USING (FeedID))
-    INNER JOIN Display USING (FeedID))
+    Items
+    INNER JOIN Feeds USING (FeedID)";
+$temp = "(" . $temp . ")";
+$temp .= "
+    INNER JOIN Display USING (FeedID)";
+if (!empty($tags)) {
+    $temp = "(" . $temp . ")";
+    $temp .= "
+    INNER JOIN Tags2Feeds USING (FeedID)";
+    $temp = "(" . $temp . ")";
+    $temp .= "
+    INNER JOIN Tags USING (TagID, UserID)";
+}
+$temp = "(" . $temp . ")";
+$temp .= "
     LEFT JOIN Like USING (UserID, ItemID)";
 if ($feed != 'Full') {
     $temp = "(" . $temp . ")";
     $temp .= sprintf("
     LEFT JOIN %s USING (UserID, ItemID)", $clf_dict[$clf]['table']);
-}
-if (!empty($tags)) {
-    $temp = "(" . $temp . ")";
-    $temp .= "
-    LEFT JOIN Tags2Feeds USING (FeedID)";
-    $temp = "(" . $temp . ")";
-    $temp .= "
-    LEFT JOIN Tags USING (TagID, UserID)";
 }
 $stmt .= $temp;
 $stmt .= "
@@ -169,10 +173,21 @@ if ($feed == 'Surprise') {
     $probs_total = $probs_partial[count($items)];
 
     $items_temp = array();
-    for ($i = 0; $i < 10; $i++) {
+    $indices = array();
+    while (true) {
         $val = rand() / getrandmax() * $probs_total;
         $idx = choice($probs_partial, $val);
-        $items_temp[] = $items[$idx];
+
+        if (in_array($idx, $indices)) {
+            continue;
+        } else {
+            $items_temp[] = $items[$idx];
+            $indices[] = $idx;
+        }
+
+        if (count($indices) == 10) {
+            break;
+        }
     }
     $items = $items_temp;
 }
@@ -221,7 +236,7 @@ Last updated: <?php echo $last_updated, " GMT";?>.
 </h2>
 <p>
 Source: <?php echo $item_it['Feed'];?>.
-Published: <?php echo $item_it['Published'];?>.
+Published: <?php echo $item_it['Published'];?> GMT.
 <?php
 if ($feed != 'Full'):
 ?>
