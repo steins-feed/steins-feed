@@ -128,12 +128,13 @@ def handle_highlight(qd):
     clf = qd['clf']
     item_id = int(qd['id'])
 
-    user_path = dir_path + os.sep + user
+    user_id = c.execute("SELECT UserID FROM Users WHERE Name=?", (user, )).fetchone()[0]
+    user_path = dir_path + os.sep + str(user_id)
     clf_path = user_path + os.sep + clf
     with open(clf_path + os.sep + "clfs.pickle", 'rb') as f:
         clfs = pickle.load(f)
 
-    item_it = c.execute("SELECT Items.*, Feeds.Language FROM Items INNER JOIN Feeds ON Items.Source=Feeds.Title WHERE Items.ItemID=?", (item_id, )).fetchone()
+    item_it = c.execute("SELECT Items.*, Feeds.Language FROM Items INNER JOIN Feeds USING (FeedID) WHERE Items.ItemID=?", (item_id, )).fetchone()
     title = "<span>" + unescape(item_it['Title']) + "</span>"
     summary = "<div>" + unescape(item_it['Summary']) + "</div>"
 
@@ -145,10 +146,10 @@ def handle_highlight(qd):
 
     #coeff_dislike = -0.5
     #coeff_like = 0.5
-    with open(clf_path + os.sep + "{}.pickle".format(item_it['Language']), 'rb') as f:
-        table = pickle.load(f)
-    coeff_dislike = table[no_words][1]
-    coeff_like = table[-no_words][1]
+    with open(clf_path + os.sep + "{}_words.json".format(item_it['Language']), 'r') as f:
+        table = json.load(f)
+    coeff_dislike = sorted(table.values())[no_words]
+    coeff_like = sorted(table.values())[-no_words]
 
     new_title = ""
     idx_left = 0
@@ -160,9 +161,9 @@ def handle_highlight(qd):
 
         for token_it in set(tokenizer(section)):
             expr = " ".join(analyzer(token_it))
-            coeff = 2. * clf.predict_proba([expr])[0][1] - 1.
+            coeff = clf.predict_proba([expr])[0][1]
             if coeff < coeff_dislike or coeff >= coeff_like:
-                section = re.sub(r"\b{}\b".format(token_it), "<span class=\"tooltip\"><mark>{}</mark><span class=\"tooltiptext\">{:.2f}</span></span>".format(token_it, coeff), section)
+                section = re.sub(r"\b{}\b".format(token_it), "<span class=\"tooltip\"><mark>{}</mark><span class=\"tooltiptext\">{:.2f}</span></span>".format(token_it, 2. * coeff - 1.), section)
         new_title += section
 
         if idx_right == -1:
@@ -181,9 +182,9 @@ def handle_highlight(qd):
 
         for token_it in set(tokenizer(section)):
             expr = " ".join(analyzer(token_it))
-            coeff = 2. * clf.predict_proba([expr])[0][1] - 1.
+            coeff = clf.predict_proba([expr])[0][1]
             if coeff < coeff_dislike or coeff >= coeff_like:
-                section = re.sub(r"\b{}\b".format(token_it), "<span class=\"tooltip\"><mark>{}</mark><span class=\"tooltiptext\">{:.2f}</span></span>".format(token_it, coeff), section)
+                section = re.sub(r"\b{}\b".format(token_it), "<span class=\"tooltip\"><mark>{}</mark><span class=\"tooltiptext\">{:.2f}</span></span>".format(token_it, 2. * coeff - 1.), section)
         new_summary += section
 
         if idx_right == -1:
