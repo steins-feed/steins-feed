@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-import html
 import importlib
 import json
+from html import unescape
+from lxml import etree, html
 import numpy as np
 import os
 import pickle
@@ -23,18 +24,11 @@ no_feeds = 10
 no_articles = 100
 
 def build_feature(row):
-    title = row['Title'] + " " + row['Summary']
-    title = html.unescape(title)
-
-    idx1 = title.find("<")
-    while not idx1 == -1:
-        idx2 = title.find(">", idx1)
-        if idx2 == -1:
-            break
-        title = title[:idx1] + title[idx2+1:]
-        idx1 = title.find("<")
-
-    return title
+    title = "<div>" + row['Title'] + " " + row['Summary'] + "</div>"
+    title = html.fromstring(title)
+    etree.strip_tags(title, "*")
+    title = unescape(unescape(html.tostring(title).decode()))
+    return title[len("<div>"):-len("</div>")]
 
 def steins_learn(user_id, classifier):
     c = get_cursor()

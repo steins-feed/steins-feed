@@ -44,11 +44,13 @@ for user_it in users:
             pass
 
         file_path = clf_path + os.sep + "clfs.pickle"
-        if os.path.exists(file_path) and datetime.fromtimestamp(os.stat(file_path).st_mtime) > timestamp_like:
+        if os.path.exists(file_path) and datetime.utcfromtimestamp(os.stat(file_path).st_mtime) > timestamp_like:
             with open(file_path, 'rb') as f:
                 clfs = pickle.load(f)
         else:
             clfs = steins_learn(user_id, clf_it)
+            if len(clfs) == 0:
+                continue
             reset_magic(user_id, clf_it)
             with open(file_path, 'wb') as f:
                 pickle.dump(clfs, f)

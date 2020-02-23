@@ -174,7 +174,7 @@ def last_updated():
     c = get_cursor()
     timestamp_it = c.execute("SELECT MIN(Updated) FROM Feeds").fetchone()
 
-    timestamp = datetime.fromtimestamp(0)
+    timestamp = datetime.utcfromtimestamp(0)
     if timestamp_it[0] is not None:
         timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
 
@@ -184,7 +184,7 @@ def last_liked(user_id):
     c = get_cursor()
     timestamp_it = c.execute("SELECT MAX(Updated) FROM Like WHERE UserID=?", (user_id, )).fetchone()
 
-    timestamp = datetime.fromtimestamp(0)
+    timestamp = datetime.utcfromtimestamp(0)
     if timestamp_it[0] is not None:
         timestamp = datetime.strptime(timestamp_it[0], "%Y-%m-%d %H:%M:%S")
 

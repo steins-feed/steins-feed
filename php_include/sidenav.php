@@ -73,19 +73,31 @@ $feed_dict = array(
     "Magic" => "enable_clf()",
     "Surprise" => "enable_clf()"
 );
+$clf_dict = json_decode(file_get_contents("json/steins_magic.json"), true);
+$clf_key = key($clf_dict);
+$magic_exists = file_exists($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/$user_id/$clf_key/clfs.pickle");
 foreach($feed_dict as $key => $value):
     if ($key == $feed):
+        if ($key == "Full" or $magic_exists):
 ?>
 <input name="feed" value="<?php echo $key;?>" type="radio" onclick="<?php echo $value;?>" checked><?php echo $key;?><br>
-<?php else:?>
-<input name="feed" value="<?php echo $key;?>" type="radio" onclick="<?php echo $value;?>"><?php echo $key;?><br>
+<?php   else:?>
+<input name="feed" value="<?php echo $key;?>" type="radio" onclick="<?php echo $value;?>" checked disabled><?php echo $key;?><br>
+<?php   endif;?>
 <?php
+    else:
+        if ($key == "Full" or $magic_exists):
+?>
+<input name="feed" value="<?php echo $key;?>" type="radio" onclick="<?php echo $value;?>"><?php echo $key;?><br>
+<?php   else:?>
+<input name="feed" value="<?php echo $key;?>" type="radio" onclick="<?php echo $value;?>" disabled><?php echo $key;?><br>
+<?php
+        endif;
     endif;
 endforeach;
 ?>
 <p>Algorithm:</p>
 <?php
-$clf_dict = json_decode(file_get_contents("json/steins_magic.json"), true);
 foreach ($clf_dict as $clf_it => $clf_val):
     if ($feed == "Full"):
         if ($clf_it == $clf):
