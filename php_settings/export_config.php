@@ -1,6 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
 $db = steins_db(SQLITE3_OPEN_READWRITE);
+$db->exec("BEGIN");
 
 $stmt = $db->prepare("SELECT UserID FROM Users WHERE Name=:Name");
 $stmt->bindValue(":Name", $_POST['user'], SQLITE3_TEXT);
@@ -33,4 +34,7 @@ for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()):
 </feed>
 <?php endfor;?>
 </root>
-<?php $db->close();?>
+<?php
+$db->exec("END");
+$db->close();
+?>

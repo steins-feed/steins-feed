@@ -27,7 +27,7 @@ def have_connection():
 def get_connection():
     global connection
     if not have_connection():
-        connection = sqlite3.connect(db_path, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+        connection = sqlite3.connect(db_path, timeout=60., detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA foreign_keys = ON")
         logger.debug("Open {}.".format(db_path))

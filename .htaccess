@@ -14,6 +14,10 @@
     Require all granted
 </Files>
 
+<Files "*.json">
+    Require all granted
+</Files>
+
 <Files "*.php">
     Require all granted
 </Files>

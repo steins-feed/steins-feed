@@ -1,4 +1,4 @@
-span.liked, span.disliked {
+span.liked, span.disliked, span.highlit {
 	color: blue;
 }
 

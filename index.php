@@ -1,6 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
 $db = steins_db(SQLITE3_OPEN_READONLY);
+$db->exec("BEGIN");
 
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
@@ -49,6 +50,7 @@ $stmt = "
 SELECT
     Items.*,
     MIN(Feeds.Title) AS Feed,
+    Language,
     IFNULL(Like.Score, 0) AS Like";
 if ($feed != 'Full') {
     $stmt .= sprintf(",
@@ -127,9 +129,11 @@ for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
 
 // Classifiers.
 if (!empty($unclassified)) {
+    $db->exec("END");
     $bash_cmd = "python3 " . $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/aux/apply_magic.py " . escapeshellarg($user_id) . " " . escapeshellarg($clf) . " " . escapeshellarg(json_encode($unclassified));
     $res = shell_exec($bash_cmd);
     $classified = json_decode($res, true);
+    $db->exec("BEGIN");
 
     for ($i = 0; $i < count($unclassified); $i++) {
         $j = array_search($unclassified[$i], array_column($items, 'ItemID'));
@@ -201,15 +205,30 @@ if ($feed == 'Surprise') {
 <link href="/steins-feed/favicon.ico" rel="shortcut icon" type="image/png">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <title>Stein's Feed</title>
-<script type="text/javascript">
+<script>
 var user="<?php echo $user;?>";
 var clf="<?php echo $clf;?>";
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <?php
 $f_list = array("like.js", "dislike.js", "highlight.js", "open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js");
 foreach ($f_list as $f_it):
 ?>
-<script type="text/javascript" src="/steins-feed/js/<?php echo $f_it;?>"></script>
+<script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>
+<?php endforeach;?>
+<script>
+<?php foreach ($langs_disp as $lang_it):?>
+var <?php echo strtolower($lang_it);?>_words;
+$(document).ready(function() {
+    $.getJSON("/steins-feed/<?php echo $user_id;?>/<?php echo $clf;?>/<?php echo $lang_it;?>_cookie.json", function(result) {
+        <?php echo strtolower($lang_it);?>_words = result;
+    });
+});
+<?php endforeach;?>
+</script>
+<script src="/steins-feed/snowball/base-stemmer.js" defer></script>
+<?php foreach ($langs_disp as $lang_it):?>
+<script src="/steins-feed/snowball/<?php echo strtolower($lang_it);?>-stemmer.js" defer></script>
 <?php endforeach;?>
 </head>
 <body>
@@ -267,8 +286,10 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
 <?php endif;?>
 </i>
 </button>
-<button onclick="highlight(<?php echo $item_it['ItemID'];?>)" type="button">
-<i class="material-icons">lightbulb_outline</i>
+<button onclick="highlight(<?php echo $item_it['ItemID'];?>, '<?php echo $item_it['Language'];?>')" type="button">
+<i class="material-icons">
+<span id="highlight_<?php echo $item_it['ItemID'];?>" class="highlight">lightbulb_outline</span>
+</i>
 </button>
 </p>
 </div>
@@ -277,4 +298,7 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
 </div>
 </body>
 </html>
-<?php $db->close();?>
+<?php
+$db->exec("END");
+$db->close();
+?>

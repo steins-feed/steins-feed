@@ -1,6 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
 $db = steins_db(SQLITE3_OPEN_READONLY);
+$db->exec("BEGIN");
 
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
@@ -18,7 +19,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/tags.php";
 <link href="/steins-feed/favicon.ico" rel="shortcut icon" type="image/png">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <title>Stein's Feed</title>
-<script type="text/javascript">
+<script>
 var user="<?php echo $user;?>";
 var clf="<?php echo $clf;?>";
 </script>
@@ -26,7 +27,7 @@ var clf="<?php echo $clf;?>";
 $f_list = array("open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js");
 foreach ($f_list as $f_it):
 ?>
-<script type="text/javascript" src="/steins-feed/js/<?php echo $f_it;?>"></script>
+<script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>
 <?php endforeach;?>
 </head>
 <body>
@@ -215,4 +216,7 @@ New name:<br>
 </div>
 </body>
 </html>
-<?php $db->close();?>
+<?php
+$db->exec("END");
+$db->close();
+?>

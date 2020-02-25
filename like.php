@@ -1,6 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
 $db = steins_db(SQLITE3_OPEN_READWRITE);
+$db->exec("BEGIN");
 
 $user = $_POST['user'];
 $item_id = $_POST['id'];
@@ -38,5 +39,6 @@ if ($score == $val) {
 }
 $stmt->execute();
 
+$db->exec("END");
 $db->close();
 ?>

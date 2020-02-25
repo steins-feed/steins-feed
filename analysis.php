@@ -1,6 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
 $db = steins_db(SQLITE3_OPEN_READONLY);
+$db->exec("BEGIN");
 
 include "php_include/user.php";
 include "php_include/langs.php";
@@ -37,18 +38,15 @@ foreach (glob("$user_id/$clf/*_feeds.json") as $f_it) {
 <link href="/steins-feed/favicon.ico" rel="shortcut icon" type="image/png">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <title>Stein's Feed</title>
+<script>
+var user="<?php echo $user;?>";
+var clf="<?php echo $clf;?>";
+</script>
 <?php
 $f_list = array("open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js");
 foreach ($f_list as $f_it):
 ?>
-<script>
-<?php
-    $s = file_get_contents("js/" . $f_it);
-    $s = str_replace("USER", $user, $s);
-    $s = str_replace("CLF", str_replace(" ", "+", $clf), $s);
-    echo $s;
-?>
-</script>
+<script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>
 <?php endforeach;?>
 </head>
 <body>
@@ -147,4 +145,7 @@ Last updated: <?php echo $last_updated, " GMT";?>.
 </div>
 </body>
 </html>
-<?php $db->close();?>
+<?php
+$db->exec("END");
+$db->close();
+?>

@@ -1,6 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
 $db = steins_db(SQLITE3_OPEN_READWRITE);
+$db->exec("BEGIN");
 
 $stmt = "INSERT INTO Users (Name) VALUES (:Name)";
 $stmt = $db->prepare($stmt);
@@ -22,6 +23,7 @@ if ($res) {
     $_POST['user'] = $_POST['name'];
 }
 
+$db->exec("END");
 $db->close();
 $_GET = $_POST;
 include "../settings.php";

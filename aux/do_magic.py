@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from collections import OrderedDict
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import numpy as np
 import os
@@ -48,13 +48,13 @@ for user_it in users:
             with open(file_path, 'rb') as f:
                 clfs = pickle.load(f)
         else:
+            logger.info("Learn {} about {}.".format(clf_it, user))
             clfs = steins_learn(user_id, clf_it)
             if len(clfs) == 0:
                 continue
             reset_magic(user_id, clf_it)
             with open(file_path, 'wb') as f:
                 pickle.dump(clfs, f)
-                logger.info("Learn {} about {}.".format(clf_it, user))
 
         for lang_it in clfs:
             pipeline = clfs[lang_it]
@@ -64,7 +64,8 @@ for user_it in users:
             #words = list(count_vect.vocabulary_.keys())
             words = list(count_vect.vocabulary_nltk.values())
             coeffs = pipeline.predict_proba(words)[:, 1]
-            table = OrderedDict(sorted(zip(words, coeffs), key=lambda x: x[1]))
+            table = sorted(zip(words, coeffs), key=lambda x: x[1])
+            table = OrderedDict(table)
 
             # If KL divergence below threshold, do not prepare analysis.
             try:
@@ -79,16 +80,24 @@ for user_it in users:
             except FileNotFoundError:
                 pass
 
+            logger.info("Learn {} about {} ({} words).".format(clf_it, user, lang_it))
             with open(file_path, 'w') as f:
                 json.dump(table, f)
-                logger.info("Learn {} about {} ({} words).".format(clf_it, user, lang_it))
+
+            file_path = clf_path + os.sep + "{}_cookie.json".format(lang_it)
+            with open(file_path, 'w') as f:
+                words = list(count_vect.vocabulary_nltk.keys())
+                table = sorted(zip(words, coeffs), key=lambda x: x[1])
+                table = OrderedDict(table)
+                json.dump(table, f)
 
             # Feeds.
-            feeds = [row['FeedID'] for row in c.execute("SELECT FeedID FROM Feeds INNER JOIN Display USING (FeedID) WHERE UserID=? AND Language=?", (user_id, lang_it, ))]
+            logger.info("Learn {} about {} ({} feeds).".format(clf_it, user, lang_it))
+            feeds = c.execute("SELECT * FROM Feeds INNER JOIN Display USING (FeedID) WHERE UserID=? AND Language=?", (user_id, lang_it, )).fetchall()
 
             coeffs = []
-            for feed_id in feeds:
-                articles_raw = c.execute("SELECT * FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID) WHERE FeedID=? AND Published<?", (feed_id, timestamp, )).fetchall()
+            for feed_it in feeds:
+                articles_raw = c.execute("SELECT * FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID) WHERE FeedID=? AND Published BETWEEN ? AND ?", (feed_it['FeedID'], timestamp - timedelta(days=28), timestamp, )).fetchall()
                 articles = [build_feature(row) for row in articles_raw]
 
                 if len(articles) == 0:
@@ -98,20 +107,22 @@ for user_it in users:
                 articles_proba = pipeline.predict_proba(articles)[:, 1]
                 for i in range(len(articles)):
                     c.execute("INSERT OR IGNORE INTO {} (UserID, ItemID, Score) VALUES (?, ?, ?)".format(clf_dict[clf_it]['table']), (user_id, articles_raw[i]['ItemID'], articles_proba[i], ))
+                    logger.debug("Score item -- {} ({}).".format(articles_raw[i]['Title'], 2. * articles_proba[i] - 1.))
                 conn.commit()
 
                 articles_proba /= (1. - articles_proba)
                 articles_proba = np.log(articles_proba)
                 coeff = np.sum(articles_proba) / (articles_proba.size + 10.)
+                coeff = np.exp(coeff)
+                coeff /= (1. + coeff)
+
+                logger.info("Score feed -- {} ({}).".format(feed_it['Title'], 2. * coeff - 1.))
                 coeffs.append(coeff)
 
-            coeffs = np.exp(coeffs)
-            coeffs /= (1. + coeffs)
-            table = OrderedDict(sorted(zip(feeds, coeffs), key=lambda x: x[1]))
+            table = OrderedDict(sorted(zip([e['FeedID'] for e in feeds], coeffs), key=lambda x: x[1]))
 
             file_path = clf_path + os.sep + "{}_feeds.json".format(lang_it)
             with open(file_path, 'w') as f:
                 json.dump(table, f)
-                logger.info("Learn {} about {} ({} feeds).".format(clf_it, user, lang_it))
 
 close_connection()
