@@ -122,10 +122,11 @@ endforeach;
 ?>
 <p>
 <input name="user" value="<?php echo $user;?>" type="hidden">
-<?php /*<input name="page" value="<?php echo $page;?>" type="hidden">*/?>
-<input name="timeunit" value="Day" type="submit">
-<input name="timeunit" value="Week" type="submit">
-<input name="timeunit" value="Month" type="submit">
+<input name="page" value="<?php echo $page;?>" type="hidden">
+<input name="timeunit" value="<?php echo $timeunit;?>" type="hidden">
+<input name="new_timeunit" value="Day" type="submit">
+<input name="new_timeunit" value="Week" type="submit">
+<input name="new_timeunit" value="Month" type="submit">
 </p>
 </form>
 <hr>
