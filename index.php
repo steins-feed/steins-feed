@@ -211,8 +211,15 @@ var clf="<?php echo $clf;?>";
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <?php
-$f_list = array("like.js", "dislike.js", "highlight.js", "open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js");
+$f_list = array("like.js", "dislike.js", "open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js");
 foreach ($f_list as $f_it):
+?>
+<script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>
+<?php
+endforeach;
+if ($feed != 'Full'):
+    $f_list = array("highlight.js");
+    foreach ($f_list as $f_it):
 ?>
 <script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>
 <?php endforeach;?>
@@ -229,7 +236,10 @@ $(document).ready(function() {
 <script src="/steins-feed/snowball/base-stemmer.js" defer></script>
 <?php foreach ($langs_disp as $lang_it):?>
 <script src="/steins-feed/snowball/<?php echo strtolower($lang_it);?>-stemmer.js" defer></script>
-<?php endforeach;?>
+<?php
+    endforeach;
+endif;
+?>
 </head>
 <body>
 <?php
@@ -286,11 +296,13 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
 <?php endif;?>
 </i>
 </button>
+<?php if ($feed != 'Full'):?>
 <button onclick="highlight(<?php echo $item_it['ItemID'];?>, '<?php echo $item_it['Language'];?>')" type="button">
 <i class="material-icons">
 <span id="highlight_<?php echo $item_it['ItemID'];?>" class="highlight">lightbulb_outline</span>
 </i>
 </button>
+<?php endif;?>
 </p>
 </div>
 <?php endforeach;?>

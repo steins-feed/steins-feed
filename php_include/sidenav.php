@@ -125,19 +125,20 @@ endforeach;
 </p>
 </form>
 <hr>
+<?php if ($feed != 'Full'):?>
 <form action="/steins-feed/analysis.php" method="get">
 <p>
 <select name="clf">
 <?php
-foreach ($clf_dict as $clf_it => $clf_val):
-    if ($clf_it == $clf):
+    foreach ($clf_dict as $clf_it => $clf_val):
+        if ($clf_it == $clf):
 ?>
 <option value="<?php echo $clf_it;?>" selected><?php echo $clf_it;?></option>
-<?php else:?>
+<?php   else:?>
 <option value="<?php echo $clf_it;?>"><?php echo $clf_it;?></option>
 <?php
-    endif;
-endforeach;
+        endif;
+    endforeach;
 ?>
 </select>
 <input name="user" value="<?php echo $user;?>" type="hidden">
@@ -145,9 +146,11 @@ endforeach;
 </p>
 </form>
 <hr>
+<?php endif;?>
 <p><a href="/steins-feed/statistics.php?user=<?php echo $user;?>">Statistics</a></p>
 <p><a href="/steins-feed/settings.php?user=<?php echo $user;?>">Settings</a></p>
 <hr>
 <p><a href="https://github.com/hy144328/steins-feed">GitHub</a></p>
 <p><a href="https://github.com/hy144328/steins-feed/blob/master/HOWTO.md">Instructions</a></p>
+<hr>
 </div>
