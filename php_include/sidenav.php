@@ -15,6 +15,7 @@ if (count($dates) >= 2):
 <input name="page" value="<?php echo $page + 1;?>" type="hidden">
 <input name="feed" value="<?php echo $feed;?>" type="hidden">
 <input name="clf" value="<?php echo $clf;?>" type="hidden">
+<input name="timeunit" value="<?php echo $timeunit;?>" type="hidden">
 <button type="submit"><i class="material-icons">fast_rewind</i></button>
 </form>
 <?php
@@ -29,6 +30,7 @@ if (count($dates) >= 2):
 <input name="page" value="<?php echo $page - 1;?>" type="hidden">
 <input name="feed" value="<?php echo $feed;?>" type="hidden">
 <input name="clf" value="<?php echo $clf;?>" type="hidden">
+<input name="timeunit" value="<?php echo $timeunit;?>" type="hidden">
 <button type="submit"><i class="material-icons">fast_forward</i></button>
 </form>
 <?php
@@ -120,8 +122,10 @@ endforeach;
 ?>
 <p>
 <input name="user" value="<?php echo $user;?>" type="hidden">
-<input name="page" value="<?php echo $page;?>" type="hidden">
-<input type="submit" value="Display">
+<?php /*<input name="page" value="<?php echo $page;?>" type="hidden">*/?>
+<input name="timeunit" value="Day" type="submit">
+<input name="timeunit" value="Week" type="submit">
+<input name="timeunit" value="Month" type="submit">
 </p>
 </form>
 <hr>

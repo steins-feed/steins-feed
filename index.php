@@ -8,6 +8,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/timeunit.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/tags.php";
 
 // Last updated.
@@ -38,11 +39,33 @@ $stmt->bindValue(":Published", $last_updated, SQLITE3_TEXT);
 $res = $stmt->execute();
 
 $dates = array();
-for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-    $dates[] = $row_it[0];
+if ($timeunit == 'Day') {
+    for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
+        $dates[] = new DateTime($row_it[0]);
+    }
+} else if ($timeunit == 'Week') {
+    for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
+        $date_it = new DateTime($row_it[0]);
+        $delta = intval($date_it->format("N")) - 1;
+        $date_delta = new DateInterval("P" . strval($delta) . "D");
+        $date_it->sub($date_delta);
+        if (!in_array($date_it, $dates)) {
+            $dates[] = $date_it;
+        }
+    }
+} else if ($timeunit == 'Month') {
+    for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
+        $date_it = new DateTime($row_it[0]);
+        $delta = intval($date_it->format("j")) - 1;
+        $date_delta = new DateInterval("P" . strval($delta) . "D");
+        $date_it->sub($date_delta);
+        if (!in_array($date_it, $dates)) {
+            $dates[] = $date_it;
+        }
+    }
 }
 if ($page >= count($dates)) return;
-$date_it = new DateTime($dates[$page]);
+$date_it = $dates[$page];
 
 // Items.
 $clf_dict = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/json/steins_magic.json"), true);
@@ -107,8 +130,19 @@ ORDER BY
 }
 $stmt = $db->prepare($stmt);
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
-$stmt->bindValue(":Start", $date_it->format("Y-m-d") . " 00:00:00", SQLITE3_TEXT);
-$stmt->bindValue(":Finish", $date_it->format("Y-m-d") . " 23:59:59", SQLITE3_TEXT);
+$start_time = $date_it->format("Y-m-d H:i:s");
+$stmt->bindValue(":Start", $start_time, SQLITE3_TEXT);
+$finish_time = clone $date_it;
+if ($timeunit == 'Day') {
+    $finish_time->add(new DateInterval("P1D"));
+} else if ($timeunit == 'Week') {
+    $finish_time->add(new DateInterval("P1W"));
+} else if ($timeunit == 'Month') {
+    $finish_time->add(new DateInterval("P1M"));
+}
+$finish_time->sub(new DateInterval("PT1S"));
+$finish_time = $finish_time->format("Y-m-d H:i:s");
+$stmt->bindValue(":Finish", $finish_time, SQLITE3_TEXT);
 $stmt->bindValue(":Time", $last_updated, SQLITE3_TEXT);
 for ($i = 0; $i < count($langs); $i++) {
     $stmt->bindValue(":Language_" . $i, $langs[$i], SQLITE3_TEXT);
@@ -244,7 +278,50 @@ endif;
 <body>
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
-topnav($date_it->format("D, d M Y"));
+
+$current_date = new DateTime();
+$current_date->setTime(0, 0, 0, 0);
+
+if ($timeunit == 'Day') {
+    if ($date_it == $current_date) {
+        $topnav_title = "Today";
+    } else if ($date_it == $current_date->sub(new DateInterval("P1D"))) {
+        $topnav_title = "Yesterday";
+    } else {
+        $topnav_title = $date_it->format("D, d M Y");
+    }
+} else if ($timeunit == 'Week') {
+    $delta = intval($current_date->format("N")) - 1;
+    $date_delta = new DateInterval("P" . strval($delta) . "D");
+    $current_date->sub($date_delta);
+
+    if ($date_it == $current_date) {
+        $topnav_title = "This Week";
+    } else if ($date_it == $current_date->sub(new DateInterval("P1W"))) {
+        $topnav_title = "Last Week";
+    } else {
+        $finish_date = clone $date_it;
+        $finish_date->add(new DateInterval("P1W"))->sub(new DateInterval("P1D"));
+        $topnav_title = "Week " . $date_it->format("N") . ", " . $date_it->format("Y");
+    }
+} else if ($timeunit == 'Month') {
+    $delta = intval($current_date->format("j")) - 1;
+    $date_delta = new DateInterval("P" . strval($delta) . "D");
+    $current_date->sub($date_delta);
+
+    if ($date_it == $current_date) {
+        $topnav_title = "This Month";
+    } else if ($date_it == $current_date->sub(new DateInterval("P1M"))) {
+        $topnav_title = "Last Month";
+    } else {
+        $finish_date = clone $date_it;
+        $finish_date->add(new DateInterval("P1M"))->sub(new DateInterval("P1D"));
+        $topnav_title = $date_it->format("F Y");
+    }
+}
+
+topnav($topnav_title);
+
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
 <div class="main">

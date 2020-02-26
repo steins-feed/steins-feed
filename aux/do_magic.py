@@ -97,7 +97,7 @@ for user_it in users:
 
             coeffs = []
             for feed_it in feeds:
-                articles_raw = c.execute("SELECT * FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID) WHERE FeedID=? AND Published BETWEEN ? AND ?", (feed_it['FeedID'], timestamp - timedelta(days=28), timestamp, )).fetchall()
+                articles_raw = c.execute("SELECT * FROM (Items INNER JOIN Feeds USING (FeedID)) INNER JOIN Display USING (FeedID) WHERE FeedID=? AND Published BETWEEN ? AND ?", (feed_it['FeedID'], timestamp - timedelta(days=100), timestamp, )).fetchall()
                 articles = [build_feature(row) for row in articles_raw]
 
                 if len(articles) == 0:

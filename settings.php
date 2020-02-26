@@ -8,6 +8,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/timeunit.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/tags.php";
 ?>
 <!DOCTYPE html>
