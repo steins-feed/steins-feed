@@ -33,6 +33,138 @@
         <lang>English</lang>
     </feed>
 
+    <!-- Andreessen Horowitz -->
+    <feed>
+        <title>Andreessen Horowitz -- AI, Machine &amp; Deep Learning</title>
+        <link>https://a16z.com/category/machine-learning/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- APIs</title>
+        <link>https://a16z.com/category/apis/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Autonomous Cars &amp; Drones</title>
+        <link>https://a16z.com/category/autonomous-cars/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Bio</title>
+        <link>https://a16z.com/category/bio/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- China</title>
+        <link>https://a16z.com/category/china/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- CLF</title>
+        <link>https://a16z.com/category/clf/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Cloud Computing</title>
+        <link>https://a16z.com/category/cloud-computing/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Cryptocurrencies &amp; Blockchains</title>
+        <link>https://a16z.com/category/blockchain-cryptocurrencies/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Design</title>
+        <link>https://a16z.com/category/design/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- E-Commerce</title>
+        <link>https://a16z.com/category/ecommerce/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Enterprise &amp; SaaS</title>
+        <link>https://a16z.com/category/enterprise-b2b-saas/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- FinTech</title>
+        <link>https://a16z.com/category/fintech/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Gaming &amp; New Media</title>
+        <link>https://a16z.com/category/gaming/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Innovation Clusters</title>
+        <link>https://a16z.com/category/innovation-clusters/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- LSV</title>
+        <link>https://a16z.com/category/lsv/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Marketplaces</title>
+        <link>https://a16z.com/category/marketplaces/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Mobile</title>
+        <link>https://a16z.com/category/mobile/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Networking</title>
+        <link>https://a16z.com/category/networking/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- News</title>
+        <link>https://a16z.com/category/in-the-news/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Online Communities</title>
+        <link>https://a16z.com/category/community/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Open Source</title>
+        <link>https://a16z.com/category/open-source/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Policy</title>
+        <link>https://a16z.com/category/policy/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Quantum Computing</title>
+        <link>https://a16z.com/category/quantum-computing/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Security &amp; Privacy</title>
+        <link>https://a16z.com/category/security-privacy/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz -- Virtual &amp; Augmented Reality</title>
+        <link>https://a16z.com/category/virtual-reality/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Andreessen Horowitz</title>
+        <link>https://a16z.com/feed/</link>
+        <lang>English</lang>
+    </feed>
+
     <!-- Ars Technica -->
     <feed>
         <title>Ars Technica -- Technology Lab</title>
@@ -1068,6 +1200,170 @@
         <title>Frankfurter Allgemeine Zeitung</title>
         <link>https://www.faz.net/rss/aktuell/</link>
         <lang>German</lang>
+    </feed>
+
+    <!-- Google -->
+    <feed>
+        <title>Google Cloud</title>
+        <link>https://cloudblog.withgoogle.com/rss/</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google</title>
+        <link>https://www.blog.google/rss/</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+
+    <!-- Google Outreach & Initiatives -->
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Accessibility</title>
+        <link>https://www.blog.google/outreach-initiatives/accessibility/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Arts &amp; Culture</title>
+        <link>https://www.blog.google/outreach-initiatives/arts-culture/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Digital Wellbeing</title>
+        <link>https://www.blog.google/outreach-initiatives/digital-wellbeing/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Diversity</title>
+        <link>https://www.blog.google/outreach-initiatives/diversity/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Education</title>
+        <link>https://www.blog.google/outreach-initiatives/education/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Entrepreneurs</title>
+        <link>https://www.blog.google/outreach-initiatives/entrepreneurs/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Google News Initiative</title>
+        <link>https://www.blog.google/outreach-initiatives/google-news-initiative/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Google.org</title>
+        <link>https://www.blog.google/outreach-initiatives/google-org/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Grow with Google</title>
+        <link>https://www.blog.google/outreach-initiatives/grow-with-google/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Google for Nonprofits</title>
+        <link>https://www.blog.google/outreach-initiatives/nonprofits/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Public Policy</title>
+        <link>https://www.blog.google/outreach-initiatives/public-policy/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Small Business</title>
+        <link>https://www.blog.google/outreach-initiatives/small-business/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Outreach &amp; Initiatives -- Sustainability</title>
+        <link>https://www.blog.google/outreach-initiatives/sustainability/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+
+    <!-- Google Technology -->
+    <feed>
+        <title>Google Technology -- AI</title>
+        <link>https://www.blog.google/technology/ai/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Technology -- Area 120</title>
+        <link>https://www.blog.google/technology/area-120/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Technology -- Design</title>
+        <link>https://www.blog.google/technology/design/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Technology -- Developers</title>
+        <link>https://www.blog.google/technology/developers/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Technology -- Families</title>
+        <link>https://www.blog.google/technology/families/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Technology -- Next Billion Users</title>
+        <link>https://www.blog.google/technology/next-billion-users/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Technology -- Safety &amp; Security</title>
+        <link>https://www.blog.google/technology/safety-security/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+
+    <!-- Google Inside -->
+    <feed>
+        <title>Google Inside -- Data Centers and Infrastructure</title>
+        <link>https://www.blog.google/inside-google/infrastructure/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Inside -- Doodles</title>
+        <link>https://www.blog.google/inside-google/doodles/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Inside -- Googlers</title>
+        <link>https://www.blog.google/inside-google/googlers/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google Inside -- Working at Google</title>
+        <link>https://www.blog.google/inside-google/working-google/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
     </feed>
 
     <!-- The Guardian -->

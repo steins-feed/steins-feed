@@ -34,7 +34,7 @@ $stmt = "SELECT DISTINCT
 if ($timeunit == 'Day') {
     $stmt = sprintf($stmt, "'start of day'", $stmt_lang, $page + 2);
 } else if ($timeunit == 'Week') {
-    $stmt = sprintf($stmt, "'weekday 0', '-6 days'", $stmt_lang, $page + 2);
+    $stmt = sprintf($stmt, "'weekday 0', '-6 days', 'start of day'", $stmt_lang, $page + 2);
 } else if ($timeunit == 'Month') {
     $stmt = sprintf($stmt, "'start of month'", $stmt_lang, $page + 2);
 }
