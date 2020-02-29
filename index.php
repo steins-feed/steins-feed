@@ -18,7 +18,7 @@ $last_updated = $res[0];
 
 // Dates.
 $stmt = sprintf("SELECT DISTINCT
-                     SUBSTR(Published, 1, 10)
+                     Published%s
                  FROM
                      (Items
                      INNER JOIN Feeds USING (FeedID))
@@ -26,10 +26,12 @@ $stmt = sprintf("SELECT DISTINCT
                  WHERE
                      UserID=:UserID
                      AND (%s)
-                     AND Published<:Published
+                     AND Published%s<:Published
                  ORDER BY
-                     Published DESC",
-                $stmt_lang);
+                     Published%s DESC
+                 LIMIT
+                     %d",
+                $timeunit, $stmt_lang, $timeunit, $timeunit, $page + 1);
 $stmt = $db->prepare($stmt);
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
 for ($i = 0; $i < count($langs); $i++) {
@@ -38,34 +40,10 @@ for ($i = 0; $i < count($langs); $i++) {
 $stmt->bindValue(":Published", $last_updated, SQLITE3_TEXT);
 $res = $stmt->execute();
 
-$dates = array();
-if ($timeunit == 'Day') {
-    for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-        $dates[] = new DateTime($row_it[0]);
-    }
-} else if ($timeunit == 'Week') {
-    for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-        $date_it = new DateTime($row_it[0]);
-        $delta = intval($date_it->format("N")) - 1;
-        $date_delta = new DateInterval("P" . strval($delta) . "D");
-        $date_it->sub($date_delta);
-        if (!in_array($date_it, $dates)) {
-            $dates[] = $date_it;
-        }
-    }
-} else if ($timeunit == 'Month') {
-    for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-        $date_it = new DateTime($row_it[0]);
-        $delta = intval($date_it->format("j")) - 1;
-        $date_delta = new DateInterval("P" . strval($delta) . "D");
-        $date_it->sub($date_delta);
-        if (!in_array($date_it, $dates)) {
-            $dates[] = $date_it;
-        }
-    }
+for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
+    $date_it = $row_it[0];
 }
-if ($page >= count($dates)) return;
-$date_it = $dates[$page];
+$date_it = new DateTime($date_it);
 
 // Items.
 $clf_dict = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/json/steins_magic.json"), true);
@@ -133,13 +111,7 @@ $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
 $start_time = $date_it->format("Y-m-d H:i:s");
 $stmt->bindValue(":Start", $start_time, SQLITE3_TEXT);
 $finish_time = clone $date_it;
-if ($timeunit == 'Day') {
-    $finish_time->add(new DateInterval("P1D"));
-} else if ($timeunit == 'Week') {
-    $finish_time->add(new DateInterval("P1W"));
-} else if ($timeunit == 'Month') {
-    $finish_time->add(new DateInterval("P1M"));
-}
+$finish_time->add(new DateInterval("P1" . $timeunit[0]));
 $finish_time->sub(new DateInterval("PT1S"));
 $finish_time = $finish_time->format("Y-m-d H:i:s");
 $stmt->bindValue(":Finish", $finish_time, SQLITE3_TEXT);
@@ -327,7 +299,6 @@ include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 <div class="main">
 <p>
 <?php echo count($items);?> articles.
-<?php echo count($dates);?> pages.
 Last updated: <?php echo $last_updated, " GMT";?>.
 </p>
 <?php foreach ($items as $item_it):?>
