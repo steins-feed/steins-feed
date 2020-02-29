@@ -17,21 +17,27 @@ $res = $stmt->execute()->fetcharray();
 $last_updated = $res[0];
 
 // Dates.
-$stmt = sprintf("SELECT DISTINCT
-                     Published%s
-                 FROM
-                     (Items
-                     INNER JOIN Feeds USING (FeedID))
-                     INNER JOIN Display USING (FeedID)
-                 WHERE
-                     UserID=:UserID
-                     AND (%s)
-                     AND Published%s<:Published
-                 ORDER BY
-                     Published%s DESC
-                 LIMIT
-                     %d",
-                $timeunit, $stmt_lang, $timeunit, $timeunit, $page + 1);
+$stmt = "SELECT DISTINCT
+             datetime(Published, %s)
+         FROM
+             (Items
+             INNER JOIN Feeds USING (FeedID))
+             INNER JOIN Display USING (FeedID)
+         WHERE
+             UserID=:UserID
+             AND (%s)
+             AND Published<:Published
+         ORDER BY
+             Published DESC
+         LIMIT
+             %d";
+if ($timeunit == 'Day') {
+    $stmt = sprintf($stmt, "'start of day'", $stmt_lang, $page + 2);
+} else if ($timeunit == 'Week') {
+    $stmt = sprintf($stmt, "'weekday 0', '-6 days'", $stmt_lang, $page + 2);
+} else if ($timeunit == 'Month') {
+    $stmt = sprintf($stmt, "'start of month'", $stmt_lang, $page + 2);
+}
 $stmt = $db->prepare($stmt);
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
 for ($i = 0; $i < count($langs); $i++) {
@@ -40,8 +46,13 @@ for ($i = 0; $i < count($langs); $i++) {
 $stmt->bindValue(":Published", $last_updated, SQLITE3_TEXT);
 $res = $stmt->execute();
 
+$dates = array();
 for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-    $date_it = $row_it[0];
+    $dates[] = $row_it[0];
+}
+$date_it = end($dates);
+if (count($dates) == $page + 2) {
+    $date_it = prev($dates);
 }
 $date_it = new DateTime($date_it);
 

@@ -1,8 +1,7 @@
 <div id="sidenav" class="sidenav">
 <h1 class="sidenav">
 <?php 
-if (count($dates) >= 2):
-    if ($page < count($dates) - 1):
+if ($page < count($dates) - 1):
 ?>
 <form action="/steins-feed/index.php" method="get">
 <input name="user" value="<?php echo $user;?>" type="hidden">
@@ -19,8 +18,8 @@ if (count($dates) >= 2):
 <button type="submit"><i class="material-icons">fast_rewind</i></button>
 </form>
 <?php
-    endif;
-    if ($page > 0):
+endif;
+if ($page > 0):
 ?>
 <form action="/steins-feed/index.php" method="get">
 <input name="user" value="<?php echo $user;?>" type="hidden">
@@ -34,10 +33,8 @@ if (count($dates) >= 2):
 <button type="submit"><i class="material-icons">fast_forward</i></button>
 </form>
 <?php
-    endif;
-else:
-    echo "&#160;";
 endif;
+echo "&#160;";
 ?>
 <span onclick="close_menu()" class="onclick">&#215;&nbsp;</span>
 </h1>

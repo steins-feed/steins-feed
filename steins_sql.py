@@ -89,11 +89,8 @@ def create_items():
     conn = get_connection()
     c = get_cursor()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Published TIMESTAMP NOT NULL, PublishedDay TIMESTAMP NOT NULL, PublishedWeek TIMESTAMP NOT NULL, PublishedMonth TIMESTAMP NOT NULL, FeedID INTEGER NOT NULL, Summary MEDIUMTEXT, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(Title, Link, Published, FeedID))")
+    c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Published TIMESTAMP NOT NULL, FeedID INTEGER NOT NULL, Summary MEDIUMTEXT, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(Title, Link, Published, FeedID))")
     c.execute("CREATE INDEX IF NOT EXISTS index_Items_Published_Title ON Items (Published, Title)")
-    c.execute("CREATE INDEX IF NOT EXISTS index_Items_PublishedDay ON Items (PublishedDay)")
-    c.execute("CREATE INDEX IF NOT EXISTS index_Items_PublishedWeek ON Items (PublishedWeek)")
-    c.execute("CREATE INDEX IF NOT EXISTS index_Items_PublishedMonth ON Items (PublishedMonth)")
 
     conn.commit()
     logger.info("Create Items.")
@@ -147,7 +144,7 @@ def add_item(item_title, item_link, item_time, feed_id, item_summary=""):
     if item_time > datetime.utcnow():
         return
 
-    c.execute("INSERT OR IGNORE INTO Items (Title, Link, Published, PublishedDay, PublishedWeek, PublishedMonth, FeedID, Summary) VALUES (?, ?, ?, datetime(?, 'start of day'), datetime(?, 'weekday 0', '-6 days'), datetime(?, 'start of month'), ?, ?)", (item_title, item_link, item_time, feed_id, item_summary, ))
+    c.execute("INSERT OR IGNORE INTO Items (Title, Link, Published, FeedID, Summary) VALUES (?, ?, ?, ?, ?)", (item_title, item_link, item_time, feed_id, item_summary, ))
     logger.debug("Add item -- {}.".format(item_title))
 
 def delete_item(item_id):
