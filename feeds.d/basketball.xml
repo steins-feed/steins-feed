@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<root>
+    <feed>
+        <title>FiveThirtyEight NBA</title>
+        <link>https://fivethirtyeight.com/tag/nba/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Barstool Sports NBA</title>
+        <link>https://cms.barstoolsports.com/topics/nba/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Ringer NBA</title>
+        <link>https://www.theringer.com/rss/nba/index.xml</link>
+        <lang>English</lang>
+        <summary>1</summary>
+    </feed>
+</root>

@@ -2192,6 +2192,58 @@
         <lang>English</lang>
     </feed>
 
+    <!-- Mozilla -->
+    <feed>
+        <title>Mozilla -- The Firefox Frontier</title>
+        <link>https://blog.mozilla.org/firefox/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Mozilla -- Open Policy &amp; Advocacy</title>
+        <link>https://blog.mozilla.org/netpolicy/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Mozilla -- Internet Citizen</title>
+        <link>https://blog.mozilla.org/internetcitizen/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Mozilla Hacks</title>
+        <link>https://hacks.mozilla.org/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Mozilla -- Future Releases</title>
+        <link>https://blog.mozilla.org/futurereleases/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Mozilla -- Life@Mozilla</title>
+        <link>https://blog.mozilla.org/careers/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Mozilla -- about:community</title>
+        <link>https://blog.mozilla.org/community/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Mozilla Berlin</title>
+        <link>https://blog.mozilla.org/berlin/feed/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Mozilla Open Design</title>
+        <link>https://blog.mozilla.org/opendesign/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Mozilla</title>
+        <link>https://blog.mozilla.org/feed/</link>
+        <lang>English</lang>
+    </feed>
+
     <!-- Netzpolitik.org -->
     <feed>
         <title>Netzpolitik.org Datenschutz</title>
@@ -2901,6 +2953,63 @@
     <feed>
         <title>Rolling Stone</title>
         <link>https://www.rollingstone.com/feed/</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- Royal Society -->
+    <feed>
+        <title>Royal Society -- Philosophical Transactions B</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rstb</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Royal Society -- Proceedings B</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rspb</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Royal Society -- Open Biology</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsob</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Royal Society -- Biology Letters</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsbl</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Royal Society -- Philosophical Transactions A</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsta</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Royal Society -- Proceedings A</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rspa</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Royal Society -- Open Science</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsos</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Royal Society -- Interface</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsif</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Royal Society -- Interface Focus</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsfs</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Royal Society -- Notes and Records</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsnr</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Royal Society -- Biographical Memoirs</title>
+        <link>https://royalsocietypublishing.org/action/showFeed?type=etoc&amp;feed=rss&amp;jc=rsbm</link>
         <lang>English</lang>
     </feed>
 

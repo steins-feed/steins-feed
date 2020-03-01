@@ -7,6 +7,16 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>National Academy of Sciences</title>
+        <link>https://feeds.feedburner.com/pnas/SMZM</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Nature</title>
+        <link>http://www.nature.com/nature/current_issue/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>Nautilus</title>
         <link>http://nautil.us/rss/all</link>
         <lang>English</lang>
@@ -14,6 +24,16 @@
     <feed>
         <title>Physics Today</title>
         <link>https://physicstoday.scitation.org/feed/most-recent</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Science</title>
+        <link>http://science.sciencemag.org/rss/current.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>SIAM News</title>
+        <link>https://sinews.siam.org/Current-Issue/rss/2226-1</link>
         <lang>English</lang>
     </feed>
 </root>

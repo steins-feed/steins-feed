@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<root>
+    <feed>
+        <title>Gründerszene</title>
+        <link>https://www.gruenderszene.de/feed/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Harvard Business Review</title>
+        <link>http://feeds.hbr.org/harvardbusiness/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Inside Philanthropy</title>
+        <link>https://www.insidephilanthropy.com/home?format=RSS</link>
+        <lang>English</lang>
+    </feed>
+</root>

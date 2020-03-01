@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<root>
+    <feed>
+        <title>Breitbart</title>
+        <link>https://feeds.feedburner.com/breitbart</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Edge.org</title>
+        <link>https://www.edge.org/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Inc.com</title>
+        <link>https://www.inc.com/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>The Intercept</title>
+        <link>https://theintercept.com/feed/?lang=en</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Vanity Fair</title>
+        <link>https://www.vanityfair.com/feed/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Vogue</title>
+        <link>https://www.vogue.com/feed/rss</link>
+        <lang>English</lang>
+    </feed>
+</root>

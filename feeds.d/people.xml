@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<root>
+    <feed>
+        <title>John Carlos Baez</title>
+        <link>https://johncarlosbaez.wordpress.com/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Gates Notes</title>
+        <link>https://www.gatesnotes.com/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Robert Reich</title>
+        <link>https://robertreich.org/rss</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Schneier on Security</title>
+        <link>https://www.schneier.com/blog/atom.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Nate Silver</title>
+        <link>https://fivethirtyeight.com/contributors/nate-silver/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Terence Tao</title>
+        <link>https://terrytao.wordpress.com/feed/</link>
+        <lang>English</lang>
+    </feed>
+</root>

@@ -2,6 +2,24 @@
 
 <root>
     <feed>
+        <title>Electronic Frontier Foundation</title>
+        <link>https://www.eff.org/rss/updates.xml</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>European Commission Digital Single Market</title>
+        <link>https://ec.europa.eu/digital-single-market/rss.xml</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>European Commission Education and Training</title>
+        <link>https://ec.europa.eu/education/rss.xml</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
         <title>Facebook</title>
         <link>https://about.fb.com/news/feed/</link>
         <lang>English</lang>
@@ -24,8 +42,28 @@
         <summary>0</summary>
     </feed>
     <feed>
+        <title>IBM Developer</title>
+        <link>https://developer.ibm.com/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>McKinsey Insights</title>
+        <link>https://www.mckinsey.com/insights/rss.aspx</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Microsoft</title>
+        <link>https://blogs.microsoft.com/?feed=rss2</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>OpenAI</title>
         <link>https://openai.com/blog/rss/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Pornhub Insights</title>
+        <link>https://pornhub.com/insights/feed/</link>
         <lang>English</lang>
     </feed>
 </root>

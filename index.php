@@ -25,18 +25,17 @@ $stmt = "SELECT DISTINCT
              INNER JOIN Display USING (FeedID)
          WHERE
              UserID=:UserID
-             AND (%s)
              AND Published<:Published
          ORDER BY
              Published DESC
          LIMIT
              %d";
 if ($timeunit == 'Day') {
-    $stmt = sprintf($stmt, "'start of day'", $stmt_lang, $page + 2);
+    $stmt = sprintf($stmt, "'start of day'", $page + 2);
 } else if ($timeunit == 'Week') {
-    $stmt = sprintf($stmt, "'weekday 0', '-6 days', 'start of day'", $stmt_lang, $page + 2);
+    $stmt = sprintf($stmt, "'weekday 0', '-6 days', 'start of day'", $page + 2);
 } else if ($timeunit == 'Month') {
-    $stmt = sprintf($stmt, "'start of month'", $stmt_lang, $page + 2);
+    $stmt = sprintf($stmt, "'start of month'", $page + 2);
 }
 $stmt = $db->prepare($stmt);
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);

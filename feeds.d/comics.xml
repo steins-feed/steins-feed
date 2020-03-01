@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<root>
+    <feed>
+        <title>Existential Comics</title>
+        <link>http://existentialcomics.com/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Piled Higher and Deeper</title>
+        <link>http://phdcomics.com/gradfeed.php</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>XKCD</title>
+        <link>https://www.xkcd.com/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+</root>

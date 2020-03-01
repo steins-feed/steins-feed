@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<root>
+    <feed>
+        <title>Engadget</title>
+        <link>https://www.engadget.com/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Gizmodo</title>
+        <link>https://gizmodo.com/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Mashable</title>
+        <link>http://feeds.mashable.com/Mashable</link>
+        <lang>English</lang>
+    </feed>
+</root>
