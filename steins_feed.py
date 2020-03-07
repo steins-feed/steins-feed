@@ -17,9 +17,12 @@ def steins_read(title_pattern=""):
         handler = get_handler(feed_it)
         d = handler.parse(feed_it['Link'])
         try:
-            logger.info("{} -- {}.".format(feed_it['Title'], d.status))
+            if d.status < 400:
+                logger.info("{} -- {}.".format(feed_it['Title'], d.status))
+            else:
+                logger.error("{} -- {}.".format(feed_it['Title'], d.status))
         except AttributeError:
-            logger.info("{}.".format(feed_it['Title']))
+            logger.warning("{}.".format(feed_it['Title']))
 
         for item_it in d['items']:
             try:

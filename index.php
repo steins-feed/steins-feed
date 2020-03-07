@@ -322,7 +322,7 @@ Last updated: <?php echo $last_updated, " GMT";?>.
 </a>
 </h2>
 <p>
-Source: <?php echo $item_it['Feed'];?>.
+Source: <a href="/steins-feed/feed.php?user=<?php echo $user;?>&feed=<?php echo $item_it['FeedID'];?>"><?php echo $item_it['Feed'];?></a>.
 Published: <?php echo $item_it['Published'];?> GMT.
 <?php
 if ($feed != 'Full'):

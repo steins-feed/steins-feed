@@ -75,7 +75,7 @@ $feed_dict = array(
     "Magic" => "enable_clf()",
     "Surprise" => "enable_clf()"
 );
-$clf_dict = json_decode(file_get_contents("json/steins_magic.json"), true);
+$clf_dict = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/json/steins_magic.json"), true);
 $clf_key = key($clf_dict);
 $magic_exists = file_exists($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/$user_id/$clf_key/clfs.pickle");
 foreach($feed_dict as $key => $value):

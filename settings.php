@@ -76,7 +76,7 @@ foreach ($langs as $lang_it):
 <?php   else:?>
 <input type="checkbox" name=<?php echo $row_it['FeedID'];?>>
 <?php   endif;?>
-<a href="<?php echo $row_it['Link'];?>">
+<a href="/steins-feed/feed.php?user=<?php echo $user;?>&feed=<?php echo $row_it['FeedID'];?>">
 <?php echo $row_it['Title'], PHP_EOL;?>
 </a>
 <br>
@@ -99,7 +99,10 @@ Link:<br>
 </p>
 <p>
 Language:<br>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/select_lang.php";?>
+<?php
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/select_lang.php";
+select_lang();
+?>
 </p>
 <p>
 Summary:<br>
@@ -191,7 +194,10 @@ Name:<br>
 </p>
 <p>
 Language:<br>
-<?php include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/select_lang.php";?>
+<?php
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/select_lang.php";
+select_lang();
+?>
 </p>
 <p>
 <input type="hidden" name="user" value=<?php echo $user;?>>

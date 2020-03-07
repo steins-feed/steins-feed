@@ -72,15 +72,21 @@ $all_langs = array(
     "Vietnamese",
     "Welsh",
     "Xhosa");
+
+function select_lang($lang='English') {
+    global $all_langs;
+    echo '<select name="lang">', PHP_EOL;
+
+    foreach ($all_langs as $lang_it) {
+        if ($lang_it == $lang) {
+            echo '<option value="' . $lang_it . '" selected>', PHP_EOL;
+        } else {
+            echo '<option value="' . $lang_it . '">', PHP_EOL;
+        }
+        echo $lang_it, PHP_EOL;
+        echo '</option>', PHP_EOL;
+    }
+
+    echo '</select>', PHP_EOL;
+}
 ?>
-<select name="lang">
-<?php foreach ($all_langs as $lang_it):?>
-<?php if ($lang_it == 'English'):?>
-<option value="<?php echo $lang_it;?>" selected>
-<?php else:?>
-<option value="<?php echo $lang_it;?>">
-<?php endif;?>
-<?php echo $lang_it, PHP_EOL;?>
-</option>
-<?php endforeach;?>
-</select>
