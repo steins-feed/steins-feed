@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<root>
+    <feed>
+        <title>The Aspen Institute</title>
+        <link>https://www.aspeninstitute.org/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Breakthrough Energy</title>
+        <link>https://www.b-t.energy/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Chaos Computer Club</title>
+        <link>https://www.ccc.de/de/rss/updates.rdf</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Common Sense Media</title>
+        <link>http://feeds.feedburner.com/csm/parent</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Common Sense Education</title>
+        <link>https://www.commonsense.org/education/blog/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Common Sense Kids Action</title>
+        <link>http://feeds.feedburner.com/csm/kids-action</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>European Commission Digital Single Market</title>
+        <link>https://ec.europa.eu/digital-single-market/rss.xml</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>European Commission Education and Training</title>
+        <link>https://ec.europa.eu/education/rss.xml</link>
+        <lang>English</lang>
+        <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Freedom of the Press Foundation</title>
+        <link>https://freedom.press/news/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Global Citizen</title>
+        <link>https://www.globalcitizen.org/en/content/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>MIT Center for Civic Media</title>
+        <link>https://civic.mit.edu/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>NASA Global Climate Change</title>
+        <link>https://climate.nasa.gov/news/rss.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Nieman Lab</title>
+        <link>https://www.niemanlab.org/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Pew Research Center</title>
+        <link>https://www.pewresearch.org/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Principles for Responsible Investment</title>
+        <link>https://www.unpri.org/1302.rss</link>
+        <lang>English</lang>
+    </feed>
+</root>

@@ -27,6 +27,11 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>Royal Academy of Engineering</title>
+        <link>https://www.raeng.org.uk/rss-feeds/news-releases</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>Science</title>
         <link>http://science.sciencemag.org/rss/current.xml</link>
         <lang>English</lang>

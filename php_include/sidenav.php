@@ -26,6 +26,9 @@ if ($page > 0):
 <?php foreach ($langs as $lang_ct => $lang_it):?>
 <input name="lang_<?php echo $lang_ct;?>" value="<?php echo $lang_it;?>" type="hidden">
 <?php endforeach;?>
+<?php foreach ($tags as $tag_ct => $tag_it):?>
+<input name="tag_<?php echo $tag_ct;?>" value="<?php echo $tag_it;?>" type="hidden">
+<?php endforeach;?>
 <input name="page" value="<?php echo $page - 1;?>" type="hidden">
 <input name="feed" value="<?php echo $feed;?>" type="hidden">
 <input name="clf" value="<?php echo $clf;?>" type="hidden">

@@ -34,9 +34,11 @@ def get_connection():
     return connection
 
 def close_connection():
+    global connection
     if have_connection():
         close_cursor()
         connection.close()
+        del connection
         logger.debug("Close {}.".format(db_path))
 
 def have_cursor():
@@ -53,10 +55,12 @@ def get_cursor():
     return cursor
 
 def close_cursor():
+    global cursor
     if have_cursor():
         cursor.execute("PRAGMA optimize")
         connection.commit()
         cursor.close()
+        del cursor
 
 ###############################################################################
 # Create tables.

@@ -3050,6 +3050,38 @@
         <lang>English</lang>
     </feed>
 
+    <!-- Science News -->
+    <feed>
+        <title>Science News Life</title>
+        <link>https://www.sciencenews.org/topic/life/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Science News Humans</title>
+        <link>https://www.sciencenews.org/topic/humans/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Science News Earth</title>
+        <link>https://www.sciencenews.org/topic/earth/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Science News Space</title>
+        <link>https://www.sciencenews.org/topic/space/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Science News Physics</title>
+        <link>https://www.sciencenews.org/topic/physics/feed</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Science News</title>
+        <link>https://www.sciencenews.org/feed</link>
+        <lang>English</lang>
+    </feed>
+
     <!-- Scientific American -->
     <feed>
         <title>Scientific American Mind</title>

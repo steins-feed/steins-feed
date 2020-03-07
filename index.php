@@ -284,7 +284,7 @@ if ($timeunit == 'Day') {
     } else {
         $finish_date = clone $date_it;
         $finish_date->add(new DateInterval("P1W"))->sub(new DateInterval("P1D"));
-        $topnav_title = "Week " . $date_it->format("N") . ", " . $date_it->format("Y");
+        $topnav_title = "Week " . $date_it->format("W") . ", " . $date_it->format("Y");
     }
 } else if ($timeunit == 'Month') {
     $delta = intval($current_date->format("j")) - 1;
