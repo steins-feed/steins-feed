@@ -30,7 +30,7 @@ for ($tag_it = $res->fetcharray(); $tag_it; $tag_it = $res->fetcharray()) {
     $tagged[] = $tag_it;
 }
 
-$stmt = $db->prepare("SELECT DISTINCT Tags.* FROM Tags INNER JOIN Tags2Feeds USING (TagID) WHERE UserID=:UserID AND TagID NOT IN (SELECT DISTINCT TagID FROM Tags INNER JOIN Tags2Feeds USING (TagID) WHERE UserID=:UserID AND FeedID=:FeedID) ORDER BY Name COLLATE NOCASE");
+$stmt = $db->prepare("SELECT DISTINCT Tags.* FROM Tags WHERE UserID=:UserID AND TagID NOT IN (SELECT DISTINCT TagID FROM Tags INNER JOIN Tags2Feeds USING (TagID) WHERE UserID=:UserID AND FeedID=:FeedID) ORDER BY Name COLLATE NOCASE");
 $stmt->bindValue(':UserID', $user_id, SQLITE3_INTEGER);
 $stmt->bindValue(':FeedID', $_GET['feed'], SQLITE3_INTEGER);
 $res = $stmt->execute();
@@ -64,7 +64,7 @@ foreach ($f_list as $f_it):
 <body>
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
-topnav($user);
+topnav($feed_it['Title']);
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
 <div class="main">

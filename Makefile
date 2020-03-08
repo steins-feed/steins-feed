@@ -17,6 +17,7 @@ README.pdf: README.md
 
 .PHONY: clean
 clean:
+	-rm cachegrind.out
 	-rm README.pdf
 	-rm steins-*.html
 	-rm tmp_feeds.xml
