@@ -15,24 +15,6 @@ $stmt = $db->prepare("SELECT * FROM Tags WHERE TagID=:TagID");
 $stmt->bindValue(':TagID', $_GET['tag'], SQLITE3_INTEGER);
 $tag_it = $stmt->execute()->fetcharray();
 
-$stmt = $db->prepare("SELECT DISTINCT Feeds.* FROM Feeds INNER JOIN Tags2Feeds USING (FeedID) WHERE TagID=:TagID ORDER BY Title COLLATE NOCASE");
-$stmt->bindValue(':TagID', $_GET['tag'], SQLITE3_INTEGER);
-$res = $stmt->execute();
-
-$tagged = array();
-for ($feed_it = $res->fetcharray(); $feed_it; $feed_it = $res->fetcharray()) {
-    $tagged[] = $feed_it;
-}
-
-$stmt = $db->prepare("SELECT DISTINCT Feeds.* FROM Feeds WHERE FeedID NOT IN (SELECT DISTINCT FeedID FROM Feeds INNER JOIN Tags2Feeds USING (FeedID) WHERE TagID=:TagID) ORDER BY Title COLLATE NOCASE");
-$stmt->bindValue(':TagID', $_GET['tag'], SQLITE3_INTEGER);
-$res = $stmt->execute();
-
-$untagged = array();
-for ($feed_it = $res->fetcharray(); $feed_it; $feed_it = $res->fetcharray()) {
-    $untagged[] = $feed_it;
-}
-
 $stmt = $db->prepare("SELECT DISTINCT Language FROM Feeds ORDER BY Language COLLATE NOCASE");
 $res = $stmt->execute();
 
@@ -74,34 +56,37 @@ include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 <p><?php echo $lang_it;?> feeds:</p>
 <select name="tagged_<?php echo $lang_it;?>" size=10 style="width: 200px;" multiple>
 <?php
-    foreach ($tagged as $feed_it):
-        if ($feed_it['Language'] == $lang_it):
+    $stmt = $db->prepare("SELECT DISTINCT Feeds.* FROM Feeds INNER JOIN Tags2Feeds USING (FeedID) WHERE TagID=:TagID AND Language=:Language ORDER BY Title COLLATE NOCASE");
+    $stmt->bindValue(':TagID', $_GET['tag'], SQLITE3_INTEGER);
+    $stmt->bindValue(':Language', $lang_it, SQLITE3_TEXT);
+    $res = $stmt->execute();
+
+    for ($feed_it = $res->fetcharray(); $feed_it; $feed_it = $res->fetcharray()):
 ?>
 <option value=<?php echo $feed_it['FeedID'];?>>
-<?php       echo $feed_it['Title'], PHP_EOL;?>
+<?php   echo $feed_it['Title'], PHP_EOL;?>
 </option>
-<?php
-        endif;
-    endforeach;
-?>
+<?php endfor;?>
 </select>
 <button onclick="toggle_feeds('<?php echo $lang_it;?>')" type="button">
 <i class="material-icons">compare_arrows</i>
 </button>
 <select name="untagged_<?php echo $lang_it;?>" size=10 style="width: 200px;" multiple>
 <?php
-    foreach ($untagged as $feed_it):
-        if ($feed_it['Language'] == $lang_it):
+    $stmt = $db->prepare("SELECT DISTINCT Feeds.* FROM Feeds WHERE FeedID NOT IN (SELECT DISTINCT FeedID FROM Feeds INNER JOIN Tags2Feeds USING (FeedID) WHERE TagID=:TagID AND Language=:Language) AND Language=:Language ORDER BY Title COLLATE NOCASE");
+    $stmt->bindValue(':TagID', $_GET['tag'], SQLITE3_INTEGER);
+    $stmt->bindValue(':Language', $lang_it, SQLITE3_TEXT);
+    $res = $stmt->execute();
+
+    for ($feed_it = $res->fetcharray(); $feed_it; $feed_it = $res->fetcharray()):
 ?>
 <option value=<?php echo $feed_it['FeedID'];?>>
-<?php       echo $feed_it['Title'], PHP_EOL;?>
+<?php   echo $feed_it['Title'], PHP_EOL;?>
 </option>
-<?php
-        endif;
-    endforeach;
-?>
+<?php endfor;?>
 </select>
 <?php endforeach;?>
+<hr>
 </div>
 </body>
 </html>

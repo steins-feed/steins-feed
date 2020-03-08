@@ -25,7 +25,7 @@ var user="<?php echo $user;?>";
 var clf="<?php echo $clf;?>";
 </script>
 <?php
-$f_list = array("open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js");
+$f_list = array("open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js", "toggle_display.js");
 foreach ($f_list as $f_it):
 ?>
 <script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>
@@ -39,54 +39,47 @@ include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
 <div class="main">
 <hr>
-<form method="post" action="/steins-feed/php_settings/display_feeds.php">
 <?php
 $stmt = $db->prepare("SELECT DISTINCT Language FROM Feeds ORDER BY Language");
-$res = $stmt->execute();
-$langs = array();
-for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()){
-    $langs[] = $row_it['Language'];
-}
+$res_lang = $stmt->execute();
 
-foreach ($langs as $lang_it):
+for ($lang_it = $res_lang->fetcharray(); $lang_it; $lang_it = $res_lang->fetcharray()):
 ?>
-<h2><?php echo $lang_it;?> feeds</h2>
+<p><?php echo $lang_it['Language'];?> feeds:</p>
+<select name="displayed_<?php echo $lang_it['Language'];?>" size=10 style="width: 200px;" multiple>
 <?php
-    $stmt = $db->prepare("SELECT FeedID FROM Display WHERE UserID=:UserID");
-    $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
-    $res = $stmt->execute();
-    $displayed = array();
-    for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-        $displayed[] = $row_it['FeedID'];
-    }
-
-    $stmt = "SELECT * FROM Feeds WHERE Language=:Language ORDER BY Title COLLATE NOCASE";
+    $stmt = "SELECT * FROM Feeds INNER JOIN Display USING (FeedID) WHERE UserID=:UserID AND Language=:Language ORDER BY Title COLLATE NOCASE";
     $stmt = $db->prepare($stmt);
-    $stmt->bindValue(":Language", $lang_it, SQLITE3_TEXT);
+    $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
+    $stmt->bindValue(":Language", $lang_it['Language'], SQLITE3_TEXT);
     $res = $stmt->execute();
-    $feeds = array();
-    for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-        $feeds[] = $row_it;
-    }
 
-    foreach ($feeds as $row_it):
-        if (in_array($row_it['FeedID'], $displayed)):
+    for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()):
 ?>
-<input type="checkbox" name=<?php echo $row_it['FeedID'];?> checked>
-<?php   else:?>
-<input type="checkbox" name=<?php echo $row_it['FeedID'];?>>
-<?php   endif;?>
-<a href="/steins-feed/feed.php?user=<?php echo $user;?>&feed=<?php echo $row_it['FeedID'];?>">
-<?php echo $row_it['Title'], PHP_EOL;?>
-</a>
-<br>
-<?php endforeach;?>
-<?php endforeach;?>
-<p>
-<input type="hidden" name="user" value=<?php echo $user;?>>
-<input type="submit" value="Display feeds">
-</p>
-</form>
+<option value=<?php echo $row_it['FeedID'];?>>
+<?php   echo $row_it['Title'], PHP_EOL;?>
+</option>
+<?php endfor;?>
+</select>
+<button onclick="toggle_display('<?php echo $lang_it['Language'];?>')" type="button">
+<i class="material-icons">compare_arrows</i>
+</button>
+<select name="hidden_<?php echo $lang_it['Language'];?>" size=10 style="width: 200px;" multiple>
+<?php
+    $stmt = "SELECT * FROM Feeds WHERE FeedID NOT IN (SELECT FeedID FROM Feeds INNER JOIN Display USING (FeedID) WHERE UserID=:UserID AND Language=:Language) AND Language=:Language ORDER BY Title COLLATE NOCASE";
+    $stmt = $db->prepare($stmt);
+    $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
+    $stmt->bindValue(":Language", $lang_it['Language'], SQLITE3_TEXT);
+    $res = $stmt->execute();
+
+    for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()):
+?>
+<option value=<?php echo $row_it['FeedID'];?>>
+<?php   echo $row_it['Title'], PHP_EOL;?>
+</option>
+<?php endfor;?>
+</select>
+<?php endfor;?>
 <hr>
 <form method="post" action="/steins-feed/php_settings/add_feed.php">
 <p>
