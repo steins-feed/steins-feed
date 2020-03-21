@@ -13,9 +13,11 @@ def steins_read(title_pattern=""):
     conn = get_connection()
     c = get_cursor()
 
+    parsers = c.execute("SELECT * FROM Parsers").fetchall()
+    parsers = dict([(p_it[0], p_it) for p_it in parsers])
     for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
         handler = get_handler(feed_it)
-        d = handler.parse(feed_it['Link'])
+        d = handler.parse(feed_it['Link'], parsers.get(feed_it['ParserID'], None))
         try:
             if d.status < 400:
                 logger.info("{} -- {}.".format(feed_it['Title'], d.status))

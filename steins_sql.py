@@ -70,7 +70,11 @@ def create_users(users=None):
     conn = get_connection()
     c = get_cursor()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Users (UserID INTEGER PRIMARY KEY, Name TINYTEXT NOT NULL UNIQUE)")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS Users (
+            UserID INTEGER PRIMARY KEY,
+            Name TINYTEXT NOT NULL UNIQUE
+        )""")
     if users is None:
         c.execute("INSERT OR IGNORE INTO Users (Name) VALUES (?)", ('nobody', ))
     else:
@@ -84,7 +88,41 @@ def create_feeds():
     conn = get_connection()
     c = get_cursor()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Feeds (FeedID INTEGER PRIMARY KEY, Title TEXT NOT NULL UNIQUE, Link TEXT NOT NULL UNIQUE, Language TINYTEXT, Summary INTEGER DEFAULT 2, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS Feeds (
+            FeedID INTEGER PRIMARY KEY,
+            Title TEXT NOT NULL UNIQUE,
+            Link TEXT NOT NULL UNIQUE,
+            Language TINYTEXT,
+            Summary INTEGER DEFAULT 2,
+            Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            ParserID INTEGER,
+            Pause INTEGER DEFAULT 0,
+            FOREIGN KEY (ParserID)
+                REFERENCES Parsers (ParserID)
+                ON UPDATE CASCADE
+                ON DELETE SET NULL
+        )""")
+
+    conn.commit()
+    logger.info("Create Feeds.")
+
+def create_parsers():
+    conn = get_connection()
+    c = get_cursor()
+
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS Parsers (
+            ParserID INTEGER PRIMARY KEY,
+            Description TEXT,
+            Namespace TEXT DEFAULT NULL,
+            Entry TEXT,
+            Title TEXT,
+            Link TEXT,
+            Published TEXT,
+            Summary TEXT
+        )""")
 
     conn.commit()
     logger.info("Create Feeds.")
@@ -93,7 +131,20 @@ def create_items():
     conn = get_connection()
     c = get_cursor()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Items (ItemID INTEGER PRIMARY KEY, Title TEXT NOT NULL, Link TEXT NOT NULL, Published TIMESTAMP NOT NULL, FeedID INTEGER NOT NULL, Summary MEDIUMTEXT, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(Title, Link, Published, FeedID))")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS Items (
+            ItemID INTEGER PRIMARY KEY,
+            Title TEXT NOT NULL,
+            Link TEXT NOT NULL,
+            Published TIMESTAMP NOT NULL,
+            FeedID INTEGER NOT NULL,
+            Summary MEDIUMTEXT,
+            FOREIGN KEY (FeedID)
+                REFERENCES Feeds (FeedID)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE,
+            UNIQUE(Title, Link, Published, FeedID)
+        )""")
     c.execute("CREATE INDEX IF NOT EXISTS index_Items_Published_Title ON Items (Published, Title)")
 
     conn.commit()
@@ -103,7 +154,20 @@ def create_display():
     conn = get_connection()
     c = get_cursor()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Display (UserID INTEGER NOT NULL, FeedID INTEGER NOT NULL, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, FeedID))")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS Display (
+            UserID INTEGER NOT NULL,
+            FeedID INTEGER NOT NULL,
+            FOREIGN KEY (UserID)
+                REFERENCES Users (UserID)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE,
+            FOREIGN KEY (FeedID)
+                REFERENCES Feeds (FeedID)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE,
+            UNIQUE(UserID, FeedID)
+        )""")
 
     conn.commit()
     logger.info("Create Display.")
@@ -112,8 +176,31 @@ def create_tags():
     conn = get_connection()
     c = get_cursor()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Tags (TagID INTEGER PRIMARY KEY, UserID INTEGER NOT NULL, Name TINYTEXT NOT NULL, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, Name))")
-    c.execute("CREATE TABLE IF NOT EXISTS Tags2Feeds (TagID INTEGER NOT NULL, FeedID INTEGER NOT NULL, FOREIGN KEY (TagID) REFERENCES Tags (TagID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (FeedID) REFERENCES Feeds (FeedID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(TagID, FeedID))")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS Tags (
+            TagID INTEGER PRIMARY KEY,
+            UserID INTEGER NOT NULL,
+            Name TINYTEXT NOT NULL,
+            FOREIGN KEY (UserID)
+                REFERENCES Users (UserID)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE,
+            UNIQUE(UserID, Name)
+        )""")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS Tags2Feeds (
+            TagID INTEGER NOT NULL,
+            FeedID INTEGER NOT NULL,
+            FOREIGN KEY (TagID)
+                REFERENCES Tags (TagID)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE,
+            FOREIGN KEY (FeedID)
+                REFERENCES Feeds (FeedID)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE,
+            UNIQUE(TagID, FeedID)
+        )""")
 
     conn.commit()
     logger.info("Create Tags.")
@@ -122,7 +209,23 @@ def create_like():
     conn = get_connection()
     c = get_cursor()
 
-    c.execute("CREATE TABLE IF NOT EXISTS Like (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score INTEGER NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS Like (
+            UserID INTEGER NOT NULL,
+            ItemID INTEGER NOT NULL,
+            Score INTEGER NOT NULL,
+            Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (UserID)
+                REFERENCES Users (UserID)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE,
+                FOREIGN KEY (ItemID)
+                REFERENCES Items (ItemID)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE,
+            UNIQUE(UserID, ItemID)
+        )""")
 
     conn.commit()
     logger.info("Create Like.")
@@ -132,7 +235,23 @@ def create_magic():
     c = get_cursor()
 
     for clf_it in clf_dict:
-        c.execute("CREATE TABLE IF NOT EXISTS {} (UserID INTEGER NOT NULL, ItemID INTEGER NOT NULL, Score FLOAT NOT NULL, Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP, Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (UserID) REFERENCES Users (UserID) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (ItemID) REFERENCES Items (ItemID) ON UPDATE CASCADE ON DELETE CASCADE, UNIQUE(UserID, ItemID))".format(clf_dict[clf_it]['table']))
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS {} (
+                UserID INTEGER NOT NULL,
+                ItemID INTEGER NOT NULL,
+                Score FLOAT NOT NULL,
+                Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (UserID)
+                    REFERENCES Users (UserID)
+                    ON UPDATE CASCADE
+                    ON DELETE CASCADE,
+                FOREIGN KEY (ItemID)
+                    REFERENCES Items (ItemID)
+                    ON UPDATE CASCADE
+                    ON DELETE CASCADE,
+                UNIQUE(UserID, ItemID)
+            )""".format(clf_dict[clf_it]['table']))
 
     conn.commit()
     logger.info("Create Magic.")
@@ -148,7 +267,16 @@ def add_item(item_title, item_link, item_time, feed_id, item_summary=""):
     if item_time > datetime.utcnow():
         return
 
-    c.execute("INSERT OR IGNORE INTO Items (Title, Link, Published, FeedID, Summary) VALUES (?, ?, ?, ?, ?)", (item_title, item_link, item_time, feed_id, item_summary, ))
+    c.execute("""
+        INSERT OR IGNORE INTO Items (
+            Title,
+            Link,
+            Published,
+            FeedID,
+            Summary
+        ) VALUES (?, ?, ?, ?, ?)""",
+        (item_title, item_link, item_time, feed_id, item_summary, )
+    )
     logger.debug("Add item -- {}.".format(item_title))
 
 def delete_item(item_id):

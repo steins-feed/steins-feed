@@ -88,8 +88,23 @@ class SteinsHandler:
         logger.error("No time for '{}'.".format(self.read_title(item_it)))
         raise KeyError
 
-    def parse(self, feed_link):
-        return feedparser.parse(feed_link)
+    def parse(self, feed_link, patterns=None):
+        if patterns == None:
+            return feedparser.parse(feed_link)
+
+        tree = get_tree_from_session(feed_link)
+        entries = tree.xpath("//foo:{}".format(patterns['Entry']), namespaces={'foo': patterns['Namespace']})
+
+        l = []
+        for entry_it in entries:
+            l_it = {}
+            l_it['title'] = entry_it.xpath("./foo:{}".format(patterns['Title']), namespaces={'foo': patterns['Namespace']})[0].text
+            l_it['link'] = entry_it.xpath("./foo:{}".format(patterns['Link']), namespaces={'foo': patterns['Namespace']})[0].get('href')
+            l_it['published_parsed'] = time.strptime(entry_it.xpath("./foo:{}".format(patterns['Published']), namespaces={'foo': patterns['Namespace']})[0].text[:22] + "00", "%Y-%m-%dT%H:%M:%S%z")
+            l_it['summary'] = entry_it.xpath("./foo:{}".format(patterns['Summary']), namespaces={'foo': patterns['Namespace']})[0].text
+            l.append(l_it)
+
+        return {'items': l}
 
 class AbstractHandler(SteinsHandler):
     def read_summary(self, item_it):
@@ -107,18 +122,6 @@ class AbstractHandler(SteinsHandler):
 class NoAbstractHandler(SteinsHandler):
     def read_summary(self, item_it):
         return ""
-
-class AtlanticHandler(SteinsHandler):
-    def parse(self, feed_link):
-        if "feedburner.com" in feed_link:
-            return super().parse(feed_link)
-
-        tree = get_tree_from_session(feed_link)
-        contents = tree.xpath("//foo:content", namespaces={'foo': tree.nsmap[None]})
-        for content_it in contents:
-            content_it.getparent().remove(content_it)
-        d = feedparser.parse(etree.tostring(tree))
-        return d
 
 class GatesHandler(SteinsHandler):
     def read_time(self, item_it):
@@ -140,13 +143,7 @@ class MediumHandler(SteinsHandler):
 # Static factory.
 def get_handler(feed_it):
     title = feed_it['Title']
-    if "The Atlantic" in title:
-        global atlantic_handler
-        if not "atlantic_handler" in globals():
-            logger.debug("AtlanticHandler.")
-            atlantic_handler = AtlanticHandler()
-        handler = atlantic_handler
-    elif "Gates" in title:
+    if "Gates" in title:
         global gates_handler
         if not "gates_handler" in globals():
             logger.debug("GatesHandler.")
