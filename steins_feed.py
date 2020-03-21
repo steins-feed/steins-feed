@@ -2,6 +2,7 @@
 
 import os
 dir_path = os.path.dirname(os.path.abspath(__file__))
+import time
 
 from steins_log import get_logger
 logger = get_logger()
@@ -17,7 +18,8 @@ def steins_read(title_pattern=""):
     parsers = dict([(p_it[0], p_it) for p_it in parsers])
     for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
         handler = get_handler(feed_it)
-        d = handler.parse(feed_it['Link'], parsers.get(feed_it['ParserID'], None))
+        patterns = parsers.get(feed_it['ParserID'], None)
+        d = handler.parse(feed_it['Link'], patterns)
         try:
             if d.status < 400:
                 logger.info("{} -- {}.".format(feed_it['Title'], d.status))
@@ -39,6 +41,9 @@ def steins_read(title_pattern=""):
 
         c.execute("UPDATE Feeds SET Updated=datetime('now') WHERE FeedID=?", (feed_it['FeedID'], ))
         conn.commit()
+
+        if patterns is not None and patterns['Pause'] > 0:
+            time.sleep(patterns['Pause'])
 
 # Generate HTML.
 def steins_write():

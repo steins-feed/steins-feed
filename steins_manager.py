@@ -135,11 +135,6 @@ class GatesHandler(SteinsHandler):
         logger.error("No time for '{}'.".format(self.read_title(item_it)))
         raise KeyError
 
-class MediumHandler(SteinsHandler):
-    def parse(self, feed_link):
-        time.sleep(1)
-        return feedparser.parse(feed_link)
-
 # Static factory.
 def get_handler(feed_it):
     title = feed_it['Title']
@@ -149,12 +144,6 @@ def get_handler(feed_it):
             logger.debug("GatesHandler.")
             gates_handler = GatesHandler()
         handler = gates_handler
-    elif "Medium" in title:
-        global medium_handler
-        if not "medium_handler" in globals():
-            logger.debug("MediumHandler.")
-            medium_handler = MediumHandler()
-        handler = medium_handler
     else:
         summary = feed_it['Summary']
         if summary == 0:
