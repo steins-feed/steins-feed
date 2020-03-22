@@ -61,6 +61,7 @@ $stmt = "
 SELECT
     Items.*,
     MIN(Feeds.Title) AS Feed,
+    Feeds.Summary AS Abstract,
     Language,
     IFNULL(Like.Score, 0) AS Like";
 if ($feed != 'Full') {
@@ -262,7 +263,7 @@ endif;
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
 
 $current_date = new DateTime();
-$current_date->setTime(0, 0, 0, 0);
+$current_date->setTime(0, 0, 0);
 
 if ($timeunit == 'Day') {
     if ($date_it == $current_date) {
@@ -317,7 +318,7 @@ Last updated: <?php echo $last_updated, " GMT";?>.
 <h2>
 <a href="<?php echo htmlentities($item_it['Link'])?>" rel="noopener noreferrer" target="_blank">
 <span id="title_<?php echo $item_it['ItemID'];?>">
-<span><?php echo $item_it['Title'];?></span>
+<?php echo $item_it['Title'];?>
 </span>
 </a>
 </h2>
@@ -325,32 +326,78 @@ Last updated: <?php echo $last_updated, " GMT";?>.
 Source: <a href="/steins-feed/feed.php?user=<?php echo $user;?>&feed=<?php echo $item_it['FeedID'];?>"><?php echo $item_it['Feed'];?></a>.
 Published: <?php echo $item_it['Published'];?> GMT.
 <?php
-$stmt = "SELECT Tags.* FROM (Tags INNER JOIN Tags2Feeds USING (TagID)) INNER JOIN Feeds USING (FeedID) WHERE UserId=:UserID AND FeedID=:FeedID";
-$stmt = $db->prepare($stmt);
-$stmt->bindValue(':UserID', $user_id, SQLITE3_INTEGER);
-$stmt->bindValue(':FeedID', $item_it['FeedID'], SQLITE3_INTEGER);
-$res = $stmt->execute();
-
-$tag_it = $res->fetcharray();
-if ($tag_it):
+    $stmt = "SELECT Tags.* FROM (Tags INNER JOIN Tags2Feeds USING (TagID)) INNER JOIN Feeds USING (FeedID) WHERE UserId=:UserID AND FeedID=:FeedID";
+    $stmt = $db->prepare($stmt);
+    $stmt->bindValue(':UserID', $user_id, SQLITE3_INTEGER);
+    $stmt->bindValue(':FeedID', $item_it['FeedID'], SQLITE3_INTEGER);
+    $res = $stmt->execute();
+    
+    $tag_it = $res->fetcharray();
+    if ($tag_it):
 ?>
 Tags:
 <?php
-    echo '<a href="/steins-feed/tag.php?user=' . $user . '&tag=' . $tag_it['TagID'] . '">' . $tag_it['Name'] . '</a>';
-    for ($tag_it = $res->fetcharray(); $tag_it; $tag_it = $res->fetcharray()):
-        echo ', <a href="/steins-feed/tag.php?user=' . $user . '&tag=' . $tag_it['TagID'] . '">' . $tag_it['Name'] . '</a>';
-    endfor;
-    echo '.' . PHP_EOL;
-endif;
-if ($feed != 'Full'):
+        echo '<a href="/steins-feed/tag.php?user=' . $user . '&tag=' . $tag_it['TagID'] . '">' . $tag_it['Name'] . '</a>';
+        for ($tag_it = $res->fetcharray(); $tag_it; $tag_it = $res->fetcharray()):
+            echo ', <a href="/steins-feed/tag.php?user=' . $user . '&tag=' . $tag_it['TagID'] . '">' . $tag_it['Name'] . '</a>';
+        endfor;
+        echo '.' . PHP_EOL;
+    endif;
+    if ($feed != 'Full'):
 ?>
 Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
 <?php endif;?>
 </p>
 <div id="summary_<?php echo $item_it['ItemID'];?>">
-<div>
-<?php echo html_entity_decode($item_it['Summary']), PHP_EOL;?>
-</div>
+<?php
+    $s = "";
+    if ($item_it['Abstract'] != 0) {
+        $tree = new DOMDocument();
+        $tree->loadXML("<root>" . $item_it['Summary'] . "</root>");
+        if ($item_it['Abstract'] == 1) {
+            $res = $tree->getElementsByTagName('p');
+            for ($i = $res->length - 1; $i > 0; $i--) {
+                $res_it = $res->item($i);
+                $res_it->parentNode->removeChild($res_it);
+            }
+        }
+        
+        $tags = ['figure', 'img', 'iframe', 'script', 'small', 'svg'];
+        foreach ($tags as $tag_it) {
+            $res = $tree->getElementsByTagName($tag_it);
+            foreach ($res as $res_it) {
+                $res_it->parentNode->removeChild($res_it);
+            }
+        }
+        
+        /*
+        # Remove leading and trailing <br>.
+        for node_it in summary_tree.xpath("//div"):
+            while True:
+                if len(node_it) == 0:
+                    break
+                if node_it[0].tag == 'br':
+                    node_it[0].drop_tag()
+                    continue
+                if node_it[-1].tag == 'br':
+                    node_it[-1].drop_tag()
+                    continue
+                break
+        */
+        
+        $s = $tree->saveXML();
+        $s_begin = strpos($s, "<root>") + strlen("<root>");
+        $s_end = strpos($s, "</root>");
+        $s = substr($s, $s_begin, $s_end - $s_begin);
+        
+        $tags = ['strong', 'hr'];
+        foreach ($tags as $tag_it) {
+            $s = preg_replace("/<" . $tag_it . "[^>]*>/i", " ", $s);
+        }
+    }
+    
+    echo $s, PHP_EOL;
+?>
 </div>
 <p>
 <button onclick="like(<?php echo $item_it['ItemID'];?>)" type="button">

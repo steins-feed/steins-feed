@@ -37,38 +37,7 @@ class SteinsHandler:
         raise KeyError
 
     def read_summary(self, item_it):
-        summary = "<div>" + item_it['summary'] + "</div>"
-        summary_tree = html.fromstring(summary)
-
-        # Remove.
-        tags = ['figure', 'img', 'iframe', 'script', 'small', 'svg']
-        for tag_it in tags:
-            elems = summary_tree.xpath("//{}".format(tag_it))
-            for elem_it in elems:
-                elem_it.drop_tree()
-
-        # Remove leading and trailing <br>.
-        for node_it in summary_tree.xpath("//div"):
-            while True:
-                if len(node_it) == 0:
-                    break
-                if node_it[0].tag == 'br':
-                    node_it[0].drop_tag()
-                    continue
-                if node_it[-1].tag == 'br':
-                    node_it[-1].drop_tag()
-                    continue
-                break
-
-        # Strip.
-        tags = ['strong', 'hr']
-        for tag_it in tags:
-            elems = summary_tree.xpath("//{}".format(tag_it))
-            for elem_it in elems:
-                elem_it.drop_tag()
-
-        res = html.tostring(summary_tree).decode()
-        return res[len("<div>"):-len("</div>")]
+        return item_it['summary']
 
     def read_time(self, item_it):
         try:
@@ -106,23 +75,6 @@ class SteinsHandler:
 
         return {'items': l}
 
-class AbstractHandler(SteinsHandler):
-    def read_summary(self, item_it):
-        summary = super().read_summary(item_it)
-        summary = "<div>" + summary + "</div>"
-        summary_tree = html.fromstring(summary)
-
-        p_nodes = summary_tree.xpath("//p")
-        for node_it in p_nodes[1:]:
-            node_it.drop_tree()
-
-        res = html.tostring(summary_tree).decode()
-        return res[len("<div>"):-len("</div>")]
-
-class NoAbstractHandler(SteinsHandler):
-    def read_summary(self, item_it):
-        return ""
-
 class GatesHandler(SteinsHandler):
     def read_time(self, item_it):
         try:
@@ -145,12 +97,6 @@ def get_handler(feed_it):
             gates_handler = GatesHandler()
         handler = gates_handler
     else:
-        summary = feed_it['Summary']
-        if summary == 0:
-            handler = NoAbstractHandler()
-        elif summary == 1:
-            handler = AbstractHandler()
-        else:
-            handler = SteinsHandler()
+        handler = SteinsHandler()
 
     return handler
