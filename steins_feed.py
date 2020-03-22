@@ -6,7 +6,7 @@ import time
 
 from steins_log import get_logger
 logger = get_logger()
-from steins_manager import get_handler
+from steins_manager import SteinsHandler
 from steins_sql import get_connection, get_cursor, add_item
 
 # Scrape feeds.
@@ -14,19 +14,20 @@ def steins_read(title_pattern=""):
     conn = get_connection()
     c = get_cursor()
 
+    handler = SteinsHandler()
     parsers = c.execute("SELECT * FROM Parsers").fetchall()
     parsers = dict([(p_it[0], p_it) for p_it in parsers])
-    for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
-        handler = get_handler(feed_it)
+    for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ? ORDER BY Title", ("%" + title_pattern + "%", )).fetchall():
         patterns = parsers.get(feed_it['ParserID'], None)
-        d = handler.parse(feed_it['Link'], patterns)
-        try:
-            if d.status < 400:
-                logger.info("{} -- {}.".format(feed_it['Title'], d.status))
-            else:
-                logger.error("{} -- {}.".format(feed_it['Title'], d.status))
-        except AttributeError:
+        d, status = handler.parse(feed_it['Link'], patterns)
+        if status < 0:
             logger.warning("{}.".format(feed_it['Title']))
+        elif status < 300:
+            logger.info("{} -- {}.".format(feed_it['Title'], d.status))
+        elif status < 400:
+            logger.warning("{} -- {}.".format(feed_it['Title'], d.status))
+        else:
+            logger.error("{} -- {}.".format(feed_it['Title'], d.status))
 
         for item_it in d['items']:
             try:

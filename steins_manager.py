@@ -37,38 +37,7 @@ class SteinsHandler:
         raise KeyError
 
     def read_summary(self, item_it):
-        summary = "<div>" + item_it['summary'] + "</div>"
-        summary_tree = html.fromstring(summary)
-
-        # Remove.
-        tags = ['figure', 'img', 'iframe', 'script', 'small', 'svg']
-        for tag_it in tags:
-            elems = summary_tree.xpath("//{}".format(tag_it))
-            for elem_it in elems:
-                elem_it.drop_tree()
-
-        # Remove leading and trailing <br>.
-        for node_it in summary_tree.xpath("//div"):
-            while True:
-                if len(node_it) == 0:
-                    break
-                if node_it[0].tag == 'br':
-                    node_it[0].drop_tag()
-                    continue
-                if node_it[-1].tag == 'br':
-                    node_it[-1].drop_tag()
-                    continue
-                break
-
-        # Strip.
-        tags = ['strong', 'hr']
-        for tag_it in tags:
-            elems = summary_tree.xpath("//{}".format(tag_it))
-            for elem_it in elems:
-                elem_it.drop_tag()
-
-        res = html.tostring(summary_tree).decode()
-        return res[len("<div>"):-len("</div>")]
+        return item_it['summary']
 
     def read_time(self, item_it):
         try:
@@ -90,9 +59,14 @@ class SteinsHandler:
 
     def parse(self, feed_link, patterns=None):
         if patterns == None:
-            return feedparser.parse(feed_link)
+            d = feedparser.parse(feed_link)
+            try:
+                status = d.status
+            except AttributeError:
+                status = -1
+            return d, status
 
-        tree = get_tree_from_session(feed_link)
+        tree, status = get_tree_from_session(feed_link)
         entries = tree.xpath("//foo:{}".format(patterns['Entry']), namespaces={'foo': patterns['Namespace']})
 
         l = []
@@ -110,53 +84,4 @@ class SteinsHandler:
                 l_it['summary'] = ""
             l.append(l_it)
 
-        return {'items': l}
-
-class AbstractHandler(SteinsHandler):
-    def read_summary(self, item_it):
-        summary = super().read_summary(item_it)
-        summary = "<div>" + summary + "</div>"
-        summary_tree = html.fromstring(summary)
-
-        p_nodes = summary_tree.xpath("//p")
-        for node_it in p_nodes[1:]:
-            node_it.drop_tree()
-
-        res = html.tostring(summary_tree).decode()
-        return res[len("<div>"):-len("</div>")]
-
-class NoAbstractHandler(SteinsHandler):
-    def read_summary(self, item_it):
-        return ""
-
-class GatesHandler(SteinsHandler):
-    def read_time(self, item_it):
-        try:
-            item_time = item_it['published']
-            item_time = datetime.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
-            return item_time
-        except (KeyError, TypeError, ValueError):
-            pass
-
-        logger.error("No time for '{}'.".format(self.read_title(item_it)))
-        raise KeyError
-
-# Static factory.
-def get_handler(feed_it):
-    title = feed_it['Title']
-    if "Gates" in title:
-        global gates_handler
-        if not "gates_handler" in globals():
-            logger.debug("GatesHandler.")
-            gates_handler = GatesHandler()
-        handler = gates_handler
-    else:
-        summary = feed_it['Summary']
-        if summary == 0:
-            handler = NoAbstractHandler()
-        elif summary == 1:
-            handler = AbstractHandler()
-        else:
-            handler = SteinsHandler()
-
-    return handler
+        return {'items': l}, status
