@@ -6,7 +6,7 @@ import time
 
 from steins_log import get_logger
 logger = get_logger()
-from steins_manager import get_handler
+from steins_manager import SteinsHandler
 from steins_sql import get_connection, get_cursor, add_item
 
 # Scrape feeds.
@@ -14,10 +14,10 @@ def steins_read(title_pattern=""):
     conn = get_connection()
     c = get_cursor()
 
+    handler = SteinsHandler()
     parsers = c.execute("SELECT * FROM Parsers").fetchall()
     parsers = dict([(p_it[0], p_it) for p_it in parsers])
-    for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ?", ("%" + title_pattern + "%", )).fetchall():
-        handler = get_handler(feed_it)
+    for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ? ORDER BY Title", ("%" + title_pattern + "%", )).fetchall():
         patterns = parsers.get(feed_it['ParserID'], None)
         d = handler.parse(feed_it['Link'], patterns)
         try:
@@ -42,8 +42,8 @@ def steins_read(title_pattern=""):
         c.execute("UPDATE Feeds SET Updated=datetime('now') WHERE FeedID=?", (feed_it['FeedID'], ))
         conn.commit()
 
-        if patterns is not None and patterns['Pause'] > 0:
-            time.sleep(patterns['Pause'])
+        if feed_it['Pause'] > 0:
+            time.sleep(feed_it['Pause'])
 
 # Generate HTML.
 def steins_write():

@@ -74,29 +74,3 @@ class SteinsHandler:
             l.append(l_it)
 
         return {'items': l}
-
-class GatesHandler(SteinsHandler):
-    def read_time(self, item_it):
-        try:
-            item_time = item_it['published']
-            item_time = datetime.strptime(item_time, "%m/%d/%Y %I:%M:%S %p")
-            return item_time
-        except (KeyError, TypeError, ValueError):
-            pass
-
-        logger.error("No time for '{}'.".format(self.read_title(item_it)))
-        raise KeyError
-
-# Static factory.
-def get_handler(feed_it):
-    title = feed_it['Title']
-    if "Gates" in title:
-        global gates_handler
-        if not "gates_handler" in globals():
-            logger.debug("GatesHandler.")
-            gates_handler = GatesHandler()
-        handler = gates_handler
-    else:
-        handler = SteinsHandler()
-
-    return handler

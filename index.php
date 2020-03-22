@@ -323,7 +323,7 @@ Last updated: <?php echo $last_updated, " GMT";?>.
 </a>
 </h2>
 <p>
-Source: <a href="/steins-feed/feed.php?user=<?php echo $user;?>&feed=<?php echo $item_it['FeedID'];?>"><?php echo $item_it['Feed'];?></a>.
+Source: <a href="/steins-feed/feed.php?user=<?php echo $user;?>&amp;feed=<?php echo $item_it['FeedID'];?>"><?php echo $item_it['Feed'];?></a>.
 Published: <?php echo $item_it['Published'];?> GMT.
 <?php
     $stmt = "SELECT Tags.* FROM (Tags INNER JOIN Tags2Feeds USING (TagID)) INNER JOIN Feeds USING (FeedID) WHERE UserId=:UserID AND FeedID=:FeedID";
@@ -337,9 +337,9 @@ Published: <?php echo $item_it['Published'];?> GMT.
 ?>
 Tags:
 <?php
-        echo '<a href="/steins-feed/tag.php?user=' . $user . '&tag=' . $tag_it['TagID'] . '">' . $tag_it['Name'] . '</a>';
+        echo '<a href="/steins-feed/tag.php?user=' . $user . '&amp;tag=' . $tag_it['TagID'] . '">' . $tag_it['Name'] . '</a>';
         for ($tag_it = $res->fetcharray(); $tag_it; $tag_it = $res->fetcharray()):
-            echo ', <a href="/steins-feed/tag.php?user=' . $user . '&tag=' . $tag_it['TagID'] . '">' . $tag_it['Name'] . '</a>';
+            echo ', <a href="/steins-feed/tag.php?user=' . $user . '&amp;tag=' . $tag_it['TagID'] . '">' . $tag_it['Name'] . '</a>';
         endfor;
         echo '.' . PHP_EOL;
     endif;
