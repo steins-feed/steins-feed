@@ -19,14 +19,15 @@ def steins_read(title_pattern=""):
     parsers = dict([(p_it[0], p_it) for p_it in parsers])
     for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ? ORDER BY Title", ("%" + title_pattern + "%", )).fetchall():
         patterns = parsers.get(feed_it['ParserID'], None)
-        d = handler.parse(feed_it['Link'], patterns)
-        try:
-            if d.status < 400:
-                logger.info("{} -- {}.".format(feed_it['Title'], d.status))
-            else:
-                logger.error("{} -- {}.".format(feed_it['Title'], d.status))
-        except AttributeError:
+        d, status = handler.parse(feed_it['Link'], patterns)
+        if status < 0:
             logger.warning("{}.".format(feed_it['Title']))
+        elif status < 300:
+            logger.info("{} -- {}.".format(feed_it['Title'], d.status))
+        elif status < 400:
+            logger.warning("{} -- {}.".format(feed_it['Title'], d.status))
+        else:
+            logger.error("{} -- {}.".format(feed_it['Title'], d.status))
 
         for item_it in d['items']:
             try:

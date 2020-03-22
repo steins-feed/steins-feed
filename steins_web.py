@@ -19,4 +19,4 @@ def get_tree_from_session(item_link):
     session = get_session()
     page = session.get(item_link)
     tree = etree.fromstring(page.text.encode())
-    return tree
+    return tree, page.status_code

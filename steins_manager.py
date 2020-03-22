@@ -59,9 +59,14 @@ class SteinsHandler:
 
     def parse(self, feed_link, patterns=None):
         if patterns == None:
-            return feedparser.parse(feed_link)
+            d = feedparser.parse(feed_link)
+            try:
+                status = d.status
+            except AttributeError:
+                status = -1
+            return d, status
 
-        tree = get_tree_from_session(feed_link)
+        tree, status = get_tree_from_session(feed_link)
         entries = tree.xpath("//foo:{}".format(patterns['Entry']), namespaces={'foo': patterns['Namespace']})
 
         l = []
@@ -73,4 +78,4 @@ class SteinsHandler:
             l_it['summary'] = entry_it.xpath("./foo:{}".format(patterns['Summary']), namespaces={'foo': patterns['Namespace']})[0].text
             l.append(l_it)
 
-        return {'items': l}
+        return {'items': l}, status
