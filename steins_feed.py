@@ -23,11 +23,11 @@ def steins_read(title_pattern=""):
         if status < 0:
             logger.warning("{}.".format(feed_it['Title']))
         elif status < 300:
-            logger.info("{} -- {}.".format(feed_it['Title'], d.status))
+            logger.info("{} -- {}.".format(feed_it['Title'], status))
         elif status < 400:
-            logger.warning("{} -- {}.".format(feed_it['Title'], d.status))
+            logger.warning("{} -- {}.".format(feed_it['Title'], status))
         else:
-            logger.error("{} -- {}.".format(feed_it['Title'], d.status))
+            logger.error("{} -- {}.".format(feed_it['Title'], status))
 
         for item_it in d['items']:
             try:
