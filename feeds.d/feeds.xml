@@ -2680,6 +2680,33 @@
         <lang>English</lang>
     </feed>
 
+    <!-- NYLON -->
+    <feed>
+        <title>NYLON Fashion</title>
+        <link>https://nylon.com/feeds/fashion.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>NYLON Beauty</title>
+        <link>https://nylon.com/feeds/beauty.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>NYLON Entertainment</title>
+        <link>https://nylon.com/feeds/entertainment.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>NYLON Life</title>
+        <link>https://nylon.com/feeds/life.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>NYLON</title>
+        <link>https://nylon.com/feeds/feed.rss</link>
+        <lang>English</lang>
+    </feed>
+
     <!-- The Onion -->
     <feed>
         <title>The Onion Politics</title>

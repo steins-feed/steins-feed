@@ -98,10 +98,16 @@ class SteinsHandler:
         l = []
         for entry_it in entries:
             l_it = {}
-            l_it['title'] = entry_it.xpath("./foo:{}".format(patterns['Title']), namespaces={'foo': patterns['Namespace']})[0].text
-            l_it['link'] = entry_it.xpath("./foo:{}".format(patterns['Link']), namespaces={'foo': patterns['Namespace']})[0].get('href')
-            l_it['published_parsed'] = time.strptime(entry_it.xpath("./foo:{}".format(patterns['Published']), namespaces={'foo': patterns['Namespace']})[0].text[:22] + "00", "%Y-%m-%dT%H:%M:%S%z")
-            l_it['summary'] = entry_it.xpath("./foo:{}".format(patterns['Summary']), namespaces={'foo': patterns['Namespace']})[0].text
+            try:
+                l_it['title'] = entry_it.xpath("./foo:{}".format(patterns['Title']), namespaces={'foo': patterns['Namespace']})[0].text
+                l_it['link'] = entry_it.xpath("./foo:{}".format(patterns['Link']), namespaces={'foo': patterns['Namespace']})[0].get('href')
+                l_it['published_parsed'] = time.strptime(entry_it.xpath("./foo:{}".format(patterns['Published']), namespaces={'foo': patterns['Namespace']})[0].text[:22] + "00", "%Y-%m-%dT%H:%M:%S%z")
+            except IndexError:
+                continue
+            try:
+                l_it['summary'] = entry_it.xpath("./foo:{}".format(patterns['Summary']), namespaces={'foo': patterns['Namespace']})[0].text
+            except:
+                l_it['summary'] = ""
             l.append(l_it)
 
         return {'items': l}

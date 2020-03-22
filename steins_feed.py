@@ -42,8 +42,8 @@ def steins_read(title_pattern=""):
         c.execute("UPDATE Feeds SET Updated=datetime('now') WHERE FeedID=?", (feed_it['FeedID'], ))
         conn.commit()
 
-        if patterns is not None and patterns['Pause'] > 0:
-            time.sleep(patterns['Pause'])
+        if feed_it['Pause'] > 0:
+            time.sleep(feed_it['Pause'])
 
 # Generate HTML.
 def steins_write():

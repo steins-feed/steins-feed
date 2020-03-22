@@ -2,12 +2,6 @@
 
 <root>
     <feed>
-        <title>Electronic Frontier Foundation</title>
-        <link>https://www.eff.org/rss/updates.xml</link>
-        <lang>English</lang>
-        <summary>0</summary>
-    </feed>
-    <feed>
         <title>Facebook</title>
         <link>https://about.fb.com/news/feed/</link>
         <lang>English</lang>
