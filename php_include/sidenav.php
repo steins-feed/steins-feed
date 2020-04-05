@@ -158,4 +158,11 @@ endforeach;
 <p><a href="https://github.com/hy144328/steins-feed">GitHub</a></p>
 <p><a href="https://github.com/hy144328/steins-feed/blob/master/HOWTO.md">Instructions</a></p>
 <hr>
+<p>Links:</p>
+<ul>
+<?php foreach ($tags_disp as $tag_ct => $tag_it):?>
+<li><a href="/steins-feed/tag.php?user=<?php echo $user;?>&tag=<?php echo $tags_disp_id[$tag_ct];?>"><?php echo $tags_disp[$tag_ct];?></a></li>
+<?php endforeach;?>
+</ul>
+<hr>
 </div>

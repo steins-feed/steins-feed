@@ -165,6 +165,7 @@ foreach ($tags as $row_it):
 <input type="submit" value="Delete tag">
 </form>
 <hr>
+<?php if (false):?>
 <form method="post" action="/steins-feed/php_settings/load_config.php" enctype="multipart/form-data">
 <p>
 <input type="file" name="feeds" value="feeds">
@@ -213,6 +214,7 @@ New name:<br>
 <input type="submit" value="Delete user" style="background-color:red">
 </form>
 <hr>
+<?php endif;?>
 </div>
 </body>
 </html>
