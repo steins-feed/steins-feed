@@ -3,13 +3,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php
 $db = steins_db(SQLITE3_OPEN_READONLY);
 $db->exec("BEGIN");
 
-include "php_include/user.php";
-include "php_include/langs.php";
-include "php_include/page.php";
-include "php_include/feed.php";
-include "php_include/clf.php";
-include "php_include/tags.php";
-include "php_include/timeunit.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/tags.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/timeunit.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
 
 // Last updated.
 $stmt = $db->prepare("SELECT MIN(Updated) From Feeds");
@@ -52,9 +52,9 @@ foreach ($f_list as $f_it):
 </head>
 <body>
 <?php
-include "php_include/topnav.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
 topnav($user);
-include "php_include/sidenav.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
 <div class="main">
 <p>

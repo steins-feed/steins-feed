@@ -1,4 +1,6 @@
 <?php
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
+
 $stmt = $db->prepare("SELECT DISTINCT Language FROM Feeds INNER JOIN Display USING (FeedID) WHERE UserID=:UserID");
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
 $res = $stmt->execute();

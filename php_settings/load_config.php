@@ -49,6 +49,7 @@ foreach ($feeds->feed as $feed_it) {
 
 $db->exec("END");
 $db->close();
+
 $_GET = $_POST;
 include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/settings.php";
 ?>

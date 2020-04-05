@@ -23,6 +23,7 @@ if ($user_id != $default_user_id) {
 
 $db->exec("END");
 $db->close();
+
 $_GET = $_POST;
-include "../settings.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/settings.php";
 ?>

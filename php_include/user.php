@@ -1,5 +1,5 @@
 <?php
-if( isset($_GET["user"]) ) {
+if (isset($_GET["user"])) {
     $user = $_GET["user"];
     $stmt = $db->prepare("SELECT UserID FROM Users WHERE Name=:Name");
     $stmt->bindValue(":Name", $user, SQLITE3_TEXT);

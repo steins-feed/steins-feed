@@ -3,13 +3,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php
 $db = steins_db(SQLITE3_OPEN_READONLY);
 $db->exec("BEGIN");
 
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/timeunit.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/tags.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/tags.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/timeunit.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
 
 // Last updated.
 $stmt = $db->prepare("SELECT MIN(Updated) From Feeds");
@@ -260,8 +260,6 @@ endif;
 </head>
 <body>
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
-
 $current_date = new DateTime();
 $current_date->setTime(0, 0, 0);
 
@@ -303,9 +301,9 @@ if ($timeunit == 'Day') {
     }
 }
 
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
 topnav($topnav_title);
-
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
 <div class="main">
 <p>
@@ -353,7 +351,9 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
     $s = "";
     if ($item_it['Abstract'] != 0) {
         $tree = new DOMDocument();
-        $tree->loadXML("<root>" . $item_it['Summary'] . "</root>");
+        $s = htmlentities($item_it['Summary'], ENT_NOQUOTES);
+        $s = str_replace(array('&lt;', '&gt;'), array('<', '>'), $s);
+        $tree->loadHTML("<body>" . $s . "</body>");
         if ($item_it['Abstract'] == 1) {
             $res = $tree->getElementsByTagName('p');
             for ($i = $res->length - 1; $i > 0; $i--) {
@@ -365,7 +365,8 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
         $tags = ['figure', 'img', 'iframe', 'script', 'small', 'svg'];
         foreach ($tags as $tag_it) {
             $res = $tree->getElementsByTagName($tag_it);
-            foreach ($res as $res_it) {
+            for ($i = $res->length - 1; $i >= 0; $i--) {
+                $res_it = $res->item($i);
                 $res_it->parentNode->removeChild($res_it);
             }
         }
@@ -385,9 +386,9 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
                 break
         */
         
-        $s = $tree->saveXML();
-        $s_begin = strpos($s, "<root>") + strlen("<root>");
-        $s_end = strpos($s, "</root>");
+        $s = html_entity_decode($tree->saveHTML());
+        $s_begin = strpos($s, "<body>") + strlen("<body>");
+        $s_end = strpos($s, "</body>");
         $s = substr($s, $s_begin, $s_end - $s_begin);
         
         $tags = ['strong', 'hr'];

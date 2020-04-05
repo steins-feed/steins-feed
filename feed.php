@@ -3,13 +3,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php
 $db = steins_db(SQLITE3_OPEN_READONLY);
 $db->exec("BEGIN");
 
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/timeunit.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/tags.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/tags.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/timeunit.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
 
 $stmt = $db->prepare("SELECT * FROM Feeds WHERE FeedID=:FeedID");
 $stmt->bindValue(':FeedID', $_GET['feed'], SQLITE3_INTEGER);
@@ -63,9 +63,9 @@ foreach ($f_list as $f_it):
 </head>
 <body>
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
 topnav($feed_it['Title']);
-include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
 <div class="main">
 <hr>

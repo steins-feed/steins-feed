@@ -5,6 +5,7 @@ steins.db.?
 steins.db-journal
 steins-*.html
 steins.log
+steins.log.?
 steins_feed.log
 steins_magic.log
 tmp_feeds.xml

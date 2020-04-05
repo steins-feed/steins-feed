@@ -29,6 +29,7 @@ $stmt->execute();
 
 $db->exec("END");
 $db->close();
+
 $_GET = $_POST;
-include "../feed.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/feed.php";
 ?>

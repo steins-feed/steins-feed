@@ -33,6 +33,7 @@ if ($res) {
 
 $db->exec("END");
 $db->close();
+
 $_GET = $_POST;
-include "../settings.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/settings.php";
 ?>

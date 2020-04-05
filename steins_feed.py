@@ -17,7 +17,7 @@ def steins_read(title_pattern=""):
     handler = SteinsHandler()
     parsers = c.execute("SELECT * FROM Parsers").fetchall()
     parsers = dict([(p_it[0], p_it) for p_it in parsers])
-    for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ? ORDER BY Title", ("%" + title_pattern + "%", )).fetchall():
+    for feed_it in c.execute("SELECT * FROM Feeds WHERE Title LIKE ? ORDER BY Title COLLATE NOCASE", ("%" + title_pattern + "%", )).fetchall():
         patterns = parsers.get(feed_it['ParserID'], None)
         d, status = handler.parse(feed_it['Link'], patterns)
         if status < 0:
