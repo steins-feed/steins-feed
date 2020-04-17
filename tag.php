@@ -28,7 +28,9 @@ for ($lang_it = $res->fetcharray(); $lang_it; $lang_it = $res->fetcharray()) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="/steins-feed/index.css" rel="stylesheet" type="text/css">
+<link href="/steins-feed/css/index.css" rel="stylesheet" type="text/css">
+<link href="/steins-feed/css/topnav.css" rel="stylesheet" type="text/css">
+<link href="/steins-feed/css/sidenav.css" rel="stylesheet" type="text/css">
 <link href="/steins-feed/favicon.ico" rel="shortcut icon" type="image/png">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <title>Stein's Feed</title>
@@ -47,10 +49,12 @@ foreach ($f_list as $f_it):
 <body>
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
-topnav($tag_it['Name']);
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
-<div class="main">
+<main>
+<header>
+<h1><?php echo $user;?></h1>
+</header>
 <hr>
 <?php foreach ($langs_tag as $lang_it):?>
 <p><?php echo $lang_it;?> feeds:</p>
@@ -87,7 +91,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 </select>
 <?php endforeach;?>
 <hr>
-</div>
+</main>
 </body>
 </html>
 <?php

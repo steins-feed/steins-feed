@@ -1,14 +1,22 @@
-<div id="sidenav" class="sidenav">
-<h1 class="sidenav">
-<?php 
-if ($page < count($dates) - 1):
-?>
+<aside id="sidenav" class="sidenav">
+<nav class="topnav">
+<span onclick="close_menu()" class="toggle_menu">
+<i class="material-icons">
+close
+</i>
+</span>
+&nbsp;
+</nav>
+<nav class="page">
+<?php if ($page < count($dates) - 1):?>
 <form action="/steins-feed/index.php" method="get">
 <input name="user" value="<?php echo $user;?>" type="hidden">
 <?php foreach ($langs as $lang_ct => $lang_it):?>
 <input name="lang_<?php echo $lang_ct;?>" value="<?php echo $lang_it;?>" type="hidden">
-<?php endforeach;?>
-<?php foreach ($tags as $tag_ct => $tag_it):?>
+<?php
+endforeach;
+foreach ($tags as $tag_ct => $tag_it):
+?>
 <input name="tag_<?php echo $tag_ct;?>" value="<?php echo $tag_it;?>" type="hidden">
 <?php endforeach;?>
 <input name="page" value="<?php echo $page + 1;?>" type="hidden">
@@ -39,8 +47,7 @@ if ($page > 0):
 endif;
 echo "&#160;";
 ?>
-<span onclick="close_menu()" class="onclick">&#215;&nbsp;</span>
-</h1>
+</nav>
 <form action="/steins-feed/index.php" method="get">
 <?php if (count($tags_disp)):?>
 <p>Tags:</p>
@@ -161,8 +168,8 @@ endforeach;
 <p>Links:</p>
 <ul>
 <?php foreach ($tags_disp as $tag_ct => $tag_it):?>
-<li><a href="/steins-feed/tag.php?user=<?php echo $user;?>&tag=<?php echo $tags_disp_id[$tag_ct];?>"><?php echo $tags_disp[$tag_ct];?></a></li>
+<li><a href="/steins-feed/tag.php?user=<?php echo $user;?>&amp;tag=<?php echo $tags_disp_id[$tag_ct];?>"><?php echo $tags_disp[$tag_ct];?></a></li>
 <?php endforeach;?>
 </ul>
 <hr>
-</div>
+</aside>

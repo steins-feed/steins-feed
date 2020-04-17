@@ -16,7 +16,9 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="/steins-feed/index.css" rel="stylesheet" type="text/css">
+<link href="/steins-feed/css/index.css" rel="stylesheet" type="text/css">
+<link href="/steins-feed/css/topnav.css" rel="stylesheet" type="text/css">
+<link href="/steins-feed/css/sidenav.css" rel="stylesheet" type="text/css">
 <link href="/steins-feed/favicon.ico" rel="shortcut icon" type="image/png">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <title>Stein's Feed</title>
@@ -34,10 +36,12 @@ foreach ($f_list as $f_it):
 <body>
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
-topnav($user);
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
-<div class="main">
+<main>
+<header>
+<h1><?php echo $user;?></h1>
+</header>
 <hr>
 <?php
 $stmt = $db->prepare("SELECT DISTINCT Language FROM Feeds ORDER BY Language");
@@ -215,7 +219,7 @@ New name:<br>
 </form>
 <hr>
 <?php endif;?>
-</div>
+</main>
 </body>
 </html>
 <?php

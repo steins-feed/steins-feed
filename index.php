@@ -14,7 +14,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
 // Last updated.
 $stmt = $db->prepare("SELECT MIN(Updated) From Feeds");
 $res = $stmt->execute()->fetcharray();
-$last_updated = $res[0];
+$last_updated = substr($res[0], 0, 13) . ":00:00";
 
 // Dates.
 $stmt = "SELECT DISTINCT
@@ -37,6 +37,7 @@ if ($timeunit == 'Day') {
 } else if ($timeunit == 'Month') {
     $stmt = sprintf($stmt, "'start of month'", $page + 2);
 }
+
 $stmt = $db->prepare($stmt);
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
 for ($i = 0; $i < count($langs); $i++) {
@@ -117,6 +118,7 @@ ORDER BY
 ORDER BY
     %s.Score DESC", $clf_dict[$clf]['table']);
 }
+
 $stmt = $db->prepare($stmt);
 $stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
 $start_time = $date_it->format("Y-m-d H:i:s");
@@ -218,7 +220,9 @@ if ($feed == 'Surprise') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="/steins-feed/index.css" rel="stylesheet" type="text/css">
+<link href="/steins-feed/css/index.css" rel="stylesheet" type="text/css">
+<link href="/steins-feed/css/topnav.css" rel="stylesheet" type="text/css">
+<link href="/steins-feed/css/sidenav.css" rel="stylesheet" type="text/css">
 <link href="/steins-feed/favicon.ico" rel="shortcut icon" type="image/png">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <title>Stein's Feed</title>
@@ -229,17 +233,16 @@ var clf="<?php echo $clf;?>";
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <?php
 $f_list = array("like.js", "dislike.js", "open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js");
+if ($feed != 'Full') {
+    $f_list[] = "highlight.js";
+}
 foreach ($f_list as $f_it):
 ?>
 <script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>
 <?php
 endforeach;
 if ($feed != 'Full'):
-    $f_list = array("highlight.js");
-    foreach ($f_list as $f_it):
 ?>
-<script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>
-<?php endforeach;?>
 <script>
 <?php foreach ($langs_disp as $lang_it):?>
 var <?php echo strtolower($lang_it);?>_words;
@@ -259,6 +262,12 @@ endif;
 ?>
 </head>
 <body>
+<?php
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
+?>
+<main>
+<header>
 <?php
 $current_date = new DateTime();
 $current_date->setTime(0, 0, 0);
@@ -300,19 +309,16 @@ if ($timeunit == 'Day') {
         $topnav_title = $date_it->format("F Y");
     }
 }
-
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
-topnav($topnav_title);
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
-<div class="main">
+<h1><?php echo $topnav_title;?></h1>
 <p>
 <?php echo count($items);?> articles.
-Last updated: <?php echo $last_updated, " GMT";?>.
+Last updated: <?php echo $last_updated . " GMT";?>.
 </p>
+</header>
 <?php foreach ($items as $item_it):?>
 <hr>
-<div>
+<article>
 <h2>
 <a href="<?php echo htmlentities($item_it['Link'])?>" rel="noopener noreferrer" target="_blank">
 <span id="title_<?php echo $item_it['ItemID'];?>">
@@ -362,7 +368,8 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
             }
         }
         
-        $tags = ['figure', 'img', 'iframe', 'script', 'small', 'svg'];
+        // Strip tag and content.
+        $tags = ['figure', 'iframe', 'img', 'script', 'small', 'svg'];
         foreach ($tags as $tag_it) {
             $res = $tree->getElementsByTagName($tag_it);
             for ($i = $res->length - 1; $i >= 0; $i--) {
@@ -391,7 +398,8 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
         $s_end = strpos($s, "</body>");
         $s = substr($s, $s_begin, $s_end - $s_begin);
         
-        $tags = ['strong', 'hr'];
+        // Strip tag.
+        $tags = ['h[1-6]', 'hr', 'strong'];
         foreach ($tags as $tag_it) {
             $s = preg_replace("/<" . $tag_it . "[^>]*>/i", " ", $s);
         }
@@ -402,35 +410,41 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
 </div>
 <p>
 <button onclick="like(<?php echo $item_it['ItemID'];?>)" type="button">
-<i class="material-icons">
 <?php if ($item_it['Like'] == 1):?>
-<span id="like_<?php echo $item_it['ItemID'];?>" class="liked">thumb_up</span>
+<span id="like_<?php echo $item_it['ItemID'];?>" class="liked">
 <?php else:?>
-<span id="like_<?php echo $item_it['ItemID'];?>" class="like">thumb_up</span>
+<span id="like_<?php echo $item_it['ItemID'];?>" class="like">
 <?php endif;?>
+<i class="material-icons">
+thumb_up
 </i>
+</span>
 </button>
 <button onclick="dislike(<?php echo $item_it['ItemID'];?>)" type="button">
-<i class="material-icons">
 <?php if ($item_it['Like'] == -1):?>
-<span id="dislike_<?php echo $item_it['ItemID'];?>" class="disliked">thumb_down</span>
+<span id="dislike_<?php echo $item_it['ItemID'];?>" class="disliked">
 <?php else:?>
-<span id="dislike_<?php echo $item_it['ItemID'];?>" class="dislike">thumb_down</span>
+<span id="dislike_<?php echo $item_it['ItemID'];?>" class="dislike">
 <?php endif;?>
+<i class="material-icons">
+thumb_down
 </i>
+</span>
 </button>
 <?php if ($feed != 'Full'):?>
 <button onclick="highlight(<?php echo $item_it['ItemID'];?>, '<?php echo $item_it['Language'];?>')" type="button">
+<span id="highlight_<?php echo $item_it['ItemID'];?>" class="highlight">
 <i class="material-icons">
-<span id="highlight_<?php echo $item_it['ItemID'];?>" class="highlight">lightbulb_outline</span>
+lightbulb_outline
 </i>
+</span>
 </button>
 <?php endif;?>
 </p>
-</div>
+</article>
 <?php endforeach;?>
 <hr>
-</div>
+</main>
 </body>
 </html>
 <?php

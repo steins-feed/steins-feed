@@ -1,0 +1,23 @@
+aside.sidenav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 3;
+    width: 0;
+    height: 100%;
+    background-color: lightgrey;
+    white-space: nowrap;
+    overflow-x: hidden;
+    transition: 0.5s;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+aside.sidenav::-webkit-scrollbar {
+    display: none;
+}
+
+nav.page form {
+    display: inline;
+}

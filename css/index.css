@@ -1,0 +1,38 @@
+body {
+    margin-top: 0;
+    background-color: white;
+}
+
+main {
+    position: relative;
+    top: -2em;
+}
+
+main > header {
+    position: relative;
+    z-index: 2;
+}
+
+main button {
+    cursor: pointer;
+}
+
+span.liked, span.disliked, span.highlit {
+    color: blue;
+}
+
+span.tooltip {
+    cursor: pointer;
+}
+
+span.tooltip span.tooltiptext {
+    position: absolute;
+    z-index: 2;
+    visibility: hidden;
+    background-color: black;
+    color: white;
+}
+
+span.tooltip:hover span.tooltiptext {
+    visibility: visible;
+}
