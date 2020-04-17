@@ -5,7 +5,6 @@
 close
 </i>
 </span>
-&nbsp;
 </nav>
 <nav class="page">
 <?php if ($page < count($dates) - 1):?>

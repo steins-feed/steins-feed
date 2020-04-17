@@ -4,5 +4,4 @@
 menu
 </i>
 </span>
-&nbsp;
 </nav>

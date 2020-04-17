@@ -2,13 +2,12 @@ aside.sidenav {
     position: fixed;
     top: 0;
     right: 0;
-    z-index: 3;
-    width: 0;
+    z-index: 2;
     height: 100%;
+    padding: 0 8px 0 8px;
+    display: none;
     background-color: lightgrey;
-    white-space: nowrap;
-    overflow-x: hidden;
-    transition: 0.5s;
+    overflow: auto;
 
     scrollbar-width: none;
     -ms-overflow-style: none;

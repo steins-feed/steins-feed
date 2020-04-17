@@ -1,16 +1,8 @@
 body {
-    margin-top: 0;
+    margin: 0;
+    border: 0;
+    padding: 0 8px 0 8px;
     background-color: white;
-}
-
-main {
-    position: relative;
-    top: -2em;
-}
-
-main > header {
-    position: relative;
-    z-index: 2;
 }
 
 main button {
