@@ -986,6 +986,68 @@
         <lang>English</lang>
     </feed>
 
+    <!-- FOCUS -->
+    <feed>
+        <title>FOCUS Politik</title>
+        <link>https://rss.focus.de/politik/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>FOCUS Finanzen</title>
+        <link>https://rss.focus.de/finanzen/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>FOCUS Wissen</title>
+        <link>https://rss.focus.de/wissen/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>FOCUS Gesundheit</title>
+        <link>https://rss.focus.de/gesundheit/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>FOCUS Kultur</title>
+        <link>https://rss.focus.de/kultur/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>FOCUS Panorama</title>
+        <link>https://rss.focus.de/panorama/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>FOCUS Sport</title>
+        <link>https://rss.focus.de/sport/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>FOCUS Digital</title>
+        <link>https://rss.focus.de/digital/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>FOCUS Reisen</title>
+        <link>https://rss.focus.de/reisen/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>FOCUS Auto</title>
+        <link>https://rss.focus.de/auto/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>FOCUS Immobilien</title>
+        <link>https://rss.focus.de/immobilien/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>FOCUS</title>
+        <link>http://rss.focus.de/fol/XML/rss_folnews.xml</link>
+        <lang>German</lang>
+    </feed>
+
     <!-- Forbes -->
     <feed>
         <title>Forbes Billionaires</title>
@@ -3345,6 +3407,172 @@
         <title>Slate</title>
         <link>https://slate.com/feeds/all.rss</link>
         <lang>English</lang>
+    </feed>
+
+    <!-- Smithsonian Magazine -->
+    <feed>
+        <title>Smithsonian Magazine History</title>
+        <link>https://www.smithsonianmag.com/rss/history/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Smithsonian Magazine Science</title>
+        <link>https://www.smithsonianmag.com/rss/science-nature/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Smithsonian Magazine Ingenuity</title>
+        <link>https://www.smithsonianmag.com/rss/innovation/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Smithsonian Magazine Arts &amp; Culture</title>
+        <link>https://www.smithsonianmag.com/rss/arts-culture/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Smithsonian Magazine Travel</title>
+        <link>https://www.smithsonianmag.com/rss/travel/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Smithsonian Magazine Smartnews</title>
+        <link>https://www.smithsonianmag.com/rss/smart-news/</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- Spiegel -->
+    <feed>
+        <title>Spiegel Politik</title>
+        <link>https://www.spiegel.de/politik/index.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Spiegel Wirtschaft</title>
+        <link>https://www.spiegel.de/wirtschaft/index.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Spiegel Panorama</title>
+        <link>https://www.spiegel.de/panorama/index.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Spiegel Sport</title>
+        <link>https://www.spiegel.de/sport/index.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Spiegel Kultur</title>
+        <link>https://www.spiegel.de/kultur/index.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Spiegel Netzwelt</title>
+        <link>https://www.spiegel.de/netzwelt/index.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Spiegel Wissenschaft</title>
+        <link>https://www.spiegel.de/wissenschaft/index.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Spiegel Gesundheit</title>
+        <link>https://www.spiegel.de/gesundheit/index.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Spiegel Reise</title>
+        <link>https://www.spiegel.de/reise/index.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Spiegel Geschichte</title>
+        <link>https://www.spiegel.de/einestages/index.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Spiegel Mobilität</title>
+        <link>https://www.spiegel.de/auto/index.rss</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Spiegel</title>
+        <link>https://www.spiegel.de/schlagzeilen/tops/index.rss</link>
+        <lang>German</lang>
+    </feed>
+
+    <!-- Stern -->
+    <feed>
+        <title>Stern Politik</title>
+        <link>https://www.stern.de/feed/standard/politik/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Panorama</title>
+        <link>https://www.stern.de/feed/standard/panorama/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Sport</title>
+        <link>https://www.stern.de/feed/standard/sport/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Kultur</title>
+        <link>https://www.stern.de/feed/standard/kultur/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Wirtschaft</title>
+        <link>https://www.stern.de/feed/standard/wirtschaft/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Auto</title>
+        <link>https://www.stern.de/feed/standard/auto/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Gesundheit</title>
+        <link>https://www.stern.de/feed/standard/gesundheit/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Lifestyle</title>
+        <link>https://www.stern.de/feed/standard/lifestyle/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Genuss</title>
+        <link>https://www.stern.de/feed/standard/genuss/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Familie</title>
+        <link>https://www.stern.de/feed/standard/familie/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Digital</title>
+        <link>https://www.stern.de/feed/standard/digital/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Wissen</title>
+        <link>https://www.stern.de/feed/standard/wissen/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern Reise</title>
+        <link>https://www.stern.de/feed/standard/reise/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Stern</title>
+        <link>https://www.stern.de/feed/standard/all/</link>
+        <lang>German</lang>
     </feed>
 
     <!-- Süddeutsche Zeitung -->

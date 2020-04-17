@@ -24,9 +24,19 @@
     </feed>
     <feed>
         <title>GitLab</title>
-        <link>https://about.gitlab.com/blog/atom.xml</link>
+        <link>https://about.gitlab.com/atom.xml</link>
         <lang>English</lang>
         <summary>0</summary>
+    </feed>
+    <feed>
+        <title>Google DeepMind</title>
+        <link>https://deepmind.com/blog/feed/basic/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>H2O.ai</title>
+        <link>https://www.h2o.ai/feed/</link>
+        <lang>English</lang>
     </feed>
     <feed>
         <title>IBM Developer</title>

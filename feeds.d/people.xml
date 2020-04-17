@@ -53,6 +53,11 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>Stephen Wolfram</title>
+        <link>https://writings.stephenwolfram.com/feed/</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>Terence Tao</title>
         <link>https://terrytao.wordpress.com/feed/</link>
         <lang>English</lang>

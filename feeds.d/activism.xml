@@ -22,6 +22,11 @@
         <lang>German</lang>
     </feed>
     <feed>
+        <title>Code for Germany</title>
+        <link>https://www.codefor.de/feed.xml</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
         <title>Creative Commons</title>
         <link>https://creativecommons.org/feed/</link>
         <lang>English</lang>
@@ -75,6 +80,11 @@
         <summary>0</summary>
     </feed>
     <feed>
+        <title>Europe Code Week</title>
+        <link>https://blog.codeweek.eu/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>Free Software Foundation</title>
         <link>https://www.fsf.org/static/fsforg/rss/news.xml</link>
         <lang>English</lang>
@@ -102,6 +112,11 @@
     <feed>
         <title>Jöran und Konsorten</title>
         <link>https://www.joeran.de/feed/</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Jointly</title>
+        <link>https://jointly.info/feed/</link>
         <lang>German</lang>
     </feed>
     <feed>
