@@ -1,8 +1,8 @@
 <aside id="sidenav" class="sidenav">
 <nav class="topnav">
 <span class="right">
-<a href="/steins-feed/statistics.php?user=<?php echo $user;?>"><i class="material-icons">insert_chart_outlined</i></a>
-<a href="/steins-feed/settings.php?user=<?php echo $user;?>"><i class="material-icons">settings</i></a>
+<a href="/steins-feed/statistics.php?user=<?php echo $user;?>" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
+<a href="/steins-feed/settings.php?user=<?php echo $user;?>" target="_blank"><i class="material-icons">settings</i></a>
 <i onclick="close_menu()" class="material-icons">
 close
 </i>
