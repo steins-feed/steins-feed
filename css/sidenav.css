@@ -16,7 +16,3 @@ aside.sidenav {
 aside.sidenav::-webkit-scrollbar {
     display: none;
 }
-
-nav.page form {
-    display: inline;
-}

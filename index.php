@@ -232,10 +232,7 @@ var clf="<?php echo $clf;?>";
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <?php
-$f_list = array("like.js", "dislike.js", "open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js");
-if ($feed != 'Full') {
-    $f_list[] = "highlight.js";
-}
+$f_list = array("like.js", "dislike.js", "open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js", "highlight.js", "next_item.js");
 foreach ($f_list as $f_it):
 ?>
 <script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>
@@ -266,7 +263,7 @@ endif;
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
-<main>
+<main id="main">
 <header>
 <?php
 $current_date = new DateTime();
@@ -317,8 +314,8 @@ Last updated: <?php echo $last_updated . " GMT";?>.
 </p>
 </header>
 <?php foreach ($items as $item_it):?>
+<article id="article_<?php echo $item_it['ItemID'];?>">
 <hr>
-<article>
 <h2>
 <a href="<?php echo htmlentities($item_it['Link'])?>" rel="noopener noreferrer" target="_blank">
 <span id="title_<?php echo $item_it['ItemID'];?>">
@@ -443,7 +440,13 @@ lightbulb_outline
 </p>
 </article>
 <?php endforeach;?>
+<footer>
 <hr>
+<p>
+<a href="https://github.com/hy144328/steins-feed">GitHub</a>
+<a href="https://github.com/hy144328/steins-feed/blob/master/HOWTO.md">Instructions</a>
+</p>
+</footer>
 </main>
 </body>
 </html>

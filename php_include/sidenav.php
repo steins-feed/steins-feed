@@ -1,52 +1,14 @@
 <aside id="sidenav" class="sidenav">
 <nav class="topnav">
-<span onclick="close_menu()" class="toggle_menu">
-<i class="material-icons">
+<span class="right">
+<a href="/steins-feed/statistics.php?user=<?php echo $user;?>"><i class="material-icons">insert_chart_outlined</i></a>
+<a href="/steins-feed/settings.php?user=<?php echo $user;?>"><i class="material-icons">settings</i></a>
+<i onclick="close_menu()" class="material-icons">
 close
 </i>
 </span>
 </nav>
-<nav class="page">
-<?php if ($page < count($dates) - 1):?>
-<form action="/steins-feed/index.php" method="get">
-<input name="user" value="<?php echo $user;?>" type="hidden">
-<?php foreach ($langs as $lang_ct => $lang_it):?>
-<input name="lang_<?php echo $lang_ct;?>" value="<?php echo $lang_it;?>" type="hidden">
-<?php
-endforeach;
-foreach ($tags as $tag_ct => $tag_it):
-?>
-<input name="tag_<?php echo $tag_ct;?>" value="<?php echo $tag_it;?>" type="hidden">
-<?php endforeach;?>
-<input name="page" value="<?php echo $page + 1;?>" type="hidden">
-<input name="feed" value="<?php echo $feed;?>" type="hidden">
-<input name="clf" value="<?php echo $clf;?>" type="hidden">
-<input name="timeunit" value="<?php echo $timeunit;?>" type="hidden">
-<button type="submit"><i class="material-icons">fast_rewind</i></button>
-</form>
-<?php
-endif;
-if ($page > 0):
-?>
-<form action="/steins-feed/index.php" method="get">
-<input name="user" value="<?php echo $user;?>" type="hidden">
-<?php foreach ($langs as $lang_ct => $lang_it):?>
-<input name="lang_<?php echo $lang_ct;?>" value="<?php echo $lang_it;?>" type="hidden">
-<?php endforeach;?>
-<?php foreach ($tags as $tag_ct => $tag_it):?>
-<input name="tag_<?php echo $tag_ct;?>" value="<?php echo $tag_it;?>" type="hidden">
-<?php endforeach;?>
-<input name="page" value="<?php echo $page - 1;?>" type="hidden">
-<input name="feed" value="<?php echo $feed;?>" type="hidden">
-<input name="clf" value="<?php echo $clf;?>" type="hidden">
-<input name="timeunit" value="<?php echo $timeunit;?>" type="hidden">
-<button type="submit"><i class="material-icons">fast_forward</i></button>
-</form>
-<?php
-endif;
-echo "&#160;";
-?>
-</nav>
+<section>
 <form action="/steins-feed/index.php" method="get">
 <?php if (count($tags_disp)):?>
 <p>Tags:</p>
@@ -135,8 +97,10 @@ endforeach;
 <input name="new_timeunit" value="Month" type="submit">
 </p>
 </form>
+</section>
 <hr>
 <?php if ($feed != 'Full'):?>
+<section>
 <form action="/steins-feed/analysis.php" method="get">
 <p>
 <select name="clf">
@@ -156,19 +120,18 @@ endforeach;
 <input type="submit" value="Report">
 </p>
 </form>
+</section>
 <hr>
 <?php endif;?>
-<p><a href="/steins-feed/statistics.php?user=<?php echo $user;?>">Statistics</a></p>
-<p><a href="/steins-feed/settings.php?user=<?php echo $user;?>">Settings</a></p>
-<hr>
-<p><a href="https://github.com/hy144328/steins-feed">GitHub</a></p>
-<p><a href="https://github.com/hy144328/steins-feed/blob/master/HOWTO.md">Instructions</a></p>
-<hr>
-<p>Links:</p>
-<ul>
+<form action="/steins-feed/tag.php" method="get">
+<p>
+<select name="tag">
 <?php foreach ($tags_disp as $tag_ct => $tag_it):?>
-<li><a href="/steins-feed/tag.php?user=<?php echo $user;?>&amp;tag=<?php echo $tags_disp_id[$tag_ct];?>"><?php echo $tags_disp[$tag_ct];?></a></li>
+<option value="<?php echo $tags_disp_id[$tag_ct];?>"><?php echo $tags_disp[$tag_ct];?></option>
 <?php endforeach;?>
-</ul>
-<hr>
+</select>
+<input name="user" value="<?php echo $user;?>" type="hidden">
+<input type="submit" value="Edit">
+</p>
+</form>
 </aside>
