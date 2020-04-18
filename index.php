@@ -332,7 +332,7 @@ Published: <?php echo $item_it['Published'];?> GMT.
     $stmt->bindValue(':UserID', $user_id, SQLITE3_INTEGER);
     $stmt->bindValue(':FeedID', $item_it['FeedID'], SQLITE3_INTEGER);
     $res = $stmt->execute();
-    
+
     $tag_it = $res->fetcharray();
     if ($tag_it):
 ?>
@@ -357,6 +357,9 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
         $s = htmlentities($item_it['Summary'], ENT_NOQUOTES);
         $s = str_replace(array('&lt;', '&gt;'), array('<', '>'), $s);
         $tree->loadHTML("<body>" . $s . "</body>");
+        $tree_xpath = new DOMXPath($tree);
+        $tree_body = $tree->childNodes[1]->childNodes[0];
+
         if ($item_it['Abstract'] == 1) {
             $res = $tree->getElementsByTagName('p');
             for ($i = $res->length - 1; $i > 0; $i--) {
@@ -364,7 +367,7 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
                 $res_it->parentNode->removeChild($res_it);
             }
         }
-        
+
         // Strip tag and content.
         $tags = ['figure', 'iframe', 'img', 'script', 'small', 'svg'];
         foreach ($tags as $tag_it) {
@@ -374,34 +377,59 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
                 $res_it->parentNode->removeChild($res_it);
             }
         }
-        
-        /*
-        # Remove leading and trailing <br>.
-        for node_it in summary_tree.xpath("//div"):
-            while True:
-                if len(node_it) == 0:
-                    break
-                if node_it[0].tag == 'br':
-                    node_it[0].drop_tag()
-                    continue
-                if node_it[-1].tag == 'br':
-                    node_it[-1].drop_tag()
-                    continue
-                break
-        */
-        
+
+        // Strip class and content.
+        $classes = ['twitter'];
+        foreach ($classes as $class_it) {
+            $res = $tree_xpath->query("//*[contains(@class, '" . $class_it . "')]");
+            for ($i = $res->length - 1; $i >= 0; $i--) {
+                $res_it = $res->item($i);
+                $res_it->parentNode->removeChild($res_it);
+            }
+        }
+
+        // Strip empty tags.
+        $tags = ['div', 'p', 'span'];
+        foreach ($tags as $tag_it) {
+            $res = $tree->getElementsByTagName($tag_it);
+            for ($i = $res->length - 1; $i >= 0; $i--) {
+                $res_it = $res->item($i);
+                if (!$res_it->hasChildNodes() and $res_it->textContent == "") {
+                    $res_it->parentNode->removeChild($res_it);
+                }
+            }
+        }
+
+        // Remove leading and trailing tags.
+        $tags = ['br'];
+        while (true) {
+            if (!is_null($tree_body->firstChild) and in_array($tree_body->firstChild->tagName, $tags)) {
+                $tree_body->removeChild($tree_body->firstChild);
+            } else {
+                break;
+            }
+        }
+        while (true) {
+            if (!is_null($tree_body->lastChild) and in_array($tree_body->lastChild->tagName, $tags)) {
+                $tree_body->removeChild($tree_body->lastChild);
+            } else {
+                break;
+            }
+        }
+
         $s = html_entity_decode($tree->saveHTML());
+        $s = html_entity_decode($s);
         $s_begin = strpos($s, "<body>") + strlen("<body>");
         $s_end = strpos($s, "</body>");
         $s = substr($s, $s_begin, $s_end - $s_begin);
-        
+
         // Strip tag.
         $tags = ['h[1-6]', 'hr', 'strong'];
         foreach ($tags as $tag_it) {
             $s = preg_replace("/<" . $tag_it . "[^>]*>/i", " ", $s);
         }
     }
-    
+
     echo $s, PHP_EOL;
 ?>
 </div>
