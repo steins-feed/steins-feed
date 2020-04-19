@@ -232,7 +232,7 @@ var clf="<?php echo $clf;?>";
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <?php
-$f_list = array("like.js", "dislike.js", "open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js", "highlight.js", "next_item.js");
+$f_list = array("highlight.js", "like.js", "next_item.js");
 foreach ($f_list as $f_it):
 ?>
 <script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>

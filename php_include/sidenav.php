@@ -38,55 +38,21 @@ endforeach;
 ?>
 <p>Feed:</p>
 <?php
-$feed_dict = array(
-    "Full" => "disable_clf()",
-    "Magic" => "enable_clf()",
-    "Surprise" => "enable_clf()"
-);
+$feed_dict = array("Full", "Magic", "Surprise");
 $clf_dict = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/json/steins_magic.json"), true);
 $clf_key = key($clf_dict);
 $magic_exists = file_exists($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/$user_id/$clf_key/clfs.pickle");
-foreach($feed_dict as $key => $value):
-    if ($key == $feed):
-        if ($key == "Full" or $magic_exists):
-?>
-<input name="feed" value="<?php echo $key;?>" type="radio" onclick="<?php echo $value;?>" checked><?php echo $key;?><br>
-<?php   else:?>
-<input name="feed" value="<?php echo $key;?>" type="radio" onclick="<?php echo $value;?>" checked disabled><?php echo $key;?><br>
-<?php   endif;?>
-<?php
-    else:
-        if ($key == "Full" or $magic_exists):
-?>
-<input name="feed" value="<?php echo $key;?>" type="radio" onclick="<?php echo $value;?>"><?php echo $key;?><br>
-<?php   else:?>
-<input name="feed" value="<?php echo $key;?>" type="radio" onclick="<?php echo $value;?>" disabled><?php echo $key;?><br>
-<?php
-        endif;
-    endif;
-endforeach;
-?>
-<p>Algorithm:</p>
-<?php
-foreach ($clf_dict as $clf_it => $clf_val):
-    if ($feed == "Full"):
-        if ($clf_it == $clf):
-?>
-<input name="clf" value="<?php echo $clf_it;?>" type="radio" class="clf" checked disabled><?php echo $clf_it;?><br>
-<?php   else:?>
-<input name="clf" value="<?php echo $clf_it;?>" type="radio" class="clf" disabled><?php echo $clf_it;?><br>
-<?php
-        endif;
-    else:
-        if ($clf_it == $clf):
-?>
-<input name="clf" value="<?php echo $clf_it;?>" type="radio" class="clf" checked><?php echo $clf_it;?><br>
-<?php   else:?>
-<input name="clf" value="<?php echo $clf_it;?>" type="radio" class="clf"><?php echo $clf_it;?><br>
-<?php
-        endif;
-    endif;
-endforeach;
+foreach($feed_dict as $key) {
+    $feed_input = '<input name="feed" value="' . $key . '" type="radio"';
+    if ($key == $feed) {
+        $feed_input .= ' checked';
+    }
+    if (!$magic_exists) {
+        $feed_input .= ' disabled';
+    }
+    $feed_input .= '>' . $key . '<br>';
+    echo $feed_input . PHP_EOL;
+}
 ?>
 <p>
 <input name="user" value="<?php echo $user;?>" type="hidden">
@@ -99,30 +65,6 @@ endforeach;
 </form>
 </section>
 <hr>
-<?php if ($feed != 'Full'):?>
-<section>
-<form action="/steins-feed/analysis.php" method="get">
-<p>
-<select name="clf">
-<?php
-    foreach ($clf_dict as $clf_it => $clf_val):
-        if ($clf_it == $clf):
-?>
-<option value="<?php echo $clf_it;?>" selected><?php echo $clf_it;?></option>
-<?php   else:?>
-<option value="<?php echo $clf_it;?>"><?php echo $clf_it;?></option>
-<?php
-        endif;
-    endforeach;
-?>
-</select>
-<input name="user" value="<?php echo $user;?>" type="hidden">
-<input type="submit" value="Report">
-</p>
-</form>
-</section>
-<hr>
-<?php endif;?>
 <form action="/steins-feed/tag.php" method="get">
 <p>
 <select name="tag">

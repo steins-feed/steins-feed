@@ -26,12 +26,6 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
 var user="<?php echo $user;?>";
 var clf="<?php echo $clf;?>";
 </script>
-<?php
-$f_list = array("open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js");
-foreach ($f_list as $f_it):
-?>
-<script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>
-<?php endforeach;?>
 </head>
 <body>
 <?php

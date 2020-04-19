@@ -39,12 +39,7 @@ var user="<?php echo $user;?>";
 var clf="<?php echo $clf;?>";
 var tag_id="<?php echo $_GET['tag'];?>";
 </script>
-<?php
-$f_list = array("open_menu.js", "close_menu.js", "enable_clf.js", "disable_clf.js", "toggle_request.js");
-foreach ($f_list as $f_it):
-?>
-<script src="/steins-feed/js/<?php echo $f_it;?>" defer></script>
-<?php endforeach;?>
+<script src="/steins-feed/js/toggle_request.js" defer></script>
 </head>
 <body>
 <?php

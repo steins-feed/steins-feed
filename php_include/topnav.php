@@ -1,4 +1,5 @@
 <nav class="topnav">
+<script src="/steins-feed/js/menu.js" defer></script>
 <span class="left">
 <?php
 if ($page > 0):
