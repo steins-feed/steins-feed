@@ -52,22 +52,11 @@ PHP:
 6.  Open browser, and enter URL to website.
 7.  Enjoy.
 
-## Feeds behind paywalls
-
-*   Financial Times.
-*   The Wall Street Journal.
-*   Die WELT.
-
 ## No RSS
 
 *   Bloomberg.
-*   Boston Globe.
 *   Business Insider.
 *   New York Magazine.
 *   The Tab.
 *   The Telegraph.
 *   The Times.
-
-## GDPR
-
-*   LA Times.

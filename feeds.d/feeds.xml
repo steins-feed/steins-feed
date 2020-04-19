@@ -401,6 +401,83 @@
         <summary>0</summary>
     </feed>
 
+    <!-- Boston.com -->
+    <feed>
+        <title>Boston.com Local News</title>
+        <link>https://www.boston.com/tag/local-news/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com National News</title>
+        <link>https://www.boston.com/tag/national-news/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com World News</title>
+        <link>https://www.boston.com/tag/world-news/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com Business</title>
+        <link>https://www.boston.com/tag/business/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com Education</title>
+        <link>https://www.boston.com/tag/education/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com Finance</title>
+        <link>https://www.boston.com/tag/finance/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com Health</title>
+        <link>https://www.boston.com/tag/health/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com History</title>
+        <link>https://www.boston.com/tag/history/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com Innovation</title>
+        <link>https://www.boston.com/tag/innovation/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com Jobs News</title>
+        <link>https://www.boston.com/tag/jobs-news/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com Politics</title>
+        <link>https://www.boston.com/tag/politics/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com Science</title>
+        <link>https://www.boston.com/tag/science/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com Technology</title>
+        <link>https://www.boston.com/tag/technology/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com Weather Wisdom</title>
+        <link>https://www.boston.com/tag/weather-wisdom/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Boston.com</title>
+        <link>https://www.boston.com/?feed=rss</link>
+        <lang>English</lang>
+    </feed>
+
     <!-- Capital.de -->
     <feed>
         <title>Capital.de Geld &amp; Versicherungen</title>
@@ -1687,6 +1764,73 @@
     <feed>
         <title>The Hill Regulation -- International</title>
         <link>http://thehill.com/taxonomy/term/25208/feed</link>
+        <lang>English</lang>
+    </feed>
+
+    <!-- Los Angeles Times -->
+    <feed>
+        <title>Los Angeles Times Business</title>
+        <link>https://www.latimes.com/business/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times California</title>
+        <link>https://www.latimes.com/california/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times Climate &amp; Environment</title>
+        <link>https://www.latimes.com/environment/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times Entertainment &amp; Arts</title>
+        <link>https://www.latimes.com/entertainment-arts/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times Food</title>
+        <link>https://www.latimes.com/food/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times Lifestyle</title>
+        <link>https://www.latimes.com/lifestyle/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times Obituaries</title>
+        <link>https://www.latimes.com/obituaries/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times Opinion</title>
+        <link>https://www.latimes.com/opinion/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times Politics</title>
+        <link>https://www.latimes.com/politics/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times Science</title>
+        <link>https://www.latimes.com/science/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times Sports</title>
+        <link>https://www.latimes.com/sports/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times Travel</title>
+        <link>https://www.latimes.com/travel/rss2.0.xml</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Los Angeles Times World &amp; Nation</title>
+        <link>https://www.latimes.com/world-nation/rss2.0.xml</link>
         <lang>English</lang>
     </feed>
 
