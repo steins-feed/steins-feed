@@ -65,11 +65,40 @@ foreach($feed_dict as $key) {
 </form>
 </section>
 <hr>
+<form action="/steins-feed/feed.php" method="get">
+<p>
+<select name="feed">
+<?php
+$stmt = $db->prepare("SELECT * FROM Feeds Order BY Title COLLATE NOCASE");
+$res = $stmt->execute();
+$feeds_all = array();
+for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
+    $feeds_all[$row_it['FeedID']] = $row_it['Title'];
+}
+
+foreach ($feeds_all as $feed_ct => $feed_it):
+?>
+<option value="<?php echo $feed_ct;?>"><?php echo $feed_it;?></option>
+<?php endforeach;?>
+</select>
+<input name="user" value="<?php echo $user;?>" type="hidden">
+<input type="submit" value="Edit">
+</p>
+</form>
 <form action="/steins-feed/tag.php" method="get">
 <p>
 <select name="tag">
-<?php foreach ($tags_disp as $tag_ct => $tag_it):?>
-<option value="<?php echo $tags_disp_id[$tag_ct];?>"><?php echo $tags_disp[$tag_ct];?></option>
+<?php
+$stmt = $db->prepare("SELECT * FROM Tags WHERE UserID=:UserID ORDER BY Name COLLATE NOCASE");
+$stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
+$res = $stmt->execute();
+$tags_all = array();
+for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
+    $tags_all[$row_it['TagID']] = $row_it['Name'];
+}
+
+foreach ($tags_all as $tag_ct => $tag_it):?>
+<option value="<?php echo $tag_ct;?>"><?php echo $tag_it;?></option>
 <?php endforeach;?>
 </select>
 <input name="user" value="<?php echo $user;?>" type="hidden">

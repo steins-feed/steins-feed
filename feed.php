@@ -13,7 +13,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
 
 $stmt = $db->prepare("SELECT * FROM Feeds WHERE FeedID=:FeedID");
 $stmt->bindValue(':FeedID', $_GET['feed'], SQLITE3_INTEGER);
-$feed_it = $stmt->execute()->fetcharray();
+$feed_row = $stmt->execute()->fetcharray();
 
 $stmt = $db->prepare("SELECT * FROM Display WHERE UserID=:UserID AND FeedID=:FeedID");
 $stmt->bindValue(':UserID', $user_id, SQLITE3_INTEGER);
@@ -65,40 +65,40 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
 <main>
 <header>
-<h1><?php echo $feed_it['Title'];?></h1>
+<h1><?php echo $feed_row['Title'];?></h1>
 </header>
 <hr>
 <form method="post" action="/steins-feed/php_settings/update_feed.php">
 <p>
 Title:<br>
-<input type="text" name="title" value="<?php echo $feed_it['Title'];?>">
+<input type="text" name="title" value="<?php echo $feed_row['Title'];?>">
 </p>
 <p>
 Link:<br>
-<input type="text" name="link" value="<?php echo $feed_it['Link'];?>">
+<input type="text" name="link" value="<?php echo $feed_row['Link'];?>">
 </p>
 <p>
 Language:<br>
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/select_lang.php";
-select_lang($feed_it['Language']);
+select_lang($feed_row['Language']);
 ?>
 </p>
 <p>
 Summary:<br>
-<?php if ($feed_it['Summary'] == 0):?>
+<?php if ($feed_row['Summary'] == 0):?>
 <input type="radio" name="summary" value=0 checked>
 <?php else:?>
 <input type="radio" name="summary" value=0>
 <?php endif;?>
 No abstract
-<?php if ($feed_it['Summary'] == 1):?>
+<?php if ($feed_row['Summary'] == 1):?>
 <input type="radio" name="summary" value=1 checked>
 <?php else:?>
 <input type="radio" name="summary" value=1>
 <?php endif;?>
 First paragraph
-<?php if ($feed_it['Summary'] == 2):?>
+<?php if ($feed_row['Summary'] == 2):?>
 <input type="radio" name="summary" value=2 checked>
 <?php else:?>
 <input type="radio" name="summary" value=2>

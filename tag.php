@@ -13,7 +13,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
 
 $stmt = $db->prepare("SELECT * FROM Tags WHERE TagID=:TagID");
 $stmt->bindValue(':TagID', $_GET['tag'], SQLITE3_INTEGER);
-$tag_it = $stmt->execute()->fetcharray();
+$tag_row = $stmt->execute()->fetcharray();
 
 $stmt = $db->prepare("SELECT DISTINCT Language FROM Feeds ORDER BY Language COLLATE NOCASE");
 $res = $stmt->execute();
@@ -48,7 +48,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
 ?>
 <main>
 <header>
-<h1><?php echo $user;?></h1>
+<h1><?php echo $tag_row['Name'];?></h1>
 </header>
 <hr>
 <?php foreach ($langs_tag as $lang_it):?>

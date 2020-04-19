@@ -112,18 +112,9 @@ Full abstract
 <form method="post" action="/steins-feed/php_settings/delete_feed.php">
 <p>
 <select name="feed">
-<?php
-$stmt = $db->prepare("SELECT * FROM Feeds ORDER BY Title COLLATE NOCASE");
-$res = $stmt->execute();
-$feeds = array();
-for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-    $feeds[] = $row_it;
-}
-
-foreach ($feeds as $row_it):
-?>
-<option value="<?php echo $row_it['FeedID'];?>">
-<?php echo $row_it['Title'], PHP_EOL;?>
+<?php foreach ($feeds_all as $feed_ct => $feed_it):?>
+<option value="<?php echo $feed_ct;?>">
+<?php echo $feed_it, PHP_EOL;?>
 </option>
 <?php endforeach;?>
 </select>
@@ -143,19 +134,9 @@ foreach ($feeds as $row_it):
 <form method="post" action="/steins-feed/php_settings/delete_tag.php">
 <p>
 <select name="tag">
-<?php
-$stmt = $db->prepare("SELECT * FROM Tags WHERE UserID=:UserID ORDER BY Name COLLATE NOCASE");
-$stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
-$res = $stmt->execute();
-$tags = array();
-for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-    $tags[] = $row_it;
-}
-
-foreach ($tags as $row_it):
-?>
-<option value="<?php echo $row_it['TagID'];?>">
-<?php echo $row_it['Name'], PHP_EOL;?>
+<?php foreach ($tags_all as $tag_ct => $tag_it):?>
+<option value="<?php echo $tag_ct;?>">
+<?php echo $tag_it, PHP_EOL;?>
 </option>
 <?php endforeach;?>
 </select>

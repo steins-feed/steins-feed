@@ -16,3 +16,7 @@ aside.sidenav {
 aside.sidenav::-webkit-scrollbar {
     display: none;
 }
+
+aside.sidenav select {
+    max-width: 200px;
+}
