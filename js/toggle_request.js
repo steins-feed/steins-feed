@@ -1,9 +1,10 @@
 function insert_alphabetically(node, parent_node) {
     let lo = 0;
-    let hi = parent_node.length - 1;
+    let hi = parent_node.length;
+
     while (lo < hi) {
         let mid = (lo + hi - (hi - lo) % 2) / 2;
-        if (parent_node[mid].innerText > node.innerText) {
+        if (parent_node[mid].innerText.toLowerCase() > node.innerText.toLowerCase()) {
             hi = mid;
         } else if (lo < mid) {
             lo = mid;
@@ -11,7 +12,12 @@ function insert_alphabetically(node, parent_node) {
             lo++;
         }
     }
-    parent_node.insertBefore(node, parent_node[hi]);
+
+    if (hi == parent_node.length) {
+        parent_node.appendChild(node);
+    } else {
+        parent_node.insertBefore(node, parent_node[hi]);
+    }
 }
 
 function toggle_request(left, right, dest, lang=null, param=null) {
