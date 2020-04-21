@@ -32,6 +32,11 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>Martin Fowler</title>
+        <link>https://martinfowler.com/feed.atom</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>Nate Silver</title>
         <link>https://fivethirtyeight.com/contributors/nate-silver/feed</link>
         <lang>English</lang>

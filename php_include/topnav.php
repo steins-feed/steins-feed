@@ -52,6 +52,21 @@ endif;
 ?>
 </span>
 <span class="right">
+<?php
+$link = "/steins-feed/index.php";
+$link .= "?user=" . $user;
+foreach ($langs as $lang_ct => $lang_it) {
+    $link .= "&lang_" . $lang_ct . "=" . $lang_it;
+}
+foreach ($tags as $tag_ct => $tag_it) {
+    $link .= "&tag_" . $tag_ct . "=" . $tag_it;
+}
+$link .= "&page=0";
+$link .= "&feed=" . $feed;
+$link .= "&clf=" . $clf;
+$link .= "&timeunit=" . $timeunit;
+?>
+<a href="<?php echo $link;?>"><i class="material-icons">home</i></a>
 <a href="/steins-feed/statistics.php?user=<?php echo $user;?>" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
 <a href="/steins-feed/settings.php?user=<?php echo $user;?>" target="_blank"><i class="material-icons">settings</i></a>
 <i onclick="open_menu()" class="material-icons">

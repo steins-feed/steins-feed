@@ -1767,6 +1767,483 @@
         <lang>English</lang>
     </feed>
 
+    <!-- Lobsters -->
+    <feed>
+        <title>Lobsters a11y</title>
+        <link>https://lobste.rs/t/a11y.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters ai</title>
+        <link>https://lobste.rs/t/ai.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters android</title>
+        <link>https://lobste.rs/t/android.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters api</title>
+        <link>https://lobste.rs/t/api.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters apl</title>
+        <link>https://lobste.rs/t/apl.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters art</title>
+        <link>https://lobste.rs/t/art.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters assembly</title>
+        <link>https://lobste.rs/t/assembly.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters book</title>
+        <link>https://lobste.rs/t/book.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters browsers</title>
+        <link>https://lobste.rs/t/browsers.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters c</title>
+        <link>https://lobste.rs/t/c.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters c++</title>
+        <link>https://lobste.rs/t/c++.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters clojure</title>
+        <link>https://lobste.rs/t/clojure.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters cogsci</title>
+        <link>https://lobste.rs/t/cogsci.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters compilers</title>
+        <link>https://lobste.rs/t/compilers.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters compsci</title>
+        <link>https://lobste.rs/t/compsci.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters crypto</title>
+        <link>https://lobste.rs/t/crypto.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters cryptocurrencies</title>
+        <link>https://lobste.rs/t/cryptocurrencies.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters css</title>
+        <link>https://lobste.rs/t/css.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters culture</title>
+        <link>https://lobste.rs/t/culture.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters d</title>
+        <link>https://lobste.rs/t/d.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters databases</title>
+        <link>https://lobste.rs/t/databases.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters debugging</title>
+        <link>https://lobste.rs/t/debugging.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters design</title>
+        <link>https://lobste.rs/t/design.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters devops</title>
+        <link>https://lobste.rs/t/devops.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters distributed</title>
+        <link>https://lobste.rs/t/distributed.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters dotnet</title>
+        <link>https://lobste.rs/t/dotnet.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters dragonflybsd</title>
+        <link>https://lobste.rs/t/dragonflybsd.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters education</title>
+        <link>https://lobste.rs/t/education.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters elixir</title>
+        <link>https://lobste.rs/t/elixir.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters elm</title>
+        <link>https://lobste.rs/t/elm.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters emacs</title>
+        <link>https://lobste.rs/t/emacs.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters email</title>
+        <link>https://lobste.rs/t/email.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters erlang</title>
+        <link>https://lobste.rs/t/erlang.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters event</title>
+        <link>https://lobste.rs/t/event.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters finance</title>
+        <link>https://lobste.rs/t/finance.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters formalmethods</title>
+        <link>https://lobste.rs/t/formalmethods.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters fortran</title>
+        <link>https://lobste.rs/t/fortran.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters freebsd</title>
+        <link>https://lobste.rs/t/freebsd.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters games</title>
+        <link>https://lobste.rs/t/games.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters go</title>
+        <link>https://lobste.rs/t/go.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters graphics</title>
+        <link>https://lobste.rs/t/graphics.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters hardware</title>
+        <link>https://lobste.rs/t/hardware.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters haskell</title>
+        <link>https://lobste.rs/t/haskell.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters historical</title>
+        <link>https://lobste.rs/t/historical.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters illumos</title>
+        <link>https://lobste.rs/t/illumos.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters ios</title>
+        <link>https://lobste.rs/t/ios.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters java</title>
+        <link>https://lobste.rs/t/java.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters javascript</title>
+        <link>https://lobste.rs/t/javascript.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters job</title>
+        <link>https://lobste.rs/t/job.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters law</title>
+        <link>https://lobste.rs/t/law.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters linux</title>
+        <link>https://lobste.rs/t/linux.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters lisp</title>
+        <link>https://lobste.rs/t/lisp.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters lua</title>
+        <link>https://lobste.rs/t/lua.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters mac</title>
+        <link>https://lobste.rs/t/mac.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters math</title>
+        <link>https://lobste.rs/t/math.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters meta</title>
+        <link>https://lobste.rs/t/meta.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters ml</title>
+        <link>https://lobste.rs/t/ml.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters mobile</title>
+        <link>https://lobste.rs/t/mobile.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters netbsd</title>
+        <link>https://lobste.rs/t/netbsd.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters networking</title>
+        <link>https://lobste.rs/t/networking.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters nodejs</title>
+        <link>https://lobste.rs/t/nodejs.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters objectivec</title>
+        <link>https://lobste.rs/t/objectivec.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters openbsd</title>
+        <link>https://lobste.rs/t/openbsd.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters osdev</title>
+        <link>https://lobste.rs/t/osdev.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters performance</title>
+        <link>https://lobste.rs/t/performance.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters perl</title>
+        <link>https://lobste.rs/t/perl.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters person</title>
+        <link>https://lobste.rs/t/person.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters philosophy</title>
+        <link>https://lobste.rs/t/philosophy.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters php</title>
+        <link>https://lobste.rs/t/php.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters plt</title>
+        <link>https://lobste.rs/t/plt.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters practices</title>
+        <link>https://lobste.rs/t/practices.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters privacy</title>
+        <link>https://lobste.rs/t/privacy.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters programming</title>
+        <link>https://lobste.rs/t/programming.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters python</title>
+        <link>https://lobste.rs/t/python.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters rant</title>
+        <link>https://lobste.rs/t/rant.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters release</title>
+        <link>https://lobste.rs/t/release.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters reversing</title>
+        <link>https://lobste.rs/t/reversing.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters ruby</title>
+        <link>https://lobste.rs/t/ruby.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters rust</title>
+        <link>https://lobste.rs/t/rust.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters satire</title>
+        <link>https://lobste.rs/t/satire.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters scala</title>
+        <link>https://lobste.rs/t/scala.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters scaling</title>
+        <link>https://lobste.rs/t/scaling.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters science</title>
+        <link>https://lobste.rs/t/science.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters security</title>
+        <link>https://lobste.rs/t/security.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters swift</title>
+        <link>https://lobste.rs/t/swift.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters systemd</title>
+        <link>https://lobste.rs/t/systemd.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters testing</title>
+        <link>https://lobste.rs/t/testing.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters unix</title>
+        <link>https://lobste.rs/t/unix.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters vcs</title>
+        <link>https://lobste.rs/t/vcs.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters vim</title>
+        <link>https://lobste.rs/t/vim.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters virtualization</title>
+        <link>https://lobste.rs/t/virtualization.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters visualization</title>
+        <link>https://lobste.rs/t/visualization.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters wasm</title>
+        <link>https://lobste.rs/t/wasm.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters web</title>
+        <link>https://lobste.rs/t/web.rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
+        <title>Lobsters windows</title>
+        <link>https://lobste.rs/t/windows.rss</link>
+        <lang>English</lang>
+    </feed>
+
     <!-- Los Angeles Times -->
     <feed>
         <title>Los Angeles Times Business</title>

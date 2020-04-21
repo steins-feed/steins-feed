@@ -27,4 +27,9 @@
         <link>http://feeds.feedburner.com/nybooks</link>
         <lang>English</lang>
     </feed>
+    <feed>
+        <title>Variety</title>
+        <link>https://variety.com/feed/</link>
+        <lang>English</lang>
+    </feed>
 </root>

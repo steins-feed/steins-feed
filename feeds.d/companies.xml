@@ -7,6 +7,11 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>Factorio</title>
+        <link>https://www.factorio.com/blog/rss</link>
+        <lang>English</lang>
+    </feed>
+    <feed>
         <title>Fairphone Blog</title>
         <link>https://www.fairphone.com/en/feed/</link>
         <lang>English</lang>
