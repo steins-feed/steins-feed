@@ -351,8 +351,11 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
 </p>
 <div id="summary_<?php echo $item_it['ItemID'];?>">
 <?php
-    $s = "";
-    if ($item_it['Abstract'] != 0) {
+    if ($item_it['Abstract'] == 0) {
+        $s = "";
+    } else if ($item_it['Abstract'] == 3) {
+        $s = $item_it['Summary'];
+    } else {
         $tree = new DOMDocument();
         $s = htmlentities($item_it['Summary'], ENT_NOQUOTES);
         $s = str_replace(array('&lt;', '&gt;'), array('<', '>'), $s);
@@ -423,10 +426,17 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
         $s_end = strpos($s, "</body>");
         $s = substr($s, $s_begin, $s_end - $s_begin);
 
-        // Strip tag.
-        $tags = ['h[1-6]', 'hr', 'strong'];
+        // Strip tags.
+        $tags = ['hr', 'strong'];
         foreach ($tags as $tag_it) {
-            $s = preg_replace("/<" . $tag_it . "[^>]*>/i", " ", $s);
+            $s = preg_replace("/<\/?" . $tag_it . "[^>]*>/i", "", $s);
+        }
+
+        // Replace tags.
+        $tags = ['h[1-2]'];
+        foreach ($tags as $tag_it) {
+            $s = preg_replace("/<" . $tag_it . "[^>]*>/i", "<h3>", $s);
+            $s = preg_replace("/<\/" . $tag_it . "[^>]*>/i", "</h3>", $s);
         }
     }
 

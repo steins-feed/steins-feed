@@ -103,7 +103,13 @@ First paragraph
 <?php else:?>
 <input type="radio" name="summary" value=2>
 <?php endif;?>
-Full abstract
+Full text
+<?php if ($feed_row['Summary'] == 3):?>
+<input type="radio" name="summary" value=2 checked>
+<?php else:?>
+<input type="radio" name="summary" value=2>
+<?php endif;?>
+Full text and everything
 </p>
 <p>
 Display:<br>

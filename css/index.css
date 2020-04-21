@@ -5,6 +5,10 @@ body {
     background-color: white;
 }
 
+main article * {
+    float: none !important;
+}
+
 main button {
     cursor: pointer;
 }

@@ -103,7 +103,9 @@ No abstract
 <input type="radio" name="summary" value=1>
 First paragraph
 <input type="radio" name="summary" value=2 checked>
-Full abstract
+Full text
+<input type="radio" name="summary" value=3>
+Full text and everything
 </p>
 <input type="hidden" name="user" value=<?php echo $user;?>>
 <input type="submit" value="Add feed">
