@@ -214,6 +214,16 @@ if ($feed == 'Surprise') {
     }
     $items = $items_temp;
 }
+
+function empty_leaves($node) {
+    for ($i = $node->childNodes->length - 1; $i >= 0; $i--) {
+        empty_leaves($node->childNodes[$i]);
+    }
+
+    if (!$node->hasChildNodes() and $node->textContent == "") {
+        $node->parentNode->removeChild($node);
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -392,16 +402,8 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
         }
 
         // Strip empty tags.
-        $tags = ['div', 'p', 'span'];
-        foreach ($tags as $tag_it) {
-            $res = $tree->getElementsByTagName($tag_it);
-            for ($i = $res->length - 1; $i >= 0; $i--) {
-                $res_it = $res->item($i);
-                if (!$res_it->hasChildNodes() and $res_it->textContent == "") {
-                    $res_it->parentNode->removeChild($res_it);
-                }
-            }
-        }
+        $tags = ['a', 'div', 'p', 'span'];
+        empty_leaves($tree, $tags);
 
         // Remove leading and trailing tags.
         $tags = ['br'];

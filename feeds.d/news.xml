@@ -17,6 +17,11 @@
         <lang>English</lang>
     </feed>
     <feed>
+        <title>FritzFeed</title>
+        <link>https://fritzfeed.de/feed</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
         <title>Inc.com</title>
         <link>https://www.inc.com/rss</link>
         <lang>English</lang>
