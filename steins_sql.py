@@ -121,6 +121,7 @@ def create_parsers():
             Title TEXT,
             Link TEXT,
             Published TEXT,
+            Published_format TEXT,
             Summary TEXT
         )""")
 

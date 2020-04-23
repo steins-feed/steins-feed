@@ -57,6 +57,12 @@ class SteinsHandler:
         logger.error("No time for '{}'.".format(self.read_title(item_it)))
         raise KeyError
 
+    def xpath(self, tree, pat, ns=None):
+        if ns == None:
+            return tree.xpath("./{}".format(pat))
+        else:
+            return tree.xpath("./foo:{}".format(pat), namespaces={'foo': ns})
+
     def parse(self, feed_link, patterns=None):
         if patterns == None:
             d = feedparser.parse(feed_link)
@@ -66,20 +72,27 @@ class SteinsHandler:
                 status = -1
             return d, status
 
-        tree, status = get_tree_from_session(feed_link)
-        entries = tree.xpath("//foo:{}".format(patterns['Entry']), namespaces={'foo': patterns['Namespace']})
+        if patterns['Namespace'] == None:
+            tree, status = get_tree_from_session(feed_link, 'html')
+        else:
+            tree, status = get_tree_from_session(feed_link)
+        entries = self.xpath(tree, patterns['Entry'], patterns['Namespace'])
 
         l = []
         for entry_it in entries:
             l_it = {}
             try:
-                l_it['title'] = entry_it.xpath("./foo:{}".format(patterns['Title']), namespaces={'foo': patterns['Namespace']})[0].text
-                l_it['link'] = entry_it.xpath("./foo:{}".format(patterns['Link']), namespaces={'foo': patterns['Namespace']})[0].get('href')
-                l_it['published_parsed'] = time.strptime(entry_it.xpath("./foo:{}".format(patterns['Published']), namespaces={'foo': patterns['Namespace']})[0].text[:22] + "00", "%Y-%m-%dT%H:%M:%S%z")
+                l_it['title'] = self.xpath(entry_it, patterns['Title'], patterns['Namespace'])[0].text
+                l_it['link'] = self.xpath(entry_it, patterns['Link'], patterns['Namespace'])[0].get('href')
+                s = self.xpath(entry_it, patterns['Published'], patterns['Namespace'])[0].text
+                s = s.upper()
+                s = s.replace(".M", "M")
+                s = s.replace("M.", "M")
+                l_it['published_parsed'] = time.strptime(s, patterns['Published_format'])
             except IndexError:
                 continue
             try:
-                l_it['summary'] = entry_it.xpath("./foo:{}".format(patterns['Summary']), namespaces={'foo': patterns['Namespace']})[0].text
+                l_it['summary'] = self.xpath(entry_it, patterns['Summary'], patterns['Namespace'])[0].text
             except:
                 l_it['summary'] = ""
             l.append(l_it)

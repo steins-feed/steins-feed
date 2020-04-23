@@ -5,7 +5,7 @@ Icon taken from [Santa Fe College](https://www.sfcollege.edu/about/index).
 
 ## Packages
 
-Python:
+Python 3.7:
 
 *   lxml
 *   feedparser
