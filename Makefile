@@ -40,3 +40,7 @@ distclean:
 .PHONY: venv
 venv:
 	python3 -m venv .venv
+
+.PHONY: requirements
+requirements: requirements.txt
+	python -m pip install -r requirements.txt
