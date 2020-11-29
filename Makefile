@@ -34,3 +34,9 @@ distclean:
 	-rm steins.log
 	-rm steins_feed.log
 	-rm steins_magic.log
+	-rm -r .venv/
+
+
+.PHONY: venv
+venv:
+	python3 -m venv .venv
