@@ -25,6 +25,10 @@ class LIKE(enum.Enum):
     MEH = 0
     DOWN = -1
 
+class LANG(enum.Enum):
+    ENGLISH = 'English'
+    GERMAN = 'German'
+
 def gen_fk(c):
     return sqla.ForeignKey(c, on_update='CASCADE', on_delete='CASCADE')
 
@@ -40,12 +44,12 @@ def create_schema_feeds():
             sqla.Column("FeedID", sqla.Integer, primary_key=True),
             sqla.Column("Title", TEXT, nullable=False, unique=True),
             sqla.Column("Link", TEXT, nullable=False, unique=True),
-            sqla.Column("Language", TINYTEXT),
+            sqla.Column("Language", sqla.Enum(LANG)),
     )
     feeds.create(get_engine(), checkfirst=True)
 
 def create_schema_items():
-    feeds = get_table("Feeds")
+    feeds = get_table('Feeds')
     items = sqla.Table("Items", get_metadata(),
             sqla.Column("ItemID", sqla.Integer, primary_key=True),
             sqla.Column("Title", TEXT, nullable=False),
@@ -58,8 +62,8 @@ def create_schema_items():
     items.create(get_engine(), checkfirst=True)
 
 def create_schema_display():
-    users = get_table("Users")
-    feeds = get_table("Feeds")
+    users = get_table('Users')
+    feeds = get_table('Feeds')
     display = sqla.Table("Display", get_metadata(),
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("FeedID", sqla.Integer, gen_fk(feeds.c.FeedID), nullable=False),
@@ -69,7 +73,7 @@ def create_schema_display():
 
 
 def create_schema_tags():
-    users = get_table("Users")
+    users = get_table('Users')
     tags = sqla.Table("Tags", get_metadata(),
             sqla.Column("TagID", sqla.Integer, primary_key=True),
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
@@ -78,7 +82,7 @@ def create_schema_tags():
     )
     tags.create(get_engine(), checkfirst=True)
 
-    feeds = get_table("Feeds")
+    feeds = get_table('Feeds')
     tags2feeds = sqla.Table("Tags2Feeds", get_metadata(),
             sqla.Column("TagID", sqla.Integer, gen_fk(tags.c.TagID), nullable=False),
             sqla.Column("FeedID", sqla.Integer, gen_fk(feeds.c.FeedID), nullable=False),
@@ -87,8 +91,8 @@ def create_schema_tags():
     tags2feeds.create(get_engine(), checkfirst=True)
 
 def create_schema_likes():
-    users = get_table("Users")
-    items = get_table("Items")
+    users = get_table('Users')
+    items = get_table('Items')
     likes = sqla.Table("Like", get_metadata(),
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("ItemID", sqla.Integer, gen_fk(items.c.ItemID), nullable=False),
@@ -98,8 +102,8 @@ def create_schema_likes():
     likes.create(get_engine(), checkfirst=True)
 
 def create_schema_magic():
-    users = get_table("Users")
-    items = get_table("Items")
+    users = get_table('Users')
+    items = get_table('Items')
     magic = sqla.Table("Magic", get_metadata(),
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("ItemID", sqla.Integer, gen_fk(items.c.ItemID), nullable=False),

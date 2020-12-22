@@ -29,4 +29,9 @@ def connect():
     return get_engine().connect()
 
 def get_table(name):
-    return sqla.Table(name, get_metadata(), autoload=True, autoload_with=get_engine())
+    return sqla.Table(
+            name,
+            get_metadata(),
+            autoload=True,
+            autoload_with=get_engine()
+    )
