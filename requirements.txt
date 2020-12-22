@@ -1,1 +1,2 @@
-sqlalchemy
+pip>=20.3.3
+sqlalchemy>=1.3.22
