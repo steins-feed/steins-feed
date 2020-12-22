@@ -5,7 +5,7 @@ import feedparser
 from lxml import etree
 import sqlalchemy.sql as sql
 
-from .database import connect, get_table
+from . import connect, get_table
 from .schema import LANG
 
 def read_xml(f):
