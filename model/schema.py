@@ -28,6 +28,7 @@ class LIKE(enum.Enum):
 class LANG(enum.Enum):
     ENGLISH = 'English'
     GERMAN = 'German'
+    SWEDISH = 'Swedish'
 
 def gen_fk(c):
     return sqla.ForeignKey(c, on_update='CASCADE', on_delete='CASCADE')

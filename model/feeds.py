@@ -6,6 +6,7 @@ from lxml import etree
 import sqlalchemy.sql as sql
 
 from .database import connect, get_table
+from .schema import LANG
 
 def read_xml(f):
     conn = connect()
@@ -13,14 +14,21 @@ def read_xml(f):
 
     tree = etree.parse(f)
     root = tree.getroot()
+    ins_rows = []
+
     for feed_it in root.xpath("feed"):
         title = feed_it.xpath("title")[0].text
         link = feed_it.xpath("link")[0].text
-        lang = feed_it.xpath("lang")[0].text
+        lang = LANG(feed_it.xpath("lang")[0].text).name
 
-        ins = feeds.insert().values(Title=title, Link=link, Language=lang)
-        ins = ins.prefix_with("OR IGNORE", dialect='sqlite')
-        conn.execute(ins)
+        ins_rows.append(dict(zip(
+                ['Title', 'Link', 'Language'],
+                [title, link, lang]
+        )))
+
+    ins = feeds.insert()
+    ins = ins.prefix_with("OR IGNORE", dialect='sqlite')
+    conn.execute(ins, ins_rows)
 
 def write_xml(f):
     conn = connect()
@@ -53,23 +61,29 @@ def read_feeds():
         .select([feeds])
         .order_by(sql.collate(feeds.c.Title, 'NOCASE'))
     )
+    row_keys = [
+        'Title',
+        'Link',
+        'Published',
+        'Summary'
+    ]
+
     for feed_it in conn.execute(q):
+        ins_rows = []
+
         d = parse_feed(feed_it)
         for item_it in d['items']:
             try:
-                item_title, item_link, item_time, item_summary = read_item(item_it)
+                row_values = read_item(item_it)
             except KeyError:
                 continue
+            ins_row = dict(zip(row_keys, row_values))
+            ins_row['FeedID'] = feed_it['FeedID']
+            ins_rows.append(ins_row)
 
-            ins = items.insert().values(
-                Title = item_title,
-                Link = item_link,
-                Published = item_time,
-                FeedID = feed_it['FeedID'],
-                Summary = item_summary
-            )
-            ins = ins.prefix_with("OR IGNORE", dialect='sqlite')
-            conn.execute(ins)
+        ins = items.insert()
+        ins = ins.prefix_with("OR IGNORE", dialect='sqlite')
+        conn.execute(ins, ins_rows)
 
 def parse_feed(feed):
     return feedparser.parse(feed['Link'])
