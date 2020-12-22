@@ -3,7 +3,6 @@
 from datetime import datetime
 import feedparser
 from lxml import etree
-import sqlalchemy as sqla
 import sqlalchemy.sql as sql
 
 from .database import connect, get_table
@@ -49,20 +48,16 @@ def read_feeds():
     conn = connect()
     feeds = get_table('Feeds')
     items = get_table('Items')
-    handler = FeedHandler()
 
     q = (sql
         .select([feeds])
         .order_by(sql.collate(feeds.c.Title, 'NOCASE'))
     )
     for feed_it in conn.execute(q):
-        d, status = handler.parse(feed_it['Link'])
+        d = parse_feed(feed_it)
         for item_it in d['items']:
             try:
-                item_title = handler.read_title(item_it)
-                item_link = handler.read_link(item_it)
-                item_time = handler.read_time(item_it)
-                item_summary = handler.read_summary(item_it)
+                item_title, item_link, item_time, item_summary = read_item(item_it)
             except KeyError:
                 continue
 
@@ -76,58 +71,59 @@ def read_feeds():
             ins = ins.prefix_with("OR IGNORE", dialect='sqlite')
             conn.execute(ins)
 
-class FeedHandler:
-    def read_title(self, item_it):
-        try:
-            item_title = item_it['title']
-            return item_title
-        except KeyError:
-            pass
+def parse_feed(feed):
+    return feedparser.parse(feed['Link'])
 
-        #logger.error("No title.")
-        raise KeyError
+def read_item(item):
+    item_title = read_item_title(item)
+    item_link = read_item_link(item)
+    item_time = read_item_time(item)
+    item_summary = read_item_summary(item)
+    return item_title, item_link, item_time, item_summary
 
-    def read_link(self, item_it):
-        try:
-            item_link = item_it['link']
-            return item_link
-        except KeyError:
-            pass
+def read_item_title(item):
+    try:
+        item_title = item['title']
+        return item_title
+    except KeyError:
+        pass
 
-        try:
-            item_link = item_it['links'][0]['href']
-            return item_link
-        except KeyError:
-            pass
+    #logger.error("No title.")
+    raise KeyError
 
-        #logger.error("No link for '{}'.".format(self.read_title(item_it)))
-        raise KeyError
+def read_item_link(item):
+    try:
+        item_link = item['link']
+        return item_link
+    except KeyError:
+        pass
 
-    def read_summary(self, item_it):
-        return item_it['summary']
+    try:
+        item_link = item['links'][0]['href']
+        return item_link
+    except KeyError:
+        pass
 
-    def read_time(self, item_it):
-        try:
-            item_time = item_it['published_parsed']
-            item_time = datetime(*item_time[:6])
-            return item_time
-        except (KeyError, TypeError, ValueError):
-            pass
+    #logger.error("No link for '{}'.".format(self.read_title(item)))
+    raise KeyError
 
-        try:
-            item_time = item_it['updated_parsed']
-            item_time = datetime(*item_time[:6])
-            return item_time
-        except (KeyError, TypeError, ValueError):
-            pass
+def read_item_summary(item):
+    return item['summary']
 
-        #logger.error("No time for '{}'.".format(self.read_title(item_it)))
-        raise KeyError
+def read_item_time(item):
+    try:
+        item_time = item['published_parsed']
+        item_time = datetime(*item_time[:6])
+        return item_time
+    except (KeyError, TypeError, ValueError):
+        pass
 
-    def parse(self, feed_link):
-        d = feedparser.parse(feed_link)
-        try:
-            status = d.status
-        except AttributeError:
-            status = -1
-        return d, status
+    try:
+        item_time = item['updated_parsed']
+        item_time = datetime(*item_time[:6])
+        return item_time
+    except (KeyError, TypeError, ValueError):
+        pass
+
+    #logger.error("No time for '{}'.".format(self.read_title(item)))
+    raise KeyError
