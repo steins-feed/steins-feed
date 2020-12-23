@@ -2,11 +2,17 @@
 
 from datetime import datetime
 import feedparser
+import logging
 from lxml import etree
 import sqlalchemy.sql as sql
 
 from . import connect, get_table
 from .schema import LANG
+from log import get_handler
+
+logger = logging.getLogger('feeds')
+logger.setLevel(logging.INFO)
+logger.addHandler(get_handler())
 
 def read_xml(f):
     conn = connect()
@@ -70,9 +76,7 @@ def read_feeds():
 
     for feed_it in conn.execute(q):
         ins_rows = []
-
-        d = parse_feed(feed_it)
-        for item_it in d['items']:
+        for item_it in parse_feed(feed_it):
             try:
                 row_values = read_item(item_it)
             except KeyError:
@@ -86,7 +90,23 @@ def read_feeds():
         conn.execute(ins, ins_rows)
 
 def parse_feed(feed):
-    return feedparser.parse(feed['Link'])
+    res = feedparser.parse(feed['Link'])
+
+    try:
+        status = res.status
+        if status < 300:
+            logger.info("{} -- {}.".format(feed['Title'], status))
+        elif status < 400:
+            logger.warning("{} -- {}.".format(feed['Title'], status))
+        else:
+            logger.error("{} -- {}.".format(feed['Title'], status))
+    except AttributeError:
+        if res['items']:
+            logger.info("{}.".format(feed['Title']))
+        else:
+            logger.warning("{}.".format(feed['Title']))
+
+    return res['items']
 
 def read_item(item):
     item_title = read_item_title(item)
@@ -102,7 +122,7 @@ def read_item_title(item):
     except KeyError:
         pass
 
-    #logger.error("No title.")
+    logger.error("No title.")
     raise KeyError
 
 def read_item_link(item):
@@ -118,7 +138,7 @@ def read_item_link(item):
     except KeyError:
         pass
 
-    #logger.error("No link for '{}'.".format(self.read_title(item)))
+    logger.error("No link for '{}'.".format(read_item_title(item)))
     raise KeyError
 
 def read_item_summary(item):
@@ -139,5 +159,5 @@ def read_item_time(item):
     except (KeyError, TypeError, ValueError):
         pass
 
-    #logger.error("No time for '{}'.".format(self.read_title(item)))
+    logger.error("No time for '{}'.".format(read_item_title(item)))
     raise KeyError

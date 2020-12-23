@@ -1,1 +1,0 @@
-{"Naive Bayes": {"table": "NaiveBayes", "class": "MultinomialNB", "module": "sklearn.naive_bayes"}, "Logistic Regression": {"table": "LogisticRegression", "class": "LogisticRegression", "module": "sklearn.linear_model"}}

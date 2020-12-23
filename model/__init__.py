@@ -17,7 +17,7 @@ db_path = "sqlite:///" + os_path.normpath(os_path.join(
 ))
 
 sqla_logger = logging.getLogger('sqlalchemy')
-sqla_logger.setLevel(logging.INFO)
+sqla_logger.setLevel(logging.WARNING)
 sqla_logger.addHandler(get_handler())
 
 def get_engine():
