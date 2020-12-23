@@ -12,15 +12,16 @@ logger = logging.getLogger('feeds')
 logger.setLevel(logging.INFO)
 logger.addHandler(get_handler())
 
-def read_feeds():
+def read_feeds(title_pattern=None):
     conn = connect()
     feeds = get_table('Feeds')
     items = get_table('Items')
 
-    q = (sql
-        .select([feeds])
-        .order_by(sql.collate(feeds.c.Title, 'NOCASE'))
-    )
+    q = sql.select([feeds])
+    if title_pattern:
+        q = q.where(feeds.c.Title.like("%{}%".format(title_pattern)))
+    q = q.order_by(sql.collate(feeds.c.Title, 'NOCASE'))
+
     row_keys = [
         'Title',
         'Link',

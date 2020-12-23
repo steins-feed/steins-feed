@@ -7,11 +7,6 @@ steins.db:
 	php -f aux/init_feeds.php
 	python3 aux/update_db.py
 
-.PHONY: test
-test:
-	make distclean
-	make run
-
 README.pdf: README.md
 	pandoc -o README.pdf README.md
 
@@ -47,3 +42,7 @@ venv: .venv
 .PHONY: requirements
 requirements: requirements.txt venv
 	python3 -m pip install --upgrade -r requirements.txt
+
+.PHONY: test
+test: venv
+	python3 -m pytest tests

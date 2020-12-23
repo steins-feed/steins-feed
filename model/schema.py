@@ -108,7 +108,7 @@ def create_schema_magic():
     magic = sqla.Table("Magic", get_metadata(),
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("ItemID", sqla.Integer, gen_fk(items.c.ItemID), nullable=False),
-            sqla.Column("Score", sqla.Float, sqla_schema.CheckConstraint("Score <= {} AND Score >= {}".format(LIKE.UP.value, LIKE.DOWN.value)), nullable=False),
+            sqla.Column("Score", sqla.Float, sqla_schema.CheckConstraint("Score BETWEEN {} AND {}".format(LIKE.DOWN.value, LIKE.UP.value)), nullable=False),
             sqla_schema.UniqueConstraint('UserID', 'ItemID')
     )
     magic.create(get_engine(), checkfirst=True)

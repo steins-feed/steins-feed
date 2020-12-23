@@ -6,6 +6,8 @@ import sqlalchemy.sql as sql
 from . import connect, get_table
 from .schema import LANG
 
+ENC = 'utf-8'
+
 def read_xml(f):
     conn = connect()
     feeds = get_table('Feeds')
@@ -32,8 +34,11 @@ def write_xml(f):
     conn = connect()
     feeds = get_table('Feeds')
 
+    q = (sql.select([feeds])
+            .order_by(sql.collate(feeds.c.Title, 'NOCASE')))
+
     root = etree.Element("root")
-    for row_it in conn.execute(sql.select([feeds])):
+    for row_it in conn.execute(q):
         title_it = etree.Element("title")
         title_it.text = row_it['Title']
         link_it = etree.Element("link")
@@ -49,7 +54,7 @@ def write_xml(f):
 
     s = etree.tostring(root,
             xml_declaration=True,
-            encoding='unicode',
+            encoding=ENC,
             pretty_print=True
     )
-    f.write(s)
+    f.write(s.decode(ENC))
