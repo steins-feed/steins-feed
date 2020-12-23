@@ -1,4 +1,7 @@
+bcrypt
 feedparser
+flask
+flask-security-too
 lxml
 pip
 pytest

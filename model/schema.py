@@ -36,7 +36,9 @@ def gen_fk(c):
 def create_schema_users():
     users = sqla.Table("Users", get_metadata(),
             sqla.Column("UserID", sqla.Integer, primary_key=True),
-            sqla.Column("Name", TINYTEXT, nullable=False, unique=True)
+            sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
+            sqla.Column("password", TINYTEXT, nullable=False),
+            sqla.Column("email", TINYTEXT)
     )
     users.create(get_engine(), checkfirst=True)
 
