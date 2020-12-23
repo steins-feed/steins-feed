@@ -3,60 +3,14 @@
 from datetime import datetime
 import feedparser
 import logging
-from lxml import etree
 import sqlalchemy.sql as sql
 
 from . import connect, get_table
-from .schema import LANG
 from log import get_handler
 
 logger = logging.getLogger('feeds')
 logger.setLevel(logging.INFO)
 logger.addHandler(get_handler())
-
-def read_xml(f):
-    conn = connect()
-    feeds = get_table('Feeds')
-
-    tree = etree.parse(f)
-    root = tree.getroot()
-    ins_rows = []
-
-    for feed_it in root.xpath("feed"):
-        title = feed_it.xpath("title")[0].text
-        link = feed_it.xpath("link")[0].text
-        lang = LANG(feed_it.xpath("lang")[0].text).name
-
-        ins_rows.append(dict(zip(
-                ['Title', 'Link', 'Language'],
-                [title, link, lang]
-        )))
-
-    ins = feeds.insert()
-    ins = ins.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(ins, ins_rows)
-
-def write_xml(f):
-    conn = connect()
-    feeds = get_table('Feeds')
-
-    root = etree.Element("root")
-    for row_it in conn.execute(sql.select([feeds])):
-        title_it = etree.Element("title")
-        title_it.text = row_it['Title']
-        link_it = etree.Element("link")
-        link_it.text = row_it['Link']
-        lang_it = etree.Element("lang")
-        lang_it.text = row_it['Language']
-
-        feed_it = etree.Element("feed")
-        feed_it.append(title_it)
-        feed_it.append(link_it)
-        feed_it.append(lang_it)
-        root.append(feed_it)
-
-    s = etree.tostring(root, xml_declaration=True, pretty_print=True)
-    f.write(s.decode())
 
 def read_feeds():
     conn = connect()
@@ -106,7 +60,7 @@ def parse_feed(feed):
         else:
             logger.warning("{}.".format(feed['Title']))
 
-    return res['items']
+    return res.entries
 
 def read_item(item):
     item_title = read_item_title(item)
@@ -117,7 +71,7 @@ def read_item(item):
 
 def read_item_title(item):
     try:
-        item_title = item['title']
+        item_title = item.title
         return item_title
     except KeyError:
         pass
@@ -127,13 +81,13 @@ def read_item_title(item):
 
 def read_item_link(item):
     try:
-        item_link = item['link']
+        item_link = item.link
         return item_link
     except KeyError:
         pass
 
     try:
-        item_link = item['links'][0]['href']
+        item_link = item.links[0].href
         return item_link
     except KeyError:
         pass
@@ -142,18 +96,18 @@ def read_item_link(item):
     raise KeyError
 
 def read_item_summary(item):
-    return item['summary']
+    return item.summary
 
 def read_item_time(item):
     try:
-        item_time = item['published_parsed']
+        item_time = item.published_parsed
         item_time = datetime(*item_time[:6])
         return item_time
     except (KeyError, TypeError, ValueError):
         pass
 
     try:
-        item_time = item['updated_parsed']
+        item_time = item.updated_parsed
         item_time = datetime(*item_time[:6])
         return item_time
     except (KeyError, TypeError, ValueError):
