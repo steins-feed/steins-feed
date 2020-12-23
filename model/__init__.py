@@ -20,6 +20,9 @@ sqla_logger = logging.getLogger('sqlalchemy')
 sqla_logger.setLevel(logging.WARNING)
 sqla_logger.addHandler(get_handler())
 
+def get_connection():
+    return get_engine().connect()
+
 def get_engine():
     global engine
     if not engine:
@@ -29,16 +32,13 @@ def get_engine():
 def get_metadata():
     global metadata
     if not metadata:
-        metadata = sqla.MetaData()
+        metadata = sqla.MetaData(bind=get_engine())
+    metadata.reflect()
     return metadata
-
-def connect():
-    return get_engine().connect()
 
 def get_table(name):
     return sqla.Table(
             name,
             get_metadata(),
-            autoload=True,
-            autoload_with=get_engine()
+            autoload=True
     )

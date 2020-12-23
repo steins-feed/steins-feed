@@ -3,13 +3,13 @@
 from lxml import etree
 import sqlalchemy.sql as sql
 
-from . import connect, get_table
+from . import get_connection, get_table
 from .schema import LANG
 
 ENC = 'utf-8'
 
 def read_xml(f):
-    conn = connect()
+    conn = get_connection()
     feeds = get_table('Feeds')
 
     tree = etree.parse(f)
@@ -31,7 +31,7 @@ def read_xml(f):
     conn.execute(ins, ins_rows)
 
 def write_xml(f):
-    conn = connect()
+    conn = get_connection()
     feeds = get_table('Feeds')
 
     q = (sql.select([feeds])

@@ -5,7 +5,7 @@ import feedparser
 import logging
 import sqlalchemy.sql as sql
 
-from . import connect, get_table
+from . import get_connection, get_table
 from log import get_handler
 
 logger = logging.getLogger('feeds')
@@ -13,7 +13,7 @@ logger.setLevel(logging.INFO)
 logger.addHandler(get_handler())
 
 def read_feeds(title_pattern=None):
-    conn = connect()
+    conn = get_connection()
     feeds = get_table('Feeds')
     items = get_table('Items')
 
