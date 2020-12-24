@@ -48,8 +48,8 @@ def get_session():
         session = scoped_session(session_factory)
     return session
 
-def get_model(name):
-    return type(name, (Base, ), {'__table__': get_table(name)})
+def get_model(name, mixins=[]):
+    return type(name, tuple([Base] + mixins), {'__table__': get_table(name)})
 
 def get_table(name):
     return sqla.Table(

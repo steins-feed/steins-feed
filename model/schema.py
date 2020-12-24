@@ -8,6 +8,7 @@ from . import get_engine, get_metadata, get_table
 
 def create_schema():
     create_schema_users()
+    create_schema_roles()
     create_schema_feeds()
     create_schema_items()
     create_schema_display()
@@ -37,10 +38,29 @@ def create_schema_users():
     users = sqla.Table("Users", get_metadata(),
             sqla.Column("UserID", sqla.Integer, primary_key=True),
             sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
-            sqla.Column("password", TINYTEXT, nullable=False),
-            sqla.Column("email", TINYTEXT)
+            sqla.Column("Password", TINYTEXT, nullable=False),
+            sqla.Column("Email", TINYTEXT),
+            sqla.Column("Active", sqla.Boolean)
     )
     users.create(get_engine(), checkfirst=True)
+
+def create_schema_roles():
+    roles = sqla.Table("Roles", get_metadata(),
+            sqla.Column("RoleID", sqla.Integer, primary_key=True),
+            sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
+            sqla.Column("Description", TEXT)
+    )
+    roles.create(get_engine(), checkfirst=True)
+
+    users = get_table('Users')
+    users2roles = sqla.Table("Users2Roles", get_metadata(),
+            sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
+            sqla.Column("RoleID", sqla.Integer, gen_fk(roles.c.RoleID), nullable=False),
+            sqla_schema.UniqueConstraint('UserID', 'RoleID')
+    )
+    users2roles.create(get_engine(), checkfirst=True)
+
+#------------------------------------------------------------------------------
 
 def create_schema_feeds():
     feeds = sqla.Table("Feeds", get_metadata(),
