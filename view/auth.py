@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
 
+from dotenv import load_dotenv
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from flask_security import LoginForm, RegisterForm
 from flask_security import UserMixin, RoleMixin
-import json
-import os.path as os_path
+import os
 from sqlalchemy.orm import relationship, synonym
 from wtforms import StringField
 from wtforms.validators import DataRequired
 
 from model import get_model, get_session, get_table
 
-env_path = os_path.join(os_path.dirname(__file__), "env.json")
-with open(env_path, 'r') as f:
-    env_vars = json.load(f)
+load_dotenv()
 
 user_datastore = None
 security = None
@@ -51,8 +49,8 @@ class ExtendedRegisterForm(RegisterForm):
 def get_security(app):
     global security
     if not security:
-        app.config['SECRET_KEY'] = env_vars['SECRET_KEY']
-        app.config['SECURITY_PASSWORD_SALT'] = env_vars['SECURITY_PASSWORD_SALT']
+        app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+        app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT')
 
         app.config['SECURITY_REGISTERABLE'] = True
         app.config['SECURITY_SEND_REGISTER_EMAIL'] = False

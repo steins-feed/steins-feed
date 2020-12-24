@@ -5,4 +5,5 @@ flask-security-too
 lxml
 pip
 pytest
+python-dotenv
 sqlalchemy

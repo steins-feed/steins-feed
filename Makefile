@@ -43,4 +43,4 @@ test: venv
 
 .PHONY: debug
 debug: venv
-	env FLASK_APP=view FLASK_ENV=development python3 -m flask run
+	env FLASK_ENV=development python3 -m flask run
