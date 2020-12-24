@@ -1,15 +1,3 @@
-.PHONY: run
-run: steins.db
-	cd ..; php -S localhost:8000
-
-steins.db:
-	python3 aux/init_db.py
-	php -f aux/init_feeds.php
-	python3 aux/update_db.py
-
-README.pdf: README.md
-	pandoc -o README.pdf README.md
-
 .PHONY: clean
 clean:
 	-rm cachegrind.out
@@ -32,6 +20,9 @@ distclean:
 	-rm -r .venv/
 
 
+README.pdf: README.md
+	pandoc -o README.pdf README.md
+
 .venv:
 	python3 -m venv .venv
 
@@ -43,6 +34,13 @@ venv: .venv
 requirements: requirements.txt venv
 	python3 -m pip install --upgrade -r requirements.txt
 
+steins.db: venv
+	python3 aux/init_feeds.py
+
 .PHONY: test
 test: venv
 	python3 -m pytest tests
+
+.PHONY: debug
+debug: venv
+	env FLASK_APP=view FLASK_ENV=development python3 -m flask run
