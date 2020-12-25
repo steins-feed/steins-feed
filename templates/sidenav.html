@@ -1,31 +1,32 @@
 <aside id="sidenav" class="sidenav">
 <nav class="topnav">
 <span class="right">
-<?php
-$link = "/steins-feed/index.php";
-$link .= "?user=" . $user;
+{% macro get_link(link, page=0) -%}
+{#
 foreach ($langs as $lang_ct => $lang_it) {
     $link .= "&lang_" . $lang_ct . "=" . $lang_it;
 }
 foreach ($tags as $tag_ct => $tag_it) {
     $link .= "&tag_" . $tag_ct . "=" . $tag_it;
 }
-$link .= "&page=0";
-$link .= "&feed=" . $feed;
-$link .= "&clf=" . $clf;
-$link .= "&timeunit=" . $timeunit;
-?>
-<a href="<?php echo $link;?>"><i class="material-icons">home</i></a>
-<a href="/steins-feed/statistics.php?user=<?php echo $user;?>" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
-<a href="/steins-feed/settings.php?user=<?php echo $user;?>" target="_blank"><i class="material-icons">settings</i></a>
+#}
+{%- set link = link ~ "&page=" ~ page -%}
+{%- set link = link ~ "&feed=" ~ feed -%}
+{%- set link = link ~ "&timeunit=" ~ timeunit -%}
+{{ link }}
+{%- endmacro %}
+<a href="{{ get_link("/steins-feed/index.php") }}"><i class="material-icons">home</i></a>
+<a href="/steins-feed/statistics.php" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
+<a href="/steins-feed/settings.php>" target="_blank"><i class="material-icons">settings</i></a>
 <i onclick="close_menu()" class="material-icons">
 close
 </i>
 </span>
 </nav>
-<script src="/steins-feed/js/toggle_checkbox.js" defer></script>
+<script src="{{ url_for('static', filename='js/toggle_checkbox.js') }}" defer></script>
 <section>
 <form action="/steins-feed/index.php" method="get">
+{#
 <?php if (!empty($tags_disp)):?>
 <p>
 <fieldset id="input_tag">
@@ -55,42 +56,40 @@ ALL TAGS
 </fieldset>
 </p>
 <?php endif;?>
-<?php if (!empty($langs_disp)):?>
+#}
+{% if langs_disp %}
 <p>
 <fieldset id="input_lang">
 <legend>Languages</legend>
 <label>
-<?php if (count($langs) >= count($langs_disp)):?>
+{% if langs|count >= langs_disp|count %}
 <input type="checkbox" onclick="toggle_checkbox('input_lang')" checked>
-<?php else:?>
+{% else %}
 <input type="checkbox" onclick="toggle_checkbox('input_lang')">
-<?php endif?>
+{% endif %}
 ALL LANGUAGES
 <br>
 </label>
-<?php foreach ($langs_disp as $lang_ct => $lang_it):?>
+{% for lang_ct, lang_it in langs_disp.iter() %}
 <label>
-<?php   if (in_array($lang_it, $langs)):?>
-<input name="lang_<?php echo $lang_ct;?>" onclick="prove_checkbox('input_lang')" value="<?php echo $lang_it;?>" type="checkbox" checked>
-<?php   else:?>
-<input name="lang_<?php echo $lang_ct;?>" onclick="prove_checkbox('input_lang')" value="<?php echo $lang_it;?>" type="checkbox">
-<?php
-        endif;
-        echo $lang_it;
-?>
+{% if lang_it in langs %}
+<input name="lang_{{ lang_ct }}" onclick="prove_checkbox('input_lang')" value="{{ lang_it }}" type="checkbox" checked>
+{% else %}
+<input name="lang_{{ lang_ct }}" onclick="prove_checkbox('input_lang')" value="{{ lang_it }}" type="checkbox">
+{% endif %}
+{{ lang_it }}
 </label>
 <br>
-<?php endforeach;?>
+{% endfor %}
 </fieldset>
 </p>
-<?php endif;?>
+{% endif %}
+{#
 <p>
 <fieldset>
 <legend>Feed</legend>
 <?php
 $feed_dict = array("Full", "Magic", "Surprise");
-$clf_dict = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/json/steins_magic.json"), true);
-$clf_key = key($clf_dict);
 $magic_exists = file_exists($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/$user_id/$clf_key/clfs.pickle");
 foreach($feed_dict as $key):
 ?>
@@ -112,11 +111,12 @@ foreach($feed_dict as $key):
 <?php endforeach;?>
 </fieldset>
 </p>
+#}
 <p>
 <fieldset>
-<input name="user" value="<?php echo $user;?>" type="hidden">
-<input name="page" value="<?php echo $page;?>" type="hidden">
-<input name="timeunit" value="<?php echo $timeunit;?>" type="hidden">
+<input name="user" value="{{ user }}" type="hidden">
+<input name="page" value="{{ page }}" type="hidden">
+<input name="timeunit" value="{{ timeunit }}" type="hidden">
 <input name="new_timeunit" value="Day" type="submit">
 <input name="new_timeunit" value="Week" type="submit">
 <input name="new_timeunit" value="Month" type="submit">
@@ -125,6 +125,7 @@ foreach($feed_dict as $key):
 </form>
 </section>
 <hr>
+{#
 <form action="/steins-feed/feed.php" method="get">
 <p>
 <fieldset>
@@ -171,4 +172,5 @@ foreach ($tags_all as $tag_ct => $tag_it):?>
 </fieldset>
 </p>
 </form>
+#}
 </aside>

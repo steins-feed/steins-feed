@@ -4,6 +4,7 @@ from sqlalchemy import func, sql
 
 from model import get_connection, get_table
 from model.feeds import read_feeds
+from model.utils import last_updated
 from model.xml import read_xml, write_xml
 
 def test_xml_read():
@@ -30,3 +31,9 @@ def test_feeds():
     q = sql.select([func.count()]).select_from(items)
     res = conn.execute(q).fetchone()
     assert(res[0] > 0)
+
+def test_last_updated():
+    from datetime import datetime
+    res = last_updated()
+    print(res)
+    assert(isinstance(res, datetime))

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from lxml import etree
-import sqlalchemy.sql as sql
+from sqlalchemy import sql
 
 from . import get_connection, get_table
 from .schema import LANG

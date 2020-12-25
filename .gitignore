@@ -1,17 +1,14 @@
 .env
 .venv/
 
-cachegrind.out
 README.pdf
 steins.db
 steins.db.?
 steins.db-journal
-steins-*.html
 steins.log
 steins.log.?
 steins_feed.log
 steins_magic.log
-tmp_feeds.xml
+
 __pycache__/
 *.pyc
-[0-9]*/

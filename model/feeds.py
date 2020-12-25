@@ -3,7 +3,7 @@
 from datetime import datetime
 import feedparser
 import logging
-import sqlalchemy.sql as sql
+from sqlalchemy import func, sql
 
 from . import get_connection, get_table
 from log import get_handler
@@ -43,6 +43,11 @@ def read_feeds(title_pattern=None):
         ins = items.insert()
         ins = ins.prefix_with("OR IGNORE", dialect='sqlite')
         conn.execute(ins, ins_rows)
+
+        upd = (feeds.update()
+                    .values(Updated=func.now())
+                    .where(feeds.c.FeedID==feed_it['FeedID']))
+        conn.execute(upd)
 
 def parse_feed(feed):
     res = feedparser.parse(feed['Link'])

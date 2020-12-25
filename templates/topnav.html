@@ -1,0 +1,68 @@
+<nav class="topnav">
+<script src="{{ url_for('static', filename='js/menu.js') }}" defer></script>
+<span class="left">
+{% set link = "" %}
+{% if page > 0 %}
+{% set link = "/steins-feed/index.php" %}
+{#
+    foreach ($langs as $lang_ct => $lang_it) {
+        $link .= "&lang_" . $lang_ct . "=" . $lang_it;
+    }
+    foreach ($tags as $tag_ct => $tag_it) {
+        $link .= "&tag_" . $tag_ct . "=" . $tag_it;
+    }
+#}
+{% set link = link ~ "&page=" ~ (page - 1) %}
+{% set link = link ~ "&feed=" ~ feed %}
+{% set link = link ~ "&timeunit=" ~ timeunit %}
+<a href="{{ link }}" accesskey="h"><i class="material-icons">fast_rewind</i></a>
+{% else %}
+<i class="material-icons dead_link">fast_rewind</i>
+{% endif %}
+{% if items|count != 0 %}
+<i onclick="next_item()" class="material-icons" accesskey="j">expand_more</i>
+<i onclick="prev_item()" class="material-icons" accesskey="k">expand_less</i>
+{% else %}
+<i class="material-icons dead_link">expand_more</i>
+<i class="material-icons dead_link">expand_less</i>
+{% endif %}
+{% set link = "" %}
+{% if page < dates|count - 1 %}
+    link = "/steins-feed/index.php"
+{#
+    foreach ($langs as $lang_ct => $lang_it) {
+        $link .= "&lang_" . $lang_ct . "=" . $lang_it;
+    }
+    foreach ($tags as $tag_ct => $tag_it) {
+        $link .= "&tag_" . $tag_ct . "=" . $tag_it;
+    }
+#}
+{% set link = link ~ "&page=" ~ (page + 1) %}
+{% set link = link ~ "&feed=" ~ feed %}
+{% set link = link ~ "&timeunit=" ~ timeunit %}
+<a href="{{ link }}" accesskey="l"><i class="material-icons">fast_forward</i></a>
+{% else %}
+<i class="material-icons dead_link">fast_forward</i>
+{% endif %}
+</span>
+<span class="right">
+{% set link = "/steins-feed/index.php" %}
+{#
+foreach ($langs as $lang_ct => $lang_it) {
+    $link .= "&lang_" . $lang_ct . "=" . $lang_it;
+}
+foreach ($tags as $tag_ct => $tag_it) {
+    $link .= "&tag_" . $tag_ct . "=" . $tag_it;
+}
+#}
+{% set link = link ~ "&page=0" %}
+{% set link = link ~ "&feed=" ~ feed %}
+{% set link = link ~ "&timeunit=" ~ timeunit %}
+<a href="{{ link }}"><i class="material-icons">home</i></a>
+<a href="/steins-feed/statistics.php" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
+<a href="/steins-feed/settings.php" target="_blank"><i class="material-icons">settings</i></a>
+<i onclick="open_menu()" class="material-icons">
+menu
+</i>
+</span>
+</nav>

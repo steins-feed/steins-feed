@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='css/topnav.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='css/sidenav.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='favicon.ico') }}" rel="shortcut icon" type="image/png">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<title>Stein's Feed</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/highlight.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/like.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/next_item.js') }}" defer></script>
+{% if feed != 'Full' %}
+<script>
+{% for lang_it in langs_disp %}
+var {{ lang_it|lower }}_words;
+$(document).ready(function() {
+    $.getJSON("/steins-feed/{{ user_id }}/{{ lang_it }}_cookie.json", function(result) {
+        {{ lang_it|lower }}_words = result;
+    });
+});
+{% endfor %}
+</script>
+<script src="{{ url_for('static', filename='snowball/base-stemmer.js') }}" defer></script>
+{% for lang_it in langs_disp %}
+<script src="{{ url_for('static', filename='snowball/{{ lang_it|lower }}-stemmer.js') }}" defer></script>
+{% endfor %}
+{% endif %}
+</head>
+<body>
+{% include 'topnav.html' %}
+{% include 'sidenav.html' %}
+<main id="main">
+<header>
+<h1>{{ topnav_title }}</h1>
+<p>
+{{ items|count }} articles.
+Last updated: {{ last_updated }} GMT.
+</p>
+</header>
+{% for item_it in items %}
+<article id="article_{{ item_it['ItemID'] }}">
+<hr>
+<h2>
+<a href="{{ item_it['Link'] }}" rel="noopener noreferrer" target="_blank">
+<span id="title_{{ item_it['ItemID'] }}">
+{{ item_it['Title']|safe }}
+</span>
+</a>
+</h2>
+<p>
+Source: <a href="/steins-feed/feed.php?feed={{ item_it['FeedID'] }}">{{ item_it['Feed'] }}</a>.
+Published: {{ item_it['Published'] }} GMT.
+{#
+<?php
+    $stmt = "SELECT Tags.* FROM (Tags INNER JOIN Tags2Feeds USING (TagID)) INNER JOIN Feeds USING (FeedID) WHERE UserId=:UserID AND FeedID=:FeedID";
+    $stmt = $db->prepare($stmt);
+    $stmt->bindValue(':UserID', $user_id, SQLITE3_INTEGER);
+    $stmt->bindValue(':FeedID', $item_it['FeedID'], SQLITE3_INTEGER);
+    $res = $stmt->execute();
+
+    $tag_it = $res->fetcharray();
+    if ($tag_it):
+?>
+Tags:
+<?php
+        echo '<a href="/steins-feed/tag.php?user=' . $user . '&amp;tag=' . $tag_it['TagID'] . '">' . $tag_it['Name'] . '</a>';
+        for ($tag_it = $res->fetcharray(); $tag_it; $tag_it = $res->fetcharray()):
+            echo ', <a href="/steins-feed/tag.php?user=' . $user . '&amp;tag=' . $tag_it['TagID'] . '">' . $tag_it['Name'] . '</a>';
+        endfor;
+        echo '.' . PHP_EOL;
+    endif;
+    if ($feed != 'Full'):
+?>
+Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
+<?php endif;?>
+#}
+</p>
+<div id="summary_{{ item_it['ItemID'] }}">
+{#
+<?php
+    if ($item_it['Abstract'] == 0) {
+        $s = "";
+    } else if ($item_it['Abstract'] == 3) {
+        $s = $item_it['Summary'];
+    } else {
+        $tree = new DOMDocument();
+        $s = htmlentities($item_it['Summary'], ENT_NOQUOTES);
+        $s = str_replace(array('&lt;', '&gt;'), array('<', '>'), $s);
+        $tree->loadHTML("<body>" . $s . "</body>");
+        $tree_xpath = new DOMXPath($tree);
+        $tree_body = $tree->childNodes[1]->childNodes[0];
+
+        if ($item_it['Abstract'] == 1) {
+            $res = $tree->getElementsByTagName('p');
+            for ($i = $res->length - 1; $i > 0; $i--) {
+                $res_it = $res->item($i);
+                $res_it->parentNode->removeChild($res_it);
+            }
+        }
+
+        // Strip tag and content.
+        $tags = ['figure', 'iframe', 'img', 'script', 'small', 'svg'];
+        foreach ($tags as $tag_it) {
+            $res = $tree->getElementsByTagName($tag_it);
+            for ($i = $res->length - 1; $i >= 0; $i--) {
+                $res_it = $res->item($i);
+                $res_it->parentNode->removeChild($res_it);
+            }
+        }
+
+        // Strip class and content.
+        $classes = ['twitter'];
+        foreach ($classes as $class_it) {
+            $res = $tree_xpath->query("//*[contains(@class, '" . $class_it . "')]");
+            for ($i = $res->length - 1; $i >= 0; $i--) {
+                $res_it = $res->item($i);
+                $res_it->parentNode->removeChild($res_it);
+            }
+        }
+
+        // Strip empty tags.
+        $tags = ['a', 'div', 'p', 'span'];
+        empty_leaves($tree, $tags);
+
+        // Remove leading and trailing tags.
+        $tags = ['br'];
+        while (true) {
+            if (!is_null($tree_body->firstChild) and in_array($tree_body->firstChild->tagName, $tags)) {
+                $tree_body->removeChild($tree_body->firstChild);
+            } else {
+                break;
+            }
+        }
+        while (true) {
+            if (!is_null($tree_body->lastChild) and in_array($tree_body->lastChild->tagName, $tags)) {
+                $tree_body->removeChild($tree_body->lastChild);
+            } else {
+                break;
+            }
+        }
+
+        $s = html_entity_decode($tree->saveHTML());
+        $s = html_entity_decode($s);
+        $s_begin = strpos($s, "<body>") + strlen("<body>");
+        $s_end = strpos($s, "</body>");
+        $s = substr($s, $s_begin, $s_end - $s_begin);
+
+        // Strip tags.
+        $tags = ['hr', 'strong'];
+        foreach ($tags as $tag_it) {
+            $s = preg_replace("/<\/?" . $tag_it . "[^>]*>/i", "", $s);
+        }
+
+        // Replace tags.
+        $tags = ['h[1-2]'];
+        foreach ($tags as $tag_it) {
+            $s = preg_replace("/<" . $tag_it . "[^>]*>/i", "<h3>", $s);
+            $s = preg_replace("/<\/" . $tag_it . "[^>]*>/i", "</h3>", $s);
+        }
+    }
+
+    echo $s, PHP_EOL;
+?>
+#}
+{{ item_it['Summary']|safe }}
+</div>
+<p>
+<button onclick="like({{ item_it['ItemID'] }})" type="button">
+{% if item_it['Like'] == 1 %}
+<span id="like_{{ item_it['ItemID'] }}" class="liked">
+{% else %}
+<span id="like_{{ item_it['ItemID'] }}" class="like">
+{% endif %}
+<i class="material-icons">
+thumb_up
+</i>
+</span>
+</button>
+<button onclick="dislike({{ item_it['ItemID'] }})" type="button">
+{% if item_it['Like'] == -1 %}
+<span id="dislike_{{ item_it['ItemID'] }}" class="disliked">
+{% else %}
+<span id="dislike_{{ item_it['ItemID'] }}" class="dislike">
+{% endif %}
+<i class="material-icons">
+thumb_down
+</i>
+</span>
+</button>
+{% if feed != 'Full' %}
+<button onclick="highlight({{ item_it['ItemID'] }}, '{{ item_it['Language'] }}')" type="button">
+<span id="highlight_{{ item_it['ItemID'] }}" class="highlight">
+<i class="material-icons">
+lightbulb_outline
+</i>
+</span>
+</button>
+{% endif %}
+</p>
+</article>
+{% endfor %}
+<footer>
+<hr>
+<p>
+<a href="https://github.com/hy144328/steins-feed">GitHub</a>
+<a href="https://github.com/hy144328/steins-feed/blob/master/HOWTO.md">Instructions</a>
+</p>
+</footer>
+</main>
+</body>
+</html>
