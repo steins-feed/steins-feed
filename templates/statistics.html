@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block body %}
+# for lang_it in langs_all
+<h2>{{ lang_it }}</h2>
+<p>{{ likes_lang[lang_it][0]|count }} likes:</p>
+<ul>
+# for row_it in likes_lang[lang_it][0]
+<li>
+{{ row_it['Feed'] }}
+<a href="{{ row_it['Link'] }}">
+{{ row_it['Title'] }}
+</a>
+({{ row_it['Published'] }}).
+</li>
+# endfor
+</ul>
+<p>{{ likes_lang[lang_it][1]|count }} dislikes:</p>
+<ul>
+# for row_it in likes_lang[lang_it][1]
+<li>
+{{ row_it['Feed'] }}
+<a href="{{ row_it['Link'] }}">
+{{ row_it['Title'] }}
+</a>
+({{ row_it['Published'] }}).
+</li>
+# endfor
+</ul>
+<hr>
+# endfor
+{% endblock %}

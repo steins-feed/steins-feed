@@ -23,7 +23,7 @@ TEXT = sqla.String(2**16 - 1)
 MEDIUMTEXT = sqla.String(2**24 - 1)
 LONGTEXT = sqla.String(2**32 - 1)
 
-class LIKE(enum.Enum):
+class Like(enum.Enum):
     UP = 1
     MEH = 0
     DOWN = -1
@@ -124,7 +124,7 @@ def create_schema_likes():
     likes = sqla.Table("Like", get_metadata(),
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("ItemID", sqla.Integer, gen_fk(items.c.ItemID), nullable=False),
-            sqla.Column("Score", sqla.Enum(LIKE), nullable=False),
+            sqla.Column("Score", sqla.Enum(Like), nullable=False),
             sqla.Column("Added", sqla.DateTime, default=func.now()),
             sqla.Column("Updated", sqla.DateTime, default=func.now()),
             schema.UniqueConstraint('UserID', 'ItemID')
@@ -142,7 +142,7 @@ def create_schema_magic():
             sqla.Column("Updated", sqla.DateTime, default=func.now()),
             schema.UniqueConstraint('UserID', 'ItemID'),
             schema.CheckConstraint(
-                    "Score BETWEEN {} AND {}".format(LIKE.DOWN.value, LIKE.UP.value)
+                    "Score BETWEEN {} AND {}".format(Like.DOWN.value, Like.UP.value)
             )
     )
     magic.create(get_engine(), checkfirst=True)

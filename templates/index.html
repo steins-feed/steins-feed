@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ url_for('static', filename='css/topnav.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ url_for('static', filename='css/sidenav.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ url_for('static', filename='favicon.ico') }}" rel="shortcut icon" type="image/png">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<title>Stein's Feed</title>
+{% extends "base.html" %}
+
+{% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="{{ url_for('static', filename='js/highlight.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/like.js') }}" defer></script>
@@ -29,21 +21,18 @@ $(document).ready(function() {
 <script src="{{ url_for('static', filename='snowball/{{ lang_it|lower }}-stemmer.js') }}" defer></script>
 {% endfor %}
 {% endif %}
-</head>
-<body>
-{% include 'topnav.html' %}
-{% include 'sidenav.html' %}
-<main id="main">
-<header>
-<h1>{{ topnav_title }}</h1>
+{% endblock %}
+
+{% block header %}
 <p>
 {{ items|count }} articles.
 Last updated: {{ last_updated }} GMT.
 </p>
-</header>
+{% endblock %}
+
+{% block body %}
 {% for item_it in items %}
 <article id="article_{{ item_it['ItemID'] }}">
-<hr>
 <h2>
 <a href="{{ item_it['Link'] }}" rel="noopener noreferrer" target="_blank">
 <span id="title_{{ item_it['ItemID'] }}">
@@ -201,15 +190,7 @@ lightbulb_outline
 </button>
 {% endif %}
 </p>
+<hr>
 </article>
 {% endfor %}
-<footer>
-<hr>
-<p>
-<a href="https://github.com/hy144328/steins-feed">GitHub</a>
-<a href="https://github.com/hy144328/steins-feed/blob/master/HOWTO.md">Instructions</a>
-</p>
-</footer>
-</main>
-</body>
-</html>
+{% endblock %}

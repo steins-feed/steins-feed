@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='css/topnav.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='css/sidenav.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='favicon.ico') }}" rel="shortcut icon" type="image/png">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<title>Stein's Feed</title>
+{% block scripts %}{% endblock %}
+</head>
+<body>
+{% include 'topnav.html' %}
+{% include 'sidenav.html' %}
+<main id="main">
+<header>
+<h1>{{ topnav_title }}</h1>
+{% block header %}{% endblock %}
+</header>
+<hr>
+{% block body %}{% endblock %}
+<footer>
+<p>
+<a href="https://github.com/hy144328/steins-feed">GitHub</a>
+<a href="https://github.com/hy144328/steins-feed/blob/master/HOWTO.md">Instructions</a>
+</p>
+</footer>
+</main>
+</body>
+</html>

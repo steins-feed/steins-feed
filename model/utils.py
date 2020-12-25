@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import func, sql
 
 from . import get_connection, get_table
-from .schema import Language
+from .schema import Language, Like
 
 def last_updated():
     conn = get_connection()
@@ -228,6 +228,39 @@ def all_tags(user_id=None):
     q = q.order_by(sql.collate(tags.c.Name, 'NOCASE'))
 
     return conn.execute(q).fetchall()
+
+def all_likes_lang(user_id):
+    conn = get_connection()
+    feeds = get_table('Feeds')
+    items = get_table('Items')
+    like = get_table('Like')
+
+    q = sql.select([
+            items,
+            feeds.c.Title.label("Feed")
+    ]).select_from(
+            items.join(feeds).join(like)
+    ).where(sql.and_(
+            like.c.UserID == user_id,
+            like.c.Score == sql.bindparam("score"),
+            feeds.c.Language == sql.bindparam("lang")
+    )).order_by(
+        sql.desc(items.c.Published)
+    )
+
+    res = dict()
+    for lang_it in all_langs():
+        lang_it = Language(lang_it)
+
+        res[lang_it.value] = []
+        res[lang_it.value].append(
+                conn.execute(q, score=Like.UP.name, lang=lang_it.name).fetchall()
+        )
+        res[lang_it.value].append(
+                conn.execute(q, score=Like.DOWN.name, lang=lang_it.name).fetchall()
+        )
+
+    return res
 
 def reset_magic(user_id=None):
     conn = get_connection()

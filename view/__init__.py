@@ -10,7 +10,10 @@ from .auth import get_security
 from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from .req import Timeunit
 from model.schema import Language
-from model.utils import last_updated, updated_dates, updated_items, displayed_languages, displayed_tags, all_feeds, all_feeds_lang, all_tags
+from model.utils import last_updated
+from model.utils import updated_dates, updated_items
+from model.utils import displayed_languages, displayed_tags
+from model.utils import all_feeds, all_feeds_lang, all_tags, all_likes_lang
 
 static_path = os_path.normpath(os_path.join(
         os_path.dirname(__file__),
@@ -70,9 +73,9 @@ def home():
     return render_template("index.html",
             timeunit=r_timeunit.value,
             feed=r_feed.value,
+            page=r_page,
             items=page_items,
             last_updated=last_hour,
-            page=r_page,
             topnav_title=get_topnav_title(page_date, r_timeunit),
             dates=page_dates,
             langs_disp=displayed_languages(current_user.UserID),
@@ -91,6 +94,8 @@ def settings():
     r_timeunit = get_timeunit()
 
     return render_template("settings.html",
+            timeunit=r_timeunit.value,
+            feed=r_feed.value,
             page=r_page,
             topnav_title=current_user.Name,
             feeds_all=all_feeds(),
@@ -102,7 +107,19 @@ def settings():
 @app.route("/statistics")
 @auth_required()
 def statistics():
-    pass
+    r_feed = get_feed()
+    r_langs = get_langs()
+    r_page = get_page()
+    r_tags = get_tags()
+    r_timeunit = get_timeunit()
+
+    return render_template("statistics.html",
+            timeunit=r_timeunit.value,
+            feed=r_feed.value,
+            page=r_page,
+            langs_all=[e.value for e in Language],
+            likes_lang=all_likes_lang(current_user.UserID)
+    )
 
 #<?php
 #$items = array();
@@ -207,21 +224,21 @@ def get_topnav_title(page_date, timeunit):
     if timeunit == Timeunit.DAY:
         if current_date >= page_date and current_date < page_date + timedelta(days=1):
             topnav_title = "Today"
-        elif current_date >= page_date - timedelta(days=1) and current_date < page_date:
+        elif current_date - timedelta(days=1) >= page_date and current_date - timedelta(days=1) < page_date + timedelta(days=1):
             topnav_title = "Yesterday"
         else:
             topnav_title = page_date.strftime("%a, %d %b %Y")
     elif timeunit == timeunit.WEEK:
         if current_date >= page_date and current_date < page_date + timedelta(days=7):
             topnav_title = "This week"
-        elif current_date >= page_date - timedelta(days=7) and current_date < page_date:
+        elif current_date - timedelta(days=7) >= page_date and current_date - timedelta(days=7) < page_date + timedelta(days=7):
             topnav_title = "Last week"
         else:
             topnav_title = page_date.strftime("Week %U, %Y")
     elif timeunit == timeunit.MONTH:
         if current_date >= page_date and current_date < page_date + timedelta(month=1):
             topnav_title = "This month"
-        elif current_date >= page_date - timedelta(months=1) and current_date < page_date:
+        elif current_date - timedelta(months=1) >= page_date and current_date - timedelta(months=1) < page_date + timedelta(months=1):
             topnav_title = "Last month"
         else:
             topnav_title = page_date.strftime("%B %Y")

@@ -1,25 +1,11 @@
-# from 'forms.jinja' import select_lang
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ url_for('static', filename='css/topnav.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ url_for('static', filename='css/sidenav.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ url_for('static', filename='favicon.ico') }}" rel="shortcut icon" type="image/png">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<title>Stein's Feed</title>
+{% extends "base.html" %}
+{% from 'forms.jinja' import select_lang %}
+
+{% block scripts %}
 <script src="{{ url_for('static', filename='js/toggle_request.js') }}" defer></script>
-</head>
-<body>
-{% include 'topnav.html' %}
-{% include 'sidenav.html' %}
-<main>
-<header>
-<h1>{{ topnav_title }}</h1>
-</header>
-<hr>
+{% endblock %}
+
+{% block body %}
 # for lang_it in langs_all
 <p>{{ lang_it }} feeds:</p>
 <select name="displayed_{{ lang_it }}" size=10 style="width: 200px;" multiple>
@@ -149,6 +135,4 @@ New name:<br>
 </form>
 <hr>
 #}
-</main>
-</body>
-</html>
+{% endblock %}
