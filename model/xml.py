@@ -4,7 +4,7 @@ from lxml import etree
 from sqlalchemy import sql
 
 from . import get_connection, get_table
-from .schema import LANG
+from .schema import Language
 
 ENC = 'utf-8'
 
@@ -19,7 +19,7 @@ def read_xml(f):
     for feed_it in root.xpath("feed"):
         title = feed_it.xpath("title")[0].text
         link = feed_it.xpath("link")[0].text
-        lang = LANG(feed_it.xpath("lang")[0].text).name
+        lang = Language(feed_it.xpath("lang")[0].text).name
 
         ins_rows.append(dict(zip(
                 ['Title', 'Link', 'Language'],

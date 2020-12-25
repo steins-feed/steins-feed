@@ -28,7 +28,7 @@ class LIKE(enum.Enum):
     MEH = 0
     DOWN = -1
 
-class LANG(enum.Enum):
+class Language(enum.Enum):
     ENGLISH = 'English'
     GERMAN = 'German'
     SWEDISH = 'Swedish'
@@ -69,7 +69,7 @@ def create_schema_feeds():
             sqla.Column("FeedID", sqla.Integer, primary_key=True),
             sqla.Column("Title", TEXT, nullable=False, unique=True),
             sqla.Column("Link", TEXT, nullable=False, unique=True),
-            sqla.Column("Language", sqla.Enum(LANG)),
+            sqla.Column("Language", sqla.Enum(Language)),
             sqla.Column("Added", sqla.DateTime, default=func.now()),
             sqla.Column("Updated", sqla.DateTime)
     )

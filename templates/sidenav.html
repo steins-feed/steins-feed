@@ -1,21 +1,8 @@
+# from 'links.jinja' import get_home
 <aside id="sidenav" class="sidenav">
 <nav class="topnav">
 <span class="right">
-{% macro get_link(link, page=0) -%}
-{#
-foreach ($langs as $lang_ct => $lang_it) {
-    $link .= "&lang_" . $lang_ct . "=" . $lang_it;
-}
-foreach ($tags as $tag_ct => $tag_it) {
-    $link .= "&tag_" . $tag_ct . "=" . $tag_it;
-}
-#}
-{%- set link = link ~ "&page=" ~ page -%}
-{%- set link = link ~ "&feed=" ~ feed -%}
-{%- set link = link ~ "&timeunit=" ~ timeunit -%}
-{{ link }}
-{%- endmacro %}
-<a href="{{ get_link("/steins-feed/index.php") }}"><i class="material-icons">home</i></a>
+<a href="{{ get_home(feed, 0, timeunit, langs, tags) }}"><i class="material-icons">home</i></a>
 <a href="/steins-feed/statistics.php" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
 <a href="/steins-feed/settings.php>" target="_blank"><i class="material-icons">settings</i></a>
 <i onclick="close_menu()" class="material-icons">
@@ -25,65 +12,59 @@ close
 </nav>
 <script src="{{ url_for('static', filename='js/toggle_checkbox.js') }}" defer></script>
 <section>
-<form action="/steins-feed/index.php" method="get">
-{#
-<?php if (!empty($tags_disp)):?>
+<form action="{{ url_for('home') }}" method="get">
+# if tags_disp|count > 0
 <p>
 <fieldset id="input_tag">
 <legend>Tags</legend>
 <label>
-<?php if (count($tags) >= count($tags_disp)):?>
+# if tags|contains(tags_disp)
 <input type="checkbox" onclick="toggle_checkbox('input_tag')" checked>
-<?php else:?>
+# else
 <input type="checkbox" onclick="toggle_checkbox('input_tag')">
-<?php endif;?>
+# endif
 ALL TAGS
 <br>
 </label>
-<?php foreach ($tags_disp as $tag_ct => $tag_it):?>
+# for tag_it in tags_disp
 <label>
-<?php   if (in_array($tag_it, $tags)):?>
-<input name="tag_<?php echo $tag_ct;?>" onclick="prove_checkbox('input_tag')" value="<?php echo $tag_it;?>" type="checkbox" checked>
-<?php   else:?>
-<input name="tag_<?php echo $tag_ct;?>" onclick="prove_checkbox('input_tag')" value="<?php echo $tag_it;?>" type="checkbox">
-<?php
-        endif;
-    echo $tag_it . PHP_EOL;
-?>
+# if tag_it in tags
+<input name="tag" onclick="prove_checkbox('input_tag')" value="{{ tag_it }}" type="checkbox" checked>
+# else
+<input name="tag" onclick="prove_checkbox('input_tag')" value="{{ tag_it }}" type="checkbox">
+# endif
+{{ tag_it }}
 </label>
 <br>
-<?php endforeach;?>
+# endfor
 </fieldset>
 </p>
-<?php endif;?>
-#}
-{% if langs_disp %}
+# endif
 <p>
 <fieldset id="input_lang">
 <legend>Languages</legend>
 <label>
-{% if langs|count >= langs_disp|count %}
+# if langs|count == 0 or langs|contains(langs_disp)
 <input type="checkbox" onclick="toggle_checkbox('input_lang')" checked>
-{% else %}
+# else
 <input type="checkbox" onclick="toggle_checkbox('input_lang')">
-{% endif %}
+# endif
 ALL LANGUAGES
 <br>
 </label>
-{% for lang_ct, lang_it in langs_disp.iter() %}
+# for lang_it in langs_disp
 <label>
-{% if lang_it in langs %}
-<input name="lang_{{ lang_ct }}" onclick="prove_checkbox('input_lang')" value="{{ lang_it }}" type="checkbox" checked>
-{% else %}
-<input name="lang_{{ lang_ct }}" onclick="prove_checkbox('input_lang')" value="{{ lang_it }}" type="checkbox">
-{% endif %}
+# if langs|count == 0 or lang_it in langs
+<input name="lang" onclick="prove_checkbox('input_lang')" value="{{ lang_it }}" type="checkbox" checked>
+# else
+<input name="lang" onclick="prove_checkbox('input_lang')" value="{{ lang_it }}" type="checkbox">
+# endif
 {{ lang_it }}
 </label>
 <br>
-{% endfor %}
+# endfor
 </fieldset>
 </p>
-{% endif %}
 {#
 <p>
 <fieldset>
@@ -114,7 +95,6 @@ foreach($feed_dict as $key):
 #}
 <p>
 <fieldset>
-<input name="user" value="{{ user }}" type="hidden">
 <input name="page" value="{{ page }}" type="hidden">
 <input name="timeunit" value="{{ timeunit }}" type="hidden">
 <input name="new_timeunit" value="Day" type="submit">
@@ -125,26 +105,15 @@ foreach($feed_dict as $key):
 </form>
 </section>
 <hr>
-{#
 <form action="/steins-feed/feed.php" method="get">
 <p>
 <fieldset>
 <legend>Feed</legend>
 <select name="feed">
-<?php
-$stmt = $db->prepare("SELECT * FROM Feeds Order BY Title COLLATE NOCASE");
-$res = $stmt->execute();
-$feeds_all = array();
-for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-    $feeds_all[$row_it['FeedID']] = $row_it['Title'];
-}
-
-foreach ($feeds_all as $feed_ct => $feed_it):
-?>
-<option value="<?php echo $feed_ct;?>"><?php echo $feed_it;?></option>
-<?php endforeach;?>
+# for feed_it in feeds_all
+<option value="{{ feed_it['FeedID'] }}">{{ feed_it['Title'] }}</option>
+# endfor
 </select>
-<input name="user" value="<?php echo $user;?>" type="hidden">
 <input type="submit" value="Edit">
 </fieldset>
 </p>
@@ -154,23 +123,12 @@ foreach ($feeds_all as $feed_ct => $feed_it):
 <fieldset>
 <legend>Tag</legend>
 <select name="tag">
-<?php
-$stmt = $db->prepare("SELECT * FROM Tags WHERE UserID=:UserID ORDER BY Name COLLATE NOCASE");
-$stmt->bindValue(":UserID", $user_id, SQLITE3_INTEGER);
-$res = $stmt->execute();
-$tags_all = array();
-for ($row_it = $res->fetcharray(); $row_it; $row_it = $res->fetcharray()) {
-    $tags_all[$row_it['TagID']] = $row_it['Name'];
-}
-
-foreach ($tags_all as $tag_ct => $tag_it):?>
-<option value="<?php echo $tag_ct;?>"><?php echo $tag_it;?></option>
-<?php endforeach;?>
+# for tag_it in tags_all
+<option value="{{ tag_it['TagID'] }}">{{ tag_it['Name'] }}</option>
+# endfor
 </select>
-<input name="user" value="<?php echo $user;?>" type="hidden">
 <input type="submit" value="Edit">
 </fieldset>
 </p>
 </form>
-#}
 </aside>

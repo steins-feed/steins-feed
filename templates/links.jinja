@@ -1,0 +1,13 @@
+# macro get_home(feed, page, timeunit, langs, tags)
+#     set link = url_for('home')
+#     set link = link ~ "?feed=" ~ feed
+#     set link = link ~ "&page=" ~ page
+#     set link = link ~ "&timeunit=" ~ timeunit
+#     for lang_it in langs
+#         set link = link ~ "&lang=" ~ lang_it
+#     endfor
+#     for tag_it in tags
+#         set link = link ~ "&tag=" ~ tag_it
+#     endfor
+{{ link }}
+# endmacro

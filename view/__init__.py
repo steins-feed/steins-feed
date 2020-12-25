@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, request
+from datetime import timedelta
+from flask import Flask, render_template
 from flask_security import auth_required, current_user
 import os
 import os.path as os_path
 
-from model.utils import last_updated, updated_dates, updated_items
 from .auth import get_security
+from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
+from .req import Timeunit
+from model.utils import last_updated, updated_dates, updated_items, displayed_languages, displayed_tags, all_feeds, all_tags
 
 static_path = os_path.normpath(os_path.join(
         os_path.dirname(__file__),
@@ -23,23 +26,59 @@ app = Flask(__name__,
         template_folder=templates_path
 )
 security = get_security(app)
+app.jinja_env.line_statement_prefix = '#'
+app.jinja_env.filters['contains'] = lambda a, b: set(a) >= set(b)
 
 @app.route("/")
 @auth_required()
 def home():
-    page_no = int(request.args.get('page', 0))
-    timeunit = request.args.get('timeunit', "Day")
-    feed = request.args.get('feed', "Full")
-    tags_disp = request.args.get('tags', [])
+    r_feed = get_feed()
+    r_langs = get_langs()
+    r_page = get_page()
+    r_tags = get_tags()
+    r_timeunit = get_timeunit()
 
     last_hour = last_updated().replace(
             minute=0, second=0, microsecond=0
     )
-    page_dates = updated_dates(current_user.UserID, timeunit, last_hour, page_no + 2)
-    if len(page_dates) == page_no + 2:
+    if r_timeunit == Timeunit.DAY:
+        date_keys = ["Year", "Month", "Day"]
+    elif r_timeunit == Timeunit.WEEK:
+        date_keys = ["Year", "Week"]
+    elif r_timeunit == Timeunit.MONTH:
+        date_keys = ["Year", "Month"]
+    else:
+        raise ValueError
+    page_dates = updated_dates(current_user.UserID, date_keys, last_hour, r_page + 2)
+    if len(page_dates) == r_page + 2:
         page_date = page_dates[-2]
+    else:
+        page_date = page_dates[-1]
 
-    page_items = updated_items(current_user.UserID, timeunit, feed, tags_disp, page_date, last_hour)
+    start_time = page_date
+    if r_timeunit == Timeunit.DAY:
+        finish_time = start_time + timedelta(days=1)
+    elif r_timeunit == Timeunit.WEEK:
+        finish_time = start_time + timedelta(weeks=1)
+    elif r_timeunit == Timeunit.MONTH:
+        finish_time = start_time + timedelta(months=1)
+    else:
+        raise ValueError
+    page_items = updated_items(current_user.UserID, r_langs, r_tags, start_time, finish_time, last_hour)
+
+    return render_template("index.html",
+            timeunit=r_timeunit.value,
+            feed=r_feed.value,
+            items=page_items,
+            last_updated=last_hour,
+            page=r_page,
+            topnav_title=get_topnav_title(page_date, r_timeunit),
+            dates=page_dates,
+            langs_disp=displayed_languages(),
+            tags_disp=displayed_tags(),
+            feeds_all=all_feeds(),
+            tags_all=all_tags()
+    )
 
 
 
@@ -139,33 +178,25 @@ def home():
 
 
 
-    return render_template("index.html",
-            feed="Full",
-            items=page_items,
-            last_updated=last_hour,
-            page=page_no,
-            topnav_title=get_topnav_title(page_date, timeunit)
-    )
-
 def get_topnav_title(page_date, timeunit):
     from datetime import datetime, timedelta
 
     current_date = datetime.now()
-    if timeunit == "Day":
+    if timeunit == Timeunit.DAY:
         if current_date >= page_date and current_date < page_date + timedelta(days=1):
             topnav_title = "Today"
         elif current_date >= page_date - timedelta(days=1) and current_date < page_date:
             topnav_title = "Yesterday"
         else:
             topnav_title = page_date.strftime("%a, %d %b %Y")
-    elif timeunit == "Week":
+    elif timeunit == timeunit.WEEK:
         if current_date >= page_date and current_date < page_date + timedelta(days=7):
             topnav_title = "This week"
         elif current_date >= page_date - timedelta(days=7) and current_date < page_date:
             topnav_title = "Last week"
         else:
             topnav_title = page_date.strftime("Week %U, %Y")
-    elif timeunit == "Month":
+    elif timeunit == timeunit.MONTH:
         if current_date >= page_date and current_date < page_date + timedelta(month=1):
             topnav_title = "This month"
         elif current_date >= page_date - timedelta(months=1) and current_date < page_date:
