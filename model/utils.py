@@ -165,6 +165,59 @@ def all_feeds():
 
     return conn.execute(q).fetchall()
 
+def all_feeds_lang(user_id):
+    conn = get_connection()
+    feeds = get_table('Feeds')
+    display = get_table('Display')
+
+    display_user = (sql.select([display])
+                       .where(display.c.UserID == user_id)
+                       .alias())
+
+    res = dict()
+    for lang_it in all_langs():
+        lang_it = Language(lang_it)
+        res[lang_it.value] = []
+
+        q_display = sql.select([
+                feeds
+        ]).select_from(
+                feeds.join(display_user)
+        ).where(
+                feeds.c.Language == lang_it.name
+        ).order_by(
+            sql.collate(feeds.c.Title, 'NOCASE')
+        )
+        res[lang_it.value].append(conn.execute(q_display).fetchall())
+
+        q_hide = sql.select([
+            feeds
+        ]).select_from(
+            feeds.outerjoin(display_user)
+        ).where(sql.and_(
+            feeds.c.Language == lang_it.name,
+            display_user.c.UserID == None
+        )).order_by(
+            sql.collate(feeds.c.Title, 'NOCASE')
+        )
+        res[lang_it.value].append(conn.execute(q_hide).fetchall())
+
+    return res
+
+def all_langs():
+    conn = get_connection()
+    feeds = get_table('Feeds')
+
+    q = sql.select([
+        feeds.c.Language
+    ]).distinct().order_by(
+        sql.collate(feeds.c.Language, 'NOCASE')
+    )
+
+    res = conn.execute(q)
+    res = [Language[e[0]].value for e in res]
+    return res
+
 def all_tags(user_id=None):
     conn = get_connection()
     tags = get_table('Tags')
@@ -174,9 +227,7 @@ def all_tags(user_id=None):
         q = q.where(tags.c.UserID == user_id)
     q = q.order_by(sql.collate(tags.c.Name, 'NOCASE'))
 
-    res = conn.execute(q)
-    res = [e['Name'] for e in res]
-    return res
+    return conn.execute(q).fetchall()
 
 def reset_magic(user_id=None):
     conn = get_connection()

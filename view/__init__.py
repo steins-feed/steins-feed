@@ -9,7 +9,8 @@ import os.path as os_path
 from .auth import get_security
 from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from .req import Timeunit
-from model.utils import last_updated, updated_dates, updated_items, displayed_languages, displayed_tags, all_feeds, all_tags
+from model.schema import Language
+from model.utils import last_updated, updated_dates, updated_items, displayed_languages, displayed_tags, all_feeds, all_feeds_lang, all_tags
 
 static_path = os_path.normpath(os_path.join(
         os_path.dirname(__file__),
@@ -74,13 +75,34 @@ def home():
             page=r_page,
             topnav_title=get_topnav_title(page_date, r_timeunit),
             dates=page_dates,
-            langs_disp=displayed_languages(),
-            tags_disp=displayed_tags(),
+            langs_disp=displayed_languages(current_user.UserID),
+            tags_disp=displayed_tags(current_user.UserID),
             feeds_all=all_feeds(),
-            tags_all=all_tags()
+            tags_all=all_tags(current_user.UserID)
     )
 
+@app.route("/settings")
+@auth_required()
+def settings():
+    r_feed = get_feed()
+    r_langs = get_langs()
+    r_page = get_page()
+    r_tags = get_tags()
+    r_timeunit = get_timeunit()
 
+    return render_template("settings.html",
+            page=r_page,
+            topnav_title=current_user.Name,
+            feeds_all=all_feeds(),
+            tags_all=all_tags(current_user.UserID),
+            langs_all=[e.value for e in Language],
+            feeds_lang=all_feeds_lang(current_user.UserID)
+    )
+
+@app.route("/statistics")
+@auth_required()
+def statistics():
+    pass
 
 #<?php
 #$items = array();

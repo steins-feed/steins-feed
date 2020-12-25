@@ -22,8 +22,8 @@
 </span>
 <span class="right">
 <a href="{{ get_home(feed, 0, timeunit, langs, tags) }}"><i class="material-icons">home</i></a>
-<a href="/steins-feed/statistics.php" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
-<a href="/steins-feed/settings.php" target="_blank"><i class="material-icons">settings</i></a>
+<a href="{{ url_for('statistics') }}" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
+<a href="{{ url_for('settings') }}" target="_blank"><i class="material-icons">settings</i></a>
 <i onclick="open_menu()" class="material-icons">
 menu
 </i>

@@ -1,0 +1,154 @@
+# from 'forms.jinja' import select_lang
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='css/topnav.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='css/sidenav.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='favicon.ico') }}" rel="shortcut icon" type="image/png">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<title>Stein's Feed</title>
+<script src="{{ url_for('static', filename='js/toggle_request.js') }}" defer></script>
+</head>
+<body>
+{% include 'topnav.html' %}
+{% include 'sidenav.html' %}
+<main>
+<header>
+<h1>{{ topnav_title }}</h1>
+</header>
+<hr>
+# for lang_it in langs_all
+<p>{{ lang_it }} feeds:</p>
+<select name="displayed_{{ lang_it }}" size=10 style="width: 200px;" multiple>
+<?php
+    $stmt = "SELECT * FROM Feeds INNER JOIN Display USING (FeedID) WHERE UserID=:UserID AND Language=:Language ORDER BY Title COLLATE NOCASE";
+?>
+# for row_it in feeds_lang[lang_it][0]
+<option value={{ row_it['FeedID'] }}>
+{{ row_it['Title'] }}
+</option>
+# endfor
+</select>
+<button onclick="toggle_display('{{ lang_it }}')" type="button">
+<i class="material-icons">compare_arrows</i>
+</button>
+<select name="hidden_{{ lang_it }}" size=10 style="width: 200px;" multiple>
+<?php
+    $stmt = "SELECT * FROM Feeds WHERE FeedID NOT IN (SELECT FeedID FROM Feeds INNER JOIN Display USING (FeedID) WHERE UserID=:UserID AND Language=:Language) AND Language=:Language ORDER BY Title COLLATE NOCASE";
+?>
+# for row_it in feeds_lang[lang_it][1]
+<option value={{ row_it['FeedID'] }}>
+{{ row_it['Title'] }}
+</option>
+# endfor
+</select>
+# endfor
+<hr>
+<form method="post" action="/steins-feed/php_settings/add_feed.php">
+<p>
+Title:<br>
+<input type="text" name="title">
+</p>
+<p>
+Link:<br>
+<input type="text" name="link">
+</p>
+<p>
+Language:<br>
+{{ select_lang(langs_all) }}
+</p>
+<p>
+Summary:<br>
+<input type="radio" name="summary" value=0>
+No abstract
+<input type="radio" name="summary" value=1>
+First paragraph
+<input type="radio" name="summary" value=2 checked>
+Full text
+<input type="radio" name="summary" value=3>
+Full text and everything
+</p>
+<input type="submit" value="Add feed">
+</form>
+<hr>
+<form method="post" action="/steins-feed/php_settings/delete_feed.php">
+<p>
+<select name="feed">
+# for feed_it in feeds_all
+<option value="{{ feed_it['FeedID'] }}">
+{{ feed_it['Title'] }}
+</option>
+# endfor
+</select>
+</p>
+<input type="submit" value="Delete feed">
+</form>
+<hr>
+<form method="post" action="/steins-feed/php_settings/add_tag.php">
+<p>
+<input type="text" name="tag">
+<input type="submit" value="Add tag">
+</p>
+</form>
+<hr>
+<form method="post" action="/steins-feed/php_settings/delete_tag.php">
+<p>
+<select name="tag">
+# for tag_it in tags_all
+<option value="{{ tag_it['TagID'] }}">
+{{ tag_it['Name'] }}
+</option>
+# endfor
+</select>
+</p>
+<input type="submit" value="Delete tag">
+</form>
+<hr>
+{#
+<form method="post" action="/steins-feed/php_settings/load_config.php" enctype="multipart/form-data">
+<p>
+<input type="file" name="feeds" value="feeds">
+</p>
+<p>
+<input type="submit" value="Load config">
+</form>
+<hr>
+<form method="post" action="/steins-feed/php_settings/export_config.php">
+<p>
+<input type="submit" value="Export config">
+</form>
+<hr>
+<form method="post" action="/steins-feed/php_settings/add_user.php">
+<p>
+Name:<br>
+<input type="text" name="name">
+</p>
+<p>
+Language:<br>
+{{ select_lang(all_langs) }}
+</p>
+<p>
+<input type="submit" value="Add user">
+</form>
+<hr>
+<form method="post" action="/steins-feed/php_settings/rename_user.php">
+<p>
+New name:<br>
+<input type="text" name="name">
+</p>
+<p>
+<input type="submit" value="Rename user">
+</form>
+<hr>
+<form method="post" action="/steins-feed/php_settings/delete_user.php">
+<p>
+<input type="submit" value="Delete user" style="background-color:red">
+</form>
+<hr>
+#}
+</main>
+</body>
+</html>

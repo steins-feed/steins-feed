@@ -1,0 +1,13 @@
+# macro select_lang(langs, default='English')
+<select name="lang">
+#     for lang_it in langs
+#         if lang_it == default
+<option value="{{ lang_it }}" selected>
+#         else
+<option value="{{ lang_it }}">
+#         endif
+{{ lang_it }}
+</option>
+#     endfor
+</select>
+# endmacro
