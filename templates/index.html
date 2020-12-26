@@ -190,7 +190,9 @@ lightbulb_outline
 </button>
 {% endif %}
 </p>
+{% if not item_it is sameas (items[-1]) %}
 <hr>
+{% endif %}
 </article>
 {% endfor %}
 {% endblock %}

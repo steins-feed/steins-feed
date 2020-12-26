@@ -36,6 +36,30 @@ def last_liked(user_id=None):
 
     return res
 
+def get_feed_row(feed_id, user_id):
+    conn = get_connection()
+    feeds = get_table('Feeds')
+    display = get_table('Display')
+
+    display_user = sql.select([
+            display
+    ]).where(
+            display.c.UserID == user_id
+    ).alias()
+    q = sql.select([
+            feeds,
+            sql.case(
+                    [(display_user.c.FeedID != None, True)],
+                    else_=False
+            ).label('Displayed')
+    ]).select_from(
+            feeds.outerjoin(display_user)
+    ).where(
+            feeds.c.FeedID == feed_id
+    )
+
+    return conn.execute(q).fetchone()
+
 def get_tag_name(tag_id):
     conn = get_connection()
     tags = get_table('Tags')
@@ -47,6 +71,20 @@ def get_tag_name(tag_id):
     )
 
     return conn.execute(q).fetchone()[0]
+
+def is_feed_displayed(user_id, feed_id):
+    conn = get_connection()
+    feeds = get_table('Feeds')
+    display = get_table('Display')
+
+    q = sql.select([
+            feeds
+    ]).where(sql.and_(
+            display.c.UserID == user_id,
+            feeds.c.FeedID == feed_id
+    ))
+
+    return conn.execute(q).fetchone() is not None
 
 def updated_dates(user_id, keys, last=None, limit=None):
     conn = get_connection()
@@ -191,28 +229,28 @@ def all_feeds_lang_disp(user_id):
         lang_it = Language(lang_it)
         res[lang_it.value] = []
 
-        q_display = sql.select([
+        q = sql.select([
                 feeds
         ]).select_from(
                 feeds.join(display_user)
         ).where(
                 feeds.c.Language == lang_it.name
         ).order_by(
-            sql.collate(feeds.c.Title, 'NOCASE')
+                sql.collate(feeds.c.Title, 'NOCASE')
         )
-        res[lang_it.value].append(conn.execute(q_display).fetchall())
+        res[lang_it.value].append(conn.execute(q).fetchall())
 
-        q_hide = sql.select([
-            feeds
+        q = sql.select([
+                feeds
         ]).select_from(
-            feeds.outerjoin(display_user)
+                feeds.outerjoin(display_user)
         ).where(sql.and_(
-            feeds.c.Language == lang_it.name,
-            display_user.c.UserID == None
+                feeds.c.Language == lang_it.name,
+                display_user.c.FeedID == None
         )).order_by(
-            sql.collate(feeds.c.Title, 'NOCASE')
+                sql.collate(feeds.c.Title, 'NOCASE')
         )
-        res[lang_it.value].append(conn.execute(q_hide).fetchall())
+        res[lang_it.value].append(conn.execute(q).fetchall())
 
     return res
 
@@ -230,28 +268,28 @@ def all_feeds_lang_tag(tag_id):
         lang_it = Language(lang_it)
         res[lang_it.value] = []
 
-        q_display = sql.select([
+        q = sql.select([
                 feeds
         ]).select_from(
                 feeds.join(tags2feeds_tag)
         ).where(
                 feeds.c.Language == lang_it.name
         ).order_by(
-            sql.collate(feeds.c.Title, 'NOCASE')
+                sql.collate(feeds.c.Title, 'NOCASE')
         )
-        res[lang_it.value].append(conn.execute(q_display).fetchall())
+        res[lang_it.value].append(conn.execute(q).fetchall())
 
-        q_hide = sql.select([
-            feeds
+        q = sql.select([
+                feeds
         ]).select_from(
-            feeds.outerjoin(tags2feeds_tag)
+                feeds.outerjoin(tags2feeds_tag)
         ).where(sql.and_(
-            feeds.c.Language == lang_it.name,
-            tags2feeds_tag.c.TagID == None
+                feeds.c.Language == lang_it.name,
+                tags2feeds_tag.c.FeedID == None
         )).order_by(
-            sql.collate(feeds.c.Title, 'NOCASE')
+                sql.collate(feeds.c.Title, 'NOCASE')
         )
-        res[lang_it.value].append(conn.execute(q_hide).fetchall())
+        res[lang_it.value].append(conn.execute(q).fetchall())
 
     return res
 
@@ -279,6 +317,41 @@ def all_tags(user_id=None):
     q = q.order_by(sql.collate(tags.c.Name, 'NOCASE'))
 
     return conn.execute(q).fetchall()
+
+def all_tags_feed(user_id, feed_id):
+    conn = get_connection()
+    tags = get_table('Tags')
+    tags2feeds = get_table('Tags2Feeds')
+
+    res = []
+    tags2feeds_feed = (sql.select([tags2feeds])
+                         .where(tags2feeds.c.FeedID == feed_id)
+                         .alias())
+
+    q = sql.select([
+            tags
+    ]).select_from(
+            tags.join(tags2feeds_feed)
+    ).where(
+            tags.c.UserID == user_id
+    ).order_by(
+            sql.collate(tags.c.Name, 'NOCASE')
+    )
+    res.append(conn.execute(q).fetchall())
+
+    q = sql.select([
+            tags
+    ]).select_from(
+            tags.outerjoin(tags2feeds_feed)
+    ).where(sql.and_(
+            tags.c.UserID == user_id,
+            tags2feeds_feed.c.TagID == None
+    )).order_by(
+            sql.collate(tags.c.Name, 'NOCASE')
+    )
+    res.append(conn.execute(q).fetchall())
+
+    return res
 
 def all_likes_lang(user_id):
     conn = get_connection()

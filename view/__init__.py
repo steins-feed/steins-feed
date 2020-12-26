@@ -10,10 +10,10 @@ from .auth import get_security
 from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from .req import Timeunit
 from model.schema import Language
-from model.utils import last_updated, get_tag_name
+from model.utils import last_updated, get_feed_row, get_tag_name
 from model.utils import updated_dates, updated_items
 from model.utils import displayed_languages, displayed_tags
-from model.utils import all_feeds, all_feeds_lang_disp, all_feeds_lang_tag, all_tags, all_likes_lang
+from model.utils import all_feeds, all_feeds_lang_disp, all_feeds_lang_tag, all_tags, all_tags_feed, all_likes_lang
 
 static_path = os_path.normpath(os_path.join(
         os_path.dirname(__file__),
@@ -101,7 +101,16 @@ def statistics():
 @app.route("/feed")
 @auth_required()
 def feed():
-    pass
+    feed_id = request.args.get('feed')
+    feed_row = get_feed_row(feed_id, current_user.UserID)
+
+    return render_template("feed.html",
+            **base_context(),
+            topnav_title=feed_row['Title'],
+            feed_row=feed_row,
+            langs_all=[e.value for e in Language],
+            tags_feed=all_tags_feed(current_user.UserID, feed_id)
+    )
 
 @app.route("/tag")
 @auth_required()

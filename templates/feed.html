@@ -1,89 +1,25 @@
-<?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/steins_db.php";
-$db = steins_db(SQLITE3_OPEN_READONLY);
-$db->exec("BEGIN");
+{% extends "base.html" %}
+{% from 'forms.jinja' import select_lang %}
 
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/clf.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/feed.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/langs.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/page.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/tags.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/timeunit.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/user.php";
-
-$stmt = $db->prepare("SELECT * FROM Feeds WHERE FeedID=:FeedID");
-$stmt->bindValue(':FeedID', $_GET['feed'], SQLITE3_INTEGER);
-$feed_row = $stmt->execute()->fetcharray();
-
-$stmt = $db->prepare("SELECT * FROM Display WHERE UserID=:UserID AND FeedID=:FeedID");
-$stmt->bindValue(':UserID', $user_id, SQLITE3_INTEGER);
-$stmt->bindValue(':FeedID', $_GET['feed'], SQLITE3_INTEGER);
-$displayed = $stmt->execute()->fetcharray();
-
-$stmt = $db->prepare("SELECT DISTINCT Tags.* FROM Tags INNER JOIN Tags2Feeds USING (TagID) WHERE UserID=:UserID AND FeedID=:FeedID ORDER BY Name COLLATE NOCASE");
-$stmt->bindValue(':UserID', $user_id, SQLITE3_INTEGER);
-$stmt->bindValue(':FeedID', $_GET['feed'], SQLITE3_INTEGER);
-$res = $stmt->execute();
-
-$tagged = array();
-for ($tag_it = $res->fetcharray(); $tag_it; $tag_it = $res->fetcharray()) {
-    $tagged[] = $tag_it;
-}
-
-$stmt = $db->prepare("SELECT DISTINCT Tags.* FROM Tags WHERE UserID=:UserID AND TagID NOT IN (SELECT DISTINCT TagID FROM Tags INNER JOIN Tags2Feeds USING (TagID) WHERE UserID=:UserID AND FeedID=:FeedID) ORDER BY Name COLLATE NOCASE");
-$stmt->bindValue(':UserID', $user_id, SQLITE3_INTEGER);
-$stmt->bindValue(':FeedID', $_GET['feed'], SQLITE3_INTEGER);
-$res = $stmt->execute();
-
-$untagged = array();
-for ($tag_it = $res->fetcharray(); $tag_it; $tag_it = $res->fetcharray()) {
-    $untagged[] = $tag_it;
-}
-?>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="/steins-feed/css/index.css" rel="stylesheet" type="text/css">
-<link href="/steins-feed/css/topnav.css" rel="stylesheet" type="text/css">
-<link href="/steins-feed/css/sidenav.css" rel="stylesheet" type="text/css">
-<link href="/steins-feed/favicon.ico" rel="shortcut icon" type="image/png">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<title>Stein's Feed</title>
-<script>
-var user="<?php echo $user;?>";
-var clf="<?php echo $clf;?>";
-var feed_id="<?php echo $_GET['feed'];?>";
-</script>
+{% block scripts %}
 <script src="/steins-feed/js/toggle_request.js" defer></script>
-</head>
-<body>
-<?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/topnav.php";
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/sidenav.php";
-?>
-<main>
-<header>
-<h1><?php echo $feed_row['Title'];?></h1>
-</header>
-<hr>
+{% endblock %}
+
+{% block body %}
 <form method="post" action="/steins-feed/php_settings/update_feed.php">
 <p>
 Title:<br>
-<input type="text" name="title" value="<?php echo $feed_row['Title'];?>">
+<input type="text" name="title" value="{{ feed_row['Title'] }}">
 </p>
 <p>
 Link:<br>
-<input type="text" name="link" value="<?php echo $feed_row['Link'];?>">
+<input type="text" name="link" value="{{ feed_row['Link'] }}">
 </p>
 <p>
 Language:<br>
-<?php
-include_once $_SERVER['DOCUMENT_ROOT'] . "/steins-feed/php_include/select_lang.php";
-select_lang($feed_row['Language']);
-?>
+{{ select_lang(langs_all, feed_row['Language']) }}
 </p>
+{#
 <p>
 Summary:<br>
 <?php if ($feed_row['Summary'] == 0):?>
@@ -111,49 +47,42 @@ Full text
 <?php endif;?>
 Full text and everything
 </p>
+#}
 <p>
 Display:<br>
-<?php if ($displayed):?>
+# if feed_row['Displayed']
 <input type="radio" name="display" value=1 checked>
-<?php else:?>
+# else
 <input type="radio" name="display" value=1>
-<?php endif;?>
+# endif
 Displayed
-<?php if (!$displayed):?>
-<input type="radio" name="display" value=0 checked>
-<?php else:?>
+# if feed_row['Displayed']
 <input type="radio" name="display" value=0>
-<?php endif;?>
+# else
+<input type="radio" name="display" value=0 checked>
+# endif
 Hidden
 </p>
-<input type="hidden" name="user" value=<?php echo $user;?>>
-<input type="hidden" name="feed" value=<?php echo $_GET['feed'];?>>
+<input type="hidden" name="feed" value={{ feed_row['FeedID'] }}>
 <input type="submit" value="Update feed">
 </form>
 <hr>
 <p>Tags:</p>
 <select name="tagged" style="width: 100px;" multiple>
-<?php foreach ($tagged as $tag_it):?>
-<option value=<?php echo $tag_it['TagID'];?>>
-<?php echo $tag_it['Name'], PHP_EOL;?>
+# for tag_it in tags_feed[0]
+<option value={{ tag_it['TagID'] }}>
+{{ tag_it['Name'] }}
 </option>
-<?php endforeach;?>
+# endfor
 </select>
 <button onclick="toggle_tags()" type="button">
 <i class="material-icons">compare_arrows</i>
 </button>
 <select name="untagged" style="width: 100px;" multiple>
-<?php foreach ($untagged as $tag_it):?>
-<option value=<?php echo $tag_it['TagID'];?>>
-<?php echo $tag_it['Name'], PHP_EOL;?>
+# for tag_it in tags_feed[1]
+<option value={{ tag_it['TagID'] }}>
+{{ tag_it['Name'] }}
 </option>
-<?php endforeach;?>
+# endfor
 </select>
-<hr>
-</main>
-</body>
-</html>
-<?php
-$db->exec("END");
-$db->close();
-?>
+{% endblock %}
