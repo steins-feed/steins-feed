@@ -9,11 +9,12 @@ import os.path as os_path
 from .auth import get_security
 from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from .req import Timeunit
-from model.schema import Language
+from model.schema import Language, Like
 from model.utils import last_updated, get_feed_row, get_tag_name
 from model.utils import updated_dates, updated_items
 from model.utils import displayed_languages, displayed_tags
 from model.utils import all_feeds, all_feeds_lang_disp, all_feeds_lang_tag, all_tags, all_tags_feed, all_likes_lang
+from model.utils import upsert_like
 
 static_path = os_path.normpath(os_path.join(
         os_path.dirname(__file__),
@@ -76,8 +77,20 @@ def home():
             items=page_items,
             last_updated=last_hour,
             topnav_title=get_topnav_title(page_date, r_timeunit),
-            dates=page_dates
+            dates=page_dates,
+            enum_like=Like
     )
+
+@app.route("/home/like", methods=['POST'])
+@auth_required()
+def like(like_val = Like.UP):
+    upsert_like(current_user.UserID, int(request.form.get('id')), like_val)
+    return ("", 200)
+
+@app.route("/home/dislike", methods=['POST'])
+@auth_required()
+def dislike():
+    return like(Like.DOWN)
 
 @app.route("/settings")
 @auth_required()

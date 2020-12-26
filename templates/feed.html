@@ -2,7 +2,7 @@
 {% from 'forms.jinja' import select_lang %}
 
 {% block scripts %}
-<script src="/steins-feed/js/toggle_request.js" defer></script>
+<script src=" {{ url_for('static', filename='js/toggle_request.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}

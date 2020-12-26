@@ -159,7 +159,7 @@ Score: <?php printf("%.2f", 2. * $item_it['Score'] - 1.);?>.
 </div>
 <p>
 <button onclick="like({{ item_it['ItemID'] }})" type="button">
-{% if item_it['Like'] == 1 %}
+{% if item_it['Like'] == enum_like.UP.name %}
 <span id="like_{{ item_it['ItemID'] }}" class="liked">
 {% else %}
 <span id="like_{{ item_it['ItemID'] }}" class="like">
@@ -170,7 +170,7 @@ thumb_up
 </span>
 </button>
 <button onclick="dislike({{ item_it['ItemID'] }})" type="button">
-{% if item_it['Like'] == -1 %}
+{% if item_it['Like'] == enum_like.DOWN.name %}
 <span id="dislike_{{ item_it['ItemID'] }}" class="disliked">
 {% else %}
 <span id="dislike_{{ item_it['ItemID'] }}" class="dislike">
