@@ -30,24 +30,24 @@ def read_feeds(title_pattern=None):
     ]
 
     for feed_it in conn.execute(q):
-        ins_rows = []
+        rows = []
         for item_it in parse_feed(feed_it):
             try:
                 row_values = read_item(item_it)
             except KeyError:
                 continue
-            ins_row = dict(zip(row_keys, row_values))
-            ins_row['FeedID'] = feed_it['FeedID']
-            ins_rows.append(ins_row)
+            row_it = dict(zip(row_keys, row_values))
+            row_it['FeedID'] = feed_it['FeedID']
+            rows.append(row_it)
 
-        ins = items.insert()
-        ins = ins.prefix_with("OR IGNORE", dialect='sqlite')
-        conn.execute(ins, ins_rows)
+        q = items.insert()
+        q = q.prefix_with("OR IGNORE", dialect='sqlite')
+        conn.execute(q, rows)
 
-        upd = (feeds.update()
-                    .values(Updated=func.now())
-                    .where(feeds.c.FeedID==feed_it['FeedID']))
-        conn.execute(upd)
+        q = (feeds.update()
+                  .values(Updated=func.now())
+                  .where(feeds.c.FeedID == feed_it['FeedID']))
+        conn.execute(q)
 
 def parse_feed(feed):
     res = feedparser.parse(feed['Link'])
@@ -61,7 +61,7 @@ def parse_feed(feed):
         else:
             logger.error("{} -- {}.".format(feed['Title'], status))
     except AttributeError:
-        if res['items']:
+        if res.entries:
             logger.info("{}.".format(feed['Title']))
         else:
             logger.warning("{}.".format(feed['Title']))

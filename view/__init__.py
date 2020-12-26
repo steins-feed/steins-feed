@@ -10,11 +10,13 @@ from .auth import get_security
 from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from .req import Timeunit
 from model.schema import Language, Like
-from model.utils import last_updated, get_feed_row, get_tag_name
-from model.utils import updated_dates, updated_items
-from model.utils import displayed_languages, displayed_tags
-from model.utils import all_feeds, all_feeds_lang_disp, all_feeds_lang_tag, all_tags, all_tags_feed, all_likes_lang
-from model.utils import upsert_like
+from model.utils.all import all_feeds, all_tags
+from model.utils.all import displayed_languages, displayed_tags
+from model.utils.all import updated_dates, updated_items
+from model.utils.data import all_feeds_lang_disp, all_feeds_lang_tag, all_likes_lang, all_tags_feed
+from model.utils.one import get_feed_row, get_tag_name
+from model.utils.recent import last_updated
+from model.utils.score import upsert_like
 
 static_path = os_path.normpath(os_path.join(
         os_path.dirname(__file__),

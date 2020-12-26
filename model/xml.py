@@ -14,28 +14,31 @@ def read_xml(f):
 
     tree = etree.parse(f)
     root = tree.getroot()
-    ins_rows = []
 
+    rows = []
     for feed_it in root.xpath("feed"):
         title = feed_it.xpath("title")[0].text
         link = feed_it.xpath("link")[0].text
         lang = Language(feed_it.xpath("lang")[0].text).name
 
-        ins_rows.append(dict(zip(
+        rows.append(dict(zip(
                 ['Title', 'Link', 'Language'],
                 [title, link, lang]
         )))
 
-    ins = feeds.insert()
-    ins = ins.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(ins, ins_rows)
+    q = feeds.insert()
+    q = q.prefix_with("OR IGNORE", dialect='sqlite')
+    conn.execute(q, rows)
 
 def write_xml(f):
     conn = get_connection()
     feeds = get_table('Feeds')
 
-    q = (sql.select([feeds])
-            .order_by(sql.collate(feeds.c.Title, 'NOCASE')))
+    q = sql.select([
+            feeds
+    ]).order_by(
+            sql.collate(feeds.c.Title, 'NOCASE')
+    )
 
     root = etree.Element("root")
     for row_it in conn.execute(q):

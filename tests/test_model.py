@@ -4,7 +4,7 @@ from sqlalchemy import func, sql
 
 from model import get_connection, get_table
 from model.feeds import read_feeds
-from model.utils import last_updated
+from model.utils.recent import last_updated
 from model.xml import read_xml, write_xml
 
 def test_xml_read():

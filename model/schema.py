@@ -36,6 +36,8 @@ class Language(enum.Enum):
 def gen_fk(c):
     return sqla.ForeignKey(c, onupdate='CASCADE', ondelete='CASCADE')
 
+#------------------------------------------------------------------------------
+
 def create_schema_users():
     users = sqla.Table("Users", get_metadata(),
             sqla.Column("UserID", sqla.Integer, primary_key=True),

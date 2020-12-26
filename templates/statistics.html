@@ -9,7 +9,7 @@
 <li>
 {{ row_it['Feed'] }}
 <a href="{{ row_it['Link'] }}">
-{{ row_it['Title'] }}
+{{ row_it['Title']|safe }}
 </a>
 ({{ row_it['Published'] }}).
 </li>
@@ -21,7 +21,7 @@
 <li>
 {{ row_it['Feed'] }}
 <a href="{{ row_it['Link'] }}">
-{{ row_it['Title'] }}
+{{ row_it['Title']|safe }}
 </a>
 ({{ row_it['Published'] }}).
 </li>

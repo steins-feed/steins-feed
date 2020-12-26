@@ -2,19 +2,14 @@
 
 import logging
 import os
-import os.path as os_path
 import sqlalchemy as sqla
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from log import get_handler
 
-engine = None
-metadata = None
-session = None
-
-db_path = "sqlite:///" + os_path.normpath(os_path.join(
-        os_path.dirname(__file__),
+db_path = "sqlite:///" + os.path.normpath(os.path.join(
+        os.path.dirname(__file__),
         os.pardir,
         "steins.db"
 ))
@@ -28,28 +23,33 @@ def get_connection():
 
 def get_engine():
     global engine
-    if not engine:
+    if 'engine' not in globals():
         engine = sqla.create_engine(db_path)
     return engine
 
 def get_metadata():
     global metadata
-    if not metadata:
+    if 'metadata' not in globals():
         metadata = sqla.MetaData(bind=get_engine())
     metadata.reflect()
     return metadata
 
+def get_model(name, mixins=[]):
+    return type(
+            name,
+            tuple([Base] + mixins),
+            {'__table__': get_table(name)}
+    )
+
 def get_session():
     global session
-    if not session:
+    if 'session' not in globals():
         session_factory = sessionmaker(autocommit=False,
-                                       autoflush=False,
-                                       bind=get_engine())
+                autoflush=False,
+                bind=get_engine()
+        )
         session = scoped_session(session_factory)
     return session
-
-def get_model(name, mixins=[]):
-    return type(name, tuple([Base] + mixins), {'__table__': get_table(name)})
 
 def get_table(name):
     return sqla.Table(
