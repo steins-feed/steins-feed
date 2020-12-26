@@ -1,12 +1,12 @@
-README.pdf: README.md
-	pandoc -o README.pdf README.md
-
-.venv:
-	python3 -m venv .venv
+SHELL := /bin/bash
+.ONESHELL:
 
 .PHONY: venv
 venv: .venv
-	. .venv/bin/activate
+	source .venv/bin/activate
+
+.venv:
+	python3 -m venv .venv
 
 .PHONY: requirements
 requirements: requirements.txt venv
@@ -28,6 +28,9 @@ foo: venv
 	make distclean
 	python3 foo.py
 	make debug
+
+README.pdf: README.md
+	pandoc -o README.pdf README.md
 
 .PHONY: clean
 clean:

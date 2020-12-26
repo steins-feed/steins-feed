@@ -105,7 +105,7 @@ foreach($feed_dict as $key):
 </form>
 </section>
 <hr>
-<form action="/steins-feed/feed.php" method="get">
+<form action="{{ url_for('feed') }}" method="get">
 <p>
 <fieldset>
 <legend>Feed</legend>
@@ -118,7 +118,7 @@ foreach($feed_dict as $key):
 </fieldset>
 </p>
 </form>
-<form action="/steins-feed/tag.php" method="get">
+<form action="{{ url_for('tag') }}" method="get">
 <p>
 <fieldset>
 <legend>Tag</legend>

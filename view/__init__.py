@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from datetime import timedelta
-from flask import Flask, render_template
+from flask import Flask, request, render_template
 from flask_security import auth_required, current_user
 import os
 import os.path as os_path
@@ -10,10 +10,10 @@ from .auth import get_security
 from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from .req import Timeunit
 from model.schema import Language
-from model.utils import last_updated
+from model.utils import last_updated, get_tag_name
 from model.utils import updated_dates, updated_items
 from model.utils import displayed_languages, displayed_tags
-from model.utils import all_feeds, all_feeds_lang, all_tags, all_likes_lang
+from model.utils import all_feeds, all_feeds_lang_disp, all_feeds_lang_tag, all_tags, all_likes_lang
 
 static_path = os_path.normpath(os_path.join(
         os_path.dirname(__file__),
@@ -34,6 +34,7 @@ app.jinja_env.line_statement_prefix = '#'
 app.jinja_env.filters['contains'] = lambda a, b: set(a) >= set(b)
 
 @app.route("/")
+@app.route("/home")
 @auth_required()
 def home():
     r_feed = get_feed()
@@ -71,55 +72,65 @@ def home():
     page_items = updated_items(current_user.UserID, r_langs, r_tags, start_time, finish_time, last_hour)
 
     return render_template("index.html",
-            timeunit=r_timeunit.value,
-            feed=r_feed.value,
-            page=r_page,
+            **base_context(),
             items=page_items,
             last_updated=last_hour,
             topnav_title=get_topnav_title(page_date, r_timeunit),
-            dates=page_dates,
-            langs_disp=displayed_languages(current_user.UserID),
-            tags_disp=displayed_tags(current_user.UserID),
-            feeds_all=all_feeds(),
-            tags_all=all_tags(current_user.UserID)
+            dates=page_dates
     )
 
 @app.route("/settings")
 @auth_required()
 def settings():
-    r_feed = get_feed()
-    r_langs = get_langs()
-    r_page = get_page()
-    r_tags = get_tags()
-    r_timeunit = get_timeunit()
-
     return render_template("settings.html",
-            timeunit=r_timeunit.value,
-            feed=r_feed.value,
-            page=r_page,
+            **base_context(),
             topnav_title=current_user.Name,
-            feeds_all=all_feeds(),
-            tags_all=all_tags(current_user.UserID),
             langs_all=[e.value for e in Language],
-            feeds_lang=all_feeds_lang(current_user.UserID)
+            feeds_lang=all_feeds_lang_disp(current_user.UserID)
     )
 
 @app.route("/statistics")
 @auth_required()
 def statistics():
-    r_feed = get_feed()
-    r_langs = get_langs()
-    r_page = get_page()
-    r_tags = get_tags()
-    r_timeunit = get_timeunit()
-
     return render_template("statistics.html",
-            timeunit=r_timeunit.value,
-            feed=r_feed.value,
-            page=r_page,
-            langs_all=[e.value for e in Language],
+            **base_context(),
+            topnav_title=current_user.Name,
             likes_lang=all_likes_lang(current_user.UserID)
     )
+
+@app.route("/feed")
+@auth_required()
+def feed():
+    pass
+
+@app.route("/tag")
+@auth_required()
+def tag():
+    tag_id = request.args.get('tag')
+    tag_name = get_tag_name(tag_id)
+
+    return render_template("tag.html",
+            **base_context(),
+            topnav_title=tag_name,
+            feeds_lang=all_feeds_lang_tag(tag_id)
+    )
+
+def base_context():
+    context = dict()
+
+    context['feed'] = get_feed()
+    context['timeunit'] = get_timeunit()
+    context['page'] = get_page()
+    context['langs'] = get_langs()
+    context['tags'] = get_tags()
+
+    context['langs_disp'] = displayed_languages(current_user.UserID)
+    context['tags_disp'] = displayed_tags(current_user.UserID)
+
+    context['feeds_all']=all_feeds()
+    context['tags_all']=all_tags(current_user.UserID)
+
+    return context
 
 #<?php
 #$items = array();

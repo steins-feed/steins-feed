@@ -7,7 +7,7 @@
 <script src="{{ url_for('static', filename='js/next_item.js') }}" defer></script>
 {% if feed != 'Full' %}
 <script>
-{% for lang_it in langs_disp %}
+{% for lang_it in langs %}
 var {{ lang_it|lower }}_words;
 $(document).ready(function() {
     $.getJSON("/steins-feed/{{ user_id }}/{{ lang_it }}_cookie.json", function(result) {
@@ -17,8 +17,8 @@ $(document).ready(function() {
 {% endfor %}
 </script>
 <script src="{{ url_for('static', filename='snowball/base-stemmer.js') }}" defer></script>
-{% for lang_it in langs_disp %}
-<script src="{{ url_for('static', filename='snowball/{{ lang_it|lower }}-stemmer.js') }}" defer></script>
+{% for lang_it in langs %}
+<script src="{{ url_for('static', filename='snowball/' ~ lang_it|lower ~ '-stemmer.js') }}" defer></script>
 {% endfor %}
 {% endif %}
 {% endblock %}

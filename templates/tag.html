@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+<script src=" {{ url_for('static', filename='js/toggle_request.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+# for lang_it, feeds_it in feeds_lang.items()
+<p>{{ lang_it }} feeds:</p>
+<select name="tagged_{{ lang_it }}" size=10 style="width: 200px;" multiple>
+# for row_it in feeds_it[0]
+<option value={{ row_it['FeedID'] }}>
+{{ row_it['Title'] }}
+</option>
+# endfor
+</select>
+<button onclick="toggle_feeds('{{ lang_it }}')" type="button">
+<i class="material-icons">compare_arrows</i>
+</button>
+<select name="untagged_{{ lang_it }}" size=10 style="width: 200px;" multiple>
+# for row_it in feeds_it[1]
+<option value={{ row_it['FeedID'] }}>
+{{ row_it['Title'] }}
+</option>
+# endfor
+</select>
+# endfor
+<hr>
+{% endblock %}

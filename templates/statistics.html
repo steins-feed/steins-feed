@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block body %}
-# for lang_it in langs_all
+# for lang_it, feeds_it in likes_lang.items()
 <h2>{{ lang_it }}</h2>
 <p>{{ likes_lang[lang_it][0]|count }} likes:</p>
 <ul>
-# for row_it in likes_lang[lang_it][0]
+# for row_it in feeds_it[0]
 <li>
 {{ row_it['Feed'] }}
 <a href="{{ row_it['Link'] }}">
@@ -17,7 +17,7 @@
 </ul>
 <p>{{ likes_lang[lang_it][1]|count }} dislikes:</p>
 <ul>
-# for row_it in likes_lang[lang_it][1]
+# for row_it in feeds_it[1]
 <li>
 {{ row_it['Feed'] }}
 <a href="{{ row_it['Link'] }}">

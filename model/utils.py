@@ -36,6 +36,18 @@ def last_liked(user_id=None):
 
     return res
 
+def get_tag_name(tag_id):
+    conn = get_connection()
+    tags = get_table('Tags')
+
+    q = sql.select([
+            tags.c.Name
+    ]).where(
+            tags.c.TagID == tag_id
+    )
+
+    return conn.execute(q).fetchone()[0]
+
 def updated_dates(user_id, keys, last=None, limit=None):
     conn = get_connection()
     feeds = get_table('Feeds')
@@ -165,7 +177,7 @@ def all_feeds():
 
     return conn.execute(q).fetchall()
 
-def all_feeds_lang(user_id):
+def all_feeds_lang_disp(user_id):
     conn = get_connection()
     feeds = get_table('Feeds')
     display = get_table('Display')
@@ -175,7 +187,7 @@ def all_feeds_lang(user_id):
                        .alias())
 
     res = dict()
-    for lang_it in all_langs():
+    for lang_it in all_langs_feeds():
         lang_it = Language(lang_it)
         res[lang_it.value] = []
 
@@ -204,7 +216,46 @@ def all_feeds_lang(user_id):
 
     return res
 
-def all_langs():
+def all_feeds_lang_tag(tag_id):
+    conn = get_connection()
+    feeds = get_table('Feeds')
+    tags2feeds = get_table('Tags2Feeds')
+
+    tags2feeds_tag = (sql.select([tags2feeds])
+                         .where(tags2feeds.c.TagID == tag_id)
+                         .alias())
+
+    res = dict()
+    for lang_it in all_langs_feeds():
+        lang_it = Language(lang_it)
+        res[lang_it.value] = []
+
+        q_display = sql.select([
+                feeds
+        ]).select_from(
+                feeds.join(tags2feeds_tag)
+        ).where(
+                feeds.c.Language == lang_it.name
+        ).order_by(
+            sql.collate(feeds.c.Title, 'NOCASE')
+        )
+        res[lang_it.value].append(conn.execute(q_display).fetchall())
+
+        q_hide = sql.select([
+            feeds
+        ]).select_from(
+            feeds.outerjoin(tags2feeds_tag)
+        ).where(sql.and_(
+            feeds.c.Language == lang_it.name,
+            tags2feeds_tag.c.TagID == None
+        )).order_by(
+            sql.collate(feeds.c.Title, 'NOCASE')
+        )
+        res[lang_it.value].append(conn.execute(q_hide).fetchall())
+
+    return res
+
+def all_langs_feeds():
     conn = get_connection()
     feeds = get_table('Feeds')
 
@@ -249,7 +300,7 @@ def all_likes_lang(user_id):
     )
 
     res = dict()
-    for lang_it in all_langs():
+    for lang_it in all_langs_feeds():
         lang_it = Language(lang_it)
 
         res[lang_it.value] = []
