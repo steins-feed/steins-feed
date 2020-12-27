@@ -3,29 +3,27 @@
 import glob
 from lxml import etree
 import os
-import sys
 
-dir_path = os.path.abspath(__file__)
-dir_path = os.path.dirname(dir_path)
-dir_path = os.path.join(dir_path, '..')
-dir_path = os.path.abspath(dir_path)
-
-sys.path.append(dir_path)
-
-from steins_sql import *
-conn = get_connection()
-c = get_cursor()
+from model.schema import Language
+from model.utils.all import all_feeds
 
 feeds_xml = []
-for f_it in glob.glob(dir_path + os.sep + "feeds.d/*"):
+for f_it in glob.glob("feeds.d/*.xml"):
     root = etree.parse(f_it)
     for feed_it in root.xpath("./feed"):
-        feeds_xml.append([feed_it.xpath("./title")[0].text, feed_it.xpath("./link")[0].text, feed_it.xpath("./lang")[0].text])
+        feeds_xml.append((
+                feed_it.xpath("./title")[0].text,
+                feed_it.xpath("./link")[0].text,
+                Language(feed_it.xpath("./lang")[0].text).name
+        ))
 print(len(feeds_xml))
 
 feeds_sql = []
-for feed_it in c.execute("SELECT * FROM Feeds"):
-    feeds_sql.append([feed_it['Title'], feed_it['Link'], feed_it['Language']])
+for feed_it in all_feeds():
+    feeds_sql.append((
+            feed_it['Title'],
+            feed_it['Link'],
+            feed_it['Language']))
 print(len(feeds_sql))
 
 for feed_it in feeds_xml:

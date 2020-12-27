@@ -17,17 +17,13 @@ steins.db: venv
 
 .PHONY: test
 test: venv
+	make distclean
+	python3 -c "from model.schema import create_schema; create_schema()"
 	python3 -m pytest tests
 
 .PHONY: debug
 debug: venv
 	env FLASK_ENV=development python3 -m flask run
-
-.PHONY: foo
-foo: venv
-	make distclean
-	python3 foo.py
-	make debug
 
 README.pdf: README.md
 	pandoc -o README.pdf README.md
