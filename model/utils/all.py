@@ -163,7 +163,7 @@ def keys2strings(keys):
             format_string += "-%m"
         elif key_it == "Week":
             date_string += "-{}"
-            format_string += "-%U"
+            format_string += "-%W"
         elif key_it == "Day":
             date_string += "-{}"
             format_string += "-%d"
@@ -172,7 +172,7 @@ def keys2strings(keys):
         date_string += "-1"
         format_string += "-%d"
     elif keys[-1] == "Week":
-        date_string += "-0"
+        date_string += "-1"
         format_string += "-%w"
 
     return date_string, format_string
