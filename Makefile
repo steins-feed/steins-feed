@@ -12,18 +12,27 @@ venv: .venv
 requirements: requirements.txt venv
 	python3 -m pip install --upgrade -r requirements.txt
 
-steins.db: venv
-	python3 aux/init_feeds.py
-
-.PHONY: test
-test: venv
-	make distclean
+.PHONY: create
+create: venv
 	python3 -c "from model.schema import create_schema; create_schema()"
-	python3 -m pytest tests
+
+.PHONY: update
+update: venv
+	python3 -c "from model.feeds import read_feeds; read_feeds()"
 
 .PHONY: debug
 debug: venv
 	env FLASK_ENV=development python3 -m flask run
+
+.PHONY: prod
+prod: venv
+	python3 -m flask run
+
+.PHONY: test
+test: venv
+	make distclean
+	make create
+	python3 -m pytest tests
 
 README.pdf: README.md
 	pandoc -o README.pdf README.md

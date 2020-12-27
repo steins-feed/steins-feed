@@ -39,7 +39,7 @@ def gen_fk(c):
 #------------------------------------------------------------------------------
 
 def create_schema_users():
-    users = sqla.Table("Users", get_metadata(),
+    users = sqla.Table("Users", sqla.MetaData(),
             sqla.Column("UserID", sqla.Integer, primary_key=True),
             sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
             sqla.Column("Password", TINYTEXT, nullable=False),
@@ -49,7 +49,7 @@ def create_schema_users():
     users.create(get_engine(), checkfirst=True)
 
 def create_schema_roles():
-    roles = sqla.Table("Roles", get_metadata(),
+    roles = sqla.Table("Roles", sqla.MetaData(),
             sqla.Column("RoleID", sqla.Integer, primary_key=True),
             sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
             sqla.Column("Description", TEXT)
@@ -57,7 +57,7 @@ def create_schema_roles():
     roles.create(get_engine(), checkfirst=True)
 
     users = get_table('Users')
-    users2roles = sqla.Table("Users2Roles", get_metadata(),
+    users2roles = sqla.Table("Users2Roles", sqla.MetaData(),
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("RoleID", sqla.Integer, gen_fk(roles.c.RoleID), nullable=False),
             schema.UniqueConstraint('UserID', 'RoleID')
@@ -67,7 +67,7 @@ def create_schema_roles():
 #------------------------------------------------------------------------------
 
 def create_schema_feeds():
-    feeds = sqla.Table("Feeds", get_metadata(),
+    feeds = sqla.Table("Feeds", sqla.MetaData(),
             sqla.Column("FeedID", sqla.Integer, primary_key=True),
             sqla.Column("Title", TEXT, nullable=False, unique=True),
             sqla.Column("Link", TEXT, nullable=False, unique=True),
@@ -80,7 +80,7 @@ def create_schema_feeds():
 def create_schema_display():
     users = get_table('Users')
     feeds = get_table('Feeds')
-    display = sqla.Table("Display", get_metadata(),
+    display = sqla.Table("Display", sqla.MetaData(),
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("FeedID", sqla.Integer, gen_fk(feeds.c.FeedID), nullable=False),
             schema.UniqueConstraint('UserID', 'FeedID')
@@ -89,7 +89,7 @@ def create_schema_display():
 
 def create_schema_tags():
     users = get_table('Users')
-    tags = sqla.Table("Tags", get_metadata(),
+    tags = sqla.Table("Tags", sqla.MetaData(),
             sqla.Column("TagID", sqla.Integer, primary_key=True),
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("Name", TINYTEXT, nullable=False),
@@ -98,7 +98,7 @@ def create_schema_tags():
     tags.create(get_engine(), checkfirst=True)
 
     feeds = get_table('Feeds')
-    tags2feeds = sqla.Table("Tags2Feeds", get_metadata(),
+    tags2feeds = sqla.Table("Tags2Feeds", sqla.MetaData(),
             sqla.Column("TagID", sqla.Integer, gen_fk(tags.c.TagID), nullable=False),
             sqla.Column("FeedID", sqla.Integer, gen_fk(feeds.c.FeedID), nullable=False),
             schema.UniqueConstraint('TagID', 'FeedID')
@@ -109,7 +109,7 @@ def create_schema_tags():
 
 def create_schema_items():
     feeds = get_table('Feeds')
-    items = sqla.Table("Items", get_metadata(),
+    items = sqla.Table("Items", sqla.MetaData(),
             sqla.Column("ItemID", sqla.Integer, primary_key=True),
             sqla.Column("Title", TEXT, nullable=False),
             sqla.Column("Link", TEXT, nullable=False),
@@ -123,7 +123,7 @@ def create_schema_items():
 def create_schema_likes():
     users = get_table('Users')
     items = get_table('Items')
-    likes = sqla.Table("Like", get_metadata(),
+    likes = sqla.Table("Like", sqla.MetaData(),
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("ItemID", sqla.Integer, gen_fk(items.c.ItemID), nullable=False),
             sqla.Column("Score", sqla.Enum(Like), nullable=False),
@@ -136,7 +136,7 @@ def create_schema_likes():
 def create_schema_magic():
     users = get_table('Users')
     items = get_table('Items')
-    magic = sqla.Table("Magic", get_metadata(),
+    magic = sqla.Table("Magic", sqla.MetaData(),
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("ItemID", sqla.Integer, gen_fk(items.c.ItemID), nullable=False),
             sqla.Column("Score", sqla.Float, nullable=False),

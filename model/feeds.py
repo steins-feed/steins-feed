@@ -34,7 +34,7 @@ def read_feeds(title_pattern=None):
         for item_it in parse_feed(feed_it):
             try:
                 row_values = read_item(item_it)
-            except KeyError:
+            except AttributeError:
                 continue
             row_it = dict(zip(row_keys, row_values))
             row_it['FeedID'] = feed_it['FeedID']
@@ -79,27 +79,27 @@ def read_item_title(item):
     try:
         item_title = item.title
         return item_title
-    except KeyError:
+    except AttributeError:
         pass
 
     logger.error("No title.")
-    raise KeyError
+    raise AttributeError
 
 def read_item_link(item):
     try:
         item_link = item.link
         return item_link
-    except KeyError:
+    except AttributeError:
         pass
 
     try:
         item_link = item.links[0].href
         return item_link
-    except KeyError:
+    except AttributeError:
         pass
 
     logger.error("No link for '{}'.".format(read_item_title(item)))
-    raise KeyError
+    raise AttributeError
 
 def read_item_summary(item):
     return item.summary
@@ -109,15 +109,15 @@ def read_item_time(item):
         item_time = item.published_parsed
         item_time = datetime(*item_time[:6])
         return item_time
-    except (KeyError, TypeError, ValueError):
+    except (AttributeError, TypeError):
         pass
 
     try:
         item_time = item.updated_parsed
         item_time = datetime(*item_time[:6])
         return item_time
-    except (KeyError, TypeError, ValueError):
+    except (AttributeError, TypeError):
         pass
 
     logger.error("No time for '{}'.".format(read_item_title(item)))
-    raise KeyError
+    raise AttributeError

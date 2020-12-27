@@ -13,7 +13,7 @@ bp = Blueprint("base", __name__)
 @bp.route("/feed")
 @auth_required()
 def feed():
-    feed_id = request.args.get('feed')
+    feed_id = request.args.get('feed_id')
     feed_row = get_feed_row(feed_id, current_user.UserID)
 
     return render_template("feed.html",

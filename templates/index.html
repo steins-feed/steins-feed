@@ -41,7 +41,7 @@ Last updated: {{ last_updated }} GMT.
 </a>
 </h2>
 <p>
-Source: <a href="/steins-feed/feed.php?feed={{ item_it['FeedID'] }}">{{ item_it['Feed'] }}</a>.
+Source: <a href="{{ url_for('base.feed') }}?feed_id={{ item_it['FeedID'] }}">{{ item_it['Feed'] }}</a>.
 Published: {{ item_it['Published'] }} GMT.
 {#
 <?php
