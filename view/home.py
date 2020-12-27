@@ -15,7 +15,7 @@ from model.utils.score import upsert_like
 
 bp = Blueprint("home", __name__, url_prefix="/home")
 
-@bp.route("/")
+@bp.route("")
 @auth_required()
 def home():
     r_page = get_page()

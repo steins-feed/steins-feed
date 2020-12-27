@@ -10,3 +10,29 @@
 &tag={{- tag_it -}}
 #     endfor
 # endmacro
+
+# macro get_settings(feed, page, timeunit, langs, tags)
+{{- url_for('overview.settings') -}}
+?feed={{- feed.name -}}
+&page={{- page -}}
+&timeunit={{- timeunit.name -}}
+#     for lang_it in langs
+&lang={{- lang_it.name -}}
+#     endfor
+#     for tag_it in tags
+&tag={{- tag_it -}}
+#     endfor
+# endmacro
+
+# macro get_statistics(feed, page, timeunit, langs, tags)
+{{- url_for('overview.statistics') -}}
+?feed={{- feed.name -}}
+&page={{- page -}}
+&timeunit={{- timeunit.name -}}
+#     for lang_it in langs
+&lang={{- lang_it.name -}}
+#     endfor
+#     for tag_it in tags
+&tag={{- tag_it -}}
+#     endfor
+# endmacro
