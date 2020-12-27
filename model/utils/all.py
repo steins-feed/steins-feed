@@ -112,7 +112,7 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
 
     q_select = [
             t_items,
-            t_feeds.c.Title.label("Feed"),
+            func.min(t_feeds.c.Title).label("Feed"),
             t_feeds.c.Language,
             func.coalesce(t_like.c.Score, 0).label("Like")
     ]
@@ -142,6 +142,10 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         q_tag = [t_tags.c.Name == e for e in tags]
         q_where.append(sql.or_(*q_tag))
     q = q.where(sql.and_(*q_where))
+    q = q.group_by(
+            t_items.c.Title,
+            t_items.c.Published
+    )
 
     if magic:
         q = q.order_by(sql.desc(t_magic.c.Score))
