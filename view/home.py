@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 from flask import Blueprint, request, render_template
 from flask_security import auth_required, current_user
-from lxml import html
+from lxml import etree, html
 
 from .req import get_langs, get_page, get_tags, get_timeunit
 from .req import Timeunit
@@ -101,7 +101,10 @@ def get_topnav_title(page_date, timeunit):
     return topnav_title
 
 def clean_summary(s):
-    tree = html.fromstring(s)
+    try:
+        tree = html.fromstring(s)
+    except etree.ParserError as e:
+        return ""
 
     # Strip tag and content.
     tags = ['figure', 'img', 'iframe', 'script', 'small', 'svg']
