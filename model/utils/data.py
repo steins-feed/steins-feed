@@ -16,7 +16,7 @@ def all_langs_feeds():
     )
 
     res = conn.execute(q)
-    res = [Language[e['Language']].value for e in res]
+    res = [Language[e['Language']] for e in res]
     return res
 
 def all_feeds_lang_disp(user_id):
@@ -31,7 +31,7 @@ def all_feeds_lang_disp(user_id):
     res = dict()
     for lang_it in all_langs_feeds():
         lang_it = Language(lang_it)
-        res[lang_it.value] = []
+        res[lang_it] = []
 
         q = sql.select([
                 feeds
@@ -42,7 +42,7 @@ def all_feeds_lang_disp(user_id):
         ).order_by(
                 sql.collate(feeds.c.Title, 'NOCASE')
         )
-        res[lang_it.value].append(conn.execute(q).fetchall())
+        res[lang_it].append(conn.execute(q).fetchall())
 
         q = sql.select([
                 feeds
@@ -54,7 +54,7 @@ def all_feeds_lang_disp(user_id):
         )).order_by(
                 sql.collate(feeds.c.Title, 'NOCASE')
         )
-        res[lang_it.value].append(conn.execute(q).fetchall())
+        res[lang_it].append(conn.execute(q).fetchall())
 
     return res
 
@@ -70,7 +70,7 @@ def all_feeds_lang_tag(tag_id):
     res = dict()
     for lang_it in all_langs_feeds():
         lang_it = Language(lang_it)
-        res[lang_it.value] = []
+        res[lang_it] = []
 
         q = sql.select([
                 feeds
@@ -81,7 +81,7 @@ def all_feeds_lang_tag(tag_id):
         ).order_by(
                 sql.collate(feeds.c.Title, 'NOCASE')
         )
-        res[lang_it.value].append(conn.execute(q).fetchall())
+        res[lang_it].append(conn.execute(q).fetchall())
 
         q = sql.select([
                 feeds
@@ -93,7 +93,7 @@ def all_feeds_lang_tag(tag_id):
         )).order_by(
                 sql.collate(feeds.c.Title, 'NOCASE')
         )
-        res[lang_it.value].append(conn.execute(q).fetchall())
+        res[lang_it].append(conn.execute(q).fetchall())
 
     return res
 
@@ -120,11 +120,11 @@ def all_likes_lang(user_id):
     for lang_it in all_langs_feeds():
         lang_it = Language(lang_it)
 
-        res[lang_it.value] = []
-        res[lang_it.value].append(
+        res[lang_it] = []
+        res[lang_it].append(
                 conn.execute(q, score=Like.UP.name, lang=lang_it.name).fetchall()
         )
-        res[lang_it.value].append(
+        res[lang_it].append(
                 conn.execute(q, score=Like.DOWN.name, lang=lang_it.name).fetchall()
         )
 

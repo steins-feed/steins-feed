@@ -6,18 +6,18 @@
 
 {% block body %}
 # for lang_it, feeds_it in feeds_lang.items()
-<p>{{ lang_it }} feeds:</p>
-<select name="tagged_{{ lang_it }}" size=10 style="width: 200px;" multiple>
+<p>{{ lang_it.value }} feeds:</p>
+<select name="tagged_{{ lang_it.name }}" size=10 style="width: 200px;" multiple>
 # for row_it in feeds_it[0]
 <option value={{ row_it['FeedID'] }}>
 {{ row_it['Title'] }}
 </option>
 # endfor
 </select>
-<button onclick="toggle_feeds('{{ lang_it }}')" type="button">
+<button onclick="toggle_feeds('{{ lang_it.name }}')" type="button">
 <i class="material-icons">compare_arrows</i>
 </button>
-<select name="untagged_{{ lang_it }}" size=10 style="width: 200px;" multiple>
+<select name="untagged_{{ lang_it.name }}" size=10 style="width: 200px;" multiple>
 # for row_it in feeds_it[1]
 <option value={{ row_it['FeedID'] }}>
 {{ row_it['Title'] }}

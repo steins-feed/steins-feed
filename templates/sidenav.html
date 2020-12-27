@@ -55,11 +55,11 @@ ALL LANGUAGES
 # for lang_it in langs_disp
 <label>
 # if langs|count == 0 or lang_it in langs
-<input name="lang" onclick="prove_checkbox('input_lang')" value="{{ lang_it }}" type="checkbox" checked>
+<input name="lang" onclick="prove_checkbox('input_lang')" value="{{ lang_it.name }}" type="checkbox" checked>
 # else
-<input name="lang" onclick="prove_checkbox('input_lang')" value="{{ lang_it }}" type="checkbox">
+<input name="lang" onclick="prove_checkbox('input_lang')" value="{{ lang_it.name }}" type="checkbox">
 # endif
-{{ lang_it }}
+{{ lang_it.value }}
 </label>
 <br>
 # endfor
@@ -96,10 +96,12 @@ foreach($feed_dict as $key):
 <p>
 <fieldset>
 <input name="page" value="{{ page }}" type="hidden">
-<input name="timeunit" value="{{ timeunit }}" type="hidden">
-<input name="new_timeunit" value="Day" type="submit">
-<input name="new_timeunit" value="Week" type="submit">
-<input name="new_timeunit" value="Month" type="submit">
+<input name="timeunit" value="{{ timeunit.name }}" type="hidden">
+# for tu_it in enum_timeunit:
+<button name="timeunit_new" value="{{ tu_it.name }}" type="submit">
+{{ tu_it.value }}
+</button>
+# endfor
 </fieldset>
 </p>
 </form>

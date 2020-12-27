@@ -20,7 +20,8 @@ def feed():
             **base_context(),
             topnav_title=feed_row['Title'],
             feed_row=feed_row,
-            langs_all=[e.value for e in Language],
+            langs_all=[e for e in Language],
+            lang_default=Language.ENGLISH,
             tags_feed=all_tags_feed(current_user.UserID, feed_id)
     )
 

@@ -18,7 +18,7 @@ def upsert_like(user_id, item_id, like_val):
     res = conn.execute(q).fetchone()
 
     if res:
-        score = res['Score']
+        score = Like[res['Score']]
         q = like.update().values(
                Score=sql.bindparam("score")
         ).where(sql.and_(
@@ -26,14 +26,14 @@ def upsert_like(user_id, item_id, like_val):
                like.c.ItemID == item_id
         ))
     else:
-        score = Like.MEH.name
+        score = Like.MEH
         q = like.insert().values(
                 UserID=user_id,
                 ItemID=item_id,
                 Score=sql.bindparam("score")
         )
 
-    if score == like_val.name:
+    if score == like_val:
         conn.execute(q, score=Like.MEH.name)
     else:
         conn.execute(q, score=like_val.name)

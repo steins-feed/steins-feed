@@ -46,7 +46,7 @@ def displayed_languages(user_id):
     )
 
     res = conn.execute(q)
-    res = [Language[e['Language']].value for e in res]
+    res = [Language[e['Language']] for e in res]
     return res
 
 def displayed_tags(user_id):
@@ -90,9 +90,14 @@ def updated_dates(user_id, keys, last=None, limit=None):
     if limit:
         q = q.limit(limit)
 
+    date_string, format_string = keys2strings(keys)
+    tuple2datetime = lambda x: datetime.strptime(
+            date_string.format(*x),
+            format_string
+    )
+
     res = conn.execute(q)
-    dt_args = lambda e: dict(zip([key.lower() for key in keys], list(e)))
-    res = [datetime(**dt_args(e)) for e in res]
+    res = [tuple2datetime(e) for e in res]
     return res
 
 def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
@@ -143,3 +148,27 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
     else:
         q = q.order_by(sql.desc(t_items.c.Published))
     return conn.execute(q).fetchall()
+
+def keys2strings(keys):
+    date_string = "{}"
+    format_string = "%Y"
+
+    for key_it in keys[1:]:
+        if key_it == "Month":
+            date_string += "-{}"
+            format_string += "-%m"
+        elif key_it == "Week":
+            date_string += "-{}"
+            format_string += "-%U"
+        elif key_it == "Day":
+            date_string += "-{}"
+            format_string += "-%d"
+
+    if keys[-1] == "Month":
+        date_string += "-1"
+        format_string += "-%d"
+    elif keys[-1] == "Week":
+        date_string += "-0"
+        format_string += "-%w"
+
+    return date_string, format_string

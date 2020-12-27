@@ -15,7 +15,8 @@ def settings():
     return render_template("settings.html",
             **base_context(),
             topnav_title=current_user.Name,
-            langs_all=[e.value for e in Language],
+            langs_all=[e for e in Language],
+            lang_default=Language.ENGLISH,
             feeds_lang=all_feeds_lang_disp(current_user.UserID)
     )
 

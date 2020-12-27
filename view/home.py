@@ -39,8 +39,16 @@ def home():
         page_date = page_dates[-1]
 
     start_time = page_date
-    td_key = r_timeunit.name.lower() + "s"
-    finish_time = start_time + timedelta(**{td_key: 1})
+    finish_time = start_time
+    if r_timeunit == Timeunit.DAY:
+        finish_time += timedelta(days=1)
+    elif r_timeunit == Timeunit.WEEK:
+        finish_time += timedelta(days=7)
+    elif r_timeunit == Timeunit.MONTH:
+        finish_time += timedelta(days=31)
+        finish_time = finish_time.replace(day=1)
+    else:
+        raise ValueError
     page_items = updated_items(current_user.UserID, get_langs(), get_tags(), start_time, finish_time, last_hour)
 
     return render_template("index.html",
@@ -80,9 +88,9 @@ def get_topnav_title(page_date, timeunit):
         else:
             topnav_title = page_date.strftime("Week %U, %Y")
     elif timeunit == timeunit.MONTH:
-        if current_date >= page_date and current_date < page_date + timedelta(month=1):
+        if current_date >= page_date and current_date < (page_date + timedelta(days=31)).replace(day=1):
             topnav_title = "This month"
-        elif current_date - timedelta(months=1) >= page_date and current_date - timedelta(months=1) < page_date + timedelta(months=1):
+        elif (current_date - timedelta(days=31)).replace(day=1) >= page_date and (current_date - timedelta(days=31)).replace(day=1) < (page_date + timedelta(days=31)).replace(day=1):
             topnav_title = "Last month"
         else:
             topnav_title = page_date.strftime("%B %Y")
