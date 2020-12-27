@@ -132,7 +132,8 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
 
     q_where = [
             t_display.c.UserID == user_id,
-            t_items.c.Published.between(start, finish),
+            t_items.c.Published >= start,
+            t_items.c.Published < finish,
             t_items.c.Published < last
     ]
     if langs:
