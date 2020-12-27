@@ -5,7 +5,7 @@ import os
 
 from .auth import get_security
 from .base import bp as base_bp
-from .home import bp as home_bp
+from .home import bp as home_bp, clean_summary
 from .overview import bp as over_bp
 
 # Flask.
@@ -29,6 +29,7 @@ security = get_security(app)
 
 # Jinja2.
 app.jinja_env.line_statement_prefix = '#'
+app.jinja_env.filters['clean'] = clean_summary
 app.jinja_env.filters['contains'] = lambda a, b: set(a) >= set(b)
 app.jinja_env.filters['day'] = lambda x: x.strftime("%a, %d %b %Y")
 
@@ -118,15 +119,5 @@ def home():
 #        }
 #    }
 #    $items = $items_temp;
-#}
-#
-#function empty_leaves($node) {
-#    for ($i = $node->childNodes->length - 1; $i >= 0; $i--) {
-#        empty_leaves($node->childNodes[$i]);
-#    }
-#
-#    if (!$node->hasChildNodes() and $node->textContent == "") {
-#        $node->parentNode->removeChild($node);
-#    }
 #}
 #?>

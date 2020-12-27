@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 from flask import Blueprint, request, render_template
 from flask_security import auth_required, current_user
+from lxml import html
 
 from .req import get_langs, get_page, get_tags, get_timeunit
 from .req import Timeunit
@@ -98,3 +99,64 @@ def get_topnav_title(page_date, timeunit):
         raise ValueError
 
     return topnav_title
+
+def clean_summary(s):
+    tree = html.fromstring(s)
+
+    # Strip tag and content.
+    tags = ['figure', 'img', 'iframe', 'script', 'small', 'svg']
+    for tag_it in tags:
+        elems = tree.xpath("//{}".format(tag_it))
+        for elem_it in elems:
+            elem_it.drop_tree()
+
+    # Strip class and content.
+    classes = ['twitter']
+    for class_it in classes:
+        elems = tree.xpath("//*[contains(@class, '" + class_it + "')]")
+        for elem_it in reversed(elems):
+            elem_it.drop_tree()
+
+    # Remove leading and trailing tags.
+    tags = ['br']
+    #while (true) {
+    #    if (!is_null($tree_body->firstChild) and in_array($tree_body->firstChild->tagName, $tags)) {
+    #        $tree_body->removeChild($tree_body->firstChild);
+    #    } else {
+    #        break;
+    #    }
+    #}
+    #while (true) {
+    #    if (!is_null($tree_body->lastChild) and in_array($tree_body->lastChild->tagName, $tags)) {
+    #        $tree_body->removeChild($tree_body->lastChild);
+    #    } else {
+    #        break;
+    #    }
+    #}
+
+    # Strip tag.
+    tags = ['em', 'hr', 'strong']
+    for tag_it in tags:
+        elems = tree.xpath("//{}".format(tag_it))
+        for elem_it in elems:
+            elem_it.drop_tag()
+
+    # Replace tag.
+    tags = ['h1', 'h2'];
+    for tag_it in tags:
+        elems = tree.xpath("//{}".format(tag_it))
+        for elem_it in elems:
+            elem_it.tag = 'h3'
+
+    # Strip empty tags.
+    tags = ['div', 'p', 'span']
+    empty_leaves(tree, tags)
+
+    return html.tostring(tree).decode()
+
+def empty_leaves(e, tags=[]):
+    for e_it in reversed(list(e)):
+        empty_leaves(e_it)
+
+    if not len(e) and not e.text and (not len(tags) or e.tag in tags):
+        e.drop_tree()
