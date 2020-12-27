@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask
+from flask import Flask, redirect, url_for
 import os
 
 from .auth import get_security
@@ -36,6 +36,10 @@ app.jinja_env.filters['day'] = lambda x: x.strftime("%a, %d %b %Y")
 app.register_blueprint(base_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(over_bp)
+
+@app.route("/")
+def home():
+    return redirect(url_for("home.home"))
 
 #<?php
 #$items = array();
