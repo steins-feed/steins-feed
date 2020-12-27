@@ -33,6 +33,7 @@ Last updated: {{ last_updated }} GMT.
 {% block body %}
 {% for item_it in items %}
 <article id="article_{{ item_it['ItemID'] }}">
+<hr>
 <h2>
 <a href="{{ item_it['Link'] }}" rel="noopener noreferrer" target="_blank">
 <span id="title_{{ item_it['ItemID'] }}">
@@ -93,9 +94,6 @@ lightbulb_outline
 </button>
 # endif
 </p>
-{% if not item_it is sameas (items[-1]) %}
-<hr>
-{% endif %}
 </article>
 {% endfor %}
 {% endblock %}
