@@ -3,8 +3,8 @@
 <nav class="topnav">
 <span class="right">
 <a href="{{ get_home(feed, 0, timeunit, langs, tags) }}"><i class="material-icons">home</i></a>
-<a href="{{ url_for('statistics') }}" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
-<a href="{{ url_for('settings') }}" target="_blank"><i class="material-icons">settings</i></a>
+<a href="{{ url_for('overview.statistics') }}" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
+<a href="{{ url_for('overview.settings') }}" target="_blank"><i class="material-icons">settings</i></a>
 <i onclick="close_menu()" class="material-icons">
 close
 </i>
@@ -12,7 +12,7 @@ close
 </nav>
 <script src="{{ url_for('static', filename='js/toggle_checkbox.js') }}" defer></script>
 <section>
-<form action="{{ url_for('home') }}" method="get">
+<form action="{{ url_for('home.home') }}" method="get">
 # if tags_disp|count > 0
 <p>
 <fieldset id="input_tag">
@@ -105,7 +105,7 @@ foreach($feed_dict as $key):
 </form>
 </section>
 <hr>
-<form action="{{ url_for('feed') }}" method="get">
+<form action="{{ url_for('base.feed') }}" method="get">
 <p>
 <fieldset>
 <legend>Feed</legend>
@@ -118,7 +118,7 @@ foreach($feed_dict as $key):
 </fieldset>
 </p>
 </form>
-<form action="{{ url_for('tag') }}" method="get">
+<form action="{{ url_for('base.tag') }}" method="get">
 <p>
 <fieldset>
 <legend>Tag</legend>

@@ -13,12 +13,9 @@ from model import get_model, get_session, get_table
 
 load_dotenv()
 
-user_datastore = None
-security = None
-
 def get_user_datastore():
     global user_datastore
-    if not user_datastore:
+    if 'user_datastore' not in globals():
         User = get_model('Users', [UserMixin])
         Role = get_model('Roles', [RoleMixin])
 
@@ -48,7 +45,7 @@ class ExtendedRegisterForm(RegisterForm):
 
 def get_security(app):
     global security
-    if not security:
+    if 'security' not in globals():
         app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
         app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT')
 

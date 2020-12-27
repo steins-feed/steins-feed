@@ -12,7 +12,7 @@ function like(button_id) {
             stat_dislike.className = 'dislike';
         }
     };
-    xmlhttp.open("POST", home_ep + "/like", true);
+    xmlhttp.open("POST", home_ep + "like", true);
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xmlhttp.send("id=" + button_id);
 }
@@ -31,7 +31,7 @@ function dislike(button_id) {
             stat_like.className = 'like';
         }
     };
-    xmlhttp.open("POST", home_ep + "/dislike", true);
+    xmlhttp.open("POST", home_ep + "dislike", true);
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xmlhttp.send("id=" + button_id);
 }

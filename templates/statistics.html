@@ -7,11 +7,9 @@
 <ul>
 # for row_it in feeds_it[0]
 <li>
-{{ row_it['Feed'] }}
-<a href="{{ row_it['Link'] }}">
-{{ row_it['Title']|safe }}
-</a>
-({{ row_it['Published'] }}).
+{{ row_it['Feed'] }}:
+<a href="{{ row_it['Link'] }}">{{ row_it['Title']|safe }}</a>
+({{ row_it['Published']|day }}).
 </li>
 # endfor
 </ul>
@@ -19,11 +17,9 @@
 <ul>
 # for row_it in feeds_it[1]
 <li>
-{{ row_it['Feed'] }}
-<a href="{{ row_it['Link'] }}">
-{{ row_it['Title']|safe }}
-</a>
-({{ row_it['Published'] }}).
+{{ row_it['Feed'] }}:
+<a href="{{ row_it['Link'] }}">{{ row_it['Title']|safe }}</a>
+({{ row_it['Published']|day }}).
 </li>
 # endfor
 </ul>

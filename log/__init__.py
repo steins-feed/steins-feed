@@ -2,20 +2,16 @@
 
 import logging
 import os
-import os.path as os_path
 
-file_path = os_path.normpath(os_path.join(
-        os_path.dirname(__file__),
+file_path = os.path.normpath(os.path.join(
+        os.path.dirname(__file__),
         os.pardir,
         "steins.log"
 ))
 
-formatter = None
-handler = None
-
 def get_formatter():
     global formatter
-    if not formatter:
+    if 'formatter' not in globals():
         formatter = logging.Formatter(
                 "[%(asctime)s] %(levelname)s: %(message)s"
         )
@@ -23,7 +19,7 @@ def get_formatter():
 
 def get_handler():
     global handler
-    if not handler:
+    if 'handler' not in globals():
         handler = logging.FileHandler(file_path)
         handler.setFormatter(get_formatter())
     return handler
