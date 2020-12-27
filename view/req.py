@@ -22,7 +22,10 @@ def get_feed():
     return Feed[request.args.get('feed', default=Feed.FULL.name)]
 
 def get_langs():
-    return [Language[e] for e in request.args.getlist('lang')]
+    res = [Language[e] for e in request.args.getlist('lang')]
+    if set(displayed_languages(current_user.UserID)) <= set(res):
+        res = []
+    return res
 
 def get_page():
     if get_timeunit_new() == get_timeunit_old():
