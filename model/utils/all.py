@@ -114,6 +114,8 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
             t_items,
             func.min(t_feeds.c.Title).label("Feed"),
             t_feeds.c.Language,
+            func.group_concat(t_tags.c.TagID).label("TagIDs"),
+            func.group_concat(t_tags.c.Name).label("TagNames"),
             func.coalesce(t_like.c.Score, 0).label("Like")
     ]
     if magic:
@@ -122,9 +124,8 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
 
     t_feeds_displayed = t_feeds.join(t_display)
     t_items_displayed = t_items.join(t_feeds_displayed)
-    if tags:
-        t_items_displayed = t_items_displayed.join(t_tags2feeds)
-        t_items_displayed = t_items_displayed.join(t_tags)
+    t_items_displayed = t_items_displayed.join(t_tags2feeds)
+    t_items_displayed = t_items_displayed.join(t_tags)
     t_items_displayed = t_items_displayed.outerjoin(t_like)
     if magic:
         t_items_displayed = t_items_displayed.outerjoin(t_magic)

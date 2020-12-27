@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from enum import Enum
+import enum
 from flask import request
 from flask_security import current_user
 
@@ -8,12 +8,12 @@ from model.schema import Language
 from model.utils.all import all_feeds, all_tags
 from model.utils.all import displayed_languages, displayed_tags
 
-class Feed(Enum):
+class Feed(enum.Enum):
     FULL = "Full"
     MAGIC = "Magic"
     SURPRISE = "Surprise"
 
-class Timeunit(Enum):
+class Timeunit(enum.Enum):
     DAY = "Day"
     WEEK = "Week"
     MONTH = "Month"
@@ -61,6 +61,7 @@ def base_context():
     context['tags_all']=all_tags(current_user.UserID)
 
     # sidenav.html.
+    context['enum_feed'] = Feed
     context['enum_timeunit'] = Timeunit
 
     return context
