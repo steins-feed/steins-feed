@@ -1,41 +1,31 @@
-SHELL := /bin/bash
-.ONESHELL:
-
-.PHONY: venv
-venv: .venv
-	source .venv/bin/activate
-
-.venv:
-	python3 -m venv .venv
+README.pdf: README.md
+	pandoc -o README.pdf README.md
 
 .PHONY: requirements
-requirements: requirements.txt venv
+requirements: requirements.txt
 	python3 -m pip install --upgrade -r requirements.txt
 
 .PHONY: create
-create: venv
+create:
 	python3 -c "from model.schema import create_schema; create_schema()"
 
 .PHONY: update
-update: venv
+update:
 	python3 -c "from model.feeds import read_feeds; read_feeds()"
 
 .PHONY: debug
-debug: venv
+debug:
 	env FLASK_ENV=development python3 -m flask run
 
 .PHONY: prod
-prod: venv
+prod:
 	python3 -m flask run
 
 .PHONY: test
-test: venv
+test:
 	make distclean
 	make create
 	python3 -m pytest tests
-
-README.pdf: README.md
-	pandoc -o README.pdf README.md
 
 .PHONY: clean
 clean:

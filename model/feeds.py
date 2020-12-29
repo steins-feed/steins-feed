@@ -4,6 +4,7 @@ from datetime import datetime
 import feedparser
 import logging
 from sqlalchemy import func, sql
+import time
 
 from . import get_connection, get_table
 from log import get_handler
@@ -30,8 +31,14 @@ def read_feeds(title_pattern=None):
     ]
 
     for feed_it in conn.execute(q):
+        try:
+            item_ls = parse_feed(feed_it).entries
+        except OSError as e:
+            logger.error("{} -- {}.".format(feed_it['Title'], e))
+            continue
+
         rows = []
-        for item_it in parse_feed(feed_it):
+        for item_it in item_ls:
             try:
                 row_values = read_item(item_it)
             except AttributeError:
@@ -49,15 +56,18 @@ def read_feeds(title_pattern=None):
                   .where(feeds.c.FeedID == feed_it['FeedID']))
         conn.execute(q)
 
-def parse_feed(feed):
+def parse_feed(feed, timeout=1):
     res = feedparser.parse(feed['Link'])
-
     try:
         status = res.status
         if status < 300:
             logger.info("{} -- {}.".format(feed['Title'], status))
         elif status < 400:
             logger.warning("{} -- {}.".format(feed['Title'], status))
+        elif status == 429 and timeout < 5: # too many requests
+            logger.warning("{} -- {} (timeout = {} sec).".format(feed['Title'], status, timeout))
+            time.sleep(timeout)
+            parse_feed(feed, 2 * timeout)
         else:
             logger.error("{} -- {}.".format(feed['Title'], status))
     except AttributeError:
@@ -66,7 +76,7 @@ def parse_feed(feed):
         else:
             logger.warning("{}.".format(feed['Title']))
 
-    return res.entries
+    return res
 
 def read_item(item):
     item_title = read_item_title(item)

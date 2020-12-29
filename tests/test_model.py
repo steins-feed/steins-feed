@@ -67,11 +67,9 @@ def test_display():
     q = sql.select([
             sql.literal_column(str(user.id), type_=Integer).label('UserID'),
             feeds.c.FeedID
-    ]).where(
-            feeds.c.Title.like("%The Atlantic%")
-    )
+    ])
     ins = display.insert().from_select(['UserID', 'FeedID'], q)
-    conn.execute(ins)
+    conn.execute(ins.prefix_with("OR IGNORE"))
 
     q = sql.select([
             func.count()
@@ -92,7 +90,7 @@ def test_tags():
         user = user_datastore.find_user(name="hansolo")
 
     ins = tags.insert().values(UserID=user.id, Name="News")
-    conn.execute(ins)
+    conn.execute(ins.prefix_with("OR IGNORE"))
 
     q = sql.select([
             tags.c.TagID,
@@ -104,7 +102,7 @@ def test_tags():
             tags2feeds.c.TagID,
             tags2feeds.c.FeedID]
     , q)
-    conn.execute(ins)
+    conn.execute(ins.prefix_with("OR IGNORE"))
 
     q = sql.select([
             func.count()
