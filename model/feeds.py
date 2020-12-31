@@ -31,14 +31,8 @@ def read_feeds(title_pattern=None):
     ]
 
     for feed_it in conn.execute(q):
-        try:
-            item_ls = parse_feed(feed_it).entries
-        except OSError as e:
-            logger.error("{} -- {}.".format(feed_it['Title'], e))
-            continue
-
         rows = []
-        for item_it in item_ls:
+        for item_it in parse_feed(feed_it).entries:
             try:
                 row_values = read_item(item_it)
             except AttributeError:
@@ -57,8 +51,8 @@ def read_feeds(title_pattern=None):
         conn.execute(q)
 
 def parse_feed(feed, timeout=1):
-    res = feedparser.parse(feed['Link'])
     try:
+        res = feedparser.parse(feed['Link'])
         status = res.status
         if status < 300:
             logger.info("{} -- {}.".format(feed['Title'], status))
@@ -70,6 +64,9 @@ def parse_feed(feed, timeout=1):
             parse_feed(feed, 2 * timeout)
         else:
             logger.error("{} -- {}.".format(feed['Title'], status))
+    except OSError as e:
+        logger.error("{} -- {}.".format(feed_it['Title'], e))
+        res = feedparser.util.FeedParserDict(entries=[])
     except AttributeError:
         if res.entries:
             logger.info("{}.".format(feed['Title']))
