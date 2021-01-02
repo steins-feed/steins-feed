@@ -11,7 +11,7 @@ from .req import base_context
 from model.schema import Like
 from model.utils.all import updated_dates, updated_items
 from model.utils.recent import last_updated
-from model.utils.score import upsert_like
+from model.utils.custom import upsert_like
 
 bp = Blueprint("home", __name__, url_prefix="/home")
 

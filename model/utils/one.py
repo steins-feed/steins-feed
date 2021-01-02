@@ -28,14 +28,10 @@ def get_feed_row(feed_id, user_id):
 
     return conn.execute(q).fetchone()
 
-def get_tag_name(tag_id):
+def get_tag_row(tag_id):
     conn = get_connection()
     tags = get_table('Tags')
 
-    q = sql.select([
-            tags.c.Name
-    ]).where(
-            tags.c.TagID == tag_id
-    )
+    q = sql.select([tags]).where(tags.c.TagID == tag_id)
 
-    return conn.execute(q).fetchone()['Name']
+    return conn.execute(q).fetchone()

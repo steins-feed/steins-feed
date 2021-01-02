@@ -20,7 +20,7 @@ function insert_alphabetically(node, parent_node) {
     }
 }
 
-function toggle_request(left, right, dest, lang=null, param=null) {
+function toggle_request(left, right, dest, suffix, lang=null, param=null, param_id=null) {
     var tagged = [];
     var left_name = left;
     if (lang != null) {
@@ -64,26 +64,30 @@ function toggle_request(left, right, dest, lang=null, param=null) {
         }
     };
 
-    var qs = "user=" + user;
+    var qs = "";
     if (param != null) {
-        qs += "&" + param + "=" + window[param + "_id"];
+        qs = param + "_id" + "=" + param_id;
     }
-    qs += "&" + left + "=" + JSON.stringify(tagged);
-    qs += "&" + right + "=" + JSON.stringify(untagged);
+    for (var i = 0; i < tagged.length; i++) {
+        qs += "&" + left + "=" + tagged[i];
+    }
+    for (var i = 0; i < untagged.length; i++) {
+        qs += "&" + right + "=" + untagged[i];
+    }
 
-    xmlhttp.open("POST", "/steins-feed/php_settings/toggle_" + dest + ".php", true);
+    xmlhttp.open("POST", "/" + dest + "/toggle_" + suffix, true);
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xmlhttp.send(qs);
 }
 
 function toggle_display(lang) {
-    toggle_request("displayed", "hidden", "display", lang=lang);
+    toggle_request("displayed", "hidden", "settings", "display", lang=lang);
 }
 
-function toggle_feeds(lang) {
-    toggle_request("tagged", "untagged", "feeds", lang=lang, param="tag");
+function toggle_feeds(tag_id, lang) {
+    toggle_request("tagged", "untagged", "tag", "feeds", lang=lang, param="tag", param_id=tag_id);
 }
 
-function toggle_tags() {
-    toggle_request("tagged", "untagged", "tags", lang=null, param="feed");
+function toggle_tags(feed_id) {
+    toggle_request("tagged", "untagged", "feed", "tags", lang=null, param="feed", param_id=feed_id);
 }

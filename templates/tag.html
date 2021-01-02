@@ -15,7 +15,7 @@
 </option>
 # endfor
 </select>
-<button onclick="toggle_feeds('{{ lang_it.name }}')" type="button">
+<button onclick="toggle_feeds({{ tag_row['TagID'] }}, '{{ lang_it.name }}')" type="button">
 <i class="material-icons">compare_arrows</i>
 </button>
 <select name="untagged_{{ lang_it.name }}" size=10 style="width: 200px;" multiple>

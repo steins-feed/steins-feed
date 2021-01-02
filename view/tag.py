@@ -5,7 +5,8 @@ from flask_security import auth_required
 
 from .req import base_context
 from model.utils.data import all_feeds_lang_tag
-from model.utils.one import get_tag_name
+from model.utils.one import get_tag_row
+from model.utils.custom import delete_tagged, insert_untagged
 
 bp = Blueprint("tag", __name__, url_prefix="/tag")
 
@@ -13,10 +14,23 @@ bp = Blueprint("tag", __name__, url_prefix="/tag")
 @auth_required()
 def tag():
     tag_id = request.args.get('tag')
-    tag_name = get_tag_name(tag_id)
+    tag_row = get_tag_row(tag_id)
 
     return render_template("tag.html",
             **base_context(),
-            topnav_title=tag_name,
+            topnav_title=tag_row['Name'],
+            tag_row=tag_row,
             feeds_lang=all_feeds_lang_tag(tag_id)
     )
+
+@bp.route("/toggle_feeds", methods=['POST'])
+@auth_required()
+def toggle_feeds():
+    tag_id = request.form.get('tag_id')
+    tagged = request.form.getlist('tagged')
+    untagged = request.form.getlist('untagged')
+
+    delete_tagged(tag_id, tagged)
+    insert_untagged(tag_id, untagged)
+
+    return ("", 200)

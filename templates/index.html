@@ -42,15 +42,15 @@ Last updated: {{ last_updated }} GMT.
 </a>
 </h2>
 <p>
-Source: <a href="{{ url_for('base.feed') }}?feed_id={{ item_it['FeedID'] }}">{{ item_it['Feed'] }}</a>.
+Source: <a href="{{ url_for('feed.feed') }}?feed_id={{ item_it['FeedID'] }}">{{ item_it['Feed'] }}</a>.
 Published: {{ item_it['Published'] }} GMT.
 # if item_it['TagIDs'] != "":
 Tags:
 # set tag_ids = item_it['TagIDs'].split(",")
 # set tag_names = item_it['TagNames'].split(",")
-<a href="{{ url_for('base.tag') }}?tag={{ tag_ids[0] }}">{{ tag_names[0] }}</a>
+<a href="{{ url_for('tag.tag') }}?tag={{ tag_ids[0] }}">{{ tag_names[0] }}</a>
 # for tag_ct in range(1, tag_ids|count):
-<a href="{{ url_for('base.tag') }}?tag={{ tag_ids[tag_ct] }}">{{ tag_names[tag_ct] }}</a>
+<a href="{{ url_for('tag.tag') }}?tag={{ tag_ids[tag_ct] }}">{{ tag_names[tag_ct] }}</a>
 # endfor
 .
 # endif
