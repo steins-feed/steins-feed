@@ -68,14 +68,14 @@ Full text and everything
 <input type="submit" value="Delete feed">
 </form>
 <hr>
-<form method="post" action="/steins-feed/php_settings/add_tag.php">
+<form method="post" action="{{ url_for('overview.add_tag') }}">
 <p>
 <input type="text" name="tag">
 <input type="submit" value="Add tag">
 </p>
 </form>
 <hr>
-<form method="post" action="/steins-feed/php_settings/delete_tag.php">
+<form method="post" action="{{ url_for('overview.delete_tag') }}">
 <p>
 <select name="tag">
 # for tag_it in tags_all
@@ -87,46 +87,4 @@ Full text and everything
 </p>
 <input type="submit" value="Delete tag">
 </form>
-{#
-<hr>
-<form method="post" action="/steins-feed/php_settings/load_config.php" enctype="multipart/form-data">
-<p>
-<input type="file" name="feeds" value="feeds">
-</p>
-<p>
-<input type="submit" value="Load config">
-</form>
-<hr>
-<form method="post" action="/steins-feed/php_settings/export_config.php">
-<p>
-<input type="submit" value="Export config">
-</form>
-<hr>
-<form method="post" action="/steins-feed/php_settings/add_user.php">
-<p>
-Name:<br>
-<input type="text" name="name">
-</p>
-<p>
-Language:<br>
-{{ select_lang(all_langs) }}
-</p>
-<p>
-<input type="submit" value="Add user">
-</form>
-<hr>
-<form method="post" action="/steins-feed/php_settings/rename_user.php">
-<p>
-New name:<br>
-<input type="text" name="name">
-</p>
-<p>
-<input type="submit" value="Rename user">
-</form>
-<hr>
-<form method="post" action="/steins-feed/php_settings/delete_user.php">
-<p>
-<input type="submit" value="Delete user" style="background-color:red">
-</form>
-#}
 {% endblock %}

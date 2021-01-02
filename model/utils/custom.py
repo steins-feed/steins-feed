@@ -91,6 +91,26 @@ def insert_tags_untagged(feed_id, untagged):
     conn.execute(q, rows)
 
 # Tag.
+def add_tags(user_id, names):
+    conn = get_connection()
+    tags = get_table('Tags')
+
+    row_keys = ('UserID', 'Name')
+    rows = [dict(zip(row_keys, (user_id, e))) for e in names]
+
+    q = tags.insert()
+    q = q.prefix_with("OR IGNORE", dialect='sqlite')
+    conn.execute(q, rows)
+
+def delete_tags(tag_ids):
+    conn = get_connection()
+    tags = get_table('Tags')
+
+    q = tags.delete().where(
+            tags.c.TagID.in_(tag_ids)
+    )
+    conn.execute(q)
+
 def delete_feeds_tagged(tag_id, tagged):
     conn = get_connection()
     tags2feeds = get_table('Tags2Feeds')
@@ -112,6 +132,7 @@ def insert_feeds_untagged(tag_id, untagged):
     q = q.prefix_with("OR IGNORE", dialect='sqlite')
     conn.execute(q, rows)
 
+# Magic.
 def reset_magic(user_id=None):
     conn = get_connection()
     magic = get_table('Magic')

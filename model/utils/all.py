@@ -58,7 +58,7 @@ def displayed_tags(user_id):
 
     q = sql.select([
             tags.c.Name
-    ]).select_from(
+    ]).distinct().select_from(
             feeds.join(display)
                  .join(tags2feeds)
                  .join(tags)
