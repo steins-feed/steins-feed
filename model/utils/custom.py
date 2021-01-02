@@ -10,8 +10,8 @@ def upsert_like(user_id, item_id, like_val):
     like = get_table('Like')
 
     q = sql.select([
-            like]
-    ).where(sql.and_(
+            like
+    ]).where(sql.and_(
             like.c.UserID == user_id,
             like.c.ItemID == item_id
     ))
@@ -38,26 +38,36 @@ def upsert_like(user_id, item_id, like_val):
     else:
         conn.execute(q, score=like_val.name)
 
-def delete_feeds_tagged(tag_id, tagged):
+# Feed.
+def upsert_feed(feed_id, title, link, lang):
     conn = get_connection()
-    tags2feeds = get_table('Tags2Feeds')
+    feeds = get_table('Feeds')
 
-    q = tags2feeds.delete().where(sql.and_(
-        tags2feeds.c.TagID == tag_id,
-        tags2feeds.c.FeedID.in_(tagged)
-    ))
+    q = feeds.update().values(
+            Title = title,
+            Link = link,
+            Language = lang
+    ).where(
+            feeds.c.FeedID == feed_id
+    )
     conn.execute(q)
 
-def insert_feeds_untagged(tag_id, untagged):
+def upsert_display(user_id, feed_id, disp):
     conn = get_connection()
-    tags2feeds = get_table('Tags2Feeds')
+    display = get_table('Display')
 
-    row_keys = ("TagID", "FeedID")
-    rows = [dict(zip(row_keys, (tag_id, e))) for e in untagged]
-
-    q = tags2feeds.insert()
-    q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(q, rows)
+    if disp == 0:
+        q = display.delete().where(sql.and_(
+                display.c.UserID == sql.bindparam("user_id"),
+                display.c.FeedID == sql.bindparam("feed_id")
+        ))
+    else:
+        q = display.insert().values(
+                UserID = sql.bindparam("user_id"),
+                FeedID = sql.bindparam("feed_id")
+        )
+        q = q.prefix_with("OR IGNORE", dialect='sqlite')
+    conn.execute(q, user_id=user_id, feed_id=feed_id)
 
 def delete_tags_tagged(feed_id, tagged):
     conn = get_connection()
@@ -75,6 +85,28 @@ def insert_tags_untagged(feed_id, untagged):
 
     row_keys = ("TagID", "FeedID")
     rows = [dict(zip(row_keys, (e, feed_id))) for e in untagged]
+
+    q = tags2feeds.insert()
+    q = q.prefix_with("OR IGNORE", dialect='sqlite')
+    conn.execute(q, rows)
+
+# Tag.
+def delete_feeds_tagged(tag_id, tagged):
+    conn = get_connection()
+    tags2feeds = get_table('Tags2Feeds')
+
+    q = tags2feeds.delete().where(sql.and_(
+        tags2feeds.c.TagID == tag_id,
+        tags2feeds.c.FeedID.in_(tagged)
+    ))
+    conn.execute(q)
+
+def insert_feeds_untagged(tag_id, untagged):
+    conn = get_connection()
+    tags2feeds = get_table('Tags2Feeds')
+
+    row_keys = ("TagID", "FeedID")
+    rows = [dict(zip(row_keys, (tag_id, e))) for e in untagged]
 
     q = tags2feeds.insert()
     q = q.prefix_with("OR IGNORE", dialect='sqlite')

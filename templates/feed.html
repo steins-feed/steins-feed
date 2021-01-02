@@ -7,7 +7,7 @@
 
 {% block body %}
 <hr>
-<form method="post" action="/steins-feed/php_settings/update_feed.php">
+<form method="post" action="{{ url_for('feed.update_feed') }}">
 <p>
 Title:<br>
 <input type="text" name="title" value="{{ feed_row['Title'] }}">

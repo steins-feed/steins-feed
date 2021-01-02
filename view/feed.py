@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-from flask import Blueprint, request, render_template
+from flask import Blueprint, request, render_template, redirect, url_for
 from flask_security import auth_required, current_user
 
 from .req import base_context
 from model.schema import Language
+from model.utils.custom import upsert_feed, upsert_display
 from model.utils.custom import delete_tags_tagged, insert_tags_untagged
 from model.utils.data import all_tags_feed
 from model.utils.one import get_feed_row
@@ -13,8 +14,9 @@ bp = Blueprint("feed", __name__, url_prefix="/feed")
 
 @bp.route("")
 @auth_required()
-def feed():
-    feed_id = request.args.get('feed_id')
+def feed(feed_id=None):
+    if not feed_id:
+        feed_id = request.args.get('feed_id', type=int)
     feed_row = get_feed_row(feed_id, current_user.UserID)
 
     return render_template("feed.html",
@@ -26,12 +28,26 @@ def feed():
             tags_feed=all_tags_feed(current_user.UserID, feed_id)
     )
 
+@bp.route("/update_feed", methods=['POST'])
+@auth_required()
+def update_feed():
+    feed_id = request.form.get('feed', type=int)
+    title = request.form.get('title')
+    link = request.form.get('link')
+    lang = request.form.get('lang')
+    display = request.form.get('display', type=int)
+
+    upsert_feed(feed_id, title, link, lang)
+    upsert_display(current_user.UserID, feed_id, display)
+
+    return redirect(url_for("feed.feed", feed_id=feed_id))
+
 @bp.route("/toggle_tags", methods=['POST'])
 @auth_required()
 def toggle_tags():
-    feed_id = request.form.get('feed_id')
-    tagged = request.form.getlist('tagged')
-    untagged = request.form.getlist('untagged')
+    feed_id = request.form.get('feed_id', type=int)
+    tagged = request.form.getlist('tagged', type=int)
+    untagged = request.form.getlist('untagged', type=int)
 
     delete_tags_tagged(feed_id, tagged)
     insert_tags_untagged(feed_id, untagged)

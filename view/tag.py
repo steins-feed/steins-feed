@@ -13,7 +13,7 @@ bp = Blueprint("tag", __name__, url_prefix="/tag")
 @bp.route("")
 @auth_required()
 def tag():
-    tag_id = request.args.get('tag')
+    tag_id = request.args.get('tag', type=int)
     tag_row = get_tag_row(tag_id)
 
     return render_template("tag.html",
@@ -26,9 +26,9 @@ def tag():
 @bp.route("/toggle_feeds", methods=['POST'])
 @auth_required()
 def toggle_feeds():
-    tag_id = request.form.get('tag_id')
-    tagged = request.form.getlist('tagged')
-    untagged = request.form.getlist('untagged')
+    tag_id = request.form.get('tag_id', type=int)
+    tagged = request.form.getlist('tagged', type=int)
+    untagged = request.form.getlist('untagged', type=int)
 
     delete_feeds_tagged(tag_id, tagged)
     insert_feeds_untagged(tag_id, untagged)
