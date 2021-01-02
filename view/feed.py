@@ -5,12 +5,12 @@ from flask_security import auth_required, current_user
 
 from .req import base_context
 from model.schema import Language
-from model.utils.data import all_feeds_lang_tag, all_tags_feed
-from model.utils.one import get_feed_row, get_tag_name
+from model.utils.data import all_tags_feed
+from model.utils.one import get_feed_row
 
-bp = Blueprint("base", __name__)
+bp = Blueprint("feed", __name__, url_prefix="/feed")
 
-@bp.route("/feed")
+@bp.route("")
 @auth_required()
 def feed():
     feed_id = request.args.get('feed_id')
@@ -23,16 +23,4 @@ def feed():
             langs_all=[e for e in Language],
             lang_default=Language.ENGLISH,
             tags_feed=all_tags_feed(current_user.UserID, feed_id)
-    )
-
-@bp.route("/tag")
-@auth_required()
-def tag():
-    tag_id = request.args.get('tag')
-    tag_name = get_tag_name(tag_id)
-
-    return render_template("tag.html",
-            **base_context(),
-            topnav_title=tag_name,
-            feeds_lang=all_feeds_lang_tag(tag_id)
     )

@@ -4,9 +4,10 @@ from flask import Flask, redirect, url_for
 import os
 
 from .auth import get_security
-from .base import bp as base_bp
+from .feed import bp as feed_bp
 from .home import bp as home_bp, clean_summary
 from .overview import bp as over_bp
+from .tag import bp as tag_bp
 
 # Flask.
 static_path = os.path.normpath(os.path.join(
@@ -34,9 +35,10 @@ app.jinja_env.filters['contains'] = lambda a, b: set(a) >= set(b)
 app.jinja_env.filters['day'] = lambda x: x.strftime("%a, %d %b %Y")
 
 # Flask blueprints.
-app.register_blueprint(base_bp)
+app.register_blueprint(feed_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(over_bp)
+app.register_blueprint(tag_bp)
 
 @app.route("/")
 def home():
