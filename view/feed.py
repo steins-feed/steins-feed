@@ -5,6 +5,7 @@ from flask_security import auth_required, current_user
 
 from .req import base_context
 from model.schema import Language
+from model.utils.custom import delete_tags_tagged, insert_tags_untagged
 from model.utils.data import all_tags_feed
 from model.utils.one import get_feed_row
 
@@ -24,3 +25,15 @@ def feed():
             lang_default=Language.ENGLISH,
             tags_feed=all_tags_feed(current_user.UserID, feed_id)
     )
+
+@bp.route("/toggle_tags", methods=['POST'])
+@auth_required()
+def toggle_tags():
+    feed_id = request.form.get('feed_id')
+    tagged = request.form.getlist('tagged')
+    untagged = request.form.getlist('untagged')
+
+    delete_tags_tagged(feed_id, tagged)
+    insert_tags_untagged(feed_id, untagged)
+
+    return ("", 200)

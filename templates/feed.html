@@ -76,7 +76,7 @@ Hidden
 </option>
 # endfor
 </select>
-<button onclick="toggle_tags()" type="button">
+<button onclick="toggle_tags({{ feed_row['FeedID'] }})" type="button">
 <i class="material-icons">compare_arrows</i>
 </button>
 <select name="untagged" style="width: 100px;" multiple>

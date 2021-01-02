@@ -4,9 +4,9 @@ from flask import Blueprint, request, render_template
 from flask_security import auth_required
 
 from .req import base_context
+from model.utils.custom import delete_feeds_tagged, insert_feeds_untagged
 from model.utils.data import all_feeds_lang_tag
 from model.utils.one import get_tag_row
-from model.utils.custom import delete_tagged, insert_untagged
 
 bp = Blueprint("tag", __name__, url_prefix="/tag")
 
@@ -30,7 +30,7 @@ def toggle_feeds():
     tagged = request.form.getlist('tagged')
     untagged = request.form.getlist('untagged')
 
-    delete_tagged(tag_id, tagged)
-    insert_untagged(tag_id, untagged)
+    delete_feeds_tagged(tag_id, tagged)
+    insert_feeds_untagged(tag_id, untagged)
 
     return ("", 200)

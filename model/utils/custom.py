@@ -38,7 +38,7 @@ def upsert_like(user_id, item_id, like_val):
     else:
         conn.execute(q, score=like_val.name)
 
-def delete_tagged(tag_id, tagged):
+def delete_feeds_tagged(tag_id, tagged):
     conn = get_connection()
     tags2feeds = get_table('Tags2Feeds')
 
@@ -48,12 +48,33 @@ def delete_tagged(tag_id, tagged):
     ))
     conn.execute(q)
 
-def insert_untagged(tag_id, untagged):
+def insert_feeds_untagged(tag_id, untagged):
     conn = get_connection()
     tags2feeds = get_table('Tags2Feeds')
 
     row_keys = ("TagID", "FeedID")
     rows = [dict(zip(row_keys, (tag_id, e))) for e in untagged]
+
+    q = tags2feeds.insert()
+    q = q.prefix_with("OR IGNORE", dialect='sqlite')
+    conn.execute(q, rows)
+
+def delete_tags_tagged(feed_id, tagged):
+    conn = get_connection()
+    tags2feeds = get_table('Tags2Feeds')
+
+    q = tags2feeds.delete().where(sql.and_(
+        tags2feeds.c.TagID.in_(tagged),
+        tags2feeds.c.FeedID == feed_id
+    ))
+    conn.execute(q)
+
+def insert_tags_untagged(feed_id, untagged):
+    conn = get_connection()
+    tags2feeds = get_table('Tags2Feeds')
+
+    row_keys = ("TagID", "FeedID")
+    rows = [dict(zip(row_keys, (e, feed_id))) for e in untagged]
 
     q = tags2feeds.insert()
     q = q.prefix_with("OR IGNORE", dialect='sqlite')
