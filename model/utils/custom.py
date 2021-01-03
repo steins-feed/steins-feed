@@ -43,14 +43,30 @@ def upsert_feed(feed_id, title, link, lang):
     conn = get_connection()
     feeds = get_table('Feeds')
 
-    q = feeds.update().values(
-            Title = title,
-            Link = link,
-            Language = lang
-    ).where(
-            feeds.c.FeedID == feed_id
-    )
+    if feed_id:
+        q = feeds.update().values(
+                Title = title,
+                Link = link,
+                Language = lang.name
+        ).where(feeds.c.FeedID == feed_id)
+    else:
+        q = feeds.insert().values(
+                Title = title,
+                Link = link,
+                Language = lang.name
+        )
+        q = q.prefix_with("OR IGNORE", dialect='sqlite')
     conn.execute(q)
+
+    if not feed_id:
+        q = sql.select([
+                feeds.c.FeedID
+        ]).where(sql.and_(
+                feeds.c.Title == title,
+                feeds.c.Link == link,
+                feeds.c.Language == lang.name
+        ))
+        return conn.execute(q).fetchone()['FeedID']
 
 def upsert_display(user_id, feed_id, disp):
     conn = get_connection()
@@ -58,16 +74,23 @@ def upsert_display(user_id, feed_id, disp):
 
     if disp == 0:
         q = display.delete().where(sql.and_(
-                display.c.UserID == sql.bindparam("user_id"),
-                display.c.FeedID == sql.bindparam("feed_id")
+                display.c.UserID == user_id,
+                display.c.FeedID == feed_id
         ))
     else:
         q = display.insert().values(
-                UserID = sql.bindparam("user_id"),
-                FeedID = sql.bindparam("feed_id")
+                UserID = user_id,
+                FeedID = feed_id
         )
         q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(q, user_id=user_id, feed_id=feed_id)
+    conn.execute(q)
+
+def delete_feeds(feed_ids):
+    conn = get_connection()
+    feeds = get_table('Feeds')
+
+    q = feeds.delete().where(feeds.c.FeedID.in_(feed_ids))
+    conn.execute(q)
 
 def delete_tags_tagged(feed_id, tagged):
     conn = get_connection()
@@ -91,16 +114,31 @@ def insert_tags_untagged(feed_id, untagged):
     conn.execute(q, rows)
 
 # Tag.
-def add_tags(user_id, names):
+def upsert_tag(tag_id, user_id, name):
     conn = get_connection()
     tags = get_table('Tags')
 
-    row_keys = ('UserID', 'Name')
-    rows = [dict(zip(row_keys, (user_id, e))) for e in names]
+    if tag_id:
+        q = tags.update().values(
+                UserID = user_id,
+                Name = name
+        ).where(tags.c.TagID == tag_id)
+    else:
+        q = tags.insert().values(
+                UserID = user_id,
+                Name = name
+        )
+        q = q.prefix_with("OR IGNORE", dialect='sqlite')
+    conn.execute(q)
 
-    q = tags.insert()
-    q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(q, rows)
+    if not tag_id:
+        q = sql.select([
+                tags.c.TagID
+        ]).where(sql.and_(
+                tags.c.UserID == user_id,
+                tags.c.Name == name
+        ))
+        return conn.execute(q).fetchone()['TagID']
 
 def delete_tags(tag_ids):
     conn = get_connection()

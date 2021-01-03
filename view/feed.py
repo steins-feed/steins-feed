@@ -34,7 +34,7 @@ def update_feed():
     feed_id = request.form.get('feed', type=int)
     title = request.form.get('title')
     link = request.form.get('link')
-    lang = request.form.get('lang')
+    lang = Language[request.form.get('lang')]
     display = request.form.get('display', type=int)
 
     upsert_feed(feed_id, title, link, lang)

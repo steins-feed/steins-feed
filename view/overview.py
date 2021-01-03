@@ -5,7 +5,8 @@ from flask_security import auth_required, current_user
 
 from .req import base_context
 from model.schema import Language
-from model.utils.custom import add_tags, delete_tags
+from model.utils.custom import upsert_feed, upsert_display, delete_feeds
+from model.utils.custom import upsert_tag, delete_tags
 from model.utils.data import all_feeds_lang_disp, all_likes_lang
 
 bp = Blueprint("overview", __name__)
@@ -30,10 +31,28 @@ def settings():
             feeds_lang=all_feeds_lang_disp(current_user.UserID)
     )
 
+@bp.route("/settings/add_feed", methods=['POST'])
+@auth_required()
+def add_feed():
+    title = request.form.get('title')
+    link = request.form.get('link')
+    lang = Language[request.form.get('lang')]
+
+    feed_id = upsert_feed(None, title, link, lang)
+    upsert_display(current_user.UserID, feed_id, 1)
+
+    return redirect(url_for("overview.settings"))
+
+@bp.route("/settings/delete_feed", methods=['POST'])
+@auth_required()
+def delete_feed():
+    delete_feeds([request.form.get('feed', type=int)])
+    return redirect(url_for("overview.settings"))
+
 @bp.route("/settings/add_tag", methods=['POST'])
 @auth_required()
 def add_tag():
-    add_tags(current_user.UserID, [request.form.get('tag')])
+    upsert_tag(None, current_user.UserID, request.form.get('tag'))
     return redirect(url_for("overview.settings"))
 
 @bp.route("/settings/delete_tag", methods=['POST'])

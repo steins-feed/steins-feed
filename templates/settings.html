@@ -28,7 +28,7 @@
 </select>
 # endfor
 <hr>
-<form method="post" action="/steins-feed/php_settings/add_feed.php">
+<form method="post" action="{{ url_for('overview.add_feed') }}">
 <p>
 Title:<br>
 <input type="text" name="title">
@@ -55,7 +55,7 @@ Full text and everything
 <input type="submit" value="Add feed">
 </form>
 <hr>
-<form method="post" action="/steins-feed/php_settings/delete_feed.php">
+<form method="post" action="{{ url_for('overview.delete_feed') }}">
 <p>
 <select name="feed">
 # for feed_it in feeds_all
