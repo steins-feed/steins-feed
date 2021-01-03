@@ -38,7 +38,7 @@ def update_feed():
     display = request.form.get('display', type=int)
 
     upsert_feed(feed_id, title, link, lang)
-    upsert_display(current_user.UserID, feed_id, display)
+    upsert_display(current_user.UserID, [feed_id], display)
 
     return redirect(url_for("feed.feed", feed_id=feed_id))
 

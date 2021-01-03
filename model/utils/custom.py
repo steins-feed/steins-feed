@@ -68,22 +68,23 @@ def upsert_feed(feed_id, title, link, lang):
         ))
         return conn.execute(q).fetchone()['FeedID']
 
-def upsert_display(user_id, feed_id, disp):
+def upsert_display(user_id, feed_ids, disp):
     conn = get_connection()
     display = get_table('Display')
 
     if disp == 0:
         q = display.delete().where(sql.and_(
                 display.c.UserID == user_id,
-                display.c.FeedID == feed_id
+                display.c.FeedID.in_(feed_ids)
         ))
+        conn.execute(q)
     else:
-        q = display.insert().values(
-                UserID = user_id,
-                FeedID = feed_id
-        )
+        row_keys = ['UserID', 'FeedID']
+        rows = [dict(zip(row_keys, (user_id, e))) for e in feed_ids]
+
+        q = display.insert()
         q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(q)
+        conn.execute(q, rows)
 
 def delete_feeds(feed_ids):
     conn = get_connection()

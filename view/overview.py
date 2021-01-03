@@ -31,6 +31,19 @@ def settings():
             feeds_lang=all_feeds_lang_disp(current_user.UserID)
     )
 
+@bp.route("/settings/toggle_display", methods=['POST'])
+@auth_required()
+def toggle_display():
+    tagged = request.form.getlist('displayed', type=int)
+    untagged = request.form.getlist('hidden', type=int)
+
+    if tagged:
+        upsert_display(current_user.UserID, tagged, 0)
+    if untagged:
+        upsert_display(current_user.UserID, untagged, 1)
+
+    return ("", 200)
+
 @bp.route("/settings/add_feed", methods=['POST'])
 @auth_required()
 def add_feed():
@@ -39,7 +52,7 @@ def add_feed():
     lang = Language[request.form.get('lang')]
 
     feed_id = upsert_feed(None, title, link, lang)
-    upsert_display(current_user.UserID, feed_id, 1)
+    upsert_display(current_user.UserID, [feed_id], 1)
 
     return redirect(url_for("overview.settings"))
 
