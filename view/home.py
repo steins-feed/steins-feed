@@ -103,53 +103,28 @@ def get_topnav_title(page_date, timeunit):
 def clean_summary(s):
     try:
         tree = html.fromstring(s)
-    except etree.ParserError as e:
+    except etree.ParserError:
         return ""
 
-    # Strip tag and content.
-    tags = ['figure', 'img', 'iframe', 'script', 'small', 'svg']
+    # Penalize if full document.
+    tags = ['h' + str(e + 1) for e in range(6)];
     for tag_it in tags:
         elems = tree.xpath("//{}".format(tag_it))
-        for elem_it in elems:
-            elem_it.drop_tree()
+        if len(elems) > 0:
+            return ""
 
-    # Strip class and content.
-    classes = ['twitter']
+    # Strip tags and content.
+    tags = ['figure', 'img']
+    if tree.tag in tags:
+        return ""
+    etree.strip_elements(tree, *tags, with_tail=False)
+
+    # Strip classes and content.
+    classes = ['instagram', 'tiktok', 'twitter']
     for class_it in classes:
         elems = tree.xpath("//*[contains(@class, '" + class_it + "')]")
         for elem_it in reversed(elems):
             elem_it.drop_tree()
-
-    # Remove leading and trailing tags.
-    tags = ['br']
-    #while (true) {
-    #    if (!is_null($tree_body->firstChild) and in_array($tree_body->firstChild->tagName, $tags)) {
-    #        $tree_body->removeChild($tree_body->firstChild);
-    #    } else {
-    #        break;
-    #    }
-    #}
-    #while (true) {
-    #    if (!is_null($tree_body->lastChild) and in_array($tree_body->lastChild->tagName, $tags)) {
-    #        $tree_body->removeChild($tree_body->lastChild);
-    #    } else {
-    #        break;
-    #    }
-    #}
-
-    # Strip tag.
-    tags = ['em', 'hr', 'strong']
-    for tag_it in tags:
-        elems = tree.xpath("//{}".format(tag_it))
-        for elem_it in elems:
-            elem_it.drop_tag()
-
-    # Replace tag.
-    tags = ['h1', 'h2'];
-    for tag_it in tags:
-        elems = tree.xpath("//{}".format(tag_it))
-        for elem_it in elems:
-            elem_it.tag = 'h3'
 
     # Strip empty tags.
     tags = ['div', 'p', 'span']
@@ -161,5 +136,5 @@ def empty_leaves(e, tags=[]):
     for e_it in reversed(list(e)):
         empty_leaves(e_it)
 
-    if not len(e) and not e.text and (not len(tags) or e.tag in tags):
+    if len(e) == 0 and not e.text and not e.tail and (len(tags) == 0 or e.tag in tags):
         e.drop_tree()
