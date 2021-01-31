@@ -5,6 +5,8 @@ feedparser
 flask
 flask-security-too
 lxml
+pyOpenSSL
 pytest
 python-dotenv
+secrets
 sqlalchemy

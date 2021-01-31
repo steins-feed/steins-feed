@@ -5,6 +5,10 @@ README.pdf: README.md
 requirements: requirements.txt
 	python3 -m pip install --upgrade -r requirements.txt
 
+.env:
+	echo "SECRET_KEY=\"$$(python3 -c 'import secrets; print(secrets.token_urlsafe())')\"" > .env
+	echo "SECURITY_PASSWORD_SALT=\"$$(python3 -c 'import secrets; print(secrets.SystemRandom().getrandbits(128))')\"" >> .env
+
 .PHONY: create
 create:
 	python3 -c "from model.schema import create_schema; create_schema()"

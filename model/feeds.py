@@ -65,7 +65,7 @@ def parse_feed(feed, timeout=1):
         else:
             logger.error("{} -- {}.".format(feed['Title'], status))
     except OSError as e:
-        logger.error("{} -- {}.".format(feed_it['Title'], e))
+        logger.error("{} -- {}.".format(feed['Title'], e))
         res = feedparser.util.FeedParserDict(entries=[])
     except AttributeError:
         if res.entries:
