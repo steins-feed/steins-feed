@@ -75,19 +75,19 @@ function toggle_request(left, right, dest, suffix, lang=null, param=null, param_
         qs += "&" + right + "=" + untagged[i];
     }
 
-    xmlhttp.open("POST", "/" + dest + "/toggle_" + suffix, true);
+    xmlhttp.open("POST", dest + "/toggle_" + suffix, true);
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xmlhttp.send(qs);
 }
 
 function toggle_display(lang) {
-    toggle_request("displayed", "hidden", "settings", "display", lang=lang);
+    toggle_request("displayed", "hidden", settings_ep, "display", lang=lang);
 }
 
 function toggle_feeds(tag_id, lang) {
-    toggle_request("tagged", "untagged", "tag", "feeds", lang=lang, param="tag", param_id=tag_id);
+    toggle_request("tagged", "untagged", tag_ep, "feeds", lang=lang, param="tag", param_id=tag_id);
 }
 
 function toggle_tags(feed_id) {
-    toggle_request("tagged", "untagged", "feed", "tags", lang=null, param="feed", param_id=feed_id);
+    toggle_request("tagged", "untagged", feed_ep, "tags", lang=null, param="feed", param_id=feed_id);
 }

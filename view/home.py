@@ -105,6 +105,8 @@ def clean_summary(s):
         tree = html.fromstring(s)
     except etree.ParserError:
         return ""
+    except etree.XMLSyntaxError:
+        return ""
 
     # Penalize if full document.
     tags = ['h' + str(e + 1) for e in range(6)];
