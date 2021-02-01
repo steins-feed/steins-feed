@@ -110,10 +110,35 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
     t_like = get_table('Like')
     t_magic = get_table('Magic')
 
-    q_select = [
+    q = sql.select([
             t_items,
-            func.min(t_feeds.c.Title).label("Feed"),
+            t_feeds.c.Title.label("Feed"),
             t_feeds.c.Language,
+            t_display.c.UserID
+    ]).select_from(t_items.join(t_feeds)
+                          .join(t_display))
+
+    q_where = [
+            t_items.c.Published >= start,
+            t_items.c.Published < finish,
+            t_items.c.Published < last
+    ]
+    if langs:
+        q_lang = [t_feeds.c.Language == Language(e).name for e in langs]
+        q_where.append(sql.or_(*q_lang))
+    q = q.where(sql.and_(*q_where))
+
+    q = q.group_by(
+            t_items.c.Title,
+            t_items.c.Published
+    )
+    q = q.having(
+            t_feeds.c.Title == func.min(t_feeds.c.Title),
+    )
+    t_items_displayed = q.cte()
+
+    q_select = [
+            t_items_displayed,
             func.coalesce(func.group_concat(t_tags.c.TagID), "").label("TagIDs"),
             func.coalesce(func.group_concat(t_tags.c.Name), "").label("TagNames"),
             func.coalesce(t_like.c.Score, 0).label("Like")
@@ -122,36 +147,30 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         q_select.append(t_magic.c.Score)
     q = sql.select(q_select)
 
-    t_feeds_displayed = t_feeds.join(t_display)
-    t_items_displayed = t_items.join(t_feeds_displayed)
-    t_items_displayed = t_items_displayed.outerjoin(t_tags2feeds.join(t_tags))
-    t_items_displayed = t_items_displayed.outerjoin(t_like)
+    q_from = (t_items_displayed.outerjoin(
+            t_tags2feeds.join(t_tags), sql.and_(
+            t_items_displayed.c.FeedID == t_tags2feeds.c.FeedID,
+            t_items_displayed.c.UserID == t_tags.c.UserID
+    )).outerjoin(
+            t_like, sql.and_(
+            t_items_displayed.c.ItemID == t_like.c.ItemID,
+            t_items_displayed.c.UserID == t_like.c.UserID
+    )))
     if magic:
-        t_items_displayed = t_items_displayed.outerjoin(t_magic)
-    q = q.select_from(t_items_displayed)
+        q_from = q_from.outerjoin(t_magic)
+    q = q.select_from(q_from)
 
-    q_where = [
-            t_display.c.UserID == user_id,
-            t_items.c.Published >= start,
-            t_items.c.Published < finish,
-            t_items.c.Published < last
-    ]
-    if langs:
-        q_lang = [t_feeds.c.Language == Language(e).name for e in langs]
-        q_where.append(sql.or_(*q_lang))
+    q_where = [t_items_displayed.c.UserID == user_id]
     if tags:
         q_tag = [t_tags.c.Name == e for e in tags]
         q_where.append(sql.or_(*q_tag))
     q = q.where(sql.and_(*q_where))
-    q = q.group_by(
-            t_items.c.Title,
-            t_items.c.Published
-    )
 
+    q = q.group_by(t_items_displayed.c.ItemID)
     if magic:
         q = q.order_by(sql.desc(t_magic.c.Score))
     else:
-        q = q.order_by(sql.desc(t_items.c.Published))
+        q = q.order_by(sql.desc(t_items_displayed.c.Published))
     return conn.execute(q).fetchall()
 
 def keys2strings(keys):
