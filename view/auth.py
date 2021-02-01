@@ -11,7 +11,11 @@ from wtforms.validators import DataRequired
 
 from model import get_model, get_session, get_table
 
-load_dotenv()
+load_dotenv(os.path.join(
+    os.path.dirname(__file__),
+    os.pardir,
+    ".env"
+))
 
 def get_user_datastore():
     global user_datastore

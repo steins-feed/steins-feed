@@ -18,12 +18,10 @@
     Require all granted
 </Files>
 
-<Files "*.php">
+<Files "*.wsgi">
     Require all granted
 </Files>
 
 <Files "favicon.ico">
     Require all granted
 </Files>
-
-php_value max_input_vars 10000
