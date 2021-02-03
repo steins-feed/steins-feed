@@ -4350,6 +4350,63 @@
         <lang>German</lang>
     </feed>
 
+    <!-- Der Tagespiegel -->
+    <feed>
+        <title>Der Tagesspiegel Politik</title>
+        <link>http://www.tagesspiegel.de/contentexport/feed/politik</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Der Tagesspiegel Berlin</title>
+        <link>http://www.tagesspiegel.de/contentexport/feed/berlin</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Der Tagesspiegel Queer</title>
+        <link>http://www.tagesspiegel.de/contentexport/feed/queerspiegel</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Der Tagesspiegel Wirtschaft</title>
+        <link>http://www.tagesspiegel.de/contentexport/feed/wirtschaft</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Der Tagesspiegel Sport</title>
+        <link>http://www.tagesspiegel.de/contentexport/feed/sport</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Der Tagesspiegel Kultur</title>
+        <link>http://www.tagesspiegel.de/contentexport/feed/kultur</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Der Tagesspiegel Welt</title>
+        <link>http://www.tagesspiegel.de/contentexport/feed/welt</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Der Tagesspiegel Meinung</title>
+        <link>http://www.tagesspiegel.de/contentexport/feed/meinung</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Der Tagesspiegel Medien</title>
+        <link>http://www.tagesspiegel.de/contentexport/feed/medien</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Der Tagesspiegel Wissen</title>
+        <link>http://www.tagesspiegel.de/contentexport/feed/wissen</link>
+        <lang>German</lang>
+    </feed>
+    <feed>
+        <title>Der Tagesspiegel</title>
+        <link>http://www.tagesspiegel.de/contentexport/feed/home</link>
+        <lang>German</lang>
+    </feed>
+
     <!-- taz -->
     <feed>
         <title>taz Politik</title>
