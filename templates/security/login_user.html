@@ -12,6 +12,6 @@
   {{ render_field_errors(login_user_form.csrf_token) }}
   {{ render_field(login_user_form.submit) }}
 </form>
-<a href="/register">Register</a>
+<a href={{ url_for('security.register') }}>Register</a>
 <!--{% include "security/_menu.html" %}-->
 {% endblock %}
