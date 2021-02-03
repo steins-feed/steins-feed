@@ -43,6 +43,8 @@ def displayed_languages(user_id):
             feeds.join(display)
     ).where(
             display.c.UserID == user_id
+    ).order_by(
+            feeds.c.Language
     )
 
     res = conn.execute(q)
@@ -64,6 +66,8 @@ def displayed_tags(user_id):
                  .join(tags)
     ).where(
             display.c.UserID == user_id
+    ).order_by(
+            tags.c.Name
     )
 
     res = conn.execute(q)
