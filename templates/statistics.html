@@ -2,7 +2,7 @@
 
 {% block body %}
 <hr>
-# for lang_it, feeds_it in likes_lang.items()
+# for lang_it, feeds_it in likes_lang.items() if not (feeds_it[0]|count == 0 and feeds_it[1]|count == 0)
 <h2>{{ lang_it.value }}</h2>
 <p>{{ feeds_it[0]|count }} likes:</p>
 <ul>
