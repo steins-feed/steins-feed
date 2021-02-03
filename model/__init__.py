@@ -3,6 +3,8 @@
 import logging
 import os
 import sqlalchemy as sqla
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -28,6 +30,12 @@ def get_engine():
                 "check_same_thread": False
         })
     return engine
+
+@event.listens_for(Engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
 
 def get_metadata():
     global metadata
