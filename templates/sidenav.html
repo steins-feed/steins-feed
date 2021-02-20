@@ -49,39 +49,23 @@ ALL LANGUAGES
 # endfor
 </fieldset>
 </p>
-{#
 <p>
 <fieldset>
 <legend>Feed</legend>
-<?php
-$feed_dict = array("Full", "Magic", "Surprise");
-$magic_exists = file_exists($_SERVER['DOCUMENT_ROOT'] . "/steins-feed/$user_id/$clf_key/clfs.pickle");
-foreach($feed_dict as $key):
-?>
+# for feed_it in enum_feed
 <label>
-<?php
-    $feed_input = '<input name="feed" value="' . $key . '" type="radio"';
-    if ($key == $feed) {
-        $feed_input .= ' checked';
-    }
-    if (!$magic_exists) {
-        $feed_input .= ' disabled';
-    }
-    $feed_input .= '>';
-    echo $feed_input . PHP_EOL;
-    echo $key . PHP_EOL;
-?>
+<input name="feed" value="' . $key . '" type="radio"{{" checked" if feed_it == feed}}{{" disabled" if not magic_exists}}>
+{{ feed_it.value }}
 </label>
 <br>
-<?php endforeach;?>
+# endfor
 </fieldset>
 </p>
-#}
 <p>
 <fieldset>
 <input name="page" value="{{ page }}" type="hidden">
 <input name="timeunit" value="{{ timeunit.name }}" type="hidden">
-# for tu_it in enum_timeunit:
+# for tu_it in enum_timeunit
 <button name="timeunit_new" value="{{ tu_it.name }}" type="submit">
 {{ tu_it.value }}
 </button>

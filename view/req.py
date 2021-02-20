@@ -3,6 +3,7 @@
 import enum
 from flask import request
 from flask_security import current_user
+import os
 
 from model.schema import Language
 from model.utils.all import all_feeds, all_tags
@@ -62,6 +63,15 @@ def base_context():
     # sidenav.html.
     context['feeds_all']=all_feeds()
     context['tags_all']=all_tags(current_user.UserID)
+
+    # sidenav.html.
+    dir_path = os.path.normpath(os.path.join(
+        os.path.dirname(__file__),
+        os.pardir,
+        "clf.d",
+        str(current_user.UserID)
+    ))
+    context['magic_exists'] = os.path.isdir(dir_path)
 
     # sidenav.html.
     context['enum_feed'] = Feed
