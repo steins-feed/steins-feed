@@ -2,6 +2,7 @@
 .python-version
 .venv/
 
+clf.d/
 feedparser
 log.d/
 README.pdf

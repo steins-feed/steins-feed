@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from datetime import datetime
 from sqlalchemy import func, sql
 
 from model import get_connection, get_table

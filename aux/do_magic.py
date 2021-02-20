@@ -6,23 +6,27 @@ import json
 import numpy as np
 import os
 import pickle
+import sqlalchemy as sqla
 import sys
 
-dir_path = os.path.abspath(__file__)
-dir_path = os.path.dirname(dir_path)
-dir_path = os.path.join(dir_path, '..')
-dir_path = os.path.abspath(dir_path)
+def mkdir_p(path):
+    try:
+        os.mkdir(path)
+    except FileExistsError:
+        pass
 
-sys.path.append(dir_path)
-with open(dir_path + os.sep + "json/steins_magic.json", 'r') as f:
-    clf_dict = json.load(f)
+par_path = os.path.normpath(os.path.join(
+        os.path.dirname(__file__),
+        os.pardir
+))
+sys.path.append(par_path)
+dir_path = os.path.join(par_path, "clf.d")
+mkdir_p(dir_path)
 
-from steins_log import get_logger
-logger = get_logger()
-from steins_magic import build_feature, kullback_leibler, steins_learn
-from steins_sql import *
-conn = get_connection()
-c = get_cursor()
+from magic import train_classifier
+from model import get_connection, get_table
+from model.utils.all import liked_languages
+from model.utils.recent import last_updated, last_liked
 
 def do_words(pipeline):
     count_vect = pipeline.named_steps['vect']
@@ -80,73 +84,65 @@ def do_feeds(pipeline, user_id, lang, timestamp, delta_timestamp=timedelta(days=
 
     return table
 
-users = c.execute("SELECT * FROM Users").fetchall()
+conn = get_connection()
+t_users = get_table('Users')
+
+users = conn.execute(sqla.select([t_users])).fetchall()
 for user_it in users:
     user = user_it['Name']
     user_id = user_it['UserID']
 
-    user_path = dir_path + os.sep + str(user_id)
-    try:
-        os.mkdir(user_path)
-    except FileExistsError:
-        pass
+    user_path = os.path.join(dir_path, str(user_id))
+    mkdir_p(user_path)
 
     timestamp = last_updated()
     timestamp_like = last_liked(user_id)
 
-    for clf_it in clf_dict:
-        clf_path = user_path + os.sep + clf_it
-        try:
-            os.mkdir(clf_path)
-        except FileExistsError:
-            pass
-
-        file_path = clf_path + os.sep + "clfs.pickle"
+    for lang_it in liked_languages(user_id):
+        file_path = os.path.join(user_path, lang_it.name + ".pickle")
         if os.path.exists(file_path) and datetime.utcfromtimestamp(os.stat(file_path).st_mtime) > timestamp_like:
             with open(file_path, 'rb') as f:
-                clfs = pickle.load(f)
+                clf = pickle.load(f)
         else:
-            logger.info("Learn {} about {}.".format(clf_it, user))
-            clfs = steins_learn(user_id, clf_it)
-            if len(clfs) == 0:
+            #logger.info("Learn {} about {}.".format(lang_it.name, user))
+            clf = train_classifier(user_id, lang_it)
+            if not clf:
                 continue
-            reset_magic(user_id, clf_it)
+            #reset_magic(user_id, lang_it)
             with open(file_path, 'wb') as f:
-                pickle.dump(clfs, f)
+                pickle.dump(clf, f)
 
-        for lang_it in clfs:
-            # Words.
-            table = do_words(clfs[lang_it])
+    #for lang_it in clfs:
+    #    # Words.
+    #    table = do_words(clfs[lang_it])
 
-            # If KL divergence below threshold, do not prepare analysis.
-            try:
-                file_path = clf_path + os.sep + "{}_words.json".format(lang_it)
-                with open(file_path, 'r') as f:
-                    table_old = json.load(f)
-                    div = kullback_leibler(table, table_old)
-                    logger.info("Kullback-Leibler divergence of {}, {}, {}: {}.".format(user, clf_it, lang_it, div))
+    #    # If KL divergence below threshold, do not prepare analysis.
+    #    try:
+    #        file_path = clf_path + os.sep + "{}_words.json".format(lang_it)
+    #        with open(file_path, 'r') as f:
+    #            table_old = json.load(f)
+    #            div = kullback_leibler(table, table_old)
+    #            logger.info("Kullback-Leibler divergence of {}, {}, {}: {}.".format(user, clf_it, lang_it, div))
 
-                    if abs(div) < 0.5:
-                        continue
-            except FileNotFoundError:
-                pass
+    #            if abs(div) < 0.5:
+    #                continue
+    #    except FileNotFoundError:
+    #        pass
 
-            logger.info("Learn {} about {} ({} words).".format(clf_it, user, lang_it))
-            with open(file_path, 'w') as f:
-                json.dump(table, f)
+    #    logger.info("Learn {} about {} ({} words).".format(clf_it, user, lang_it))
+    #    with open(file_path, 'w') as f:
+    #        json.dump(table, f)
 
-            # Cookies.
-            logger.info("Learn {} about {} ({} cookies).".format(clf_it, user, lang_it))
-            file_path = clf_path + os.sep + "{}_cookie.json".format(lang_it)
-            with open(file_path, 'w') as f:
-                table = do_cookies(clfs[lang_it])
-                json.dump(table, f)
+    #    # Cookies.
+    #    logger.info("Learn {} about {} ({} cookies).".format(clf_it, user, lang_it))
+    #    file_path = clf_path + os.sep + "{}_cookie.json".format(lang_it)
+    #    with open(file_path, 'w') as f:
+    #        table = do_cookies(clfs[lang_it])
+    #        json.dump(table, f)
 
-            # Feeds.
-            logger.info("Learn {} about {} ({} feeds).".format(clf_it, user, lang_it))
-            file_path = clf_path + os.sep + "{}_feeds.json".format(lang_it)
-            with open(file_path, 'w') as f:
-                table = do_feeds(clfs[lang_it], user_id, lang_it, timestamp)
-                json.dump(table, f)
-
-close_connection()
+    #    # Feeds.
+    #    logger.info("Learn {} about {} ({} feeds).".format(clf_it, user, lang_it))
+    #    file_path = clf_path + os.sep + "{}_feeds.json".format(lang_it)
+    #    with open(file_path, 'w') as f:
+    #        table = do_feeds(clfs[lang_it], user_id, lang_it, timestamp)
+    #        json.dump(table, f)
