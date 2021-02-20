@@ -5,8 +5,6 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
-from model.utils.all import liked_items, disliked_items
-
 def build_feature(row):
     tree = html.fromstring(row['Title'])
     return html.tostring(tree, encoding='unicode', method='text')
@@ -23,9 +21,7 @@ def kullback_leibler(q, p):
 
     return res
 
-def train_classifier(user_id, lang):
-    likes = liked_items(user_id, lang)
-    dislikes = disliked_items(user_id, lang)
+def train_classifier(user_id, likes, dislikes):
     if not likes or not dislikes:
         return None
 

@@ -54,6 +54,7 @@ def home():
         finish_time = finish_time.replace(day=1)
     else:
         raise ValueError
+
     page_items = updated_items(current_user.UserID, get_langs(), get_tags(), start_time, finish_time, last_hour)
     if r_feed == Feed.MAGIC:
         dir_path = os.path.normpath(os.path.join(
