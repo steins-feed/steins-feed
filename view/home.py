@@ -10,11 +10,11 @@ import pickle
 from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from .req import Feed, Timeunit
 from .req import base_context
-from magic import build_feature
+from magic import build_feature, compute_score, trained_languages
 from model.schema import Language, Like
-from model.utils.all import updated_dates, updated_items
+from model.utils.all import updated_dates, updated_items, unscored_items
 from model.utils.recent import last_updated
-from model.utils.custom import upsert_like
+from model.utils.custom import upsert_like, upsert_magic
 
 bp = Blueprint("home", __name__, url_prefix="/home")
 
@@ -22,7 +22,9 @@ bp = Blueprint("home", __name__, url_prefix="/home")
 @auth_required()
 def home():
     r_feed = get_feed()
+    r_langs = get_langs()
     r_page = get_page()
+    r_tags = get_tags()
     r_timeunit = get_timeunit()
 
     last_hour = last_updated().replace(
@@ -55,29 +57,31 @@ def home():
     else:
         raise ValueError
 
-    page_items = updated_items(current_user.UserID, get_langs(), get_tags(), start_time, finish_time, last_hour)
     if r_feed == Feed.MAGIC:
-        dir_path = os.path.normpath(os.path.join(
-            os.path.dirname(__file__),
-            os.pardir,
-            "clf.d",
-            str(current_user.UserID)
-        ))
+        for lang_it in trained_languages(current_user.UserID):
+            new_items = unscored_items(
+                current_user.UserID,
+                lang_it,
+                r_tags,
+                start_time,
+                finish_time,
+                last_hour
+            )
+            if len(new_items) == 0:
+                continue
 
-        clfs = dict()
-        for lang_it in Language:
-            try:
-                with open(os.path.join(dir_path, lang_it.name + ".pickle"), 'rb') as f:
-                    clfs[lang_it] = pickle.load(f)
-            except FileNotFoundError:
-                pass
+            new_scores = compute_score(current_user.UserID, lang_it, new_items)
+            upsert_magic(current_user.UserID, new_items, new_scores)
 
-        page_items = [dict(e) for e in page_items]
-        scores = [2. * clfs[Language[e['Language']]].predict_proba([build_feature(e)])[0, 1] - 1. for e in page_items]
-        for i in range(len(scores)):
-            page_items[i]['Score'] = scores[i]
-
-        page_items.sort(key=lambda x: x['Score'], reverse=True)
+    page_items = updated_items(
+        current_user.UserID,
+        r_langs,
+        r_tags,
+        start_time,
+        finish_time,
+        last_hour,
+        r_feed == Feed.MAGIC
+    )
 
     return render_template("index.html",
             **base_context(),

@@ -180,3 +180,22 @@ def reset_magic(user_id=None):
     if user_id:
         q = q.where(magic.c.UserID == user_id)
     conn.execute(q)
+
+def upsert_magic(user_id, items, scores):
+    if len(items) != len(scores):
+        raise IndexError()
+
+    conn = get_connection()
+    magic = get_table('Magic')
+
+    rows = []
+    for i in range(len(items)):
+        rows.append({
+            'UserID': user_id,
+            'ItemID': items[i]['ItemID'],
+            'Score': scores[i]
+        })
+
+    q = magic.insert()
+    q = q.prefix_with("OR IGNORE", dialect='sqlite')
+    conn.execute(q, rows)

@@ -104,7 +104,7 @@ def updated_dates(user_id, keys, last=None, limit=None):
     res = [tuple2datetime(e) for e in res]
     return res
 
-def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
+def updated_items(user_id, langs, tags, start, finish, last=None, magic=False, unscored=False):
     conn = get_connection()
     t_feeds = get_table('Feeds')
     t_display = get_table('Display')
@@ -124,9 +124,10 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
 
     q_where = [
             t_items.c.Published >= start,
-            t_items.c.Published < finish,
-            t_items.c.Published < last
+            t_items.c.Published < finish
     ]
+    if last:
+        q_where.append(t_items.c.Published < last)
     if langs:
         q_lang = [t_feeds.c.Language == Language(e).name for e in langs]
         q_where.append(sql.or_(*q_lang))
@@ -168,10 +169,16 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
     if tags:
         q_tag = [t_tags.c.Name == e for e in tags]
         q_where.append(sql.or_(*q_tag))
+    if unscored:
+        q_where.append(t_magic.c.Score == None)
     q = q.where(sql.and_(*q_where))
 
     q = q.group_by(t_items_displayed.c.ItemID)
-    if not magic:
+    if unscored:
+        pass
+    elif magic:
+        q = q.order_by(sql.desc(t_magic.c.Score))
+    else:
         q = q.order_by(sql.desc(t_items_displayed.c.Published))
     return conn.execute(q).fetchall()
 
@@ -240,3 +247,6 @@ def liked_items(user_id, lang, score=Like.UP):
 
 def disliked_items(user_id, lang):
     return liked_items(user_id, lang, Like.DOWN)
+
+def unscored_items(user_id, lang, tags, start, finish, last=None):
+    return updated_items(user_id, [lang], tags, start, finish, last, magic=True, unscored=True)

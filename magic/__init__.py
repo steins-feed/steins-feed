@@ -1,9 +1,20 @@
 #!/usr/bin/env python3
 
+import glob
 from lxml import html
+import os
+import pickle
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
+
+from model.schema import Language
+
+dir_path = os.path.normpath(os.path.join(
+    os.path.dirname(__file__),
+    os.pardir,
+    "clf.d"
+))
 
 def build_feature(row):
     tree = html.fromstring(row['Title'])
@@ -21,7 +32,7 @@ def kullback_leibler(q, p):
 
     return res
 
-def train_classifier(user_id, likes, dislikes):
+def train_classifier(user_id, lang, likes, dislikes):
     if not likes or not dislikes:
         return None
 
@@ -43,3 +54,26 @@ def train_classifier(user_id, likes, dislikes):
     # Train pipeline.
     text_clf.fit(titles, targets)
     return text_clf
+
+def compute_score(user_id, lang, items):
+    clf_path = os.path.join(
+        dir_path,
+        str(user_id),
+        lang.name + ".pickle"
+    )
+    with open(clf_path, 'rb') as f:
+        clf = pickle.load(f)
+
+    titles = [build_feature(row_it) for row_it in items]
+    targets = clf.predict_proba(titles)
+    scores = 2. * targets[:, 1] - 1.
+
+    return scores
+
+def trained_languages(user_id):
+    user_path = os.path.join(dir_path, str(user_id))
+    clf_path = os.path.join(user_path, "*.pickle")
+    clf_paths = glob.glob(clf_path)
+
+    extract_lang = lambda x: Language[x[len(user_path) + 1:-len(".pickle")]]
+    return [extract_lang(e) for e in clf_paths]
