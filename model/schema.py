@@ -72,7 +72,7 @@ def create_schema_feeds():
             sqla.Column("Title", TEXT, nullable=False, unique=True),
             sqla.Column("Link", TEXT, nullable=False, unique=True),
             sqla.Column("Language", sqla.Enum(Language)),
-            sqla.Column("Added", sqla.DateTime, default=func.now()),
+            sqla.Column("Added", sqla.DateTime, server_default=func.now()),
             sqla.Column("Updated", sqla.DateTime)
     )
     feeds.create(get_engine(), checkfirst=True)
@@ -127,8 +127,8 @@ def create_schema_likes():
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("ItemID", sqla.Integer, gen_fk(items.c.ItemID), nullable=False),
             sqla.Column("Score", sqla.Enum(Like), nullable=False),
-            sqla.Column("Added", sqla.DateTime, default=func.now()),
-            sqla.Column("Updated", sqla.DateTime, default=func.now()),
+            sqla.Column("Added", sqla.DateTime, server_default=func.now()),
+            sqla.Column("Updated", sqla.DateTime, server_default=func.now(), server_onupdate=func.now()),
             schema.UniqueConstraint('UserID', 'ItemID')
     )
     likes.create(get_engine(), checkfirst=True)
@@ -140,8 +140,8 @@ def create_schema_magic():
             sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
             sqla.Column("ItemID", sqla.Integer, gen_fk(items.c.ItemID), nullable=False),
             sqla.Column("Score", sqla.Float, nullable=False),
-            sqla.Column("Added", sqla.DateTime, default=func.now()),
-            sqla.Column("Updated", sqla.DateTime, default=func.now()),
+            sqla.Column("Added", sqla.DateTime, server_default=func.now()),
+            sqla.Column("Updated", sqla.DateTime, server_default=func.now(), server_onupdate=func.now()),
             schema.UniqueConstraint('UserID', 'ItemID'),
             schema.CheckConstraint(
                     "Score BETWEEN {} AND {}".format(Like.DOWN.value, Like.UP.value)
