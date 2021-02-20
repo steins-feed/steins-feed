@@ -18,21 +18,13 @@ close
 <fieldset id="input_tag">
 <legend>Tags</legend>
 <label>
-# if tags|contains(tags_disp)
-<input type="checkbox" onclick="toggle_checkbox('input_tag')" checked>
-# else
-<input type="checkbox" onclick="toggle_checkbox('input_tag')">
-# endif
+<input type="checkbox" onclick="toggle_checkbox('input_tag')"{{" checked" if tags|contains(tags_disp)}}>
 ALL TAGS
 <br>
 </label>
 # for tag_it in tags_disp
 <label>
-# if tag_it in tags
-<input name="tag" onclick="prove_checkbox('input_tag')" value="{{ tag_it }}" type="checkbox" checked>
-# else
-<input name="tag" onclick="prove_checkbox('input_tag')" value="{{ tag_it }}" type="checkbox">
-# endif
+<input name="tag" onclick="prove_checkbox('input_tag')" value="{{ tag_it }}" type="checkbox"{{" checked" if tag_it in tags}}>
 {{ tag_it }}
 </label>
 <br>
@@ -44,21 +36,13 @@ ALL TAGS
 <fieldset id="input_lang">
 <legend>Languages</legend>
 <label>
-# if langs|count == 0 or langs|contains(langs_disp)
-<input type="checkbox" onclick="toggle_checkbox('input_lang')" checked>
-# else
-<input type="checkbox" onclick="toggle_checkbox('input_lang')">
-# endif
+<input type="checkbox" onclick="toggle_checkbox('input_lang')"{{" checked" if langs|count == 0 or langs|contains(langs_disp)}}>
 ALL LANGUAGES
 <br>
 </label>
 # for lang_it in langs_disp
 <label>
-# if langs|count == 0 or lang_it in langs
-<input name="lang" onclick="prove_checkbox('input_lang')" value="{{ lang_it.name }}" type="checkbox" checked>
-# else
-<input name="lang" onclick="prove_checkbox('input_lang')" value="{{ lang_it.name }}" type="checkbox">
-# endif
+<input name="lang" onclick="prove_checkbox('input_lang')" value="{{ lang_it.name }}" type="checkbox"{{" checked" if langs|count == 0 or lang_it in langs}}>
 {{ lang_it.value }}
 </label>
 <br>
