@@ -33,7 +33,8 @@ def get_engine():
     global engine
     if 'engine' not in globals():
         engine = sqla.create_engine(db_path, connect_args={
-                "check_same_thread": False
+                "check_same_thread": False,
+                "timeout": 5
         })
     return engine
 
