@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import func, sql
 
 from .. import get_connection, get_table
-from ..schema import Language
+from ..schema import Language, Like
 
 def all_feeds():
     conn = get_connection()
@@ -200,3 +200,45 @@ def keys2strings(keys):
         format_string += "-%w"
 
     return date_string, format_string
+
+def liked_languages(user_id):
+    conn = get_connection()
+    t_feeds = get_table('Feeds')
+    t_items = get_table('Items')
+    t_like = get_table('Like')
+
+    q = sql.select([
+        t_feeds.c.Language
+    ]).select_from(
+        t_items.join(t_feeds)
+               .join(t_like)
+    ).where(sql.and_(
+        t_like.c.UserID == user_id,
+        t_like.c.Score != Like.MEH.name
+    )).distinct()
+
+    res = conn.execute(q)
+    res = [Language[e['Language']] for e in res]
+    return res
+
+def liked_items(user_id, lang, score=Like.UP):
+    conn = get_connection()
+    t_feeds = get_table('Feeds')
+    t_items = get_table('Items')
+    t_like = get_table('Like')
+
+    q = sql.select([
+        t_items
+    ]).select_from(
+        t_items.join(t_feeds)
+               .join(t_like)
+    ).where(sql.and_(
+        t_like.c.UserID == user_id,
+        t_feeds.c.Language == lang.name,
+        t_like.c.Score == score.name
+    ))
+
+    return conn.execute(q).fetchall()
+
+def disliked_items(user_id, lang):
+    return liked_items(user_id, lang, Like.DOWN)

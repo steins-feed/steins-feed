@@ -8,5 +8,6 @@ lxml
 pyOpenSSL
 pytest
 python-dotenv
+scikit-learn
 secrets
 sqlalchemy
