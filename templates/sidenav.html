@@ -54,7 +54,7 @@ ALL LANGUAGES
 <legend>Feed</legend>
 # for feed_it in enum_feed
 <label>
-<input name="feed" value="' . $key . '" type="radio"{{" checked" if feed_it == feed}}{{" disabled" if not magic_exists}}>
+<input name="feed" value="{{feed_it.name}}" type="radio"{{" checked" if feed_it == feed}}{{" disabled" if not magic_exists}}>
 {{ feed_it.value }}
 </label>
 <br>

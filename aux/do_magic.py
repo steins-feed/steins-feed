@@ -16,8 +16,8 @@ def mkdir_p(path):
         pass
 
 par_path = os.path.normpath(os.path.join(
-        os.path.dirname(__file__),
-        os.pardir
+    os.path.dirname(__file__),
+    os.pardir
 ))
 sys.path.append(par_path)
 dir_path = os.path.join(par_path, "clf.d")
