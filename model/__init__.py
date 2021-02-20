@@ -23,6 +23,12 @@ sqla_logger.addHandler(get_handler())
 def get_connection():
     return get_engine().connect()
 
+@event.listens_for(Engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
+
 def get_engine():
     global engine
     if 'engine' not in globals():
@@ -30,12 +36,6 @@ def get_engine():
                 "check_same_thread": False
         })
     return engine
-
-@event.listens_for(Engine, "connect")
-def set_sqlite_pragma(dbapi_connection, connection_record):
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA foreign_keys=ON")
-    cursor.close()
 
 def get_metadata():
     global metadata

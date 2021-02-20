@@ -3,6 +3,7 @@
 .venv/
 
 feedparser
+log.d/
 README.pdf
 steins.db
 steins.db.?
