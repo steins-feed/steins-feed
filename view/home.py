@@ -132,7 +132,7 @@ def clean_summary(s):
     tags = ['div', 'p', 'span']
     empty_leaves(tree, tags)
 
-    return html.tostring(tree).decode()
+    return html.tostring(tree, encoding='unicode', method='html')
 
 def empty_leaves(e, tags=[]):
     for e_it in reversed(list(e)):

@@ -6,8 +6,6 @@ from sqlalchemy import sql
 from . import get_connection, get_table
 from .schema import Language
 
-ENC = 'utf-8'
-
 def read_xml(f):
     conn = get_connection()
     feeds = get_table('Feeds')
@@ -57,7 +55,7 @@ def write_xml(f):
 
     s = etree.tostring(root,
             xml_declaration=True,
-            encoding=ENC,
+            encoding='unicode',
             pretty_print=True
     )
     f.write(s.decode(ENC))
