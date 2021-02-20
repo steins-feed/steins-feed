@@ -171,9 +171,7 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
     q = q.where(sql.and_(*q_where))
 
     q = q.group_by(t_items_displayed.c.ItemID)
-    if magic:
-        q = q.order_by(sql.desc(t_magic.c.Score))
-    else:
+    if not magic:
         q = q.order_by(sql.desc(t_items_displayed.c.Published))
     return conn.execute(q).fetchall()
 

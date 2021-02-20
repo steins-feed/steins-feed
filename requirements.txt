@@ -3,7 +3,7 @@ pip
 bcrypt
 feedparser
 flask
-flask-security-too
+flask-security-too<4.0.0
 lxml
 pyOpenSSL
 pytest

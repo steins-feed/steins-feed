@@ -25,6 +25,10 @@ debug:
 prod:
 	python3 -m flask run
 
+.PHONY: magic
+magic:
+	python3 aux/do_magic.py
+
 .PHONY: test
 test:
 	make distclean
