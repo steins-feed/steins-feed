@@ -1,5 +1,40 @@
 <root>
   <feed>
+    <title>Business Insider Karriere</title>
+    <link>https://www.businessinsider.de/karriere/feed/</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Business Insider Leben</title>
+    <link>https://www.businessinsider.de/leben/feed/</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Business Insider Panorama</title>
+    <link>https://www.businessinsider.de/panorama/feed/</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Business Insider Politik</title>
+    <link>https://www.businessinsider.de/politik/feed/</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Business Insider Tech</title>
+    <link>https://www.businessinsider.de/tech/feed/</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Business Insider Wirtschaft</title>
+    <link>https://www.businessinsider.de/wirtschaft/feed/</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Business Insider Wissenschaft</title>
+    <link>https://www.businessinsider.de/wissenschaft/feed/</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
     <title>Capital.de</title>
     <link>https://www.capital.de/feed</link>
     <lang>German</lang>

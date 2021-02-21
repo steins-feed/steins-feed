@@ -108,14 +108,17 @@ def test_display():
     )
 
     user_id = session.query(User.UserID).filter(User.Name == "hansolo").scalar()
-    q = sql.select([
-            sql.literal_column(str(user_id), type_=Integer).label('UserID'),
-            feeds.c.FeedID
-    ])
-    ins = display.insert().from_select(['UserID', 'FeedID'], q)
-    conn.execute(ins.prefix_with("OR IGNORE"))
+    display_count = session.query(User.feeds).filter(User.UserID == user_id).count
 
-    assert(session.query(User.feeds).filter(User.UserID == user_id).count())
+    if not display_count():
+        q = sql.select([
+                sql.literal_column(str(user_id), type_=Integer).label('UserID'),
+                feeds.c.FeedID
+        ])
+        ins = display.insert().from_select(['UserID', 'FeedID'], q)
+        conn.execute(ins.prefix_with("OR IGNORE"))
+
+    assert(display_count())
 
 def test_tags():
     conn = get_connection()
