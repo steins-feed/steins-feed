@@ -11,6 +11,22 @@ from model.xml import read_xml, write_xml
 from view import app
 from view.auth import get_user_datastore
 
+def test_user_datastore():
+    conn = get_connection()
+    users = get_table('Users')
+
+    session = get_session()
+    user_datastore = get_user_datastore()
+    user = user_datastore.create_user(
+            name="hansolo",
+            password="obiwankenobi"
+    )
+    session.commit()
+
+    q = sql.select([func.count()]).select_from(users)
+    res = conn.execute(q).fetchone()
+    assert(res[0] > 0)
+
 def test_xml_read():
     conn = get_connection()
     feeds = get_table('Feeds')
@@ -38,22 +54,6 @@ def test_feeds():
 
 def test_last_updated():
     assert(isinstance(last_updated(), datetime))
-
-def test_user_datastore():
-    conn = get_connection()
-    users = get_table('Users')
-
-    session = get_session()
-    user_datastore = get_user_datastore()
-    user = user_datastore.create_user(
-            name="hansolo",
-            password="obiwankenobi"
-    )
-    session.commit()
-
-    q = sql.select([func.count()]).select_from(users)
-    res = conn.execute(q).fetchone()
-    assert(res[0] > 0)
 
 def test_display():
     conn = get_connection()

@@ -17,12 +17,6 @@
         <lang>English</lang>
     </feed>
     <feed>
-        <title>fast.ai</title>
-        <link>https://www.fast.ai/atom.xml</link>
-        <lang>English</lang>
-        <summary>0</summary>
-    </feed>
-    <feed>
         <title>GitHub</title>
         <link>https://github.blog/feed/</link>
         <lang>English</lang>

@@ -107,7 +107,7 @@ for user_it in users:
             #logger.info("Learn {} about {}.".format(lang_it.name, user))
             likes = liked_items(user_id, lang_it)
             dislikes = disliked_items(user_id, lang_it)
-            clf = train_classifier(user_id, likes, dislikes)
+            clf = train_classifier(user_id, lang_it, likes, dislikes)
             if not clf:
                 continue
             #reset_magic(user_id, lang_it)

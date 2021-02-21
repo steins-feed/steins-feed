@@ -2015,42 +2015,42 @@
     <!-- New Scientist -->
     <feed>
         <title>New Scientist Physics</title>
-        <link>https://feeds.newscientist.com/physics-math</link>
+        <link>https://www.newscientist.com/subject/physics/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>New Scientist Technology</title>
-        <link>https://feeds.newscientist.com/tech</link>
+        <link>https://www.newscientist.com/subject/technology/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>New Scientist Space</title>
-        <link>https://feeds.newscientist.com/space</link>
+        <link>https://www.newscientist.com/subject/space/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>New Scientist Life</title>
-        <link>https://feeds.newscientist.com/science-life</link>
+        <link>https://www.newscientist.com/subject/life/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>New Scientist Earth</title>
-        <link>https://feeds.newscientist.com/environment</link>
+        <link>https://www.newscientist.com/subject/earth/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>New Scientist Health</title>
-        <link>https://feeds.newscientist.com/health</link>
+        <link>https://www.newscientist.com/subject/health/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>New Scientist Humans</title>
-        <link>https://feeds.newscientist.com/humans</link>
+        <link>https://www.newscientist.com/subject/humans/feed/</link>
         <lang>English</lang>
     </feed>
     <feed>
         <title>New Scientist</title>
-        <link>https://feeds.newscientist.com/features</link>
+        <link>https://www.newscientist.com/section/features/feed/</link>
         <lang>English</lang>
     </feed>
 
