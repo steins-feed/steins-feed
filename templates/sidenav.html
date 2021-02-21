@@ -74,7 +74,10 @@ ALL LANGUAGES
 </p>
 </form>
 </section>
+# if feeds_all|count > 0 or tags_all|count > 0
 <hr>
+# endif
+# if feeds_all|count > 0
 <form action="{{ url_for('feed.feed') }}" method="get">
 <p>
 <fieldset>
@@ -88,6 +91,8 @@ ALL LANGUAGES
 </fieldset>
 </p>
 </form>
+# endif
+# if tags_all|count > 0
 <form action="{{ url_for('tag.tag') }}" method="get">
 <p>
 <fieldset>
@@ -101,4 +106,5 @@ ALL LANGUAGES
 </fieldset>
 </p>
 </form>
+# endif
 </aside>

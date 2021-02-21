@@ -54,8 +54,7 @@ def write_xml(f):
         root.append(feed_it)
 
     s = etree.tostring(root,
-            xml_declaration=True,
             encoding='unicode',
             pretty_print=True
     )
-    f.write(s.decode(ENC))
+    f.write(s)

@@ -48,7 +48,7 @@ def get_metadata():
 def get_model(name, mixins=[]):
     return type(
             name,
-            tuple([Base] + mixins),
+            tuple([get_base()] + mixins),
             {'__table__': get_table(name)}
     )
 
@@ -69,5 +69,9 @@ def get_table(name):
             autoload=True
     )
 
-Base = declarative_base(metadata=get_metadata())
-Base.query = get_session().query_property()
+def get_base():
+    global Base
+    if 'Base' not in globals():
+        Base = declarative_base(metadata=get_metadata())
+        Base.query = get_session().query_property()
+    return Base

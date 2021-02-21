@@ -41,4 +41,9 @@
         <link>https://sinews.siam.org/Current-Issue/rss/2226-1</link>
         <lang>English</lang>
     </feed>
+    <feed>
+        <title>Spektrum der Wissenschaft</title>
+        <link>https://www.spektrum.de/alias/rss/spektrum-de-rss-feed/996406</link>
+        <lang>German</lang>
+    </feed>
 </root>

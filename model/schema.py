@@ -43,8 +43,9 @@ def create_schema_users():
             sqla.Column("UserID", sqla.Integer, primary_key=True),
             sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
             sqla.Column("Password", TINYTEXT, nullable=False),
-            sqla.Column("Email", TINYTEXT),
-            sqla.Column("Active", sqla.Boolean)
+            sqla.Column("Email", TINYTEXT, nullable=False, unique=True),
+            sqla.Column("Active", sqla.Boolean, nullable=False),
+            sqla.Column("fs_uniquifier", TINYTEXT, nullable=False, unique=True)
     )
     users.create(get_engine(), checkfirst=True)
 

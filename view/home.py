@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from datetime import datetime, timedelta
-from flask import Blueprint, request, render_template
+from flask import Blueprint, request, render_template, redirect, url_for
 from flask_security import auth_required, current_user
 from lxml import etree, html
 import os
@@ -40,7 +40,9 @@ def home():
         raise ValueError
 
     page_dates = updated_dates(current_user.UserID, date_keys, last_hour, r_page + 2)
-    if len(page_dates) == r_page + 2:
+    if len(page_dates) == 0:
+        return redirect(url_for("overview.settings"))
+    elif len(page_dates) == r_page + 2:
         page_date = page_dates[-2]
     else:
         page_date = page_dates[-1]
