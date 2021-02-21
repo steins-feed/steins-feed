@@ -1,0 +1,72 @@
+<root>
+  <feed>
+    <title>Esquire</title>
+    <link>https://www.esquire.com/rss/all.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Esquire Entertainment</title>
+    <link>https://www.esquire.com/rss/entertainment.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Esquire Food &amp; Drink</title>
+    <link>https://www.esquire.com/rss/food-drink.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Esquire Lifestyle</title>
+    <link>https://www.esquire.com/rss/lifestyle.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Esquire News &amp; Politics</title>
+    <link>https://www.esquire.com/rss/news-politics.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Esquire Sports</title>
+    <link>https://www.esquire.com/rss/sports.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Esquire Style</title>
+    <link>https://www.esquire.com/rss/style.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>NYLON</title>
+    <link>https://nylon.com/feeds/feed.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>NYLON Beauty</title>
+    <link>https://nylon.com/feeds/beauty.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>NYLON Entertainment</title>
+    <link>https://nylon.com/feeds/entertainment.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>NYLON Fashion</title>
+    <link>https://nylon.com/feeds/fashion.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>NYLON Life</title>
+    <link>https://nylon.com/feeds/life.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vanity Fair</title>
+    <link>https://www.vanityfair.com/feed/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vogue</title>
+    <link>https://www.vogue.com/feed/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+</root>

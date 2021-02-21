@@ -1,14 +1,12 @@
-<?xml version="1.0"?>
-
 <root>
-    <feed>
-        <title>The Porter's Log</title>
-        <link>http://theporterslog.com/feed/</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>Varsity</title>
-        <link>http://feeds.varsity.co.uk/varsity/rss</link>
-        <lang>English</lang>
-    </feed>
+  <feed>
+    <title>The Porter's Log</title>
+    <link>http://theporterslog.com/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Varsity</title>
+    <link>http://feeds.varsity.co.uk/varsity/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
 </root>

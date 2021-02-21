@@ -1,0 +1,882 @@
+<root>
+  <feed>
+    <title>Aeon.co</title>
+    <link>https://aeon.co/feed.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Aeon.co Culture</title>
+    <link>https://aeon.co/culture.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Aeon.co Philosophy</title>
+    <link>https://aeon.co/philosophy.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Aeon.co Psychology</title>
+    <link>https://aeon.co/psychology.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Aeon.co Science</title>
+    <link>https://aeon.co/science.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Aeon.co Society</title>
+    <link>https://aeon.co/society.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Edge.org</title>
+    <link>https://www.edge.org/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>FiveThirtyEight</title>
+    <link>https://fivethirtyeight.com/features/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>FiveThirtyEight Culture</title>
+    <link>https://fivethirtyeight.com/life/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>FiveThirtyEight Economics</title>
+    <link>https://fivethirtyeight.com/economics/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>FiveThirtyEight Politics</title>
+    <link>https://fivethirtyeight.com/politics/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>FiveThirtyEight Science &amp; Health</title>
+    <link>https://fivethirtyeight.com/science/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>FiveThirtyEight Sports</title>
+    <link>https://fivethirtyeight.com/sports/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>FOCUS</title>
+    <link>http://rss.focus.de/fol/XML/rss_folnews.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>FOCUS Auto</title>
+    <link>https://rss.focus.de/auto/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>FOCUS Digital</title>
+    <link>https://rss.focus.de/digital/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>FOCUS Finanzen</title>
+    <link>https://rss.focus.de/finanzen/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>FOCUS Gesundheit</title>
+    <link>https://rss.focus.de/gesundheit/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>FOCUS Immobilien</title>
+    <link>https://rss.focus.de/immobilien/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>FOCUS Kultur</title>
+    <link>https://rss.focus.de/kultur/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>FOCUS Panorama</title>
+    <link>https://rss.focus.de/panorama/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>FOCUS Politik</title>
+    <link>https://rss.focus.de/politik/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>FOCUS Reisen</title>
+    <link>https://rss.focus.de/reisen/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>FOCUS Sport</title>
+    <link>https://rss.focus.de/sport/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>FOCUS Wissen</title>
+    <link>https://rss.focus.de/wissen/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Forbes Billionaires</title>
+    <link>https://www.forbes.com/worlds-billionaires/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Forbes Business</title>
+    <link>https://www.forbes.com/business/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Forbes Innovation</title>
+    <link>https://www.forbes.com/innovation/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Forbes Leadership</title>
+    <link>https://www.forbes.com/leadership/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Forbes Lifestyle</title>
+    <link>https://www.forbes.com/lifestyle/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Forbes Money</title>
+    <link>https://www.forbes.com/money/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Forbes Small Business</title>
+    <link>https://www.forbes.com/small-business/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune</title>
+    <link>http://fortune.com/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune -- FORTUNE Small Business</title>
+    <link>http://fortune.com/section/fortune-small-business/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune -- The Ledger</title>
+    <link>http://fortune.com/section/ledger/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Automotive</title>
+    <link>http://fortune.com/section/autos/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Careers</title>
+    <link>http://fortune.com/section/careers/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Commentary</title>
+    <link>http://fortune.com/section/commentary/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Design</title>
+    <link>http://fortune.com/section/design/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Energy</title>
+    <link>http://fortune.com/section/energy/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Entertainment</title>
+    <link>http://fortune.com/section/entertainment/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Finance</title>
+    <link>http://fortune.com/section/finance/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Health</title>
+    <link>http://fortune.com/section/health/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Humor</title>
+    <link>http://fortune.com/section/humor/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune International</title>
+    <link>http://fortune.com/section/international/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Leadership</title>
+    <link>http://fortune.com/section/leadership/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Lifestyle</title>
+    <link>http://fortune.com/section/lifestyle/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Luxury</title>
+    <link>http://fortune.com/section/luxury/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Most Powerful Women</title>
+    <link>http://fortune.com/section/mpw/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Politics</title>
+    <link>http://fortune.com/section/politics/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Real Estate</title>
+    <link>http://fortune.com/section/real-estate/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Retail</title>
+    <link>http://fortune.com/section/retail/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Sports</title>
+    <link>http://fortune.com/section/sports/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fortune Technology</title>
+    <link>http://fortune.com/section/tech/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Inc.com</title>
+    <link>https://www.inc.com/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Minutes</title>
+    <link>https://minutes.co/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Minutes Business</title>
+    <link>https://minutes.co/category/business/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Minutes Features</title>
+    <link>https://minutes.co/category/features/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Minutes Leadership</title>
+    <link>https://minutes.co/category/leadership/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Minutes Marketing</title>
+    <link>https://minutes.co/category/marketing/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Minutes People</title>
+    <link>https://minutes.co/category/people/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Minutes Startups</title>
+    <link>https://minutes.co/category/startups/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review</title>
+    <link>https://www.technologyreview.com/topnews.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Biomedicine</title>
+    <link>https://www.technologyreview.com/c/biomedicine/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Business</title>
+    <link>https://www.technologyreview.com/c/business/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Computing</title>
+    <link>https://www.technologyreview.com/c/computing/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Energy</title>
+    <link>https://www.technologyreview.com/c/energy/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Mobile</title>
+    <link>https://www.technologyreview.com/c/mobile/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Robotics</title>
+    <link>https://www.technologyreview.com/c/robotics/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quartz</title>
+    <link>https://cms.qz.com/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quartz Africa</title>
+    <link>https://cms.qz.com/feed/edition/africa/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quartz at Work</title>
+    <link>https://cms.qz.com/feed/edition/work/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quartz India</title>
+    <link>https://cms.qz.com/feed/edition/india/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quartz UK</title>
+    <link>https://cms.qz.com/feed/edition/uk/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quillette</title>
+    <link>https://quillette.com/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quillette Features</title>
+    <link>https://quillette.com/category/features/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quillette Narrated</title>
+    <link>https://quillette.com/category/narrated/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quillette Podcast</title>
+    <link>https://quillette.com/category/podcast/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quillette Politics</title>
+    <link>https://quillette.com/category/politics/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quillette Review</title>
+    <link>https://quillette.com/category/review/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Quillette Science &amp; Tech</title>
+    <link>https://quillette.com/category/science-tech/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Rolling Stone</title>
+    <link>https://www.rollingstone.com/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Rolling Stone Culture</title>
+    <link>https://www.rollingstone.com/culture/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Rolling Stone Movies</title>
+    <link>https://www.rollingstone.com/movies/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Rolling Stone Music</title>
+    <link>https://www.rollingstone.com/music/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Rolling Stone Politics</title>
+    <link>https://www.rollingstone.com/politics/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Rolling Stone TV</title>
+    <link>https://www.rollingstone.com/tv/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Salon.com</title>
+    <link>https://www.salon.com/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Salon.com Culture</title>
+    <link>https://www.salon.com/category/culture/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Salon.com Economy &amp; Innovation</title>
+    <link>https://www.salon.com/category/economy-and-innovation/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Salon.com Food</title>
+    <link>https://www.salon.com/category/food/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Salon.com Life Stories</title>
+    <link>https://www.salon.com/category/life-stories/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Salon.com News &amp; Politics</title>
+    <link>https://www.salon.com/category/news-and-politics/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Salon.com Science &amp; Health</title>
+    <link>https://www.salon.com/category/science-and-health/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Slate</title>
+    <link>https://slate.com/feeds/all.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Slate Business</title>
+    <link>https://slate.com/feeds/business.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Slate Culture</title>
+    <link>https://slate.com/feeds/culture.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Slate Human Interest</title>
+    <link>https://slate.com/feeds/human-interest.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Slate News &amp; Politics</title>
+    <link>https://slate.com/feeds/news-and-politics.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Slate Technology</title>
+    <link>https://slate.com/feeds/technology.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Spiegel</title>
+    <link>https://www.spiegel.de/schlagzeilen/tops/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Spiegel Geschichte</title>
+    <link>https://www.spiegel.de/einestages/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Spiegel Gesundheit</title>
+    <link>https://www.spiegel.de/gesundheit/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Spiegel Kultur</title>
+    <link>https://www.spiegel.de/kultur/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Spiegel Mobilität</title>
+    <link>https://www.spiegel.de/auto/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Spiegel Netzwelt</title>
+    <link>https://www.spiegel.de/netzwelt/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Spiegel Panorama</title>
+    <link>https://www.spiegel.de/panorama/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Spiegel Politik</title>
+    <link>https://www.spiegel.de/politik/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Spiegel Reise</title>
+    <link>https://www.spiegel.de/reise/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Spiegel Sport</title>
+    <link>https://www.spiegel.de/sport/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Spiegel Wirtschaft</title>
+    <link>https://www.spiegel.de/wirtschaft/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Spiegel Wissenschaft</title>
+    <link>https://www.spiegel.de/wissenschaft/index.rss</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern</title>
+    <link>https://www.stern.de/feed/standard/all/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Auto</title>
+    <link>https://www.stern.de/feed/standard/auto/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Digital</title>
+    <link>https://www.stern.de/feed/standard/digital/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Familie</title>
+    <link>https://www.stern.de/feed/standard/familie/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Genuss</title>
+    <link>https://www.stern.de/feed/standard/genuss/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Gesundheit</title>
+    <link>https://www.stern.de/feed/standard/gesundheit/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Kultur</title>
+    <link>https://www.stern.de/feed/standard/kultur/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Lifestyle</title>
+    <link>https://www.stern.de/feed/standard/lifestyle/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Panorama</title>
+    <link>https://www.stern.de/feed/standard/panorama/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Politik</title>
+    <link>https://www.stern.de/feed/standard/politik/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Reise</title>
+    <link>https://www.stern.de/feed/standard/reise/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Sport</title>
+    <link>https://www.stern.de/feed/standard/sport/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Wirtschaft</title>
+    <link>https://www.stern.de/feed/standard/wirtschaft/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Stern Wissen</title>
+    <link>https://www.stern.de/feed/standard/wissen/</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (UK)</title>
+    <link>https://theconversation.com/uk/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (UK) Arts + Culture</title>
+    <link>https://theconversation.com/uk/arts/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (UK) Business + Economy</title>
+    <link>https://theconversation.com/uk/business/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (UK) Cities</title>
+    <link>https://theconversation.com/uk/cities/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (UK) Education</title>
+    <link>https://theconversation.com/uk/education/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (UK) Environment + Energy</title>
+    <link>https://theconversation.com/uk/environment/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (UK) Health + Medicine</title>
+    <link>https://theconversation.com/uk/health/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (UK) Politics + Society</title>
+    <link>https://theconversation.com/uk/politics/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (UK) Science + Technology</title>
+    <link>https://theconversation.com/uk/technology/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (US)</title>
+    <link>https://theconversation.com/us/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (US) Arts + Culture</title>
+    <link>https://theconversation.com/us/arts/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (US) Economy + Business</title>
+    <link>https://theconversation.com/us/business/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (US) Education</title>
+    <link>https://theconversation.com/us/education/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (US) Environment + Energy</title>
+    <link>https://theconversation.com/us/environment/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (US) Ethics + Religion</title>
+    <link>https://theconversation.com/us/ethics/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (US) Health + Medicine</title>
+    <link>https://theconversation.com/us/health/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (US) Politics + Society</title>
+    <link>https://theconversation.com/us/politics/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Conversation (US) Science + Technology</title>
+    <link>https://theconversation.com/us/technology/articles.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist</title>
+    <link>https://www.economist.com/the-world-this-week/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Americas</title>
+    <link>https://www.economist.com/the-americas/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Asia</title>
+    <link>https://www.economist.com/asia/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Books &amp; Arts</title>
+    <link>https://www.economist.com/books-and-arts/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Briefings</title>
+    <link>https://www.economist.com/briefing/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Britain</title>
+    <link>https://www.economist.com/britain/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Business</title>
+    <link>https://www.economist.com/business/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist China</title>
+    <link>https://www.economist.com/china/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Europe</title>
+    <link>https://www.economist.com/europe/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Finance &amp; Economics</title>
+    <link>https://www.economist.com/finance-and-economics/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Graphic Detail</title>
+    <link>https://www.economist.com/graphic-detail/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Indicators</title>
+    <link>https://www.economist.com/economic-and-financial-indicators/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist International</title>
+    <link>https://www.economist.com/international/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Leaders</title>
+    <link>https://www.economist.com/leaders/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Letters</title>
+    <link>https://www.economist.com/letters/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Middle East &amp; Africa</title>
+    <link>https://www.economist.com/middle-east-and-africa/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Obituaries</title>
+    <link>https://www.economist.com/obituary/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Science &amp; Technology</title>
+    <link>https://www.economist.com/science-and-technology/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist Special Reports</title>
+    <link>https://www.economist.com/special-report/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Economist United States</title>
+    <link>https://www.economist.com/united-states/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Intercept</title>
+    <link>https://theintercept.com/feed/?lang=en</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED</title>
+    <link>https://www.wired.com/feed/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Backchannel</title>
+    <link>https://www.wired.com/feed/category/backchannel/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Business</title>
+    <link>https://www.wired.com/feed/category/business/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Culture</title>
+    <link>https://www.wired.com/feed/category/culture/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Gear</title>
+    <link>https://www.wired.com/feed/category/gear/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Guides</title>
+    <link>https://www.wired.com/feed/tag/wired-guide/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Ideas</title>
+    <link>https://www.wired.com/feed/category/ideas/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Photo</title>
+    <link>https://www.wired.com/feed/category/photo/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Science</title>
+    <link>https://www.wired.com/feed/category/science/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Security</title>
+    <link>https://www.wired.com/feed/category/security/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Transportation</title>
+    <link>https://www.wired.com/feed/category/transportation/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+</root>

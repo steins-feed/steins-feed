@@ -1,19 +1,1097 @@
-<?xml version="1.0"?>
-
 <root>
-    <feed>
-        <title>Engadget</title>
-        <link>https://www.engadget.com/rss.xml</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>Gizmodo</title>
-        <link>https://gizmodo.com/rss</link>
-        <lang>English</lang>
-    </feed>
-    <feed>
-        <title>Mashable</title>
-        <link>http://feeds.mashable.com/Mashable</link>
-        <lang>English</lang>
-    </feed>
+  <feed>
+    <title>Ars Technica</title>
+    <link>http://feeds.arstechnica.com/arstechnica/features</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- Ars Cardboard</title>
+    <link>http://feeds.arstechnica.com/arstechnica/cardboard</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- Cars Technica</title>
+    <link>http://feeds.arstechnica.com/arstechnica/cars</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- Gear &amp; Gadgets</title>
+    <link>http://feeds.arstechnica.com/arstechnica/gadgets</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- Infinite Loop</title>
+    <link>http://feeds.arstechnica.com/arstechnica/apple</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- Law &amp; Disorder</title>
+    <link>http://feeds.arstechnica.com/arstechnica/tech-policy</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- Ministry of Innovation</title>
+    <link>http://feeds.arstechnica.com/arstechnica/business</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- Opposable Thumbs</title>
+    <link>http://feeds.arstechnica.com/arstechnica/gaming</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- Risk Assessment</title>
+    <link>http://feeds.arstechnica.com/arstechnica/security</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- Staff Blogs</title>
+    <link>http://feeds.arstechnica.com/arstechnica/staff-blogs</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- Technology Lab</title>
+    <link>http://feeds.arstechnica.com/arstechnica/technology-lab</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- The Multiverse</title>
+    <link>http://feeds.arstechnica.com/arstechnica/multiverse</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Ars Technica -- The Scientific Method</title>
+    <link>http://feeds.arstechnica.com/arstechnica/science</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>CNET</title>
+    <link>http://feed.cnet.com/feed/all</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>CNET How To</title>
+    <link>http://feed.cnet.com/feed/how-to</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>CNET News</title>
+    <link>http://feed.cnet.com/feed/news</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>CNET Reviews</title>
+    <link>http://feed.cnet.com/feed/reviews</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>CNET Roadshow</title>
+    <link>http://feed.cnet.com/feed/roadshow/all</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>CNET Smart Home</title>
+    <link>http://feed.cnet.com/feed/smart-home</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Digital Trends</title>
+    <link>https://www.digitaltrends.com/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Digital Trends Cars</title>
+    <link>https://www.digitaltrends.com/cars/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Digital Trends Computing</title>
+    <link>https://www.digitaltrends.com/computing/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Digital Trends Cool Tech</title>
+    <link>https://www.digitaltrends.com/cool-tech/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Digital Trends Gaming</title>
+    <link>https://www.digitaltrends.com/gaming/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Digital Trends Home</title>
+    <link>https://www.digitaltrends.com/home/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Digital Trends Home Theater</title>
+    <link>https://www.digitaltrends.com/home-theater/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Digital Trends Mobile</title>
+    <link>https://www.digitaltrends.com/mobile/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Digital Trends Photography</title>
+    <link>https://www.digitaltrends.com/photography/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Digital Trends Social Media</title>
+    <link>https://www.digitaltrends.com/social-media/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Digital Trends Sports</title>
+    <link>https://www.digitaltrends.com/sports/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Engadget</title>
+    <link>https://www.engadget.com/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fast Company</title>
+    <link>https://www.fastcompany.com/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fast Company Co.Design</title>
+    <link>https://www.fastcompany.com/co-design/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fast Company Creativity</title>
+    <link>https://www.fastcompany.com/entertainment/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fast Company Impact</title>
+    <link>https://www.fastcompany.com/ideas/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fast Company News</title>
+    <link>https://www.fastcompany.com/news/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fast Company Podcasts</title>
+    <link>https://www.fastcompany.com/section/audio/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fast Company Recommender</title>
+    <link>https://www.fastcompany.com/recommender/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fast Company Tech</title>
+    <link>https://www.fastcompany.com/technology/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fast Company Video</title>
+    <link>https://www.fastcompany.com/section/video/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Fast Company Work Life</title>
+    <link>https://www.fastcompany.com/leadership/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Gizmodo</title>
+    <link>https://gizmodo.com/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Heise</title>
+    <link>https://www.heise.de/rss/heise-top-atom.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise Autos</title>
+    <link>https://www.heise.de/autos/rss/news-atom.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise c't</title>
+    <link>https://www.heise.de/ct/rss/artikel-atom.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise Developer</title>
+    <link>https://www.heise.de/developer/rss/news-atom.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise Fotografie</title>
+    <link>https://www.heise.de/foto/rss/news-atom.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise iX</title>
+    <link>https://www.heise.de/ix/rss/news-atom.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise Jobs</title>
+    <link>https://jobs.heise.de/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise Mac &amp; i</title>
+    <link>https://www.heise.de/mac-and-i/news-atom.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise Make</title>
+    <link>https://www.heise.de/make/rss/hardware-hacks-atom.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise Security</title>
+    <link>https://www.heise.de/security/rss/news-atom.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise Technology Review</title>
+    <link>https://www.heise.de/tr/rss/news-atom.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise TechStage</title>
+    <link>https://www.techstage.de/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Heise Telepolis</title>
+    <link>https://www.heise.de/tp/news-atom.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Martin Fowler</title>
+    <link>https://martinfowler.com/feed.atom</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Mashable</title>
+    <link>http://feeds.mashable.com/Mashable</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review</title>
+    <link>https://www.technologyreview.com/topnews.rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Biomedicine</title>
+    <link>https://www.technologyreview.com/c/biomedicine/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Business</title>
+    <link>https://www.technologyreview.com/c/business/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Computing</title>
+    <link>https://www.technologyreview.com/c/computing/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Energy</title>
+    <link>https://www.technologyreview.com/c/energy/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Mobile</title>
+    <link>https://www.technologyreview.com/c/mobile/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>MIT Technology Review Robotics</title>
+    <link>https://www.technologyreview.com/c/robotics/rss/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Netzpolitik.org</title>
+    <link>https://netzpolitik.org/feed</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Netzpolitik.org Datenschutz</title>
+    <link>https://netzpolitik.org/category/datenschutz/feed</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Netzpolitik.org Demokratie</title>
+    <link>https://netzpolitik.org/category/demokratie/feed</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Netzpolitik.org Kultur</title>
+    <link>https://netzpolitik.org/category/kultur/feed</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Netzpolitik.org Netze</title>
+    <link>https://netzpolitik.org/category/netze/feed</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Netzpolitik.org Nutzerrechte</title>
+    <link>https://netzpolitik.org/category/nutzerrechte/feed</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Netzpolitik.org Technologie</title>
+    <link>https://netzpolitik.org/category/technologie/feed</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Netzpolitik.org Wissen</title>
+    <link>https://netzpolitik.org/category/wissen/feed</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Netzpolitik.org Öffentlichkeit</title>
+    <link>https://netzpolitik.org/category/oeffentlichkeit/feed</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>Netzpolitik.org Überwachung</title>
+    <link>https://netzpolitik.org/category/ueberwachung/feed</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>ReadWrite</title>
+    <link>https://readwrite.com/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ReadWrite AI</title>
+    <link>https://readwrite.com/category/ai/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ReadWrite Blockchain</title>
+    <link>https://readwrite.com/category/blockchain/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ReadWrite Connected Devices</title>
+    <link>https://readwrite.com/category/connected-devices/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ReadWrite Fintech</title>
+    <link>https://readwrite.com/category/fintech/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ReadWrite Industrial</title>
+    <link>https://readwrite.com/category/industrial/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ReadWrite Smart Cities</title>
+    <link>https://readwrite.com/category/smart-cities/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ReadWrite Startups</title>
+    <link>https://readwrite.com/category/startups/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ReadWrite Transport</title>
+    <link>https://readwrite.com/category/transport/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Schneier on Security</title>
+    <link>https://www.schneier.com/blog/atom.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>t3n</title>
+    <link>https://t3n.de/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>t3n Digitale Gesellschaft</title>
+    <link>https://t3n.de/tag/digitale-gesellschaft/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>t3n Digitale Wirtschaft</title>
+    <link>https://t3n.de/tag/digitale-wirtschaft/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>t3n E-Commerce</title>
+    <link>https://t3n.de/tag/e-commerce/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>t3n Entwicklung &amp; Design</title>
+    <link>https://t3n.de/tag/entwicklung-design/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>t3n Gadgets &amp; Lifestyle</title>
+    <link>https://t3n.de/tag/gadgets-lifestyle/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>t3n Karriere</title>
+    <link>https://t3n.de/tag/karriere/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>t3n Marketing</title>
+    <link>https://t3n.de/tag/marketing/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>t3n Mobilität</title>
+    <link>https://t3n.de/tag/mobilitaet/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>t3n Software &amp; Infrastruktur</title>
+    <link>https://t3n.de/tag/software-infrastruktur/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>t3n Startups</title>
+    <link>https://t3n.de/tag/startups/rss.xml</link>
+    <lang>GERMAN</lang>
+  </feed>
+  <feed>
+    <title>TechCrunch</title>
+    <link>http://feeds.feedburner.com/TechCrunch/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechCrunch Enterprise</title>
+    <link>http://feeds.feedburner.com/TechCrunchIT</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechCrunch Europe</title>
+    <link>http://feeds.feedburner.com/TechCrunch/europe</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechCrunch Fundings and Exits</title>
+    <link>http://feeds.feedburner.com/TechCrunch/fundings-exits</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechCrunch Gadgets</title>
+    <link>http://feeds.feedburner.com/crunchgear</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechCrunch GreenTech</title>
+    <link>http://feeds.feedburner.com/TechCrunch/greentech</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechCrunch Mobile</title>
+    <link>http://feeds.feedburner.com/Mobilecrunch</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechCrunch Social</title>
+    <link>http://feeds.feedburner.com/TechCrunch/social</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechCrunch Startups</title>
+    <link>http://feeds.feedburner.com/TechCrunch/startups</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar</title>
+    <link>https://www.techradar.com/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Audio</title>
+    <link>https://www.techradar.com/rss/news/audio</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Computing</title>
+    <link>https://www.techradar.com/rss/news/computing</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Computing Components</title>
+    <link>https://www.techradar.com/rss/news/computing-components</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Digital Home</title>
+    <link>https://www.techradar.com/rss/news/digital-home</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Gaming</title>
+    <link>https://www.techradar.com/rss/news/gaming</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Home Cinema</title>
+    <link>https://www.techradar.com/rss/news/home-cinema</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Internet</title>
+    <link>https://www.techradar.com/rss/news/internet</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Mobile Computing</title>
+    <link>https://www.techradar.com/rss/news/mobile-computing</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Networking</title>
+    <link>https://www.techradar.com/rss/news/networking</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Phone &amp; Communications</title>
+    <link>https://www.techradar.com/rss/news/phone-and-communications</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Photography &amp; Video Capture</title>
+    <link>https://www.techradar.com/rss/news/photography-video-capture</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Portable Devices</title>
+    <link>https://www.techradar.com/rss/news/portable-devices</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Reviews</title>
+    <link>https://www.techradar.com/rss/reviews</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Reviews -- Audio Visual</title>
+    <link>https://www.techradar.com/rss/reviews/audio-visual</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Reviews -- Cameras &amp; Camcorders</title>
+    <link>https://www.techradar.com/rss/reviews/cameras-and-camcorders</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Reviews -- Gadgets</title>
+    <link>https://www.techradar.com/rss/reviews/gadgets</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Reviews -- Gaming</title>
+    <link>https://www.techradar.com/rss/reviews/gaming</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Reviews -- PC &amp; Mac</title>
+    <link>https://www.techradar.com/rss/reviews/pc-mac</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Reviews -- Phones</title>
+    <link>https://www.techradar.com/deals/iphone-8-deals</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Software</title>
+    <link>https://www.techradar.com/rss/news/software</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Television</title>
+    <link>https://www.techradar.com/rss/news/television</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar Video</title>
+    <link>https://www.techradar.com/rss/news/video</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TechRadar World of Tech</title>
+    <link>https://www.techradar.com/rss/news/world-of-tech</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Verge</title>
+    <link>https://www.theverge.com/rss/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Verge Creators</title>
+    <link>https://www.theverge.com/rss/creators/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Verge Entertainment</title>
+    <link>https://www.theverge.com/rss/entertainment/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Verge Features</title>
+    <link>https://www.theverge.com/rss/features/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Verge Reviews</title>
+    <link>https://www.theverge.com/rss/reviews/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Verge Science</title>
+    <link>https://www.theverge.com/rss/science/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Verge Tech</title>
+    <link>https://www.theverge.com/rss/tech/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TNW</title>
+    <link>https://thenextweb.com/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TNW Fundamentals</title>
+    <link>https://thenextweb.com/adobe-fundamentals/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TNW Hard Fork</title>
+    <link>https://thenextweb.com/hardfork/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TNW Plugged</title>
+    <link>https://thenextweb.com/plugged/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>TNW Work 2030</title>
+    <link>https://thenextweb.com/work2030/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat</title>
+    <link>https://feeds.feedburner.com/venturebeat/SZYF</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat AI</title>
+    <link>https://venturebeat.com/category/ai/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat AR &amp; VR</title>
+    <link>https://venturebeat.com/category/arvr/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Big Data</title>
+    <link>https://venturebeat.com/category/big-data/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Business</title>
+    <link>https://venturebeat.com/category/business/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Cloud</title>
+    <link>https://venturebeat.com/category/cloud/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Commerce</title>
+    <link>https://venturebeat.com/category/commerce/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Dev</title>
+    <link>https://venturebeat.com/category/dev/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat E-Sports</title>
+    <link>https://venturebeat.com/category/esports/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Enterprise</title>
+    <link>https://venturebeat.com/category/enterprise/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Entrepreneur</title>
+    <link>https://venturebeat.com/category/entrepreneur/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat GamesBeat</title>
+    <link>https://venturebeat.com/category/games/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Marketing</title>
+    <link>https://venturebeat.com/category/marketing/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Media</title>
+    <link>https://venturebeat.com/category/media/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Mobile</title>
+    <link>https://venturebeat.com/category/mobile/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat PC Gaming</title>
+    <link>https://venturebeat.com/category/pc-gaming/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Security</title>
+    <link>https://venturebeat.com/category/security/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Social</title>
+    <link>https://venturebeat.com/category/social/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>VentureBeat Transportation</title>
+    <link>https://venturebeat.com/category/transportation/feed/</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox</title>
+    <link>https://www.vox.com/rss/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox -- The Goods</title>
+    <link>https://www.vox.com/rss/the-goods/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox -- The Highlight</title>
+    <link>https://www.vox.com/rss/the-highlight/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Business &amp; Finance</title>
+    <link>https://www.vox.com/rss/business-and-finance/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Culture</title>
+    <link>https://www.vox.com/rss/culture/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Energy &amp; Environment</title>
+    <link>https://www.vox.com/rss/energy-and-environment/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Explainers</title>
+    <link>https://www.vox.com/rss/explainers/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox First Person</title>
+    <link>https://www.vox.com/rss/first-person/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Future Perfect</title>
+    <link>https://www.vox.com/rss/future-perfect/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Identities</title>
+    <link>https://www.vox.com/rss/identities/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Open Sourced</title>
+    <link>https://www.vox.com/rss/open-sourced/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Podcasts</title>
+    <link>https://www.vox.com/rss/podcasts/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Policy &amp; Politics</title>
+    <link>https://www.vox.com/rss/policy-and-politics/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Recode</title>
+    <link>https://www.vox.com/rss/recode/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Science &amp; Health</title>
+    <link>https://www.vox.com/rss/science-and-health/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Technology</title>
+    <link>https://www.vox.com/rss/technology/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox Video</title>
+    <link>https://www.vox.com/rss/videos/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Vox World</title>
+    <link>https://www.vox.com/rss/world/index.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED</title>
+    <link>https://www.wired.com/feed/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Backchannel</title>
+    <link>https://www.wired.com/feed/category/backchannel/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Business</title>
+    <link>https://www.wired.com/feed/category/business/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Culture</title>
+    <link>https://www.wired.com/feed/category/culture/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Gear</title>
+    <link>https://www.wired.com/feed/category/gear/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Guides</title>
+    <link>https://www.wired.com/feed/tag/wired-guide/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Ideas</title>
+    <link>https://www.wired.com/feed/category/ideas/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Photo</title>
+    <link>https://www.wired.com/feed/category/photo/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Science</title>
+    <link>https://www.wired.com/feed/category/science/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Security</title>
+    <link>https://www.wired.com/feed/category/security/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>WIRED Transportation</title>
+    <link>https://www.wired.com/feed/category/transportation/latest/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet</title>
+    <link>https://www.zdnet.com/news/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Apple</title>
+    <link>https://www.zdnet.com/topic/apple/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Blogs -- Business Bargain Hunter</title>
+    <link>https://www.zdnet.com/blog/business-bargain-hunter/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Blogs -- Education</title>
+    <link>https://www.zdnet.com/blog/education/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Blogs -- Government</title>
+    <link>https://www.zdnet.com/blog/government/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Blogs -- Healthcare</title>
+    <link>https://www.zdnet.com/blog/healthcare/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Blogs -- Laptops &amp; Desktops</title>
+    <link>https://www.zdnet.com/blog/computers/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Blogs -- Smartphones &amp; Cell Phones</title>
+    <link>https://www.zdnet.com/blog/cell-phones/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Blogs -- The Mobile Gadgeteer</title>
+    <link>https://www.zdnet.com/blog/mobile-gadgeteer/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Collaboration</title>
+    <link>https://www.zdnet.com/topic/collaboration/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Enterprise Software</title>
+    <link>https://www.zdnet.com/topic/enterprise-software/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Google</title>
+    <link>https://www.zdnet.com/topic/google/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Great Debate</title>
+    <link>https://www.zdnet.com/topic/great-debate/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Hardware</title>
+    <link>https://www.zdnet.com/topic/hardware/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet IBM</title>
+    <link>https://www.zdnet.com/topic/ibm/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet iOS</title>
+    <link>https://www.zdnet.com/topic/ios/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet iPad</title>
+    <link>https://www.zdnet.com/topic/ipad/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet iPhone</title>
+    <link>https://www.zdnet.com/topic/iphone/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet IT Priorities</title>
+    <link>https://www.zdnet.com/topic/it-priorities/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Laptops</title>
+    <link>https://www.zdnet.com/topic/laptops/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Legal</title>
+    <link>https://www.zdnet.com/topic/legal/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Linux</title>
+    <link>https://www.zdnet.com/topic/linux/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Microsoft</title>
+    <link>https://www.zdnet.com/topic/microsoft/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Mobile OS</title>
+    <link>https://www.zdnet.com/topic/mobile-os/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Mobility</title>
+    <link>https://www.zdnet.com/topic/mobility/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Networking</title>
+    <link>https://www.zdnet.com/topic/networking/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Oracle</title>
+    <link>https://www.zdnet.com/topic/oracle/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Processors</title>
+    <link>https://www.zdnet.com/topic/processors/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Samsung</title>
+    <link>https://www.zdnet.com/topic/samsung/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Security</title>
+    <link>https://www.zdnet.com/topic/security/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>ZDNet Small Business</title>
+    <link>https://www.zdnet.com/topic/small-business-going-big-on-mobility/rss.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
 </root>

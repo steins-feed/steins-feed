@@ -1,0 +1,147 @@
+<root>
+  <feed>
+    <title>Nate Silver</title>
+    <link>https://fivethirtyeight.com/contributors/nate-silver/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Politico</title>
+    <link>https://www.politico.com/rss/politicopicks.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Politico Congress</title>
+    <link>http://www.politico.com/rss/congress.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Politico Defense</title>
+    <link>http://www.politico.com/rss/defense.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Politico Economy</title>
+    <link>http://www.politico.com/rss/economy.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Politico Energy &amp; Environment</title>
+    <link>http://www.politico.com/rss/energy.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Politico Health Care</title>
+    <link>http://www.politico.com/rss/healthcare.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Politico Politics</title>
+    <link>http://www.politico.com/rss/politics08.xml</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>Robert Reich</title>
+    <link>https://robertreich.org/rss</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill</title>
+    <link>http://thehill.com/taxonomy/term/19110/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill -- Sunday Talk Shows</title>
+    <link>http://thehill.com/taxonomy/term/1778/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Administration</title>
+    <link>http://thehill.com/taxonomy/term/1132/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill House</title>
+    <link>http://thehill.com/taxonomy/term/1131/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Policy -- Defense</title>
+    <link>http://thehill.com/taxonomy/term/39/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Policy -- Energy &amp; Environment</title>
+    <link>http://thehill.com/taxonomy/term/28/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Policy -- Finance</title>
+    <link>http://thehill.com/taxonomy/term/30/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Policy -- Healthcare</title>
+    <link>http://thehill.com/taxonomy/term/33/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Policy -- International</title>
+    <link>http://thehill.com/taxonomy/term/43/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Policy -- Technology</title>
+    <link>http://thehill.com/taxonomy/term/27/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Policy -- Transportation</title>
+    <link>http://thehill.com/taxonomy/term/38/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Polls</title>
+    <link>http://thehill.com/taxonomy/term/1630/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Regulation -- Defense</title>
+    <link>http://thehill.com/taxonomy/term/25206/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Regulation -- Energy &amp; Environment</title>
+    <link>http://thehill.com/taxonomy/term/2003/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Regulation -- Finance</title>
+    <link>http://thehill.com/taxonomy/term/2005/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Regulation -- Healthcare</title>
+    <link>http://thehill.com/taxonomy/term/2002/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Regulation -- International</title>
+    <link>http://thehill.com/taxonomy/term/25208/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Regulation -- Technology</title>
+    <link>http://thehill.com/taxonomy/term/2004/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Regulation -- Transportation</title>
+    <link>http://thehill.com/taxonomy/term/25207/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+  <feed>
+    <title>The Hill Senate</title>
+    <link>http://thehill.com/taxonomy/term/1130/feed</link>
+    <lang>ENGLISH</lang>
+  </feed>
+</root>
