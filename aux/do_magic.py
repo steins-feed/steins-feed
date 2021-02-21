@@ -26,6 +26,7 @@ mkdir_p(dir_path)
 from magic import train_classifier
 from model import get_connection, get_table
 from model.utils.all import liked_languages, liked_items, disliked_items
+from model.utils.custom import reset_magic
 from model.utils.recent import last_updated, last_liked
 
 def do_words(pipeline):
@@ -110,7 +111,7 @@ for user_it in users:
             clf = train_classifier(user_id, lang_it, likes, dislikes)
             if not clf:
                 continue
-            #reset_magic(user_id, lang_it)
+            reset_magic(user_id, lang_it)
             with open(file_path, 'wb') as f:
                 pickle.dump(clf, f)
 
