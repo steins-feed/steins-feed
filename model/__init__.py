@@ -46,11 +46,16 @@ def get_metadata():
     return metadata
 
 def get_model(name, mixins=[]):
-    return type(
+    try:
+        Model = globals()[name]
+    except KeyError:
+        Model = type(
             name,
             tuple([get_base()] + mixins),
             {'__table__': get_table(name)}
-    )
+        )
+        globals()[name] = Model
+    return Model
 
 def get_session():
     global session

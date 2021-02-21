@@ -9,22 +9,15 @@ import pickle
 import sqlalchemy as sqla
 import sys
 
-def mkdir_p(path):
-    try:
-        os.mkdir(path)
-    except FileExistsError:
-        pass
-
 par_path = os.path.normpath(os.path.join(
     os.path.dirname(__file__),
     os.pardir
 ))
 sys.path.append(par_path)
 dir_path = os.path.join(par_path, "clf.d")
-mkdir_p(dir_path)
 
 from magic import train_classifier
-from model import get_connection, get_table
+from model import get_session, get_model
 from model.utils.all import liked_languages, liked_items, disliked_items
 from model.utils.recent import last_updated, last_liked
 
@@ -84,16 +77,13 @@ def do_feeds(pipeline, user_id, lang, timestamp, delta_timestamp=timedelta(days=
 
     return table
 
-conn = get_connection()
-t_users = get_table('Users')
+session = get_session()
+User = get_model('Users')
 
-users = conn.execute(sqla.select([t_users])).fetchall()
-for user_it in users:
-    user = user_it['Name']
-    user_id = user_it['UserID']
-
+for user_it in session.query(User):
+    user = user_it.Name
+    user_id = user_it.UserID
     user_path = os.path.join(dir_path, str(user_id))
-    mkdir_p(user_path)
 
     timestamp = last_updated()
     timestamp_like = last_liked(user_id)

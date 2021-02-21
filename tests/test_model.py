@@ -5,7 +5,8 @@ import glob
 import os
 from sqlalchemy import func, sql, Integer
 
-from model import get_connection, get_session, get_table
+from model import get_connection, get_table
+from model import get_session, get_model
 from model.feeds import read_feeds
 from model.utils.recent import last_updated
 from model.xml import read_xml, write_xml
@@ -13,10 +14,9 @@ from view import app
 from view.auth import get_user_datastore
 
 def test_user_datastore():
-    conn = get_connection()
-    users = get_table('Users')
-
     session = get_session()
+    User = get_model('Users')
+
     user_datastore = get_user_datastore()
     user = user_datastore.create_user(
             name="hansolo",
@@ -24,49 +24,28 @@ def test_user_datastore():
     )
     session.commit()
 
-    q = sql.select([func.count()]).select_from(users)
-    res = conn.execute(q).fetchone()
-    assert(res[0] > 0)
+    new_user = session.query(User).filter(User.Name == user.Name).one()
+    assert(new_user is user)
 
 def test_xml_read():
-    conn = get_connection()
-    users = get_table('Users')
-    feeds = get_table('Feeds')
+    session = get_session()
+    User = get_model('Users')
+    Feed = get_model('Feeds')
 
-    q = sql.select([
-        users.c.UserID
-    ]).where(
-        users.c.Name == "hansolo"
-    )
-    user_id = conn.execute(q).fetchone()['UserID']
-
+    user_id = session.query(User).filter(User.Name == "hansolo").one().UserID
     for file_it in glob.glob(os.path.join("feeds.d", "*.xml")):
         with open(file_it, 'r') as f:
             read_xml(f, user_id, file_it[len("feeds.d") + 1:-len(".xml")])
 
-    q = sql.select([func.count()]).select_from(feeds)
-    res = conn.execute(q).fetchone()
-    assert(res[0] > 0)
+    assert(session.query(Feed).count() > 0)
 
 def test_xml_write():
-    conn = get_connection()
-    users = get_table('Users')
-    tags = get_table('Tags')
+    session = get_session()
+    User = get_model('Users')
+    Tag = get_model('Tags')
 
-    q = sql.select([
-        users.c.UserID
-    ]).where(
-        users.c.Name == "hansolo"
-    )
-    user_id = conn.execute(q).fetchone()['UserID']
-
-    q = sql.select([
-        tags.c.Name
-    ]).where(
-        tags.c.UserID == user_id
-    )
-    tags_name = [e['Name'] for e in conn.execute(q)]
-
+    user_id = session.query(User).filter(User.Name == "hansolo").one().UserID
+    tags_name = [e.Name for e in session.query(Tag).filter(Tag.UserID == user_id)]
     for tag_name in tags_name:
         with open(os.path.join("feeds.d", tag_name + ".xml"), 'w') as f:
             write_xml(f, user_id, tag_name)
