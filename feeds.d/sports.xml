@@ -2,21 +2,21 @@
   <feed>
     <title>Barstool Sports NBA</title>
     <link>https://cms.barstoolsports.com/topics/nba/feed/</link>
-    <lang>ENGLISH</lang>
+    <lang>English</lang>
   </feed>
   <feed>
     <title>FiveThirtyEight NBA</title>
     <link>https://fivethirtyeight.com/tag/nba/feed/</link>
-    <lang>ENGLISH</lang>
+    <lang>English</lang>
   </feed>
   <feed>
     <title>Nate Silver</title>
     <link>https://fivethirtyeight.com/contributors/nate-silver/feed</link>
-    <lang>ENGLISH</lang>
+    <lang>English</lang>
   </feed>
   <feed>
     <title>The Ringer NBA</title>
     <link>https://www.theringer.com/rss/nba/index.xml</link>
-    <lang>ENGLISH</lang>
+    <lang>English</lang>
   </feed>
 </root>

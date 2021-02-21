@@ -2,6 +2,7 @@
 
 from datetime import datetime
 import glob
+import os
 from sqlalchemy import func, sql, Integer
 
 from model import get_connection, get_session, get_table
@@ -29,19 +30,46 @@ def test_user_datastore():
 
 def test_xml_read():
     conn = get_connection()
+    users = get_table('Users')
     feeds = get_table('Feeds')
 
-    for file_it in glob.glob("feeds.d/*.xml"):
+    q = sql.select([
+        users.c.UserID
+    ]).where(
+        users.c.Name == "hansolo"
+    )
+    user_id = conn.execute(q).fetchone()['UserID']
+
+    for file_it in glob.glob(os.path.join("feeds.d", "*.xml")):
         with open(file_it, 'r') as f:
-            read_xml(f)
+            read_xml(f, user_id, file_it[len("feeds.d") + 1:-len(".xml")])
 
     q = sql.select([func.count()]).select_from(feeds)
     res = conn.execute(q).fetchone()
     assert(res[0] > 0)
 
 def test_xml_write():
-    with open("tests/feeds.xml", 'w') as f:
-        write_xml(f)
+    conn = get_connection()
+    users = get_table('Users')
+    tags = get_table('Tags')
+
+    q = sql.select([
+        users.c.UserID
+    ]).where(
+        users.c.Name == "hansolo"
+    )
+    user_id = conn.execute(q).fetchone()['UserID']
+
+    q = sql.select([
+        tags.c.Name
+    ]).where(
+        tags.c.UserID == user_id
+    )
+    tags_name = [e['Name'] for e in conn.execute(q)]
+
+    for tag_name in tags_name:
+        with open(os.path.join("feeds.d", tag_name + ".xml"), 'w') as f:
+            write_xml(f, user_id, tag_name)
 
 def test_feeds():
     conn = get_connection()

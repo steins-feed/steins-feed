@@ -38,23 +38,17 @@ def read_xml(f, user_id=None, tag=None):
         q = q.prefix_with("OR IGNORE", dialect='sqlite')
         conn.execute(q)
 
-        q_feed = sql.select([
-            feeds.c.FeedID
-        ]).where(
-            feeds.c.Title == sql.bindparam('Title')
-        ).cte()
-
-        q_tag = sql.select([
+        q_select = sql.select([
+            feeds.c.FeedID,
             tags.c.TagID
-        ]).where(
+        ]).where(sql.and_(
+            feeds.c.Title == sql.bindparam('Title'),
             tags.c.UserID == user_id,
             tags.c.Name == tag
-        ).cte()
+        ))
 
-        q = tags2feeds.insert().values(
-            FeedID = q_feed.c.FeedID,
-            TagID = q_tag.c.TagID
-        )
+        q = tags2feeds.insert()
+        q = q.from_select([q_select.c.FeedID, q_select.c.TagID], q_select)
         q = q.prefix_with("OR IGNORE", dialect='sqlite')
         conn.execute(q, rows)
 
@@ -72,7 +66,7 @@ def write_xml(f, user_id=None, tag=None):
         )
         q = q.where(sql.and_(
             tags.c.UserID == user_id,
-            tags.c.Name = tag
+            tags.c.Name == tag
         ))
     q = q.order_by(sql.collate(feeds.c.Title, 'NOCASE'))
 
@@ -83,7 +77,7 @@ def write_xml(f, user_id=None, tag=None):
         link_it = etree.Element("link")
         link_it.text = row_it['Link']
         lang_it = etree.Element("lang")
-        lang_it.text = row_it['Language']
+        lang_it.text = Language[row_it['Language']].value
 
         feed_it = etree.Element("feed")
         feed_it.append(title_it)
