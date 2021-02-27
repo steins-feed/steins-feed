@@ -59,16 +59,19 @@ def displayed_tags(user_id):
     tags2feeds = get_table('Tags2Feeds')
 
     q = sql.select([
-            tags.c.Name
-    ]).distinct().select_from(
-            feeds.join(display)
-                 .join(tags2feeds)
-                 .join(tags)
+        tags.c.Name,
+    ]).select_from(
+        feeds.join(display)
+             .join(tags2feeds)
+             .join(tags, sql.and_(
+                 tags.c.TagID == tags2feeds.c.TagID,
+                 tags.c.UserID == display.c.UserID,
+             ))
     ).where(
-            display.c.UserID == user_id
+        display.c.UserID == user_id,
     ).order_by(
-            tags.c.Name
-    )
+        tags.c.Name,
+    ).distinct()
 
     res = conn.execute(q)
     res = [e['Name'] for e in res]
@@ -115,16 +118,17 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False, u
     t_magic = get_table('Magic')
 
     q = sql.select([
-            t_items,
-            t_feeds.c.Title.label("Feed"),
-            t_feeds.c.Language,
-            t_display.c.UserID
+        t_items,
+        t_feeds.c.Title.label("Feed"),
+        t_feeds.c.Language,
+        t_display.c.UserID,
     ]).select_from(t_items.join(t_feeds)
                           .join(t_display))
 
     q_where = [
-            t_items.c.Published >= start,
-            t_items.c.Published < finish
+        t_display.c.UserID == user_id,
+        t_items.c.Published >= start,
+        t_items.c.Published < finish,
     ]
     if last:
         q_where.append(t_items.c.Published < last)
@@ -134,35 +138,37 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False, u
     q = q.where(sql.and_(*q_where))
 
     q = q.group_by(
-            t_items.c.Title,
-            t_items.c.Published
+        t_items.c.Title,
+        t_items.c.Published,
     )
-    q = q.having(
-            t_feeds.c.Title == func.min(t_feeds.c.Title),
-    )
+    q = q.having(t_feeds.c.Title == func.min(t_feeds.c.Title))
     t_items_displayed = q.cte()
 
     q_select = [
-            t_items_displayed,
-            func.coalesce(func.group_concat(t_tags.c.TagID), "").label("TagIDs"),
-            func.coalesce(func.group_concat(t_tags.c.Name), "").label("TagNames"),
-            func.coalesce(t_like.c.Score, 0).label("Like")
+        t_items_displayed,
+        func.coalesce(func.group_concat(t_tags.c.TagID), "").label("TagIDs"),
+        func.coalesce(func.group_concat(t_tags.c.Name), "").label("TagNames"),
+        func.coalesce(t_like.c.Score, 0).label("Like"),
     ]
     if magic:
         q_select.append(t_magic.c.Score)
     q = sql.select(q_select)
 
-    q_from = (t_items_displayed.outerjoin(
-            t_tags2feeds.join(t_tags), sql.and_(
+    q_from = t_items_displayed.outerjoin(
+        t_tags2feeds.join(t_tags), sql.and_(
             t_items_displayed.c.FeedID == t_tags2feeds.c.FeedID,
-            t_items_displayed.c.UserID == t_tags.c.UserID
+            t_items_displayed.c.UserID == t_tags.c.UserID,
     )).outerjoin(
-            t_like, sql.and_(
+        t_like, sql.and_(
             t_items_displayed.c.ItemID == t_like.c.ItemID,
-            t_items_displayed.c.UserID == t_like.c.UserID
-    )))
+            t_items_displayed.c.UserID == t_like.c.UserID,
+    ))
     if magic:
-        q_from = q_from.outerjoin(t_magic)
+        q_from = q_from.outerjoin(
+            t_magic, sql.and_(
+                t_items_displayed.c.ItemID == t_magic.c.ItemID,
+                t_items_displayed.c.UserID == t_magic.c.UserID,
+        ))
     q = q.select_from(q_from)
 
     q_where = [t_items_displayed.c.UserID == user_id]
