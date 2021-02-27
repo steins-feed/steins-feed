@@ -3,82 +3,85 @@
 from datetime import datetime
 import glob
 import os
-from sqlalchemy import func, sql, Integer
+from sqlalchemy import exc, orm, sql, Integer
 
-from model import get_connection, get_session, get_table
+from model import get_connection, get_table
+from model import get_session, get_model
 from model.feeds import read_feeds
 from model.utils.recent import last_updated
 from model.xml import read_xml, write_xml
-from view import app
 from view.auth import get_user_datastore
 
 def test_user_datastore():
-    conn = get_connection()
-    users = get_table('Users')
-
     session = get_session()
-    user_datastore = get_user_datastore()
-    user = user_datastore.create_user(
-            name="hansolo",
-            password="obiwankenobi"
-    )
-    session.commit()
+    User = get_model('Users')
 
-    q = sql.select([func.count()]).select_from(users)
-    res = conn.execute(q).fetchone()
-    assert(res[0] > 0)
+    try:
+        user_datastore = get_user_datastore()
+        user_datastore.create_user(
+            name="hansolo",
+            password="obiwankenobi",
+            email="death.star@empire.org"
+        )
+        session.commit()
+    except exc.IntegrityError:
+        session.rollback()
+
+    assert(session.query(User).filter(User.Name == "hansolo").count())
 
 def test_xml_read():
-    conn = get_connection()
-    users = get_table('Users')
-    feeds = get_table('Feeds')
+    session = get_session()
+    User = get_model('Users')
+    Feed = get_model('Feeds')
+    Tag = get_model('Tags')
+    tags2feeds = get_table('Tags2Feeds')
 
-    q = sql.select([
-        users.c.UserID
-    ]).where(
-        users.c.Name == "hansolo"
+    # Building a many-to-many relationship.
+    Feed.tags = orm.relationship(
+        Tag,
+        secondary = tags2feeds,
+        back_populates = 'feeds'
     )
-    user_id = conn.execute(q).fetchone()['UserID']
+    Tag.feeds = orm.relationship(
+        Feed,
+        secondary = tags2feeds,
+        back_populates = 'tags'
+    )
 
+    user_id = session.query(User.UserID).filter(User.Name == "hansolo").scalar()
     for file_it in glob.glob(os.path.join("feeds.d", "*.xml")):
+        tag_name = file_it[len("feeds.d") + 1:-len(".xml")]
         with open(file_it, 'r') as f:
-            read_xml(f, user_id, file_it[len("feeds.d") + 1:-len(".xml")])
+            read_xml(f, user_id, tag_name)
 
-    q = sql.select([func.count()]).select_from(feeds)
-    res = conn.execute(q).fetchone()
-    assert(res[0] > 0)
+        q = (session.query(Tag.feeds)
+                    .filter(
+                        Tag.UserID == user_id,
+                        Tag.Name == tag_name
+                    ).count())
+        assert(q)
 
 def test_xml_write():
-    conn = get_connection()
-    users = get_table('Users')
-    tags = get_table('Tags')
+    session = get_session()
+    User = get_model('Users')
+    Tag = get_model('Tags')
 
-    q = sql.select([
-        users.c.UserID
-    ]).where(
-        users.c.Name == "hansolo"
-    )
-    user_id = conn.execute(q).fetchone()['UserID']
-
-    q = sql.select([
-        tags.c.Name
-    ]).where(
-        tags.c.UserID == user_id
-    )
-    tags_name = [e['Name'] for e in conn.execute(q)]
-
+    user_id = session.query(User.UserID).filter(User.Name == "hansolo").scalar()
+    tags_name = [e.Name for e in session.query(Tag).filter(Tag.UserID == user_id)]
     for tag_name in tags_name:
-        with open(os.path.join("feeds.d", tag_name + ".xml"), 'w') as f:
+        file_path = os.path.join("feeds.d", tag_name + ".xml")
+        with open(file_path, 'w') as f:
             write_xml(f, user_id, tag_name)
 
-def test_feeds():
-    conn = get_connection()
-    items = get_table('Items')
-    read_feeds("The Atlantic")
+        assert(os.path.isfile(file_path))
 
-    q = sql.select([func.count()]).select_from(items)
-    res = conn.execute(q).fetchone()
-    assert(res[0] > 0)
+def test_feeds():
+    session = get_session()
+    Feed = get_model('Feeds')
+    Item = get_model('Items')
+
+    read_feeds("The Atlantic")
+    assert(session.query(Item).join(Feed).filter(Feed.Title.like("The Atlantic%")).count())
 
 def test_last_updated():
     assert(isinstance(last_updated(), datetime))
@@ -88,24 +91,34 @@ def test_display():
     feeds = get_table('Feeds')
     display = get_table('Display')
 
-    user_datastore = get_user_datastore()
-    with app.app_context():
-        user = user_datastore.find_user(name="hansolo")
+    session = get_session()
+    User = get_model('Users')
+    Feed = get_model('Feeds')
 
-    q = sql.select([
-            sql.literal_column(str(user.id), type_=Integer).label('UserID'),
-            feeds.c.FeedID
-    ])
-    ins = display.insert().from_select(['UserID', 'FeedID'], q)
-    conn.execute(ins.prefix_with("OR IGNORE"))
-
-    q = sql.select([
-            func.count()
-    ]).select_from(
-            feeds.join(display)
+    # Building a many-to-many relationship.
+    Feed.users = orm.relationship(
+        User,
+        secondary = display,
+        back_populates = 'feeds'
     )
-    res = conn.execute(q).fetchone()
-    assert(res[0] > 0)
+    User.feeds = orm.relationship(
+        Feed,
+        secondary = display,
+        back_populates = 'users'
+    )
+
+    user_id = session.query(User.UserID).filter(User.Name == "hansolo").scalar()
+    display_count = session.query(User.feeds).filter(User.UserID == user_id).count
+
+    if not display_count():
+        q = sql.select([
+                sql.literal_column(str(user_id), type_=Integer).label('UserID'),
+                feeds.c.FeedID
+        ])
+        ins = display.insert().from_select(['UserID', 'FeedID'], q)
+        conn.execute(ins.prefix_with("OR IGNORE"))
+
+    assert(display_count())
 
 def test_tags():
     conn = get_connection()
@@ -113,30 +126,44 @@ def test_tags():
     tags = get_table('Tags')
     tags2feeds = get_table('Tags2Feeds')
 
-    user_datastore = get_user_datastore()
-    with app.app_context():
-        user = user_datastore.find_user(name="hansolo")
+    session = get_session()
+    User = get_model('Users')
+    Feed = get_model('Feeds')
+    Tag = get_model('Tags')
 
-    ins = tags.insert().values(UserID=user.id, Name="News")
+    # Building a many-to-many relationship.
+    Feed.tags = orm.relationship(
+        Tag,
+        secondary = tags2feeds,
+        back_populates = 'feeds'
+    )
+    Tag.feeds = orm.relationship(
+        Feed,
+        secondary = tags2feeds,
+        back_populates = 'tags'
+    )
+
+    user_id = session.query(User.UserID).filter(User.Name == "hansolo").scalar()
+    ins = tags.insert().values(UserID=user_id, Name="news")
     conn.execute(ins.prefix_with("OR IGNORE"))
 
     q = sql.select([
             tags.c.TagID,
             feeds.c.FeedID
-    ]).where(
-            feeds.c.Title == "The Atlantic"
-    )
+    ]).where(sql.and_(
+            feeds.c.Title == "The Atlantic",
+            tags.c.Name == "news"
+    ))
     ins = tags2feeds.insert().from_select([
             tags2feeds.c.TagID,
             tags2feeds.c.FeedID]
     , q)
     conn.execute(ins.prefix_with("OR IGNORE"))
 
-    q = sql.select([
-            func.count()
-    ]).select_from(
-            feeds.join(tags2feeds)
-                 .join(tags)
-    )
-    res = conn.execute(q).fetchone()
-    assert(res[0] > 0)
+    q = (session.query(Tag.feeds)
+                .filter(
+                    Tag.Name == "news",
+                    Tag.UserID == user_id,
+                    Tag.feeds.any(Feed.Title.like("The Atlantic%"))
+                ).count())
+    assert(q)

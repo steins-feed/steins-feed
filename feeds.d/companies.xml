@@ -310,9 +310,54 @@
     <lang>English</lang>
   </feed>
   <feed>
+    <title>Mozilla</title>
+    <link>https://blog.mozilla.org/feed/</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
+    <title>Mozilla -- about:community</title>
+    <link>https://blog.mozilla.org/community/feed/</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
+    <title>Mozilla -- Future Releases</title>
+    <link>https://blog.mozilla.org/futurereleases/feed/</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
+    <title>Mozilla -- Internet Citizen</title>
+    <link>https://blog.mozilla.org/internetcitizen/feed/</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
+    <title>Mozilla -- Life@Mozilla</title>
+    <link>https://blog.mozilla.org/careers/feed/</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
+    <title>Mozilla -- Open Policy &amp; Advocacy</title>
+    <link>https://blog.mozilla.org/netpolicy/feed/</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
+    <title>Mozilla -- The Firefox Frontier</title>
+    <link>https://blog.mozilla.org/firefox/feed/</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
     <title>Mozilla Berlin</title>
     <link>https://blog.mozilla.org/berlin/feed/</link>
     <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Mozilla Hacks</title>
+    <link>https://hacks.mozilla.org/feed/</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
+    <title>Mozilla Open Design</title>
+    <link>https://blog.mozilla.org/opendesign/feed/</link>
+    <lang>English</lang>
   </feed>
   <feed>
     <title>Nextcloud</title>
