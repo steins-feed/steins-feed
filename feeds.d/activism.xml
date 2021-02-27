@@ -1,5 +1,15 @@
 <root>
   <feed>
+    <title>BMZ Nachrichten</title>
+    <link>http://www.bmz.de/includes/rss/rss_de.rss</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>BMZ News</title>
+    <link>http://www.bmz.de/includes/rss/rss_en.rss</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
     <title>Gates Notes</title>
     <link>https://www.gatesnotes.com/rss</link>
     <lang>English</lang>
