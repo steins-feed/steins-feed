@@ -4,7 +4,7 @@ import enum
 import sqlalchemy as sqla
 from sqlalchemy import func, schema
 
-from . import get_engine, get_metadata, get_table
+from model import get_engine, get_metadata, get_table
 
 def create_schema():
     create_schema_users()
