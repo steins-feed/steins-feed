@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 from flask import Blueprint, request, render_template, redirect, url_for
 from flask_security import auth_required, current_user
+from html import unescape
 from lxml import etree, html
 import os
 import pickle
@@ -165,7 +166,7 @@ def clean_summary(s):
     tags = ['div', 'p', 'span']
     empty_leaves(tree, tags)
 
-    return html.tostring(tree, encoding='unicode', method='html')
+    return unescape(html.tostring(tree, encoding='unicode', method='html'))
 
 def empty_leaves(e, tags=[]):
     for e_it in reversed(list(e)):

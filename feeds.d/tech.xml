@@ -215,6 +215,71 @@
     <lang>English</lang>
   </feed>
   <feed>
+    <title>Golem</title>
+    <link>https://rss.golem.de/rss.php?feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem Audio/Video</title>
+    <link>https://rss.golem.de/rss.php?tp=av&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem Desktop-Applikationen</title>
+    <link>https://rss.golem.de/rss.php?tp=apps&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem Foto</title>
+    <link>https://rss.golem.de/rss.php?tp=foto&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem Games</title>
+    <link>https://rss.golem.de/rss.php?tp=games&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem Handy</title>
+    <link>https://rss.golem.de/rss.php?tp=handy&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem Internet</title>
+    <link>https://rss.golem.de/rss.php?tp=inet&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem Mobil</title>
+    <link>https://rss.golem.de/rss.php?tp=mc&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem OSS</title>
+    <link>https://rss.golem.de/rss.php?tp=oss&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem Politik/Recht</title>
+    <link>https://rss.golem.de/rss.php?tp=pol&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem Security</title>
+    <link>https://rss.golem.de/rss.php?tp=sec&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem Software-Entwicklung</title>
+    <link>https://rss.golem.de/rss.php?tp=dev&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>Golem Wirtschaft</title>
+    <link>https://rss.golem.de/rss.php?tp=wirtschaft&amp;feed=RSS2.0</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
     <title>Heise</title>
     <link>https://www.heise.de/rss/heise-top-atom.xml</link>
     <lang>German</lang>

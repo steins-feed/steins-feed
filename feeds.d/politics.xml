@@ -1,5 +1,10 @@
 <root>
   <feed>
+    <title>Auswärtiges Amt Nachrichten</title>
+    <link>https://www.auswaertiges-amt.de/static/appdata/includes/rss/Aktuelles-RSS-Feed.xml</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
     <title>BMZ Nachrichten</title>
     <link>http://www.bmz.de/includes/rss/rss_de.rss</link>
     <lang>German</lang>
