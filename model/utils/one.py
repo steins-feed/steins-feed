@@ -5,7 +5,6 @@ from sqlalchemy import sql
 from .. import get_connection, get_table
 
 def get_feed_row(feed_id, user_id):
-    conn = get_connection()
     feeds = get_table('Feeds')
     display = get_table('Display')
 
@@ -26,12 +25,13 @@ def get_feed_row(feed_id, user_id):
             feeds.c.FeedID == feed_id
     )
 
-    return conn.execute(q).fetchone()
+    with get_connection() as conn:
+        return conn.execute(q).fetchone()
 
 def get_tag_row(tag_id):
-    conn = get_connection()
     tags = get_table('Tags')
 
     q = sql.select([tags]).where(tags.c.TagID == tag_id)
 
-    return conn.execute(q).fetchone()
+    with get_connection() as conn:
+        return conn.execute(q).fetchone()

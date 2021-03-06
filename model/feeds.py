@@ -14,14 +14,15 @@ logger.setLevel(logging.INFO)
 logger.addHandler(get_handler())
 
 def read_feeds(title_pattern=None):
-    conn = get_connection()
-    feeds = get_table('Feeds')
-    items = get_table('Items')
+    t_feeds = get_table('Feeds')
+    t_items = get_table('Items')
 
-    q = sql.select([feeds])
+    q = sql.select([t_feeds])
     if title_pattern:
-        q = q.where(feeds.c.Title.like("%{}%".format(title_pattern)))
-    q = q.order_by(sql.collate(feeds.c.Title, 'NOCASE'))
+        q = q.where(t_feeds.c.Title.like("%{}%".format(title_pattern)))
+    q = q.order_by(sql.collate(t_feeds.c.Title, 'NOCASE'))
+    with get_connection() as conn:
+        feeds = conn.execute(q).fetchall()
 
     row_keys = [
         'Title',
@@ -29,8 +30,7 @@ def read_feeds(title_pattern=None):
         'Published',
         'Summary'
     ]
-
-    for feed_it in conn.execute(q):
+    for feed_it in feeds:
         rows = []
         for item_it in parse_feed(feed_it).entries:
             try:
@@ -41,14 +41,15 @@ def read_feeds(title_pattern=None):
             row_it['FeedID'] = feed_it['FeedID']
             rows.append(row_it)
 
-        q = items.insert()
-        q = q.prefix_with("OR IGNORE", dialect='sqlite')
-        conn.execute(q, rows)
+        with get_connection() as conn:
+            q = t_items.insert()
+            q = q.prefix_with("OR IGNORE", dialect='sqlite')
+            conn.execute(q, rows)
 
-        q = (feeds.update()
-                  .values(Updated=func.now())
-                  .where(feeds.c.FeedID == feed_it['FeedID']))
-        conn.execute(q)
+            q = (t_feeds.update()
+                        .values(Updated=func.now())
+                        .where(t_feeds.c.FeedID == feed_it['FeedID']))
+            conn.execute(q)
 
 def parse_feed(feed, timeout=1):
     try:

@@ -7,7 +7,6 @@ from .. import get_connection, get_table
 from ..schema import Language, Like
 
 def all_feeds():
-    conn = get_connection()
     feeds = get_table('Feeds')
 
     q = sql.select([
@@ -15,11 +14,10 @@ def all_feeds():
     ]).order_by(
         sql.collate(feeds.c.Title, 'NOCASE')
     )
-
-    return conn.execute(q).fetchall()
+    with get_connection() as conn:
+        return conn.execute(q).fetchall()
 
 def all_tags(user_id):
-    conn = get_connection()
     tags = get_table('Tags')
 
     q = sql.select([
@@ -29,11 +27,10 @@ def all_tags(user_id):
     ).order_by(
         sql.collate(tags.c.Name, 'NOCASE')
     )
-
-    return conn.execute(q).fetchall()
+    with get_connection() as conn:
+        return conn.execute(q).fetchall()
 
 def displayed_languages(user_id):
-    conn = get_connection()
     feeds = get_table('Feeds')
     display = get_table('Display')
 
@@ -46,13 +43,13 @@ def displayed_languages(user_id):
     ).order_by(
             feeds.c.Language
     )
+    with get_connection() as conn:
+        res = conn.execute(q).fetchall()
 
-    res = conn.execute(q)
     res = [Language[e['Language']] for e in res]
     return res
 
 def displayed_tags(user_id):
-    conn = get_connection()
     feeds = get_table('Feeds')
     display = get_table('Display')
     tags = get_table('Tags')
@@ -72,13 +69,13 @@ def displayed_tags(user_id):
     ).order_by(
         tags.c.Name,
     ).distinct()
+    with get_connection() as conn:
+        res = conn.execute(q).fetchall()
 
-    res = conn.execute(q)
     res = [e['Name'] for e in res]
     return res
 
 def updated_dates(user_id, keys, last=None, limit=None):
-    conn = get_connection()
     feeds = get_table('Feeds')
     display = get_table('Display')
     items = get_table('Items')
@@ -96,6 +93,8 @@ def updated_dates(user_id, keys, last=None, limit=None):
     q = q.order_by(*[sql.desc(e) for e in keys])
     if limit:
         q = q.limit(limit)
+    with get_connection() as conn:
+        res = conn.execute(q).fetchall()
 
     date_string, format_string = keys2strings(keys)
     tuple2datetime = lambda x: datetime.strptime(
@@ -103,12 +102,10 @@ def updated_dates(user_id, keys, last=None, limit=None):
             format_string
     )
 
-    res = conn.execute(q)
     res = [tuple2datetime(e) for e in res]
     return res
 
 def updated_items(user_id, langs, tags, start, finish, last=None, magic=False, unscored=False):
-    conn = get_connection()
     t_feeds = get_table('Feeds')
     t_display = get_table('Display')
     t_tags = get_table('Tags')
@@ -186,7 +183,8 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False, u
         q = q.order_by(sql.desc(t_magic.c.Score))
     else:
         q = q.order_by(sql.desc(t_items_displayed.c.Published))
-    return conn.execute(q).fetchall()
+    with get_connection() as conn:
+        return conn.execute(q).fetchall()
 
 def keys2strings(keys):
     date_string = "{}"
@@ -213,7 +211,6 @@ def keys2strings(keys):
     return date_string, format_string
 
 def liked_languages(user_id):
-    conn = get_connection()
     t_feeds = get_table('Feeds')
     t_items = get_table('Items')
     t_like = get_table('Like')
@@ -227,13 +224,13 @@ def liked_languages(user_id):
         t_like.c.UserID == user_id,
         t_like.c.Score != Like.MEH.name
     )).distinct()
+    with get_connection() as conn:
+        res = conn.execute(q)
 
-    res = conn.execute(q)
     res = [Language[e['Language']] for e in res]
     return res
 
 def liked_items(user_id, lang, score=Like.UP):
-    conn = get_connection()
     t_feeds = get_table('Feeds')
     t_items = get_table('Items')
     t_like = get_table('Like')
@@ -248,8 +245,8 @@ def liked_items(user_id, lang, score=Like.UP):
         t_feeds.c.Language == lang.name,
         t_like.c.Score == score.name
     ))
-
-    return conn.execute(q).fetchall()
+    with get_connection() as conn:
+        return conn.execute(q).fetchall()
 
 def disliked_items(user_id, lang):
     return liked_items(user_id, lang, Like.DOWN)

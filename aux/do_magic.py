@@ -9,12 +9,19 @@ import pickle
 import sqlalchemy as sqla
 import sys
 
+def mkdir_p(s):
+    try:
+        os.mkdir(s)
+    except FileExistsError:
+        pass
+
 par_path = os.path.normpath(os.path.join(
     os.path.dirname(__file__),
     os.pardir
 ))
 sys.path.append(par_path)
 dir_path = os.path.join(par_path, "clf.d")
+mkdir_p(dir_path)
 
 from magic import train_classifier
 from model import get_session, get_model
@@ -85,6 +92,7 @@ for user_it in session.query(User):
     user = user_it.Name
     user_id = user_it.UserID
     user_path = os.path.join(dir_path, str(user_id))
+    mkdir_p(user_path)
 
     timestamp = last_updated()
     timestamp_like = last_liked(user_id)

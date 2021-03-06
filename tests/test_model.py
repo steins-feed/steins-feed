@@ -87,7 +87,6 @@ def test_last_updated():
     assert(isinstance(last_updated(), datetime))
 
 def test_display():
-    conn = get_connection()
     feeds = get_table('Feeds')
     display = get_table('Display')
 
@@ -116,12 +115,12 @@ def test_display():
                 feeds.c.FeedID
         ])
         ins = display.insert().from_select(['UserID', 'FeedID'], q)
-        conn.execute(ins.prefix_with("OR IGNORE"))
+        with get_connection() as conn:
+            conn.execute(ins.prefix_with("OR IGNORE"))
 
     assert(display_count())
 
 def test_tags():
-    conn = get_connection()
     feeds = get_table('Feeds')
     tags = get_table('Tags')
     tags2feeds = get_table('Tags2Feeds')
@@ -145,7 +144,8 @@ def test_tags():
 
     user_id = session.query(User.UserID).filter(User.Name == "hansolo").scalar()
     ins = tags.insert().values(UserID=user_id, Name="news")
-    conn.execute(ins.prefix_with("OR IGNORE"))
+    with get_connection() as conn:
+        conn.execute(ins.prefix_with("OR IGNORE"))
 
     q = sql.select([
             tags.c.TagID,
@@ -158,7 +158,8 @@ def test_tags():
             tags2feeds.c.TagID,
             tags2feeds.c.FeedID]
     , q)
-    conn.execute(ins.prefix_with("OR IGNORE"))
+    with get_connection() as conn:
+        conn.execute(ins.prefix_with("OR IGNORE"))
 
     q = (session.query(Tag.feeds)
                 .filter(

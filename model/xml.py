@@ -7,7 +7,6 @@ from . import get_connection, get_table
 from .schema import Language
 
 def read_xml(f, user_id=None, tag=None):
-    conn = get_connection()
     feeds = get_table('Feeds')
     tags2feeds = get_table('Tags2Feeds')
     tags = get_table('Tags')
@@ -28,32 +27,33 @@ def read_xml(f, user_id=None, tag=None):
 
     q = feeds.insert()
     q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(q, rows)
-
-    if user_id and tag:
-        q = tags.insert().values(
-            UserID=user_id,
-            Name=tag
-        )
-        q = q.prefix_with("OR IGNORE", dialect='sqlite')
-        conn.execute(q)
-
-        q_select = sql.select([
-            feeds.c.FeedID,
-            tags.c.TagID
-        ]).where(sql.and_(
-            feeds.c.Title == sql.bindparam('Title'),
-            tags.c.UserID == user_id,
-            tags.c.Name == tag
-        ))
-
-        q = tags2feeds.insert()
-        q = q.from_select([q_select.c.FeedID, q_select.c.TagID], q_select)
-        q = q.prefix_with("OR IGNORE", dialect='sqlite')
+    with get_connection() as conn:
         conn.execute(q, rows)
 
+    if user_id and tag:
+        with get_connection() as conn:
+            q = tags.insert().values(
+                UserID=user_id,
+                Name=tag
+            )
+            q = q.prefix_with("OR IGNORE", dialect='sqlite')
+            conn.execute(q)
+
+            q_select = sql.select([
+                feeds.c.FeedID,
+                tags.c.TagID
+            ]).where(sql.and_(
+                feeds.c.Title == sql.bindparam('Title'),
+                tags.c.UserID == user_id,
+                tags.c.Name == tag
+            ))
+
+            q = tags2feeds.insert()
+            q = q.from_select([q_select.c.FeedID, q_select.c.TagID], q_select)
+            q = q.prefix_with("OR IGNORE", dialect='sqlite')
+            conn.execute(q, rows)
+
 def write_xml(f, user_id=None, tag=None):
-    conn = get_connection()
     feeds = get_table('Feeds')
     tags2feeds = get_table('Tags2Feeds')
     tags = get_table('Tags')
@@ -69,9 +69,11 @@ def write_xml(f, user_id=None, tag=None):
             tags.c.Name == tag
         ))
     q = q.order_by(sql.collate(feeds.c.Title, 'NOCASE'))
+    with get_connection() as conn:
+        rows = conn.execute(q).fetchall()
 
     root = etree.Element("root")
-    for row_it in conn.execute(q):
+    for row_it in rows:
         title_it = etree.Element("title")
         title_it.text = row_it['Title']
         link_it = etree.Element("link")

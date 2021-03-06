@@ -6,7 +6,6 @@ from .. import get_connection, get_table
 from ..schema import Like
 
 def upsert_like(user_id, item_id, like_val):
-    conn = get_connection()
     like = get_table('Like')
 
     q = sql.select([
@@ -15,7 +14,8 @@ def upsert_like(user_id, item_id, like_val):
             like.c.UserID == user_id,
             like.c.ItemID == item_id
     ))
-    res = conn.execute(q).fetchone()
+    with get_connection() as conn:
+        res = conn.execute(q).fetchone()
 
     if res:
         score = Like[res['Score']]
@@ -33,14 +33,14 @@ def upsert_like(user_id, item_id, like_val):
                 Score=sql.bindparam("score")
         )
 
-    if score == like_val:
-        conn.execute(q, score=Like.MEH.name)
-    else:
-        conn.execute(q, score=like_val.name)
+    with get_connection() as conn:
+        if score == like_val:
+            conn.execute(q, score=Like.MEH.name)
+        else:
+            conn.execute(q, score=like_val.name)
 
 # Feed.
 def upsert_feed(feed_id, title, link, lang):
-    conn = get_connection()
     feeds = get_table('Feeds')
 
     if feed_id:
@@ -56,7 +56,8 @@ def upsert_feed(feed_id, title, link, lang):
                 Language = lang.name
         )
         q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(q)
+    with get_connection() as conn:
+        conn.execute(q)
 
     if not feed_id:
         q = sql.select([
@@ -66,10 +67,11 @@ def upsert_feed(feed_id, title, link, lang):
                 feeds.c.Link == link,
                 feeds.c.Language == lang.name
         ))
-        return conn.execute(q).fetchone()['FeedID']
+        with get_connection() as conn:
+            res = conn.execute(q).fetchone()
+        return res['FeedID']
 
 def upsert_display(user_id, feed_ids, disp):
-    conn = get_connection()
     display = get_table('Display')
 
     if disp == 0:
@@ -77,34 +79,35 @@ def upsert_display(user_id, feed_ids, disp):
                 display.c.UserID == user_id,
                 display.c.FeedID.in_(feed_ids)
         ))
-        conn.execute(q)
+        with get_connection() as conn:
+            conn.execute(q)
     else:
         row_keys = ['UserID', 'FeedID']
         rows = [dict(zip(row_keys, (user_id, e))) for e in feed_ids]
 
         q = display.insert()
         q = q.prefix_with("OR IGNORE", dialect='sqlite')
-        conn.execute(q, rows)
+        with get_connection() as conn:
+            conn.execute(q, rows)
 
 def delete_feeds(feed_ids):
-    conn = get_connection()
     feeds = get_table('Feeds')
 
     q = feeds.delete().where(feeds.c.FeedID.in_(feed_ids))
-    conn.execute(q)
+    with get_connection() as conn:
+        conn.execute(q)
 
 def delete_tags_tagged(feed_id, tagged):
-    conn = get_connection()
     tags2feeds = get_table('Tags2Feeds')
 
     q = tags2feeds.delete().where(sql.and_(
         tags2feeds.c.TagID.in_(tagged),
         tags2feeds.c.FeedID == feed_id
     ))
-    conn.execute(q)
+    with get_connection() as conn:
+        conn.execute(q)
 
 def insert_tags_untagged(feed_id, untagged):
-    conn = get_connection()
     tags2feeds = get_table('Tags2Feeds')
 
     row_keys = ("TagID", "FeedID")
@@ -112,11 +115,11 @@ def insert_tags_untagged(feed_id, untagged):
 
     q = tags2feeds.insert()
     q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(q, rows)
+    with get_connection() as conn:
+        conn.execute(q, rows)
 
 # Tag.
 def upsert_tag(tag_id, user_id, name):
-    conn = get_connection()
     tags = get_table('Tags')
 
     if tag_id:
@@ -130,7 +133,8 @@ def upsert_tag(tag_id, user_id, name):
                 Name = name
         )
         q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(q)
+    with get_connection() as conn:
+        conn.execute(q)
 
     if not tag_id:
         q = sql.select([
@@ -139,29 +143,31 @@ def upsert_tag(tag_id, user_id, name):
                 tags.c.UserID == user_id,
                 tags.c.Name == name
         ))
-        return conn.execute(q).fetchone()['TagID']
+        with get_connection() as conn:
+            res = conn.execute(q).fetchone()
+
+        return res['TagID']
 
 def delete_tags(tag_ids):
-    conn = get_connection()
     tags = get_table('Tags')
 
     q = tags.delete().where(
             tags.c.TagID.in_(tag_ids)
     )
-    conn.execute(q)
+    with get_connection() as conn:
+        conn.execute(q)
 
 def delete_feeds_tagged(tag_id, tagged):
-    conn = get_connection()
     tags2feeds = get_table('Tags2Feeds')
 
     q = tags2feeds.delete().where(sql.and_(
         tags2feeds.c.TagID == tag_id,
         tags2feeds.c.FeedID.in_(tagged)
     ))
-    conn.execute(q)
+    with get_connection() as conn:
+        conn.execute(q)
 
 def insert_feeds_untagged(tag_id, untagged):
-    conn = get_connection()
     tags2feeds = get_table('Tags2Feeds')
 
     row_keys = ("TagID", "FeedID")
@@ -169,11 +175,11 @@ def insert_feeds_untagged(tag_id, untagged):
 
     q = tags2feeds.insert()
     q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(q, rows)
+    with get_connection() as conn:
+        conn.execute(q, rows)
 
 # Magic.
 def reset_magic(user_id=None, lang=None):
-    conn = get_connection()
     feeds = get_table('Feeds')
     items = get_table('Items')
     magic = get_table('Magic')
@@ -203,13 +209,13 @@ def reset_magic(user_id=None, lang=None):
             )).distinct()
         q_where.append(magic.c.ItemID.in_(q_cte))
     q = q.where(sql.and_(*q_where))
-    conn.execute(q)
+    with get_connection() as conn:
+        conn.execute(q)
 
 def upsert_magic(user_id, items, scores):
     if len(items) != len(scores):
         raise IndexError()
 
-    conn = get_connection()
     magic = get_table('Magic')
 
     rows = []
@@ -222,4 +228,5 @@ def upsert_magic(user_id, items, scores):
 
     q = magic.insert()
     q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    conn.execute(q, rows)
+    with get_connection() as conn:
+        conn.execute(q, rows)
