@@ -4,7 +4,7 @@ import enum
 import sqlalchemy as sqla
 from sqlalchemy import func, schema
 
-from model import get_engine, get_metadata, get_table
+from model import engine, get_metadata, get_table
 
 def create_schema():
     create_schema_users()
@@ -47,7 +47,7 @@ def create_schema_users():
             sqla.Column("Active", sqla.Boolean, nullable=False),
             sqla.Column("fs_uniquifier", TINYTEXT, nullable=False, unique=True)
     )
-    users.create(get_engine(), checkfirst=True)
+    users.create(engine, checkfirst=True)
 
 def create_schema_roles():
     roles = sqla.Table("Roles", sqla.MetaData(),
@@ -55,7 +55,7 @@ def create_schema_roles():
             sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
             sqla.Column("Description", TEXT)
     )
-    roles.create(get_engine(), checkfirst=True)
+    roles.create(engine, checkfirst=True)
 
     users = get_table('Users')
     users2roles = sqla.Table("Users2Roles", sqla.MetaData(),
@@ -63,7 +63,7 @@ def create_schema_roles():
             sqla.Column("RoleID", sqla.Integer, gen_fk(roles.c.RoleID), nullable=False),
             schema.UniqueConstraint('UserID', 'RoleID')
     )
-    users2roles.create(get_engine(), checkfirst=True)
+    users2roles.create(engine, checkfirst=True)
 
 #------------------------------------------------------------------------------
 
@@ -76,7 +76,7 @@ def create_schema_feeds():
             sqla.Column("Added", sqla.DateTime, server_default=func.now()),
             sqla.Column("Updated", sqla.DateTime)
     )
-    feeds.create(get_engine(), checkfirst=True)
+    feeds.create(engine, checkfirst=True)
 
 def create_schema_display():
     users = get_table('Users')
@@ -86,7 +86,7 @@ def create_schema_display():
             sqla.Column("FeedID", sqla.Integer, gen_fk(feeds.c.FeedID), nullable=False),
             schema.UniqueConstraint('UserID', 'FeedID')
     )
-    display.create(get_engine(), checkfirst=True)
+    display.create(engine, checkfirst=True)
 
 def create_schema_tags():
     users = get_table('Users')
@@ -96,7 +96,7 @@ def create_schema_tags():
             sqla.Column("Name", TINYTEXT, nullable=False),
             schema.UniqueConstraint('UserID', 'Name')
     )
-    tags.create(get_engine(), checkfirst=True)
+    tags.create(engine, checkfirst=True)
 
     feeds = get_table('Feeds')
     tags2feeds = sqla.Table("Tags2Feeds", sqla.MetaData(),
@@ -104,7 +104,7 @@ def create_schema_tags():
             sqla.Column("FeedID", sqla.Integer, gen_fk(feeds.c.FeedID), nullable=False),
             schema.UniqueConstraint('TagID', 'FeedID')
     )
-    tags2feeds.create(get_engine(), checkfirst=True)
+    tags2feeds.create(engine, checkfirst=True)
 
 #------------------------------------------------------------------------------
 
@@ -119,7 +119,7 @@ def create_schema_items():
             sqla.Column("Summary", MEDIUMTEXT),
             schema.UniqueConstraint('Title', 'Published', 'FeedID')
     )
-    items.create(get_engine(), checkfirst=True)
+    items.create(engine, checkfirst=True)
 
 def create_schema_likes():
     users = get_table('Users')
@@ -132,7 +132,7 @@ def create_schema_likes():
             sqla.Column("Updated", sqla.DateTime, server_default=func.now(), server_onupdate=func.now()),
             schema.UniqueConstraint('UserID', 'ItemID')
     )
-    likes.create(get_engine(), checkfirst=True)
+    likes.create(engine, checkfirst=True)
 
 def create_schema_magic():
     users = get_table('Users')
@@ -148,4 +148,4 @@ def create_schema_magic():
                     "Score BETWEEN {} AND {}".format(Like.DOWN.value, Like.UP.value)
             )
     )
-    magic.create(get_engine(), checkfirst=True)
+    magic.create(engine, checkfirst=True)

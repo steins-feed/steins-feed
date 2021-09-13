@@ -3,14 +3,14 @@
 from datetime import datetime
 from sqlalchemy import func, sql
 
-from model import get_connection, get_table
+from model import engine, get_table
 
 def last_updated():
     feeds = get_table('Feeds')
 
     try:
         q = sql.select([func.min(feeds.c.Updated)])
-        with get_connection() as conn:
+        with engine.connect() as conn:
             res = conn.execute(q).fetchone()[0]
 
         if res is None:
@@ -27,7 +27,7 @@ def last_liked(user_id=None):
         q = sql.select([func.max(like.c.Updated)])
         if user_id:
             q = q.where(like.c.UserID == user_id)
-        with get_connection() as conn:
+        with engine.connect() as conn:
             res = conn.execute(q).fetchone()[0]
 
         if res is None:

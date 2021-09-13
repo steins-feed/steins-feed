@@ -3,7 +3,7 @@
 from lxml import etree
 from sqlalchemy import sql
 
-from . import get_connection, get_table
+from . import engine, get_table
 from .schema import Language
 
 def read_xml(f, user_id=None, tag=None):
@@ -27,11 +27,11 @@ def read_xml(f, user_id=None, tag=None):
 
     q = feeds.insert()
     q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    with get_connection() as conn:
+    with engine.connect() as conn:
         conn.execute(q, rows)
 
     if user_id and tag:
-        with get_connection() as conn:
+        with engine.connect() as conn:
             q = tags.insert().values(
                 UserID=user_id,
                 Name=tag
@@ -69,7 +69,7 @@ def write_xml(f, user_id=None, tag=None):
             tags.c.Name == tag
         ))
     q = q.order_by(sql.collate(feeds.c.Title, 'NOCASE'))
-    with get_connection() as conn:
+    with engine.connect() as conn:
         rows = conn.execute(q).fetchall()
 
     root = etree.Element("root")

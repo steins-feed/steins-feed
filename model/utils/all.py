@@ -3,7 +3,7 @@
 from datetime import datetime
 from sqlalchemy import func, sql
 
-from .. import get_connection, get_table
+from .. import engine, get_table
 from ..schema import Language, Like
 
 def all_feeds():
@@ -14,7 +14,7 @@ def all_feeds():
     ]).order_by(
         sql.collate(feeds.c.Title, 'NOCASE')
     )
-    with get_connection() as conn:
+    with engine.connect() as conn:
         return conn.execute(q).fetchall()
 
 def all_tags(user_id):
@@ -27,7 +27,7 @@ def all_tags(user_id):
     ).order_by(
         sql.collate(tags.c.Name, 'NOCASE')
     )
-    with get_connection() as conn:
+    with engine.connect() as conn:
         return conn.execute(q).fetchall()
 
 def displayed_languages(user_id):
@@ -43,7 +43,7 @@ def displayed_languages(user_id):
     ).order_by(
             feeds.c.Language
     )
-    with get_connection() as conn:
+    with engine.connect() as conn:
         res = conn.execute(q).fetchall()
 
     res = [Language[e['Language']] for e in res]
@@ -69,7 +69,7 @@ def displayed_tags(user_id):
     ).order_by(
         tags.c.Name,
     ).distinct()
-    with get_connection() as conn:
+    with engine.connect() as conn:
         res = conn.execute(q).fetchall()
 
     res = [e['Name'] for e in res]
@@ -93,7 +93,7 @@ def updated_dates(user_id, keys, last=None, limit=None):
     q = q.order_by(*[sql.desc(e) for e in keys])
     if limit:
         q = q.limit(limit)
-    with get_connection() as conn:
+    with engine.connect() as conn:
         res = conn.execute(q).fetchall()
 
     date_string, format_string = keys2strings(keys)
@@ -183,7 +183,7 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False, u
         q = q.order_by(sql.desc(t_magic.c.Score))
     else:
         q = q.order_by(sql.desc(t_items_displayed.c.Published))
-    with get_connection() as conn:
+    with engine.connect() as conn:
         return conn.execute(q).fetchall()
 
 def keys2strings(keys):
@@ -224,7 +224,7 @@ def liked_languages(user_id):
         t_like.c.UserID == user_id,
         t_like.c.Score != Like.MEH.name
     )).distinct()
-    with get_connection() as conn:
+    with engine.connect() as conn:
         res = conn.execute(q).fetchall()
 
     res = [Language[e['Language']] for e in res]
@@ -245,7 +245,7 @@ def liked_items(user_id, lang, score=Like.UP):
         t_feeds.c.Language == lang.name,
         t_like.c.Score == score.name
     ))
-    with get_connection() as conn:
+    with engine.connect() as conn:
         return conn.execute(q).fetchall()
 
 def disliked_items(user_id, lang):
