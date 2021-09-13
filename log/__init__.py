@@ -4,36 +4,71 @@ import logging
 from logging import handlers
 import os
 
-dir_path = os.path.normpath(os.path.join(
+
+class Formatter(logging.Formatter):
+    instance = None
+
+    def __new__(cls):
+        if cls.instance:
+            return cls.instance
+
+        formatter = logging.Formatter(
+            "[%(asctime)s] %(levelname)s: %(message)s"
+        )
+
+        cls.instance = formatter
+        return formatter
+
+
+class Handler(logging.Handler):
+    instance = None
+
+    dir_path = os.path.join(
         os.path.dirname(__file__),
         os.pardir,
-        "log.d"
-))
-try:
-    os.mkdir(dir_path)
-except FileExistsError:
-    pass
-file_path = os.path.normpath(os.path.join(
+        "log.d",
+    )
+
+    try:
+        os.mkdir(dir_path)
+    except FileExistsError:
+        pass
+
+    file_path = os.path.join(
         dir_path,
-        "steins.log"
-))
+        "steins.log",
+    )
 
-def get_formatter():
-    global formatter
-    if 'formatter' not in globals():
-        formatter = logging.Formatter(
-                "[%(asctime)s] %(levelname)s: %(message)s"
-        )
-    return formatter
+    def __new__(cls):
+        if cls.instance:
+            return cls.instance
 
-def get_handler():
-    global handler
-    if 'handler' not in globals():
         #handler = logging.FileHandler(file_path)
         handler = handlers.TimedRotatingFileHandler(
-                file_path,
-                when='midnight',
-                backupCount=14
+            cls.file_path,
+            when='midnight',
+            backupCount=14,
         )
-        handler.setFormatter(get_formatter())
-    return handler
+
+        formatter = Formatter()
+        handler.setFormatter(formatter)
+
+        cls.instance = handler
+        return handler
+
+
+class Logger(logging.Logger):
+    instances = {}
+
+    def __new__(cls, name, level=logging.WARNING):
+        if name in cls.instances:
+            return cls.instances[name]
+
+        logger = logging.getLogger(name)
+        logger.setLevel(level)
+
+        handler = Handler()
+        logger.addHandler(handler)
+
+        cls.instances[name] = logger
+        return logger

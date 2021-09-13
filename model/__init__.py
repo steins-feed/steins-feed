@@ -8,7 +8,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from log import get_handler
+import log
 
 db_path = "sqlite:///" + os.path.normpath(os.path.join(
         os.path.dirname(__file__),
@@ -16,9 +16,7 @@ db_path = "sqlite:///" + os.path.normpath(os.path.join(
         "steins.db"
 ))
 
-sqla_logger = logging.getLogger('sqlalchemy')
-sqla_logger.setLevel(logging.WARNING)
-sqla_logger.addHandler(get_handler())
+sqla_logger = log.Logger("sqlalchemy", logging.WARNING)
 
 def get_connection():
     return get_engine().connect()
