@@ -27,7 +27,7 @@ def read_feeds(title_pattern=None):
 
     q = sql.select([t_feeds])
     if title_pattern:
-        q = q.where(t_feeds.c.Title.like("%{}%".format(title_pattern)))
+        q = q.where(t_feeds.c.Title.like(f"%{title_pattern}%"))
     q = q.order_by(sql.collate(t_feeds.c.Title, "NOCASE"))
 
     with engine.connect() as conn:
@@ -54,33 +54,34 @@ def read_feeds(title_pattern=None):
 
         q = (t_feeds.update()
                     .values(Updated=func.now())
-                    .where(t_feeds.c.FeedID == feed_it['FeedID']))
+                    .where(t_feeds.c.FeedID == feed_it["FeedID"]))
 
         with engine.connect() as conn:
             conn.execute(q)
 
 def parse_feed(feed, timeout=1):
     try:
-        res = feedparser.parse(feed['Link'])
+        res = feedparser.parse(feed["Link"])
+
         status = res.status
         if status < 300:
-            logger.info("{} -- {}.".format(feed['Title'], status))
+            logger.info(f"{feed['Title']} -- {status}.")
         elif status < 400:
-            logger.warning("{} -- {}.".format(feed['Title'], status))
-        elif status == 429 and timeout < 5: # too many requests
-            logger.warning("{} -- {} (timeout = {} sec).".format(feed['Title'], status, timeout))
+            logger.warning(f"{feed['Title']} -- {status}.")
+        elif status == 429 and timeout < 5:     # too many requests
+            logger.warning(f"{feed['Title']} -- {status} (timeout = {timeout} sec).")
             time.sleep(timeout)
             parse_feed(feed, 2 * timeout)
         else:
-            logger.error("{} -- {}.".format(feed['Title'], status))
+            logger.error(f"{feed['Title']} -- {status}.")
     except OSError as e:
-        logger.error("{} -- {}.".format(feed['Title'], e))
+        logger.error(f"{feed['Title']} -- {e}.")
         res = feedparser.util.FeedParserDict(entries=[])
     except AttributeError:
         if res.entries:
-            logger.info("{}.".format(feed['Title']))
+            logger.info(f"{feed['Title']}.")
         else:
-            logger.warning("{}.".format(feed['Title']))
+            logger.warning(f"{feed['Title']}.")
 
     return res
 
