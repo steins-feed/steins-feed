@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from datetime import datetime
+import datetime
 import logging
 import time
 
@@ -11,25 +11,28 @@ import log
 
 from . import engine, get_table
 
-logger = log.Logger(__name__, level=logging.INFO)
+# Logger.
+logger = log.Logger(__name__, logging.INFO)
+
+ITEM_KEYS = [
+    "Title",
+    "Link",
+    "Published",
+    "Summary",
+]
 
 def read_feeds(title_pattern=None):
-    t_feeds = get_table('Feeds')
-    t_items = get_table('Items')
+    t_feeds = get_table("Feeds")
+    t_items = get_table("Items")
 
     q = sql.select([t_feeds])
     if title_pattern:
         q = q.where(t_feeds.c.Title.like("%{}%".format(title_pattern)))
-    q = q.order_by(sql.collate(t_feeds.c.Title, 'NOCASE'))
+    q = q.order_by(sql.collate(t_feeds.c.Title, "NOCASE"))
+
     with engine.connect() as conn:
         feeds = conn.execute(q).fetchall()
 
-    row_keys = [
-        'Title',
-        'Link',
-        'Published',
-        'Summary'
-    ]
     for feed_it in feeds:
         rows = []
         for item_it in parse_feed(feed_it).entries:
@@ -37,18 +40,23 @@ def read_feeds(title_pattern=None):
                 row_values = read_item(item_it)
             except AttributeError:
                 continue
-            row_it = dict(zip(row_keys, row_values))
-            row_it['FeedID'] = feed_it['FeedID']
+
+            row_it = dict(zip(ITEM_KEYS, row_values))
+            row_it["FeedID"] = feed_it["FeedID"]
+
             rows.append(row_it)
 
+        q = t_items.insert()
+        q = q.prefix_with("OR IGNORE", dialect="sqlite")
+
         with engine.connect() as conn:
-            q = t_items.insert()
-            q = q.prefix_with("OR IGNORE", dialect='sqlite')
             conn.execute(q, rows)
 
-            q = (t_feeds.update()
-                        .values(Updated=func.now())
-                        .where(t_feeds.c.FeedID == feed_it['FeedID']))
+        q = (t_feeds.update()
+                    .values(Updated=func.now())
+                    .where(t_feeds.c.FeedID == feed_it['FeedID']))
+
+        with engine.connect() as conn:
             conn.execute(q)
 
 def parse_feed(feed, timeout=1):
@@ -115,14 +123,14 @@ def read_item_summary(item):
 def read_item_time(item):
     try:
         item_time = item.published_parsed
-        item_time = datetime(*item_time[:6])
+        item_time = datetime.datetime(*item_time[:6])
         return item_time
     except (AttributeError, TypeError):
         pass
 
     try:
         item_time = item.updated_parsed
-        item_time = datetime(*item_time[:6])
+        item_time = datetime.datetime(*item_time[:6])
         return item_time
     except (AttributeError, TypeError):
         pass
