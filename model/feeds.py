@@ -14,13 +14,6 @@ from . import engine, get_table
 # Logger.
 logger = log.Logger(__name__, logging.INFO)
 
-ITEM_KEYS = [
-    "Title",
-    "Link",
-    "Published",
-    "Summary",
-]
-
 def read_feeds(title_pattern=None):
     t_feeds = get_table("Feeds")
     t_items = get_table("Items")
@@ -37,13 +30,11 @@ def read_feeds(title_pattern=None):
         rows = []
         for item_it in parse_feed(feed_it).entries:
             try:
-                row_values = read_item(item_it)
+                row_it = read_item(item_it)
             except AttributeError:
                 continue
 
-            row_it = dict(zip(ITEM_KEYS, row_values))
             row_it["FeedID"] = feed_it["FeedID"]
-
             rows.append(row_it)
 
         q = t_items.insert()
@@ -86,11 +77,12 @@ def parse_feed(feed, timeout=1):
     return res
 
 def read_item(item):
-    item_title = read_item_title(item)
-    item_link = read_item_link(item)
-    item_time = read_item_time(item)
-    item_summary = read_item_summary(item)
-    return item_title, item_link, item_time, item_summary
+    return {
+        "Title": read_item_title(item),
+        "Link": read_item_link(item),
+        "Published": read_item_time(item),
+        "Summary": read_item_summary(item),
+    }
 
 def read_item_title(item):
     try:
@@ -115,7 +107,7 @@ def read_item_link(item):
     except AttributeError:
         pass
 
-    logger.error("No link for '{}'.".format(read_item_title(item)))
+    logger.error(f"No link for '{read_item_title(item)}'.")
     raise AttributeError
 
 def read_item_summary(item):
@@ -136,5 +128,5 @@ def read_item_time(item):
     except (AttributeError, TypeError):
         pass
 
-    logger.error("No time for '{}'.".format(read_item_title(item)))
+    logger.error(f"No time for '{read_item_title(item)}'.")
     raise AttributeError
