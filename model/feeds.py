@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 
 from datetime import datetime
-import feedparser
 import logging
-from sqlalchemy import func, sql
 import time
 
-from . import get_connection, get_table
-from log import get_handler
+import feedparser
+from sqlalchemy import func, sql
 
-logger = logging.getLogger('feeds')
-logger.setLevel(logging.INFO)
-logger.addHandler(get_handler())
+import log
+
+from . import get_connection, get_table
+
+logger = log.Logger(__name__, level=logging.INFO)
 
 def read_feeds(title_pattern=None):
     conn = get_connection()
