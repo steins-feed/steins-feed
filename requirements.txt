@@ -1,5 +1,3 @@
-pip
-
 bcrypt
 feedparser
 flask
@@ -10,4 +8,4 @@ pytest
 python-dotenv
 scikit-learn
 secrets
-sqlalchemy
+sqlalchemy==1.4.23

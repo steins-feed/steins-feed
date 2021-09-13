@@ -225,7 +225,7 @@ def liked_languages(user_id):
         t_like.c.Score != Like.MEH.name
     )).distinct()
     with get_connection() as conn:
-        res = conn.execute(q)
+        res = conn.execute(q).fetchall()
 
     res = [Language[e['Language']] for e in res]
     return res

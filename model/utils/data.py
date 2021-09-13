@@ -14,7 +14,7 @@ def all_langs_feeds():
         sql.collate(feeds.c.Language, 'NOCASE')
     )
     with get_connection() as conn:
-        res = conn.execute(q)
+        res = conn.execute(q).fetchall()
 
     res = [Language[e['Language']] for e in res]
     return res
