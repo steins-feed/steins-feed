@@ -13,7 +13,7 @@ class Formatter(logging.Formatter):
             return cls.instance
 
         formatter = logging.Formatter(
-            "[%(asctime)s] %(levelname)s: %(message)s"
+            "[%(asctime)s] %(levelname)s:%(name)s: %(message)s"
         )
 
         cls.instance = formatter
@@ -60,7 +60,7 @@ class Handler(logging.Handler):
 class Logger(logging.Logger):
     instances = {}
 
-    def __new__(cls, name, level=logging.WARNING):
+    def __new__(cls, name="root", level=logging.WARNING):
         if name in cls.instances:
             return cls.instances[name]
 
