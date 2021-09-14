@@ -4,7 +4,7 @@ from lxml import etree
 from sqlalchemy import sql
 
 from . import get_connection, get_table
-from .schema import Language
+from .schema.feeds import Language
 
 def read_xml(f, user_id=None, tag=None):
     t_feeds = get_table("Feeds")

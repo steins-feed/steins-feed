@@ -3,7 +3,8 @@
 from sqlalchemy import sql
 
 from .. import get_connection, get_table
-from ..schema import Language, Like
+from ..schema import Like
+from ..schema.feeds import Language
 
 def all_langs_feeds():
     feeds = get_table('Feeds')

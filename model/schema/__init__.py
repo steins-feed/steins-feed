@@ -16,11 +16,6 @@ class Like(enum.Enum):
     MEH = 0
     DOWN = -1
 
-class Language(enum.Enum):
-    ENGLISH = 'English'
-    GERMAN = 'German'
-    SWEDISH = 'Swedish'
-
 def gen_fk(c):
     return sqla.ForeignKey(c, onupdate='CASCADE', ondelete='CASCADE')
 
@@ -28,54 +23,12 @@ def create_schema():
     from . import users
     users.create_schema()
 
-    create_schema_feeds()
-    create_schema_display()
-    create_schema_tags()
+    from . import feeds
+    feeds.create_schema()
 
     create_schema_items()
     create_schema_likes()
     create_schema_magic()
-
-#------------------------------------------------------------------------------
-
-def create_schema_feeds():
-    feeds = sqla.Table("Feeds", sqla.MetaData(),
-            sqla.Column("FeedID", sqla.Integer, primary_key=True),
-            sqla.Column("Title", TEXT, nullable=False, unique=True),
-            sqla.Column("Link", TEXT, nullable=False, unique=True),
-            sqla.Column("Language", sqla.Enum(Language)),
-            sqla.Column("Added", sqla.DateTime, server_default=func.now()),
-            sqla.Column("Updated", sqla.DateTime)
-    )
-    feeds.create(engine, checkfirst=True)
-
-def create_schema_display():
-    users = get_table('Users')
-    feeds = get_table('Feeds')
-    display = sqla.Table("Display", sqla.MetaData(),
-            sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
-            sqla.Column("FeedID", sqla.Integer, gen_fk(feeds.c.FeedID), nullable=False),
-            schema.UniqueConstraint('UserID', 'FeedID')
-    )
-    display.create(engine, checkfirst=True)
-
-def create_schema_tags():
-    users = get_table('Users')
-    tags = sqla.Table("Tags", sqla.MetaData(),
-            sqla.Column("TagID", sqla.Integer, primary_key=True),
-            sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
-            sqla.Column("Name", TINYTEXT, nullable=False),
-            schema.UniqueConstraint('UserID', 'Name')
-    )
-    tags.create(engine, checkfirst=True)
-
-    feeds = get_table('Feeds')
-    tags2feeds = sqla.Table("Tags2Feeds", sqla.MetaData(),
-            sqla.Column("TagID", sqla.Integer, gen_fk(tags.c.TagID), nullable=False),
-            sqla.Column("FeedID", sqla.Integer, gen_fk(feeds.c.FeedID), nullable=False),
-            schema.UniqueConstraint('TagID', 'FeedID')
-    )
-    tags2feeds.create(engine, checkfirst=True)
 
 #------------------------------------------------------------------------------
 

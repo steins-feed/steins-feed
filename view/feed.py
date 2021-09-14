@@ -4,7 +4,7 @@ from flask import Blueprint, request, render_template, redirect, url_for
 from flask_security import auth_required, current_user
 
 from .req import base_context
-from model.schema import Language
+from model.schema.feeds import Language
 from model.utils.custom import upsert_feed, upsert_display
 from model.utils.custom import delete_tags_tagged, insert_tags_untagged
 from model.utils.data import all_tags_feed

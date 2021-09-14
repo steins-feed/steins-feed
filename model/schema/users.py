@@ -5,7 +5,7 @@ import sqlalchemy as sqla
 from . import TINYTEXT, TEXT, MEDIUMTEXT, LONGTEXT
 from . import gen_fk
 
-from .. import engine
+from .. import get_connection
 
 def create_schema():
     metadata = sqla.MetaData()
@@ -21,7 +21,9 @@ def create_schema():
         sqla.Column("Active", sqla.Boolean, nullable=False),
         sqla.Column("fs_uniquifier", TINYTEXT, nullable=False, unique=True),
     )
-    users.create(engine, checkfirst=True)
+
+    with get_connection() as conn:
+        users.create(conn, checkfirst=True)
 
     # Roles.
     roles = sqla.Table(
@@ -31,7 +33,9 @@ def create_schema():
         sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
         sqla.Column("Description", TEXT),
     )
-    roles.create(engine, checkfirst=True)
+
+    with get_connection() as conn:
+        roles.create(conn, checkfirst=True)
 
     # Many-to-many relationship.
     users2roles = sqla.Table(
@@ -39,6 +43,8 @@ def create_schema():
         metadata,
         sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
         sqla.Column("RoleID", sqla.Integer, gen_fk(roles.c.RoleID), nullable=False),
-        sqla.UniqueConstraint('UserID', 'RoleID'),
+        sqla.UniqueConstraint("UserID", "RoleID"),
     )
-    users2roles.create(engine, checkfirst=True)
+
+    with get_connection() as conn:
+        users2roles.create(conn, checkfirst=True)

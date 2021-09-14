@@ -9,7 +9,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
-from model.schema import Language
+from model.schema.feeds import Language
 
 dir_path = os.path.join(
     os.path.dirname(__file__),

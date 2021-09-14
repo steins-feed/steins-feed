@@ -5,7 +5,7 @@ from flask import request
 from flask_security import current_user
 import os
 
-from model.schema import Language
+from model.schema.feeds import Language
 from model.utils.all import all_feeds, all_tags
 from model.utils.all import displayed_languages, displayed_tags
 
