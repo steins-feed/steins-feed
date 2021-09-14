@@ -1,4 +1,5 @@
 bcrypt
+bleach==4.1.0
 feedparser
 flask==2.0.1
 flask-security-too==4.1.1
