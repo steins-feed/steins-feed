@@ -4,7 +4,6 @@ import logging
 import os
 
 import sqlalchemy as sqla
-import sqlalchemy.orm as sqla_orm
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 import log
@@ -34,8 +33,17 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()
 
+# Session.
+session_factory = sqla_orm.sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine,
+)
+Session = sqla_orm.scoped_session(session_factory)
+
 # Declarative base.
 Base = sqla_orm.declarative_base(metadata=metadata)
+Base.query = Session.query_property()
 
 def get_model(name, mixins=[]):
     try:
@@ -48,17 +56,6 @@ def get_model(name, mixins=[]):
         )
         globals()[name] = Model
     return Model
-
-def get_session():
-    global session
-    if 'session' not in globals():
-        session_factory = sessionmaker(
-            autocommit=False,
-            autoflush=False,
-            bind=engine,
-        )
-        session = scoped_session(session_factory)
-    return session
 
 def get_table(name):
     return sqla.Table(

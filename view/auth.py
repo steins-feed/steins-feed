@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship, synonym
 from wtforms import StringField
 from wtforms.validators import DataRequired
 
-from model import get_model, get_session, get_table
+from model import get_model, get_table, Session
 
 load_dotenv(os.path.join(
     os.path.dirname(__file__),
@@ -38,7 +38,7 @@ def get_user_datastore():
                 secondary=get_table('Users2Roles'),
                 back_populates='roles')
 
-        user_datastore = SQLAlchemySessionUserDatastore(get_session(), User, Role)
+        user_datastore = SQLAlchemySessionUserDatastore(Session, User, Role)
     return user_datastore
 
 class ExtendedLoginForm(LoginForm):
