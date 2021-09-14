@@ -4,11 +4,12 @@ from flask import Blueprint, request, render_template, redirect, url_for
 from flask_security import auth_required, current_user
 
 from .req import base_context
+from model import get_session
+from model.orm import displayed
 from model.schema.feeds import Language
 from model.utils.custom import upsert_feed, upsert_display
 from model.utils.custom import delete_tags_tagged, insert_tags_untagged
 from model.utils.data import all_tags_feed
-from model.utils.one import get_feed_row
 
 bp = Blueprint("feed", __name__, url_prefix="/feed")
 
@@ -17,7 +18,9 @@ bp = Blueprint("feed", __name__, url_prefix="/feed")
 def feed(feed_id=None):
     if not feed_id:
         feed_id = request.args.get('feed_id', type=int)
-    feed_row = get_feed_row(feed_id, current_user.UserID)
+    with get_session() as session:
+        feed_row = session.get(displayed.Feed, feed_id)
+    print(feed_row.users)
 
     return render_template("feed.html",
             **base_context(),
