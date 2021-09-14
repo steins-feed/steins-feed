@@ -11,7 +11,8 @@ from sqlalchemy.orm import relationship, synonym
 from wtforms import StringField
 from wtforms.validators import DataRequired
 
-from model import get_model, get_table, Session
+from model import get_table
+from model import Base, Session
 
 load_dotenv(os.path.join(
     os.path.dirname(__file__),
@@ -19,27 +20,33 @@ load_dotenv(os.path.join(
     ".env",
 ))
 
+class User(Base, UserMixin):
+    __table__ = get_table("Users")
+
+    id = synonym('UserID')
+    name = synonym('Name')
+    password = synonym('Password')
+    email = synonym('Email')
+    active = synonym('Active')
+
+    roles = relationship(
+        "Roles",
+        secondary=get_table("Users2Roles"),
+        back_populates="users",
+    )
+
+class Role(Base, RoleMixin):
+    __table__ = get_table("Roles")
+
+    users = relationship(
+        "Users",
+        secondary=get_table("Users2Roles"),
+        back_populates="roles",
+    )
+
 def get_user_datastore():
     global user_datastore
     if 'user_datastore' not in globals():
-        User = get_model('Users', [UserMixin])
-        Role = get_model('Roles', [RoleMixin])
-
-        User.id = synonym('UserID')
-        User.name = synonym('Name')
-        User.password = synonym('Password')
-        User.email = synonym('Email')
-        User.active = synonym('Active')
-        User.roles = relationship(
-                'Roles',
-                secondary=get_table('Users2Roles'),
-                back_populates='users')
-
-        Role.users = relationship(
-                'Users',
-                secondary=get_table('Users2Roles'),
-                back_populates='roles')
-
         user_datastore = SQLAlchemySessionUserDatastore(Session, User, Role)
     return user_datastore
 
