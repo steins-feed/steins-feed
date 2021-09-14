@@ -4,7 +4,7 @@ import logging
 import os
 
 import sqlalchemy as sqla
-from sqlalchemy.ext.declarative import declarative_base
+import sqlalchemy.orm as sqla_orm
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 import log
@@ -34,13 +34,16 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()
 
+# Declarative base.
+Base = sqla_orm.declarative_base(metadata=metadata)
+
 def get_model(name, mixins=[]):
     try:
         Model = globals()[name]
     except KeyError:
         Model = type(
             name,
-            tuple([get_base()] + mixins),
+            tuple([Base] + mixins),
             {'__table__': get_table(name)},
         )
         globals()[name] = Model
@@ -63,10 +66,3 @@ def get_table(name):
         metadata,
         autoload=True,
     )
-
-def get_base():
-    global Base
-    if 'Base' not in globals():
-        Base = declarative_base(metadata=metadata)
-        Base.query = get_session().query_property()
-    return Base
