@@ -8,20 +8,20 @@ from .. import Base
 
 t_display = get_table("Display")
 
-class User(Base):
+class UserDisplay(Base):
     __table__ = get_table("Users")
 
     feeds = sqla_orm.relationship(
-        "Feed",
+        "DisplayedFeed",
         secondary=t_display,
         back_populates="users",
     )
 
-class Feed(Base):
+class DisplayedFeed(Base):
     __table__ = get_table("Feeds")
 
     users = sqla_orm.relationship(
-        "User",
+        "UserDisplay",
         secondary=t_display,
         back_populates="feeds",
     )

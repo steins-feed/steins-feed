@@ -10,15 +10,15 @@
 <form method="post" action="{{ url_for('feed.update_feed') }}">
 <p>
 Title:<br>
-<input type="text" name="title" value="{{ feed_row['Title'] }}">
+<input type="text" name="title" value="{{ feed_row.Title }}">
 </p>
 <p>
 Link:<br>
-<input type="text" name="link" value="{{ feed_row['Link'] }}">
+<input type="text" name="link" value="{{ feed_row.Link }}">
 </p>
 <p>
 Language:<br>
-{{ select_lang(langs_all, feed_row['Language']) }}
+{{ select_lang(langs_all, feed_row.Language) }}
 </p>
 {#
 <p>
@@ -51,20 +51,20 @@ Full text and everything
 #}
 <p>
 Display:<br>
-# if feed_row['Displayed']
+# if feed_row.Displayed
 <input type="radio" name="display" value=1 checked>
 # else
 <input type="radio" name="display" value=1>
 # endif
 Displayed
-# if feed_row['Displayed']
+# if feed_row.Displayed
 <input type="radio" name="display" value=0>
 # else
 <input type="radio" name="display" value=0 checked>
 # endif
 Hidden
 </p>
-<input type="hidden" name="feed" value={{ feed_row['FeedID'] }}>
+<input type="hidden" name="feed" value={{ feed_row.FeedID }}>
 <input type="submit" value="Update feed">
 </form>
 <hr>
@@ -76,7 +76,7 @@ Hidden
 </option>
 # endfor
 </select>
-<button onclick="toggle_tags({{ feed_row['FeedID'] }})" type="button">
+<button onclick="toggle_tags({{ feed_row.FeedID }})" type="button">
 <i class="material-icons">compare_arrows</i>
 </button>
 <select name="untagged" style="width: 100px;" multiple>

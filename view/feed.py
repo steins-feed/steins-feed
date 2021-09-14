@@ -19,12 +19,12 @@ def feed(feed_id=None):
     if not feed_id:
         feed_id = request.args.get('feed_id', type=int)
     with get_session() as session:
-        feed_row = session.get(displayed.Feed, feed_id)
-    print(feed_row.users)
+        feed_row = session.get(displayed.DisplayedFeed, feed_id)
+        feed_row.Displayed = any([user_it.UserID == current_user.UserID for user_it in feed_row.users])
 
     return render_template("feed.html",
             **base_context(),
-            topnav_title=feed_row['Title'],
+            topnav_title=feed_row.Title,
             feed_row=feed_row,
             langs_all=[e for e in Language],
             lang_default=Language.ENGLISH,
