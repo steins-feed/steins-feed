@@ -4,9 +4,10 @@ from flask import Blueprint, request, render_template
 from flask_security import auth_required
 
 from .req import base_context
+from model import get_session
+from model.orm import tagged
 from model.utils.custom import delete_feeds_tagged, insert_feeds_untagged
 from model.utils.data import all_feeds_lang_tag
-from model.utils.one import get_tag_row
 
 bp = Blueprint("tag", __name__, url_prefix="/tag")
 
@@ -14,11 +15,12 @@ bp = Blueprint("tag", __name__, url_prefix="/tag")
 @auth_required()
 def tag():
     tag_id = request.args.get('tag', type=int)
-    tag_row = get_tag_row(tag_id)
+    with get_session() as session:
+        tag_row = session.get(tagged.Tag, tag_id)
 
     return render_template("tag.html",
             **base_context(),
-            topnav_title=tag_row['Name'],
+            topnav_title=tag_row.Name,
             tag_row=tag_row,
             feeds_lang=all_feeds_lang_tag(tag_id)
     )
