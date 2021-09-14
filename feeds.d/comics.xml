@@ -10,8 +10,18 @@
     <lang>English</lang>
   </feed>
   <feed>
+    <title>Monkey User</title>
+    <link>https://www.monkeyuser.com/feed.xml</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
     <title>Piled Higher and Deeper</title>
     <link>http://phdcomics.com/gradfeed.php</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
+    <title>Why aren't you coding?</title>
+    <link>https://whyarentyoucoding.com/feed.xml</link>
     <lang>English</lang>
   </feed>
   <feed>

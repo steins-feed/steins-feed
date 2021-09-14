@@ -64,4 +64,9 @@
     <link>https://terrytao.wordpress.com/feed/</link>
     <lang>English</lang>
   </feed>
+  <feed>
+    <title>Wait But Why</title>
+    <link>https://waitbutwhy.com/feed</link>
+    <lang>English</lang>
+  </feed>
 </root>

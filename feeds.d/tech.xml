@@ -490,6 +490,11 @@
     <lang>English</lang>
   </feed>
   <feed>
+    <title>Smashing Magazine</title>
+    <link>https://www.smashingmagazine.com/feed/</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
     <title>t3n</title>
     <link>https://t3n.de/rss.xml</link>
     <lang>German</lang>

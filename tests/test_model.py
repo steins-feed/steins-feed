@@ -6,11 +6,23 @@ import os
 from sqlalchemy import exc, orm, sql, Integer
 
 from model import get_connection, get_table
-from model import get_session, get_model
+from model import Base, get_session
 from model.feeds import read_feeds
 from model.utils.recent import last_updated
 from model.xml import read_xml, write_xml
 from view.auth import get_user_datastore
+
+def get_model(name):
+    try:
+        Model = globals()[name]
+    except KeyError:
+        Model = type(
+            name,
+            (Base, ),
+            {'__table__': get_table(name)}
+        )
+        globals()[name] = Model
+    return Model
 
 def test_user_datastore():
     session = get_session()
