@@ -3,12 +3,17 @@
 import sqlalchemy as sqla
 
 from . import TINYTEXT, TEXT, MEDIUMTEXT, LONGTEXT
+from . import gen_fk
+
+from .. import engine
 
 def create_schema():
+    metadata = sqla.MetaData()
+
     # Users.
     users = sqla.Table(
         "Users",
-        sqla.MetaData(),
+        metadata,
         sqla.Column("UserID", sqla.Integer, primary_key=True),
         sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
         sqla.Column("Password", TINYTEXT, nullable=False),
@@ -21,7 +26,7 @@ def create_schema():
     # Roles.
     roles = sqla.Table(
         "Roles",
-        sqla.MetaData(),
+        metadata,
         sqla.Column("RoleID", sqla.Integer, primary_key=True),
         sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
         sqla.Column("Description", TEXT),
@@ -31,9 +36,9 @@ def create_schema():
     # Many-to-many relationship.
     users2roles = sqla.Table(
         "Users2Roles",
-        sqla.MetaData(),
+        metadata,
         sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
         sqla.Column("RoleID", sqla.Integer, gen_fk(roles.c.RoleID), nullable=False),
-        schema.UniqueConstraint('UserID', 'RoleID'),
+        sqla.UniqueConstraint('UserID', 'RoleID'),
     )
     users2roles.create(engine, checkfirst=True)

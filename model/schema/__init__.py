@@ -5,18 +5,6 @@ import sqlalchemy as sqla
 from sqlalchemy import func, schema
 
 from model import engine, get_table
-from . import users
-
-def create_schema():
-    users.create_schema()
-
-    create_schema_feeds()
-    create_schema_display()
-    create_schema_tags()
-
-    create_schema_items()
-    create_schema_likes()
-    create_schema_magic()
 
 TINYTEXT = sqla.String(2**8 - 1)
 TEXT = sqla.String(2**16 - 1)
@@ -35,6 +23,18 @@ class Language(enum.Enum):
 
 def gen_fk(c):
     return sqla.ForeignKey(c, onupdate='CASCADE', ondelete='CASCADE')
+
+def create_schema():
+    from . import users
+    users.create_schema()
+
+    create_schema_feeds()
+    create_schema_display()
+    create_schema_tags()
+
+    create_schema_items()
+    create_schema_likes()
+    create_schema_magic()
 
 #------------------------------------------------------------------------------
 
