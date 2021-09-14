@@ -5,10 +5,10 @@ import sqlalchemy as sqla
 from sqlalchemy import func, schema
 
 from model import engine, get_table
+from . import users
 
 def create_schema():
-    create_schema_users()
-    create_schema_roles()
+    users.create_schema()
 
     create_schema_feeds()
     create_schema_display()
@@ -35,35 +35,6 @@ class Language(enum.Enum):
 
 def gen_fk(c):
     return sqla.ForeignKey(c, onupdate='CASCADE', ondelete='CASCADE')
-
-#------------------------------------------------------------------------------
-
-def create_schema_users():
-    users = sqla.Table("Users", sqla.MetaData(),
-            sqla.Column("UserID", sqla.Integer, primary_key=True),
-            sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
-            sqla.Column("Password", TINYTEXT, nullable=False),
-            sqla.Column("Email", TINYTEXT, nullable=False, unique=True),
-            sqla.Column("Active", sqla.Boolean, nullable=False),
-            sqla.Column("fs_uniquifier", TINYTEXT, nullable=False, unique=True)
-    )
-    users.create(engine, checkfirst=True)
-
-def create_schema_roles():
-    roles = sqla.Table("Roles", sqla.MetaData(),
-            sqla.Column("RoleID", sqla.Integer, primary_key=True),
-            sqla.Column("Name", TINYTEXT, nullable=False, unique=True),
-            sqla.Column("Description", TEXT)
-    )
-    roles.create(engine, checkfirst=True)
-
-    users = get_table('Users')
-    users2roles = sqla.Table("Users2Roles", sqla.MetaData(),
-            sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
-            sqla.Column("RoleID", sqla.Integer, gen_fk(roles.c.RoleID), nullable=False),
-            schema.UniqueConstraint('UserID', 'RoleID')
-    )
-    users2roles.create(engine, checkfirst=True)
 
 #------------------------------------------------------------------------------
 
