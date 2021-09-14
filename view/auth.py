@@ -30,7 +30,7 @@ class User(Base, UserMixin):
     active = synonym('Active')
 
     roles = relationship(
-        "Roles",
+        "Role",
         secondary=get_table("Users2Roles"),
         back_populates="users",
     )
@@ -39,7 +39,7 @@ class Role(Base, RoleMixin):
     __table__ = get_table("Roles")
 
     users = relationship(
-        "Users",
+        "User",
         secondary=get_table("Users2Roles"),
         back_populates="roles",
     )
