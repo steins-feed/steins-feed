@@ -24,7 +24,7 @@ dir_path = os.path.join(par_path, "clf.d")
 mkdir_p(dir_path)
 
 from magic import train_classifier
-from model import get_session, get_model
+from model import get_connection, get_table
 from model.utils.all import liked_languages, liked_items, disliked_items
 from model.utils.custom import reset_magic
 from model.utils.recent import last_updated, last_liked
@@ -85,10 +85,10 @@ def do_feeds(pipeline, user_id, lang, timestamp, delta_timestamp=timedelta(days=
 
     return table
 
-session = get_session()
-User = get_model('Users')
+with get_connection() as conn:
+    users = conn.execute(sqla.select(get_table("Users"))).fetchall()
 
-for user_it in session.query(User):
+for user_it in users:
     user = user_it.Name
     user_id = user_it.UserID
     user_path = os.path.join(dir_path, str(user_id))

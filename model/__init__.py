@@ -53,18 +53,7 @@ def get_connection():
 def get_session():
     return sqla_orm.Session(engine)
 
-def get_model(name, mixins=[]):
-    try:
-        Model = globals()[name]
-    except KeyError:
-        Model = type(
-            name,
-            tuple([Base] + mixins),
-            {'__table__': get_table(name)},
-        )
-        globals()[name] = Model
-    return Model
-
+# Table.
 def get_table(name):
     return sqla.Table(
         name,
