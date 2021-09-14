@@ -4,8 +4,8 @@ from datetime import datetime
 from sqlalchemy import func, sql
 
 from .. import get_connection, get_table
-from ..schema import Like
 from ..schema.feeds import Language
+from ..schema.items import Like
 
 def all_feeds():
     feeds = get_table('Feeds')

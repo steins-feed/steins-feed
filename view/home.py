@@ -12,8 +12,8 @@ from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from .req import Feed, Timeunit
 from .req import base_context
 from magic import build_feature, compute_score, trained_languages
-from model.schema import Like
 from model.schema.feeds import Language
+from model.schema.items import Like
 from model.utils.all import updated_dates, updated_items, unscored_items
 from model.utils.recent import last_updated
 from model.utils.custom import upsert_like, upsert_magic

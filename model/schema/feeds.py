@@ -14,13 +14,14 @@ class Language(enum.Enum):
     SWEDISH = 'Swedish'
 
 def create_schema():
-    users = get_table("Users")
     metadata = sqla.MetaData()
+
+    users = get_table("Users")
 
     # Feeds.
     feeds = sqla.Table(
         "Feeds",
-        sqla.MetaData(),
+        metadata,
         sqla.Column("FeedID", sqla.Integer, primary_key=True),
         sqla.Column("Title", TEXT, nullable=False, unique=True),
         sqla.Column("Link", TEXT, nullable=False, unique=True),
@@ -35,7 +36,7 @@ def create_schema():
     # Display.
     display = sqla.Table(
         "Display",
-        sqla.MetaData(),
+        metadata,
         sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
         sqla.Column("FeedID", sqla.Integer, gen_fk(feeds.c.FeedID), nullable=False),
         sqla.UniqueConstraint("UserID", "FeedID"),
@@ -47,7 +48,7 @@ def create_schema():
     # Tags.
     tags = sqla.Table(
         "Tags",
-        sqla.MetaData(),
+        metadata,
         sqla.Column("TagID", sqla.Integer, primary_key=True),
         sqla.Column("UserID", sqla.Integer, gen_fk(users.c.UserID), nullable=False),
         sqla.Column("Name", TINYTEXT, nullable=False),
@@ -60,7 +61,7 @@ def create_schema():
     # Many-to-many relationship.
     tags2feeds = sqla.Table(
         "Tags2Feeds",
-        sqla.MetaData(),
+        metadata,
         sqla.Column("TagID", sqla.Integer, gen_fk(tags.c.TagID), nullable=False),
         sqla.Column("FeedID", sqla.Integer, gen_fk(feeds.c.FeedID), nullable=False),
         sqla.UniqueConstraint("TagID", "FeedID"),

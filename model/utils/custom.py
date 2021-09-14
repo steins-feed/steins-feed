@@ -3,7 +3,7 @@
 from sqlalchemy import sql
 
 from .. import get_connection, get_table
-from ..schema import Like
+from ..schema.items import Like
 
 def upsert_like(user_id, item_id, like_val):
     like = get_table('Like')
