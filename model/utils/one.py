@@ -2,7 +2,7 @@
 
 from sqlalchemy import sql
 
-from .. import engine, get_table
+from .. import get_connection, get_table
 
 def get_feed_row(feed_id, user_id):
     feeds = get_table('Feeds')
@@ -25,7 +25,7 @@ def get_feed_row(feed_id, user_id):
             feeds.c.FeedID == feed_id
     )
 
-    with engine.connect() as conn:
+    with get_connection() as conn:
         return conn.execute(q).fetchone()
 
 def get_tag_row(tag_id):
@@ -33,5 +33,5 @@ def get_tag_row(tag_id):
 
     q = sql.select([tags]).where(tags.c.TagID == tag_id)
 
-    with engine.connect() as conn:
+    with get_connection() as conn:
         return conn.execute(q).fetchone()

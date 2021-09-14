@@ -2,7 +2,7 @@
 
 from sqlalchemy import sql
 
-from .. import engine, get_table
+from .. import get_connection, get_table
 from ..schema import Language, Like
 
 def all_langs_feeds():
@@ -13,7 +13,7 @@ def all_langs_feeds():
     ]).distinct().order_by(
         sql.collate(feeds.c.Language, 'NOCASE')
     )
-    with engine.connect() as conn:
+    with get_connection() as conn:
         res = conn.execute(q).fetchall()
 
     res = [Language[e['Language']] for e in res]
@@ -32,7 +32,7 @@ def all_feeds_lang_disp(user_id):
         lang_it = Language(lang_it)
         res[lang_it] = []
 
-        with engine.connect() as conn:
+        with get_connection() as conn:
             q = sql.select([
                     feeds
             ]).select_from(
@@ -71,7 +71,7 @@ def all_feeds_lang_tag(tag_id):
         lang_it = Language(lang_it)
         res[lang_it] = []
 
-        with engine.connect() as conn:
+        with get_connection() as conn:
             q = sql.select([
                     feeds
             ]).select_from(
@@ -116,7 +116,7 @@ def all_likes_lang(user_id):
     )
 
     res = dict()
-    with engine.connect() as conn:
+    with get_connection() as conn:
         for lang_it in all_langs_feeds():
             lang_it = Language(lang_it)
 
@@ -139,7 +139,7 @@ def all_tags_feed(user_id, feed_id):
                          .where(tags2feeds.c.FeedID == feed_id)
                          .alias())
 
-    with engine.connect() as conn:
+    with get_connection() as conn:
         q = sql.select([
                 tags
         ]).select_from(

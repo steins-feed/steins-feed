@@ -3,7 +3,7 @@
 from lxml import etree
 from sqlalchemy import sql
 
-from . import engine, get_table
+from . import get_connection, get_table
 from .schema import Language
 
 def read_xml(f, user_id=None, tag=None):
@@ -25,7 +25,7 @@ def read_xml(f, user_id=None, tag=None):
     q = t_feeds.insert()
     q = q.prefix_with("OR IGNORE", dialect="sqlite")
 
-    with engine.connect() as conn:
+    with get_connection() as conn:
         conn.execute(q, rows)
 
     if user_id and tag:
@@ -35,7 +35,7 @@ def read_xml(f, user_id=None, tag=None):
         )
         q = q.prefix_with("OR IGNORE", dialect="sqlite")
 
-        with engine.connect() as conn:
+        with get_connection() as conn:
             conn.execute(q)
 
         q_select = sql.select([
@@ -51,7 +51,7 @@ def read_xml(f, user_id=None, tag=None):
         q = q.from_select([q_select.c.FeedID, q_select.c.TagID], q_select)
         q = q.prefix_with("OR IGNORE", dialect="sqlite")
 
-        with engine.connect() as conn:
+        with get_connection() as conn:
             conn.execute(q, rows)
 
 def write_xml(f, user_id=None, tag=None):
@@ -71,7 +71,7 @@ def write_xml(f, user_id=None, tag=None):
         ))
     q = q.order_by(sql.collate(t_feeds.c.Title, "NOCASE"))
 
-    with engine.connect() as conn:
+    with get_connection() as conn:
         rows = conn.execute(q).fetchall()
 
     root = etree.Element("root")

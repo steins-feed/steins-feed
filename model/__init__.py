@@ -4,7 +4,7 @@ import logging
 import os
 
 import sqlalchemy as sqla
-from sqlalchemy.orm import scoped_session, sessionmaker
+import sqlalchemy.orm as sqla_orm
 
 import log
 
@@ -44,6 +44,12 @@ Session = sqla_orm.scoped_session(session_factory)
 # Declarative base.
 Base = sqla_orm.declarative_base(metadata=metadata)
 Base.query = Session.query_property()
+
+def get_connection():
+    return engine.connect()
+
+def get_session():
+    return sqla_orm.Session(engine)
 
 def get_model(name, mixins=[]):
     try:

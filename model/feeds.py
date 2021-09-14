@@ -9,7 +9,7 @@ from sqlalchemy import func, sql
 
 import log
 
-from . import engine, get_table
+from . import get_connection, get_table
 
 # Logger.
 logger = log.Logger(__name__, logging.INFO)
@@ -23,7 +23,7 @@ def read_feeds(title_pattern=None):
         q = q.where(t_feeds.c.Title.like(f"%{title_pattern}%"))
     q = q.order_by(sql.collate(t_feeds.c.Title, "NOCASE"))
 
-    with engine.connect() as conn:
+    with get_connection() as conn:
         feeds = conn.execute(q).fetchall()
 
     for feed_it in feeds:
@@ -40,14 +40,14 @@ def read_feeds(title_pattern=None):
         q = t_items.insert()
         q = q.prefix_with("OR IGNORE", dialect="sqlite")
 
-        with engine.connect() as conn:
+        with get_connection() as conn:
             conn.execute(q, rows)
 
         q = (t_feeds.update()
                     .values(Updated=func.now())
                     .where(t_feeds.c.FeedID == feed_it["FeedID"]))
 
-        with engine.connect() as conn:
+        with get_connection() as conn:
             conn.execute(q)
 
 def parse_feed(feed, timeout=1):
