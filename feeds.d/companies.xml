@@ -384,4 +384,9 @@
     <link>https://stackoverflow.blog/feed/</link>
     <lang>English</lang>
   </feed>
+  <feed>
+    <title>Work Life by Atlassian</title>
+    <link>https://www.atlassian.com/blog/feed</link>
+    <lang>English</lang>
+  </feed>
 </root>

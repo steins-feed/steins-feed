@@ -275,6 +275,11 @@
     <lang>English</lang>
   </feed>
   <feed>
+    <title>jetzt</title>
+    <link>https://www.jetzt.de/alle_artikel.rss</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
     <title>Minutes</title>
     <link>https://minutes.co/feed/</link>
     <lang>English</lang>
