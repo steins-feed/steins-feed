@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sqlalchemy.orm as sqla_orm
+import sqlalchemy as sqla
 
 from .. import get_table
 from .. import Base
@@ -10,7 +10,7 @@ t_users2roles = get_table("Users2Roles")
 class User(Base):
     __table__ = get_table("Users")
 
-    roles = sqla_orm.relationship(
+    roles = sqla.orm.relationship(
         "Role",
         secondary=t_users2roles,
         back_populates="users",
@@ -19,7 +19,7 @@ class User(Base):
 class Role(Base):
     __table__ = get_table("Roles")
 
-    users = sqla_orm.relationship(
+    users = sqla.orm.relationship(
         "User",
         secondary=t_users2roles,
         back_populates="roles",

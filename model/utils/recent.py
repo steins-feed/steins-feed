@@ -5,19 +5,14 @@ from datetime import datetime
 import sqlalchemy as sqla
 
 from .. import get_session
-from ..orm import displayed
+from ..orm.feeds import Feed
+from ..orm.users import User
 
 def last_updated(user_id=None):
     try:
-        q = sqla.select(
-            sqla.func.min(displayed.DisplayedFeed.Updated)
-        )
+        q = sqla.select(sqla.func.min(Feed.Updated))
         if user_id:
-            q = q.where(
-                displayed.DisplayedFeed.users.any(
-                    displayed.UserDisplay.UserID == user_id
-                )
-            )
+            q = q.where(Feed.users.any(User.UserID == user_id))
 
         with get_session() as session:
             res = session.execute(q).fetchone()[0]

@@ -5,7 +5,7 @@ from flask_security import auth_required, current_user
 
 from .req import base_context
 from model import get_session
-from model.orm import displayed
+from model.orm.feeds import Feed
 from model.schema.feeds import Language
 from model.utils.custom import upsert_feed, upsert_display
 from model.utils.custom import delete_tags_tagged, insert_tags_untagged
@@ -19,7 +19,7 @@ def feed(feed_id=None):
     if not feed_id:
         feed_id = request.args.get('feed_id', type=int)
     with get_session() as session:
-        feed_row = session.get(displayed.DisplayedFeed, feed_id)
+        feed_row = session.get(Feed, feed_id)
         feed_row.Displayed = any([user_it.UserID == current_user.UserID for user_it in feed_row.users])
 
     return render_template("feed.html",

@@ -5,7 +5,7 @@ from flask_security import auth_required
 
 from .req import base_context
 from model import get_session
-from model.orm import tagged
+from model.orm.feeds import Tag
 from model.utils.custom import delete_feeds_tagged, insert_feeds_untagged
 from model.utils.data import all_feeds_lang_tag
 
@@ -16,7 +16,7 @@ bp = Blueprint("tag", __name__, url_prefix="/tag")
 def tag():
     tag_id = request.args.get('tag', type=int)
     with get_session() as session:
-        tag_row = session.get(tagged.Tag, tag_id)
+        tag_row = session.get(Tag, tag_id)
 
     return render_template("tag.html",
             **base_context(),
