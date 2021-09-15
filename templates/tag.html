@@ -6,12 +6,12 @@
 
 {% block body %}
 <hr>
-# for lang_it, feeds_it in feeds_lang.items()
+# for lang_it in feeds_lang
 <p>{{ lang_it.value }} feeds:</p>
 <select name="tagged_{{ lang_it.name }}" size=10 style="width: 200px;" multiple>
-# for row_it in feeds_it[0]
-<option value={{ row_it['FeedID'] }}>
-{{ row_it['Title'] }}
+# for row_it in feeds_lang[lang_it]
+<option value={{ row_it.FeedID }}>
+{{ row_it.Title }}
 </option>
 # endfor
 </select>
@@ -19,9 +19,9 @@
 <i class="material-icons">compare_arrows</i>
 </button>
 <select name="untagged_{{ lang_it.name }}" size=10 style="width: 200px;" multiple>
-# for row_it in feeds_it[1]
-<option value={{ row_it['FeedID'] }}>
-{{ row_it['Title'] }}
+# for row_it in feeds_lang_not[lang_it]
+<option value={{ row_it.FeedID }}>
+{{ row_it.Title }}
 </option>
 # endfor
 </select>

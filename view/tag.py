@@ -2,12 +2,14 @@
 
 from flask import Blueprint, request, render_template
 from flask_security import auth_required
+import sqlalchemy as sqla
 
 from .req import base_context
 from model import get_session
-from model.orm.feeds import Tag
+from model.orm.feeds import Feed, Tag
+from model.schema.feeds import Language
 from model.utils.custom import delete_feeds_tagged, insert_feeds_untagged
-from model.utils.data import all_feeds_lang_tag
+from model.utils.data import all_langs_feeds
 
 bp = Blueprint("tag", __name__, url_prefix="/tag")
 
@@ -22,7 +24,8 @@ def tag():
             **base_context(),
             topnav_title=tag_row.Name,
             tag_row=tag_row,
-            feeds_lang=all_feeds_lang_tag(tag_id)
+            feeds_lang=feeds_lang(tag_id),
+            feeds_lang_not=feeds_lang(tag_id, False),
     )
 
 @bp.route("/toggle_feeds", methods=['POST'])
@@ -36,3 +39,26 @@ def toggle_feeds():
     insert_feeds_untagged(tag_id, untagged)
 
     return ("", 200)
+
+def feeds_lang(tag_id, flag=True):
+    res = dict()
+
+    for lang_it in all_langs_feeds():
+        lang_it = Language(lang_it)
+
+        q = sqla.select(
+            Feed
+        ).where(
+            Feed.Language == lang_it.name,
+        ).order_by(
+            sqla.collate(Feed.Title, 'NOCASE')
+        )
+        if flag:
+            q = q.where(Feed.tags.any(Tag.TagID == tag_id))
+        else:
+            q = q.where(~Feed.tags.any(Tag.TagID == tag_id))
+
+        with get_session() as session:
+            res[lang_it] = [e[0] for e in session.execute(q)]
+
+    return res
