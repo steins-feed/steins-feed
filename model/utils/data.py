@@ -130,38 +130,3 @@ def all_likes_lang(user_id):
             )
 
     return res
-
-def all_tags_feed(user_id, feed_id):
-    tags = get_table('Tags')
-    tags2feeds = get_table('Tags2Feeds')
-
-    res = []
-    tags2feeds_feed = (sql.select([tags2feeds])
-                         .where(tags2feeds.c.FeedID == feed_id)
-                         .alias())
-
-    with get_connection() as conn:
-        q = sql.select([
-                tags
-        ]).select_from(
-                tags.join(tags2feeds_feed)
-        ).where(
-                tags.c.UserID == user_id
-        ).order_by(
-                sql.collate(tags.c.Name, 'NOCASE')
-        )
-        res.append(conn.execute(q).fetchall())
-
-        q = sql.select([
-                tags
-        ]).select_from(
-                tags.outerjoin(tags2feeds_feed)
-        ).where(sql.and_(
-                tags.c.UserID == user_id,
-                tags2feeds_feed.c.TagID == None
-        )).order_by(
-                sql.collate(tags.c.Name, 'NOCASE')
-        )
-        res.append(conn.execute(q).fetchall())
-
-    return res

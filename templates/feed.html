@@ -70,9 +70,9 @@ Hidden
 <hr>
 <p>Tags:</p>
 <select name="tagged" style="width: 100px;" multiple>
-# for tag_it in tags_feed[0]
-<option value={{ tag_it['TagID'] }}>
-{{ tag_it['Name'] }}
+# for tag_it in feed_tags
+<option value={{ tag_it.TagID }}>
+{{ tag_it.Name }}
 </option>
 # endfor
 </select>
@@ -80,9 +80,9 @@ Hidden
 <i class="material-icons">compare_arrows</i>
 </button>
 <select name="untagged" style="width: 100px;" multiple>
-# for tag_it in tags_feed[1]
-<option value={{ tag_it['TagID'] }}>
-{{ tag_it['Name'] }}
+# for tag_it in feed_tags_not
+<option value={{ tag_it.TagID }}>
+{{ tag_it.Name }}
 </option>
 # endfor
 </select>
