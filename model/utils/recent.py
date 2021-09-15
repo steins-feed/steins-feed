@@ -6,6 +6,7 @@ import sqlalchemy as sqla
 
 from .. import get_session
 from ..orm.feeds import Feed
+from ..orm.items import Like
 from ..orm.users import User
 
 def last_updated(user_id=None):
@@ -25,14 +26,13 @@ def last_updated(user_id=None):
     return res
 
 def last_liked(user_id=None):
-    like = get_table('Like')
-
     try:
-        q = sql.select([func.max(like.c.Updated)])
+        q = sqla.select([sqla.func.max(Like.Updated)])
         if user_id:
-            q = q.where(like.c.UserID == user_id)
-        with get_connection() as conn:
-            res = conn.execute(q).fetchone()[0]
+            q = q.where(Like.UserID == user_id)
+
+        with get_session() as session:
+            res = session.execute(q).fetchone()[0]
 
         if res is None:
             raise IndexError
