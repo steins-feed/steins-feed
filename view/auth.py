@@ -11,8 +11,8 @@ from sqlalchemy.orm import relationship, synonym
 from wtforms import StringField
 from wtforms.validators import DataRequired
 
-from model import get_table
-from model import Base, Session
+from model import Session
+from model.orm import users
 
 load_dotenv(os.path.join(
     os.path.dirname(__file__),
@@ -20,34 +20,20 @@ load_dotenv(os.path.join(
     ".env",
 ))
 
-class User(Base, UserMixin):
-    __table__ = get_table("Users")
-
+class FSUser(users.User, UserMixin):
     id = synonym('UserID')
     name = synonym('Name')
     password = synonym('Password')
     email = synonym('Email')
     active = synonym('Active')
 
-    roles = relationship(
-        "Role",
-        secondary=get_table("Users2Roles"),
-        back_populates="users",
-    )
-
-class Role(Base, RoleMixin):
-    __table__ = get_table("Roles")
-
-    users = relationship(
-        "User",
-        secondary=get_table("Users2Roles"),
-        back_populates="roles",
-    )
+class FSRole(users.Role, RoleMixin):
+    ...
 
 def get_user_datastore():
     global user_datastore
     if 'user_datastore' not in globals():
-        user_datastore = SQLAlchemySessionUserDatastore(Session, User, Role)
+        user_datastore = SQLAlchemySessionUserDatastore(Session, FSUser, FSRole)
     return user_datastore
 
 class ExtendedLoginForm(LoginForm):
