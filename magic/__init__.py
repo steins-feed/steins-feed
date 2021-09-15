@@ -3,6 +3,7 @@
 import glob
 import os
 import pickle
+import re
 
 from lxml import html
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
@@ -80,7 +81,7 @@ def trained_languages(user_id):
     clf_paths = glob.glob(clf_path)
 
     extract_lang = lambda x: re.search(
-        rf"(?<=^{user_path})\w+(?=\.pickle$)",
+        rf"(?<=^{user_path + os.sep})\w+(?=\.pickle$)",
         x,
     ).group()
 
