@@ -2,27 +2,33 @@
 
 {% block body %}
 <hr>
-# for lang_it, feeds_it in likes_lang.items() if not (feeds_it[0]|count == 0 and feeds_it[1]|count == 0)
+# for lang_it in likes_lang
+# if likes_lang[lang_it]|count and dislikes_lang[lang_it]|count
 <h2>{{ lang_it.value }}</h2>
-<p>{{ feeds_it[0]|count }} likes:</p>
+# if likes_lang[lang_it]|count
+<p>{{ likes_lang[lang_it]|count }} likes:</p>
 <ul>
-# for row_it in feeds_it[0]
+# for row_it in likes_lang[lang_it]
 <li>
-{{ row_it['Feed'] }}:
-<a href="{{ row_it['Link'] }}">{{ row_it['Title']|safe }}</a>
-({{ row_it['Published']|day }}).
+{{ row_it.feed.Title }}:
+<a href="{{ row_it.Link }}">{{ row_it.Title|safe }}</a>
+({{ row_it.Published|day }}).
 </li>
 # endfor
 </ul>
-<p>{{ feeds_it[1]|count }} dislikes:</p>
+# endif
+# if dislikes_lang[lang_it]|count
+<p>{{ dislikes_lang[lang_it]|count }} dislikes:</p>
 <ul>
-# for row_it in feeds_it[1]
+# for row_it in dislikes_lang[lang_it]
 <li>
-{{ row_it['Feed'] }}:
-<a href="{{ row_it['Link'] }}">{{ row_it['Title']|safe }}</a>
-({{ row_it['Published']|day }}).
+{{ row_it.feed.Title }}:
+<a href="{{ row_it.Link }}">{{ row_it.Title|safe }}</a>
+({{ row_it.Published|day }}).
 </li>
 # endfor
 </ul>
+# endif
+# endif
 # endfor
 {% endblock %}

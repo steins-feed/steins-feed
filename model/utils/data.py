@@ -4,7 +4,6 @@ from sqlalchemy import sql
 
 from .. import get_connection, get_table
 from ..schema.feeds import Language
-from ..schema.items import Like
 
 def all_langs_feeds():
     feeds = get_table('Feeds')
@@ -95,38 +94,5 @@ def all_feeds_lang_tag(tag_id):
                     sql.collate(feeds.c.Title, 'NOCASE')
             )
             res[lang_it].append(conn.execute(q).fetchall())
-
-    return res
-
-def all_likes_lang(user_id):
-    feeds = get_table('Feeds')
-    items = get_table('Items')
-    like = get_table('Like')
-
-    q = sql.select([
-            items,
-            feeds.c.Title.label("Feed")
-    ]).select_from(
-            items.join(feeds).join(like)
-    ).where(sql.and_(
-            like.c.UserID == user_id,
-            like.c.Score == sql.bindparam("score"),
-            feeds.c.Language == sql.bindparam("lang")
-    )).order_by(
-        sql.desc(items.c.Published)
-    )
-
-    res = dict()
-    with get_connection() as conn:
-        for lang_it in all_langs_feeds():
-            lang_it = Language(lang_it)
-
-            res[lang_it] = []
-            res[lang_it].append(
-                    conn.execute(q, score=Like.UP.name, lang=lang_it.name).fetchall()
-            )
-            res[lang_it].append(
-                    conn.execute(q, score=Like.DOWN.name, lang=lang_it.name).fetchall()
-            )
 
     return res

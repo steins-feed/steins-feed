@@ -11,6 +11,7 @@ t_magic = get_table("Magic")
 class Item(Base):
     __table__ = get_table("Items")
 
+    feed = sqla.orm.relationship("Feed")
     likes = sqla.orm.relationship("Like")
     magic = sqla.orm.relationship("Magic")
 

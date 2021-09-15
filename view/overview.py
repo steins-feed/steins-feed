@@ -2,12 +2,17 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_security import auth_required, current_user
+import sqlalchemy as sqla
 
 from .req import base_context
+from model import get_session
+from model.orm.feeds import Feed
+from model.orm.items import Item, Like
 from model.schema.feeds import Language
+from model.schema.items import Like as LikeEnum
 from model.utils.custom import upsert_feed, upsert_display, delete_feeds
 from model.utils.custom import upsert_tag, delete_tags
-from model.utils.data import all_feeds_lang_disp, all_likes_lang
+from model.utils.data import all_langs_feeds, all_feeds_lang_disp
 
 bp = Blueprint("overview", __name__)
 
@@ -17,7 +22,8 @@ def statistics():
     return render_template("statistics.html",
             **base_context(),
             topnav_title=current_user.Name,
-            likes_lang=all_likes_lang(current_user.UserID)
+            likes_lang=likes_lang(current_user.UserID),
+            dislikes_lang=likes_lang(current_user.UserID, LikeEnum.DOWN.name),
     )
 
 @bp.route("/settings")
@@ -73,3 +79,30 @@ def add_tag():
 def delete_tag():
     delete_tags([request.form.get('tag', type=int)])
     return redirect(url_for("overview.settings"))
+
+def likes_lang(user_id, score=LikeEnum.UP.name):
+    q = sqla.select(
+        Item
+    ).where(
+        Item.likes.any(sqla.and_(
+            Like.UserID == user_id,
+            Like.Score == score,
+        )),
+        Item.feed.has(
+            Feed.Language == sqla.bindparam("lang"),
+        ),
+    ).order_by(
+        sqla.desc(Item.Published),
+    ).options(
+        sqla.orm.joinedload(Item.feed),
+    )
+
+    res = dict()
+    with get_session() as session:
+        for lang_it in all_langs_feeds():
+            lang_it = Language(lang_it)
+            res[lang_it] = [
+                e[0] for e in session.execute(q, {"lang": lang_it.name})
+            ]
+
+    return res
