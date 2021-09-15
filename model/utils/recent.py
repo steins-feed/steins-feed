@@ -1,17 +1,26 @@
 #!/usr/bin/env python3
 
 from datetime import datetime
-from sqlalchemy import func, sql
 
-from model import get_connection, get_table
+import sqlalchemy as sqla
 
-def last_updated():
-    feeds = get_table('Feeds')
+from .. import get_session
+from ..orm import displayed
 
+def last_updated(user_id=None):
     try:
-        q = sql.select([func.min(feeds.c.Updated)])
-        with get_connection() as conn:
-            res = conn.execute(q).fetchone()[0]
+        q = sqla.select(
+            sqla.func.min(displayed.DisplayedFeed.Updated)
+        )
+        if user_id:
+            q = q.where(
+                displayed.DisplayedFeed.users.any(
+                    displayed.UserDisplay.UserID == user_id
+                )
+            )
+
+        with get_session() as session:
+            res = session.execute(q).fetchone()[0]
 
         if res is None:
             raise IndexError
