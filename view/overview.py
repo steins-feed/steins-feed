@@ -8,11 +8,12 @@ from .req import base_context
 from model import get_session
 from model.orm.feeds import Feed
 from model.orm.items import Item, Like
+from model.orm.users import User
 from model.schema.feeds import Language
 from model.schema.items import Like as LikeEnum
 from model.utils.custom import upsert_feed, upsert_display, delete_feeds
 from model.utils.custom import upsert_tag, delete_tags
-from model.utils.data import all_langs_feeds, all_feeds_lang_disp
+from model.utils.data import all_langs_feeds
 
 bp = Blueprint("overview", __name__)
 
@@ -34,7 +35,8 @@ def settings():
             topnav_title=current_user.Name,
             langs_all=[e for e in Language],
             lang_default=Language.ENGLISH,
-            feeds_lang=all_feeds_lang_disp(current_user.UserID)
+            feeds_lang=feeds_lang_disp(current_user.UserID),
+            feeds_lang_not=feeds_lang_disp(current_user.UserID, False),
     )
 
 @bp.route("/settings/toggle_display", methods=['POST'])
@@ -104,5 +106,28 @@ def likes_lang(user_id, score=LikeEnum.UP.name):
             res[lang_it] = [
                 e[0] for e in session.execute(q, {"lang": lang_it.name})
             ]
+
+    return res
+
+def feeds_lang_disp(user_id, flag=True):
+    res = dict()
+
+    for lang_it in all_langs_feeds():
+        lang_it = Language(lang_it)
+
+        q = sqla.select(
+            Feed
+        ).where(
+            Feed.Language == lang_it.name
+        ).order_by(
+            sqla.collate(Feed.Title, 'NOCASE')
+        )
+        if flag:
+            q = q.where(Feed.users.any(User.UserID == user_id))
+        else:
+            q = q.where(~Feed.users.any(User.UserID == user_id))
+
+        with get_session() as session:
+            res[lang_it] = [e[0] for e in session.execute(q)]
 
     return res
