@@ -25,9 +25,9 @@ mkdir_p(dir_path)
 
 from magic import train_classifier
 from model import get_connection, get_table
+from model.utils import last_updated, last_liked
 from model.utils.all import liked_languages, liked_items, disliked_items
 from model.utils.custom import reset_magic
-from model.utils.recent import last_updated, last_liked
 
 def do_words(pipeline):
     count_vect = pipeline.named_steps['vect']

@@ -14,8 +14,8 @@ from .req import base_context
 from magic import build_feature, compute_score, trained_languages
 from model.schema.feeds import Language
 from model.schema.items import Like
+from model.utils import last_updated
 from model.utils.all import updated_dates, updated_items, unscored_items
-from model.utils.recent import last_updated
 from model.utils.custom import upsert_like, upsert_magic
 
 bp = Blueprint("home", __name__, url_prefix="/home")
