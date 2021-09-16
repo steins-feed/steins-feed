@@ -5,6 +5,11 @@
     <lang>English</lang>
   </feed>
   <feed>
+    <title>Literary Hub</title>
+    <link>https://lithub.com/feed/</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
     <title>London Review of Books</title>
     <link>https://lrb.co.uk/feeds/rss</link>
     <lang>English</lang>

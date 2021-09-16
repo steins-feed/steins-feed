@@ -8,7 +8,7 @@ from sqlalchemy import exc, orm, sql, Integer
 from model import get_connection, get_table
 from model import Base, get_session
 from model.feeds import read_feeds
-from model.utils.recent import last_updated
+from model.utils import last_updated
 from model.xml import read_xml, write_xml
 from view.auth import get_user_datastore
 
