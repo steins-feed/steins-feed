@@ -8,8 +8,8 @@ from .req import base_context
 from model import get_session
 from model.orm.feeds import Feed, Tag
 from model.schema.feeds import Language
+from model.utils import all_langs_feeds
 from model.utils.custom import delete_feeds_tagged, insert_feeds_untagged
-from model.utils.data import all_langs_feeds
 
 bp = Blueprint("tag", __name__, url_prefix="/tag")
 

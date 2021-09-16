@@ -11,9 +11,9 @@ from model.orm.items import Item, Like
 from model.orm.users import User
 from model.schema.feeds import Language
 from model.schema.items import Like as LikeEnum
+from model.utils import all_langs_feeds
 from model.utils.custom import upsert_feed, upsert_display, delete_feeds
 from model.utils.custom import upsert_tag, delete_tags
-from model.utils.data import all_langs_feeds
 
 bp = Blueprint("overview", __name__)
 
