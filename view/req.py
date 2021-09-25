@@ -8,9 +8,8 @@ from flask_security import current_user
 import sqlalchemy as sqla
 
 from model import get_session
-from model.orm.feeds import Tag
+from model.orm import feeds as orm_feeds
 from model.schema.feeds import Language
-from model.utils.all import all_feeds
 from model.utils.all import displayed_languages, displayed_tags
 
 class Feed(enum.Enum):
@@ -83,13 +82,23 @@ def base_context():
 
     return context
 
+def all_feeds():
+    q = sqla.select(
+        orm_feeds.Feed
+    ).order_by(
+        sqla.collate(orm_feeds.Feed.Title, "NOCASE")
+    )
+
+    with get_session() as session:
+        return [e[0] for e in session.execute(q)]
+
 def all_tags(user_id):
     q = sqla.select(
-        Tag
+        orm_feeds.Tag
     ).where(
-        Tag.UserID == user_id
+        orm_feeds.Tag.UserID == user_id
     ).order_by(
-        sqla.collate(Tag.Name, 'NOCASE')
+        sqla.collate(orm_feeds.Tag.Name, "NOCASE")
     )
 
     with get_session() as session:

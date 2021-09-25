@@ -59,8 +59,8 @@ Full text and everything
 <p>
 <select name="feed">
 # for feed_it in feeds_all
-<option value="{{ feed_it['FeedID'] }}">
-{{ feed_it['Title'] }}
+<option value="{{ feed_it.FeedID }}">
+{{ feed_it.Title }}
 </option>
 # endfor
 </select>

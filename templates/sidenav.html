@@ -84,7 +84,7 @@ ALL LANGUAGES
 <legend>Feed</legend>
 <select name="feed_id">
 # for feed_it in feeds_all
-<option value="{{ feed_it['FeedID'] }}">{{ feed_it['Title'] }}</option>
+<option value="{{ feed_it.FeedID }}">{{ feed_it.Title }}</option>
 # endfor
 </select>
 <input type="submit" value="Edit">

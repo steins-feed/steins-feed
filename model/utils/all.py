@@ -7,17 +7,6 @@ from .. import get_connection, get_table
 from ..schema.feeds import Language
 from ..schema.items import Like
 
-def all_feeds():
-    feeds = get_table('Feeds')
-
-    q = sql.select([
-        feeds
-    ]).order_by(
-        sql.collate(feeds.c.Title, 'NOCASE')
-    )
-    with get_connection() as conn:
-        return conn.execute(q).fetchall()
-
 def displayed_languages(user_id):
     feeds = get_table('Feeds')
     display = get_table('Display')
