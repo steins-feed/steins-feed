@@ -18,19 +18,6 @@ def all_feeds():
     with get_connection() as conn:
         return conn.execute(q).fetchall()
 
-def all_tags(user_id):
-    tags = get_table('Tags')
-
-    q = sql.select([
-        tags
-    ]).where(
-        tags.c.UserID == user_id
-    ).order_by(
-        sql.collate(tags.c.Name, 'NOCASE')
-    )
-    with get_connection() as conn:
-        return conn.execute(q).fetchall()
-
 def displayed_languages(user_id):
     feeds = get_table('Feeds')
     display = get_table('Display')

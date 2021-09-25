@@ -99,7 +99,7 @@ ALL LANGUAGES
 <legend>Tag</legend>
 <select name="tag">
 # for tag_it in tags_all
-<option value="{{ tag_it['TagID'] }}">{{ tag_it['Name'] }}</option>
+<option value="{{ tag_it.TagID }}">{{ tag_it.Name }}</option>
 # endfor
 </select>
 <input type="submit" value="Edit">

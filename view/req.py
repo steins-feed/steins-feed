@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 
 import enum
-from flask import request
-from flask_security import current_user
 import os
 
+from flask import request
+from flask_security import current_user
+import sqlalchemy as sqla
+
+from model import get_session
+from model.orm.feeds import Tag
 from model.schema.feeds import Language
-from model.utils.all import all_feeds, all_tags
+from model.utils.all import all_feeds
 from model.utils.all import displayed_languages, displayed_tags
 
 class Feed(enum.Enum):
@@ -78,3 +82,15 @@ def base_context():
     context['enum_timeunit'] = Timeunit
 
     return context
+
+def all_tags(user_id):
+    q = sqla.select(
+        Tag
+    ).where(
+        Tag.UserID == user_id
+    ).order_by(
+        sqla.collate(Tag.Name, 'NOCASE')
+    )
+
+    with get_session() as session:
+        return [e[0] for e in session.execute(q)]

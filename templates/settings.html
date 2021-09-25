@@ -79,8 +79,8 @@ Full text and everything
 <p>
 <select name="tag">
 # for tag_it in tags_all
-<option value="{{ tag_it['TagID'] }}">
-{{ tag_it['Name'] }}
+<option value="{{ tag_it.TagID }}">
+{{ tag_it.Name }}
 </option>
 # endfor
 </select>
