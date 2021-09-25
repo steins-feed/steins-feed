@@ -7,32 +7,6 @@ from .. import get_connection, get_table
 from ..schema.feeds import Language
 from ..schema.items import Like
 
-def displayed_tags(user_id):
-    feeds = get_table('Feeds')
-    display = get_table('Display')
-    tags = get_table('Tags')
-    tags2feeds = get_table('Tags2Feeds')
-
-    q = sql.select([
-        tags.c.Name,
-    ]).select_from(
-        feeds.join(display)
-             .join(tags2feeds)
-             .join(tags, sql.and_(
-                 tags.c.TagID == tags2feeds.c.TagID,
-                 tags.c.UserID == display.c.UserID,
-             ))
-    ).where(
-        display.c.UserID == user_id,
-    ).order_by(
-        tags.c.Name,
-    ).distinct()
-    with get_connection() as conn:
-        res = conn.execute(q).fetchall()
-
-    res = [e['Name'] for e in res]
-    return res
-
 def updated_dates(user_id, keys, last=None, limit=None):
     feeds = get_table('Feeds')
     display = get_table('Display')

@@ -11,7 +11,6 @@ from model import get_session
 from model.orm import feeds as orm_feeds
 from model.orm import users as orm_users
 from model.schema.feeds import Language
-from model.utils.all import displayed_tags
 
 class Feed(enum.Enum):
     FULL = "Full"
@@ -107,12 +106,25 @@ def all_tags(user_id):
 
 def displayed_languages(user_id):
     q = sqla.select(
-        orm_feeds.Feed.Language
+        orm_feeds.Feed.Language,
     ).where(
-        orm_feeds.Feed.users.any(orm_users.User.UserID == user_id)
+        orm_feeds.Feed.users.any(orm_users.User.UserID == user_id),
     ).order_by(
         orm_feeds.Feed.Language
     ).distinct()
 
     with get_session() as session:
         return [Language[e.Language] for e in session.execute(q)]
+
+def displayed_tags(user_id):
+    q = sqla.select(
+        orm_feeds.Tag.Name,
+    ).where(
+        orm_feeds.Tag.UserID == user_id,
+        orm_feeds.Tag.feeds.any(orm_feeds.Feed.users.any(orm_users.User.UserID == user_id)),
+    ).order_by(
+        orm_feeds.Tag.Name,
+    ).distinct()
+
+    with get_session() as session:
+        return [e.Name for e in session.execute(q)]
