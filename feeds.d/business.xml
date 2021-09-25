@@ -190,6 +190,31 @@
     <lang>English</lang>
   </feed>
   <feed>
+    <title>manager magazin</title>
+    <link>https://www.manager-magazin.de/news/index.rss</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>manager magazin Finanzen</title>
+    <link>https://www.manager-magazin.de/finanzen/index.rss</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>manager magazin Lifestyle</title>
+    <link>https://www.manager-magazin.de/lifestyle/index.rss</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>manager magazin Politik</title>
+    <link>https://www.manager-magazin.de/politik/index.rss</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
+    <title>manager magazin Unternehmen</title>
+    <link>https://www.manager-magazin.de/unternehmen/index.rss</link>
+    <lang>German</lang>
+  </feed>
+  <feed>
     <title>The Wall Street Journal Lifestyle</title>
     <link>https://feeds.a.dj.com/rss/RSSLifestyle.xml</link>
     <lang>English</lang>
