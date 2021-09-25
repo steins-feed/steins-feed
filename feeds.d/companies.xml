@@ -150,6 +150,11 @@
     <lang>English</lang>
   </feed>
   <feed>
+    <title>GitHub ReadME</title>
+    <link>https://github.com/readme.rss</link>
+    <lang>English</lang>
+  </feed>
+  <feed>
     <title>GitLab</title>
     <link>https://about.gitlab.com/atom.xml</link>
     <lang>English</lang>
