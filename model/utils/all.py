@@ -7,25 +7,6 @@ from .. import get_connection, get_table
 from ..schema.feeds import Language
 from ..schema.items import Like
 
-def displayed_languages(user_id):
-    feeds = get_table('Feeds')
-    display = get_table('Display')
-
-    q = sql.select([
-            feeds.c.Language
-    ]).distinct().select_from(
-            feeds.join(display)
-    ).where(
-            display.c.UserID == user_id
-    ).order_by(
-            feeds.c.Language
-    )
-    with get_connection() as conn:
-        res = conn.execute(q).fetchall()
-
-    res = [Language[e['Language']] for e in res]
-    return res
-
 def displayed_tags(user_id):
     feeds = get_table('Feeds')
     display = get_table('Display')
