@@ -1,21 +1,25 @@
 #!/usr/bin/env python3
 
 from datetime import datetime, timedelta
-from flask import Blueprint, request, render_template, redirect, url_for
-from flask_security import auth_required, current_user
 from html import unescape
 from lxml import etree, html
 import os
 import pickle
 
+from flask import Blueprint, request, render_template, redirect, url_for
+from flask_security import auth_required, current_user
+import sqlalchemy as sqla
+
 from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from .req import Feed, Timeunit
 from .req import base_context
 from magic import build_feature, compute_score, trained_languages
+from model import orm
+from model import get_session
 from model.schema.feeds import Language
 from model.schema.items import Like
 from model.utils import last_updated
-from model.utils.all import updated_dates, updated_items, unscored_items
+from model.utils.all import updated_items, unscored_items
 from model.utils.custom import upsert_like, upsert_magic
 
 bp = Blueprint("home", __name__, url_prefix="/home")
@@ -175,3 +179,55 @@ def empty_leaves(e, tags=[]):
 
     if len(e) == 0 and not e.text and not e.tail and (len(tags) == 0 or e.tag in tags):
         e.drop_tree()
+
+def updated_dates(user_id, keys, last=None, limit=None):
+    q = sqla.select(
+        [sqla.extract(e.lower(), orm.items.Item.Published).label(e) for e in keys]
+    )
+    q_where = [
+        orm.items.Item.feed.has(
+            orm.feeds.Feed.users.any(
+                orm.users.User.UserID == user_id
+            )
+        )
+    ]
+    if last:
+        q_where.append(orm.items.Item.Published < last)
+    q = q.where(sqla.and_(*q_where))
+    q = q.order_by(*[sqla.desc(e) for e in keys])
+    if limit:
+        q = q.limit(limit)
+    q = q.distinct()
+
+    date_string, format_string = keys2strings(keys)
+    tuple2datetime = lambda x: datetime.strptime(
+            date_string.format(*x),
+            format_string
+    )
+
+    with get_session() as session:
+        return [tuple2datetime(e) for e in session.execute(q)]
+
+def keys2strings(keys):
+    date_string = "{}"
+    format_string = "%Y"
+
+    for key_it in keys[1:]:
+        if key_it == "Month":
+            date_string += "-{}"
+            format_string += "-%m"
+        elif key_it == "Week":
+            date_string += "-{}"
+            format_string += "-%W"
+        elif key_it == "Day":
+            date_string += "-{}"
+            format_string += "-%d"
+
+    if keys[-1] == "Month":
+        date_string += "-1"
+        format_string += "-%d"
+    elif keys[-1] == "Week":
+        date_string += "-1"
+        format_string += "-%w"
+
+    return date_string, format_string

@@ -1,41 +1,10 @@
 #!/usr/bin/env python3
 
-from datetime import datetime
 from sqlalchemy import func, sql
 
 from .. import get_connection, get_table
 from ..schema.feeds import Language
 from ..schema.items import Like
-
-def updated_dates(user_id, keys, last=None, limit=None):
-    feeds = get_table('Feeds')
-    display = get_table('Display')
-    items = get_table('Items')
-
-    q = sql.select([
-            sql.extract(e.lower(), items.c.Published).label(e) for e in keys
-    ]).distinct().select_from(
-            items.join(feeds)
-                 .join(display)
-    )
-    q_where = [display.c.UserID == user_id]
-    if last:
-        q_where.append(items.c.Published < last)
-    q = q.where(sql.and_(*q_where))
-    q = q.order_by(*[sql.desc(e) for e in keys])
-    if limit:
-        q = q.limit(limit)
-    with get_connection() as conn:
-        res = conn.execute(q).fetchall()
-
-    date_string, format_string = keys2strings(keys)
-    tuple2datetime = lambda x: datetime.strptime(
-            date_string.format(*x),
-            format_string
-    )
-
-    res = [tuple2datetime(e) for e in res]
-    return res
 
 def updated_items(user_id, langs, tags, start, finish, last=None, magic=False, unscored=False):
     t_feeds = get_table('Feeds')
@@ -117,30 +86,6 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False, u
         q = q.order_by(sql.desc(t_items_displayed.c.Published))
     with get_connection() as conn:
         return conn.execute(q).fetchall()
-
-def keys2strings(keys):
-    date_string = "{}"
-    format_string = "%Y"
-
-    for key_it in keys[1:]:
-        if key_it == "Month":
-            date_string += "-{}"
-            format_string += "-%m"
-        elif key_it == "Week":
-            date_string += "-{}"
-            format_string += "-%W"
-        elif key_it == "Day":
-            date_string += "-{}"
-            format_string += "-%d"
-
-    if keys[-1] == "Month":
-        date_string += "-1"
-        format_string += "-%d"
-    elif keys[-1] == "Week":
-        date_string += "-1"
-        format_string += "-%w"
-
-    return date_string, format_string
 
 def liked_languages(user_id):
     t_feeds = get_table('Feeds')
