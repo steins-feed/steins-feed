@@ -30,7 +30,6 @@ from model.orm import feeds as orm_feeds, items as orm_items
 from model.schema.feeds import Language
 from model.schema.items import Like
 from model.utils import last_updated, last_liked
-from model.utils.all import liked_items, disliked_items
 from model.utils.custom import reset_magic
 
 def liked_languages(user_id):
@@ -38,17 +37,34 @@ def liked_languages(user_id):
         orm_feeds.Feed.Language
     ).where(
         orm_feeds.Feed.items.any(
-            orm_items.Item.likes.any(
-                sqla.and_(
-                    orm_items.Like.UserID == user_id,
-                    orm_items.Like.Score == Like.MEH.name,
-                )
-            )
+            orm_items.Item.likes.any(sqla.and_(
+                orm_items.Like.UserID == user_id,
+                orm_items.Like.Score == Like.MEH.name,
+            ))
         )
     ).distinct()
 
     with get_session() as session:
         return [Language[e["Language"]] for e in session.execute(q)]
+
+def liked_items(user_id, lang, score=Like.UP):
+    q = sqla.select(
+        orm_items.Item
+    ).where(
+        orm_items.Item.feed.has(
+            orm_feeds.Feed.Language == lang.name
+        ),
+        orm_items.Item.likes.any(sqla.and_(
+            orm_items.Like.UserID == user_id,
+            orm_items.Like.Score == score.name,
+        )),
+    )
+
+    with get_session() as session:
+        return [e[0] for e in session.execute(q)]
+
+def disliked_items(user_id, lang):
+    return liked_items(user_id, lang, Like.DOWN)
 
 def do_words(pipeline):
     count_vect = pipeline.named_steps['vect']

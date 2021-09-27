@@ -19,7 +19,7 @@ dir_path = os.path.join(
 )
 
 def build_feature(row):
-    tree = html.fromstring(row['Title'])
+    tree = html.fromstring(row.Title)
     return html.tostring(tree, encoding='unicode', method='text')
 
 def kullback_leibler(q, p):

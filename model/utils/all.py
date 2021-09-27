@@ -87,26 +87,5 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False, u
     with get_connection() as conn:
         return conn.execute(q).fetchall()
 
-def liked_items(user_id, lang, score=Like.UP):
-    t_feeds = get_table('Feeds')
-    t_items = get_table('Items')
-    t_like = get_table('Like')
-
-    q = sql.select([
-        t_items
-    ]).select_from(
-        t_items.join(t_feeds)
-               .join(t_like)
-    ).where(sql.and_(
-        t_like.c.UserID == user_id,
-        t_feeds.c.Language == lang.name,
-        t_like.c.Score == score.name
-    ))
-    with get_connection() as conn:
-        return conn.execute(q).fetchall()
-
-def disliked_items(user_id, lang):
-    return liked_items(user_id, lang, Like.DOWN)
-
 def unscored_items(user_id, lang, tags, start, finish, last=None):
     return updated_items(user_id, [lang], tags, start, finish, last, magic=True, unscored=True)
