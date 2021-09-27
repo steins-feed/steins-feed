@@ -19,7 +19,7 @@ from model import get_session
 from model.schema.feeds import Language
 from model.schema.items import Like
 from model.utils import last_updated
-from model.utils.all import updated_items, unscored_items
+from model.utils.all import unscored_items
 from model.utils.custom import upsert_like, upsert_magic
 
 bp = Blueprint("home", __name__, url_prefix="/home")
@@ -231,3 +231,49 @@ def keys2strings(keys):
         format_string += "-%w"
 
     return date_string, format_string
+
+def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
+    q = sqla.select(orm.items.Item)
+
+    q_where = [
+        orm.items.Item.Published >= start,
+        orm.items.Item.Published < finish,
+        orm.items.Item.feed.has(
+            orm.feeds.Feed.users.any(
+                orm.users.User.UserID == user_id
+            )
+        ),
+    ]
+    if last:
+        q_where.append(orm.items.Item.Published < last)
+    if langs:
+        q_lang = [
+            orm.items.Item.feed.has(
+                orm.feeds.Feed.Language == Language(e).name
+            ) for e in langs
+        ]
+        q_where.append(sqla.or_(*q_lang))
+    if tags:
+        q_tag = orm.items.Item.feed.has(
+            orm.feeds.Feed.tags.any(sqla.and_(
+                orm.feeds.Tag.UserID == user_id,
+                orm.feeds.Tag.Name in tags,
+            ))
+        )
+        q_where.append(q_tag)
+    q = q.where(sqla.and_(*q_where))
+
+    if magic:
+        q = q.order_by(sqla.desc(orm.items.Item.magic.Score))
+    else:
+        q = q.order_by(sqla.desc(orm.items.Item.Published))
+
+    q = q.options(
+        sqla.orm.subqueryload(orm.items.Item.likes),
+        sqla.orm.subqueryload(orm.items.Item.magic),
+        sqla.orm.joinedload(orm.items.Item.feed)
+                .subqueryload(orm.feeds.Feed.tags),
+    )
+
+    with get_session() as session:
+        return [e[0] for e in session.execute(q)]
