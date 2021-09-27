@@ -62,22 +62,26 @@ Score: {{ "{:.02f}".format(magic_it.Score) }}.
 </div>
 <p>
 <button onclick="like({{ item_it.ItemID }})" type="button">
-{% if item_it.Like == enum_like.UP.name %}
+# for like_it in item_it.likes
+{% if like_it.Score == enum_like.UP.name %}
 <span id="like_{{ item_it.ItemID }}" class="liked">
 {% else %}
 <span id="like_{{ item_it.ItemID }}" class="like">
 {% endif %}
+# endfor
 <i class="material-icons">
 thumb_up
 </i>
 </span>
 </button>
 <button onclick="dislike({{ item_it.ItemID }})" type="button">
-{% if item_it.Like == enum_like.DOWN.name %}
+# for like_it in item_it.likes
+{% if like_it.Score == enum_like.DOWN.name %}
 <span id="dislike_{{ item_it.ItemID }}" class="disliked">
 {% else %}
 <span id="dislike_{{ item_it.ItemID }}" class="dislike">
 {% endif %}
+# endfor
 <i class="material-icons">
 thumb_down
 </i>
