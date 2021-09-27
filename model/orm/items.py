@@ -4,6 +4,7 @@ import sqlalchemy as sqla
 
 from .. import get_table
 from .. import Base
+from .feeds import Feed
 
 t_like = get_table("Like")
 t_magic = get_table("Magic")
@@ -11,9 +12,17 @@ t_magic = get_table("Magic")
 class Item(Base):
     __table__ = get_table("Items")
 
-    feed = sqla.orm.relationship("Feed")
+    feed = sqla.orm.relationship(
+        "Feed",
+        back_populates="items",
+    )
     likes = sqla.orm.relationship("Like")
     magic = sqla.orm.relationship("Magic")
+
+Feed.items = sqla.orm.relationship(
+    "Item",
+    back_populates="feed",
+)
 
 class Like(Base):
     __table__ = t_like
