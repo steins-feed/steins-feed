@@ -274,7 +274,7 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
     )
 
     if magic:
-        q = q.order_by(sqla.desc(orm.items.Item.magic.Score))
+        q = q.join(orm.items.Magic).order_by(sqla.desc(orm.items.Magic.Score))
     else:
         q = q.order_by(sqla.desc(orm.items.Item.Published))
 

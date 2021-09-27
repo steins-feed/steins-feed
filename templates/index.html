@@ -52,7 +52,9 @@ Tags:
 .
 # endif
 # if feed != enum_feed.FULL
-Score: {{ "{:.02f}".format(item_it.magic.Score) }}.
+# for magic_it in item_it.magic
+Score: {{ "{:.02f}".format(magic_it.Score) }}.
+# endfor
 # endif
 </p>
 <div id="summary_{{ item_it.ItemID }}">
