@@ -265,6 +265,14 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         q_where.append(sqla.or_(*q_tag))
     q = q.where(sqla.and_(*q_where))
 
+    q = q.join(orm.feeds.Feed).group_by(
+        orm.items.Item.Title,
+        orm.items.Item.Published,
+    )
+    q = q.having(
+        orm.feeds.Feed.Title == sqla.func.min(orm.feeds.Feed.Title),
+    )
+
     if magic:
         q = q.order_by(sqla.desc(orm.items.Item.magic.Score))
     else:
