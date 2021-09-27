@@ -254,13 +254,15 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         ]
         q_where.append(sqla.or_(*q_lang))
     if tags:
-        q_tag = orm.items.Item.feed.has(
-            orm.feeds.Feed.tags.any(sqla.and_(
-                orm.feeds.Tag.UserID == user_id,
-                orm.feeds.Tag.Name in tags,
-            ))
-        )
-        q_where.append(q_tag)
+        q_tag = [
+            orm.items.Item.feed.has(
+                orm.feeds.Feed.tags.any(sqla.and_(
+                    orm.feeds.Tag.UserID == user_id,
+                    orm.feeds.Tag.Name == tag_it,
+                ))
+            ) for tag_it in tags
+        ]
+        q_where.append(sqla.or_(*q_tag))
     q = q.where(sqla.and_(*q_where))
 
     if magic:
