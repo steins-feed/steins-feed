@@ -87,26 +87,6 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False, u
     with get_connection() as conn:
         return conn.execute(q).fetchall()
 
-def liked_languages(user_id):
-    t_feeds = get_table('Feeds')
-    t_items = get_table('Items')
-    t_like = get_table('Like')
-
-    q = sql.select([
-        t_feeds.c.Language
-    ]).select_from(
-        t_items.join(t_feeds)
-               .join(t_like)
-    ).where(sql.and_(
-        t_like.c.UserID == user_id,
-        t_like.c.Score != Like.MEH.name
-    )).distinct()
-    with get_connection() as conn:
-        res = conn.execute(q).fetchall()
-
-    res = [Language[e['Language']] for e in res]
-    return res
-
 def liked_items(user_id, lang, score=Like.UP):
     t_feeds = get_table('Feeds')
     t_items = get_table('Items')

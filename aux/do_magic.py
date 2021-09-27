@@ -25,9 +25,30 @@ mkdir_p(dir_path)
 
 from magic import train_classifier
 from model import get_connection, get_table
+from model import get_session
+from model.orm import feeds as orm_feeds, items as orm_items
+from model.schema.feeds import Language
+from model.schema.items import Like
 from model.utils import last_updated, last_liked
-from model.utils.all import liked_languages, liked_items, disliked_items
+from model.utils.all import liked_items, disliked_items
 from model.utils.custom import reset_magic
+
+def liked_languages(user_id):
+    q = sqla.select(
+        orm_feeds.Feed.Language
+    ).where(
+        orm_feeds.Feed.items.any(
+            orm_items.Item.likes.any(
+                sqla.and_(
+                    orm_items.Like.UserID == user_id,
+                    orm_items.Like.Score == Like.MEH.name,
+                )
+            )
+        )
+    ).distinct()
+
+    with get_session() as session:
+        return [Language[e["Language"]] for e in session.execute(q)]
 
 def do_words(pipeline):
     count_vect = pipeline.named_steps['vect']
