@@ -279,11 +279,11 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         q = q.order_by(sqla.desc(orm.items.Item.Published))
 
     q = q.options(
-        sqla.orm.subqueryload(orm.items.Item.likes),
-        sqla.orm.subqueryload(orm.items.Item.magic),
+        sqla.orm.joinedload(orm.items.Item.likes),
+        sqla.orm.joinedload(orm.items.Item.magic),
         sqla.orm.joinedload(orm.items.Item.feed)
-                .subqueryload(orm.feeds.Feed.tags),
+                .joinedload(orm.feeds.Feed.tags),
     )
 
     with get_session() as session:
-        return [e[0] for e in session.execute(q)]
+        return [e[0] for e in session.execute(q).unique()]
