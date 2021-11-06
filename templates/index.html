@@ -61,35 +61,23 @@ Score: {{ "{:.02f}".format(magic_it.Score) }}.
 {{ item_it.Summary|clean|safe }}
 </div>
 <p>
-<button onclick="like({{ item_it.ItemID }})" type="button">
-# if item_it.likes
-<span id="like_{{ item_it.ItemID }}" class="like">
-# else
+# set like_ns = namespace(like="like", dislike="dislike")
 # for like_it in item_it.likes
-{% if like_it.Score == enum_like.UP.name %}
-<span id="like_{{ item_it.ItemID }}" class="liked">
-{% else %}
-<span id="like_{{ item_it.ItemID }}" class="like">
-{% endif %}
+#     if like_it.Score == enum_like.UP.name
+#         set like_ns.like = "liked"
+#     elif like_it.Score == enum_like.DOWN.name
+#         set like_ns.dislike = "disliked"
+#     endif
 # endfor
-# endif
+<button onclick="like({{ item_it.ItemID }})" type="button">
+<span id="like_{{ item_it.ItemID }}" class="{{ like_ns.like }}">
 <i class="material-icons">
 thumb_up
 </i>
 </span>
 </button>
 <button onclick="dislike({{ item_it.ItemID }})" type="button">
-# if item_it.likes
-<span id="dislike_{{ item_it.ItemID }}" class="dislike">
-# else
-# for like_it in item_it.likes
-{% if like_it.Score == enum_like.DOWN.name %}
-<span id="dislike_{{ item_it.ItemID }}" class="disliked">
-{% else %}
-<span id="dislike_{{ item_it.ItemID }}" class="dislike">
-{% endif %}
-# endfor
-# endif
+<span id="dislike_{{ item_it.ItemID }}" class="{{ like_ns.dislike }}">
 <i class="material-icons">
 thumb_down
 </i>
