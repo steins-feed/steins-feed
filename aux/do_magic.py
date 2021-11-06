@@ -35,13 +35,15 @@ from model.utils.custom import reset_magic
 def liked_languages(user_id):
     q = sqla.select(
         orm_feeds.Feed.Language
+    ).select_from(
+        orm_items.Like
+    ).join(
+        orm_items.Like.item
+    ).join(
+        orm_items.Item.feed
     ).where(
-        orm_feeds.Feed.items.any(
-            orm_items.Item.likes.any(sqla.and_(
-                orm_items.Like.UserID == user_id,
-                orm_items.Like.Score == Like.MEH.name,
-            ))
-        )
+        orm_items.Like.UserID == user_id,
+        orm_items.Like.Score != Like.MEH.name,
     ).distinct()
 
     with get_session() as session:
