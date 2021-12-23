@@ -235,16 +235,18 @@ def keys2strings(keys):
     return date_string, format_string
 
 def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
-    q = sqla.select(orm.items.Item)
+    q = sqla.select(
+        orm.items.Item,
+    ).join(
+        orm.items.Item.feed
+    ).join(
+        orm.feeds.Feed.users
+    )
 
     q_where = [
         orm.items.Item.Published >= start,
         orm.items.Item.Published < finish,
-        orm.items.Item.feed.has(
-            orm.feeds.Feed.users.any(
-                orm.users.User.UserID == user_id
-            )
-        ),
+        orm.users.User.UserID == user_id,
     ]
     if last:
         q_where.append(orm.items.Item.Published < last)
@@ -267,7 +269,7 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         q_where.append(sqla.or_(*q_tag))
     q = q.where(sqla.and_(*q_where))
 
-    q = q.join(orm.feeds.Feed).group_by(
+    q = q.group_by(
         orm.items.Item.Title,
         orm.items.Item.Published,
     )
