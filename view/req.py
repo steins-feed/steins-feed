@@ -121,9 +121,13 @@ def displayed_languages(user_id):
 def displayed_tags(user_id):
     q = sqla.select(
         orm_feeds.Tag.Name,
+    ).join(
+        orm_feeds.Tag.feeds
+    ).join(
+        orm_feeds.Feed.users
     ).where(
         orm_feeds.Tag.UserID == user_id,
-        orm_feeds.Tag.feeds.any(orm_feeds.Feed.users.any(orm_users.User.UserID == user_id)),
+        orm_users.User.UserID == user_id,
     ).order_by(
         orm_feeds.Tag.Name,
     ).distinct()
