@@ -183,17 +183,19 @@ def empty_leaves(e, tags=[]):
 def updated_dates(user_id, keys, last=None, limit=None):
     q = sqla.select(
         [sqla.extract(e.lower(), orm.items.Item.Published).label(e) for e in keys]
+    ).join(
+        orm.items.Item.feed
+    ).join(
+        orm.feeds.Feed.users
     )
+
     q_where = [
-        orm.items.Item.feed.has(
-            orm.feeds.Feed.users.any(
-                orm.users.User.UserID == user_id
-            )
-        )
+        orm.users.User.UserID == user_id,
     ]
     if last:
         q_where.append(orm.items.Item.Published < last)
     q = q.where(sqla.and_(*q_where))
+
     q = q.order_by(*[sqla.desc(e) for e in keys])
     if limit:
         q = q.limit(limit)
