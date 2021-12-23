@@ -107,10 +107,12 @@ def all_tags(user_id):
 def displayed_languages(user_id):
     q = sqla.select(
         orm_feeds.Feed.Language,
+    ).join(
+        orm_feeds.Feed.users
     ).where(
-        orm_feeds.Feed.users.any(orm_users.User.UserID == user_id),
+        orm_users.User.UserID == user_id,
     ).order_by(
-        orm_feeds.Feed.Language
+        orm_feeds.Feed.Language,
     ).distinct()
 
     with get_session() as session:
