@@ -286,12 +286,17 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         q = q.order_by(sqla.desc(orm.items.Item.Published))
 
     q = q.options(
-        sqla.orm.joinedload(orm.items.Item.likes),
-        sqla.orm.joinedload(orm.items.Item.magic),
+        sqla.orm.joinedload(orm.items.Item.likes.and_(
+            orm.items.Like.UserID == user_id,
+        )),
+        sqla.orm.joinedload(orm.items.Item.magic.and_(
+            orm.items.Magic.UserID == user_id,
+        )),
         sqla.orm.contains_eager(orm.items.Item.feed)
-                .selectinload(orm.feeds.Feed.tags),
+                .selectinload(orm.feeds.Feed.tags.and_(
+            orm.feeds.Tag.UserID == user_id,
+        )),
     )
 
-    print(q)
     with get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
