@@ -44,9 +44,9 @@ Last updated: {{ last_updated }} GMT.
 <p>
 Source: <a href="{{ url_for('feed.feed') }}?feed_id={{ item_it.FeedID }}">{{ item_it.feed.Title }}</a>.
 Published: {{ item_it.Published }} GMT.
-# if item_it.tags:
+# if item_it.feed.tags:
 Tags:
-# for tag_it in item_it.tags:
+# for tag_it in item_it.feed.tags:
 <a href="{{ url_for('tag.tag') }}?tag={{ tag_it.TagID }}">{{ tag_it.Name }}</a>
 # endfor
 .
