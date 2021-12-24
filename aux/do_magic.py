@@ -16,21 +16,19 @@ par_path = os.path.join(
 )
 sys.path.append(par_path)
 
-from log import Logger
-from magic import train_classifier
-from model import get_connection, get_table
-from model import get_session
+import log
+import magic
+import model
 from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
-from model.schema.feeds import Language
-from model.schema.items import Like
+from model.schema import feeds as schema_feeds, items as schema_items
 from model.utils import last_updated, last_liked
 from model.utils.custom import reset_magic
 
 from util import is_up_to_date, mkdir_p
 
-logger = Logger(__name__, logging.INFO)
+logger = log.Logger(__name__, logging.INFO)
 
-def liked_languages(user_id: int) -> list[Language]:
+def liked_languages(user_id: int) -> list[schema_feeds.Language]:
     """
     Languages with training data.
 
@@ -50,16 +48,16 @@ def liked_languages(user_id: int) -> list[Language]:
         orm_items.Item.feed
     ).where(
         orm_items.Like.UserID == user_id,
-        orm_items.Like.Score != Like.MEH.name,
+        orm_items.Like.Score != schema_items.Like.MEH.name,
     ).distinct()
 
-    with get_session() as session:
-        return [Language[e["Language"]] for e in session.execute(q)]
+    with model.get_session() as session:
+        return [schema_feeds.Language[e["Language"]] for e in session.execute(q)]
 
 def liked_items(
     user_id: int,
-    lang: Language,
-    score: Like = Like.UP,
+    lang: schema_feeds.Language,
+    score: schema_items.Like = schema_items.Like.UP,
 ) -> list[orm_items.Item]:
     """
     Training data.
@@ -84,12 +82,12 @@ def liked_items(
         orm_items.Like.Score == score.name,
     )
 
-    with get_session() as session:
+    with model.get_session() as session:
         return [e[0] for e in session.execute(q)]
 
 def disliked_items(
     user_id: int,
-    lang: Language,
+    lang: schema_feeds.Language,
 ) -> list[orm_items.Item]:
     """
     Training data.
@@ -101,7 +99,7 @@ def disliked_items(
     Returns:
       List of disliked items.
     """
-    return liked_items(user_id, lang, Like.DOWN)
+    return liked_items(user_id, lang, schema_items.Like.DOWN)
 
 def do_words(pipeline: sklearn.pipeline.Pipeline) -> dict[str, float]:
     """
@@ -184,7 +182,7 @@ if __name__ == "__main__":
     )
     mkdir_p(dir_path)
 
-    with get_session() as session:
+    with model.get_session() as session:
         users = [e[0] for e in session.execute(sqla.select(orm_users.User))]
 
     for user_it in users:
@@ -209,7 +207,7 @@ if __name__ == "__main__":
 
                 likes = liked_items(user_it.UserID, lang_it)
                 dislikes = disliked_items(user_it.UserID, lang_it)
-                clf = train_classifier(user_it.UserID, lang_it, likes, dislikes)
+                clf = magic.train_classifier(user_it.UserID, lang_it, likes, dislikes)
 
                 reset_magic(user_it.UserID, lang_it)
                 with open(file_path, 'wb') as f:
