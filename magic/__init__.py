@@ -11,6 +11,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
 from model.schema.feeds import Language
+from model.orm import items as orm_items
 
 dir_path = os.path.join(
     os.path.dirname(__file__),
@@ -18,11 +19,30 @@ dir_path = os.path.join(
     "clf.d",
 )
 
-def build_feature(row):
+def build_feature(row: orm_items.Item) -> str:
+    """
+    Build feature from item.
+
+    Args:
+      row: Item object.
+
+    Returns:
+      Feature string.
+    """
     tree = html.fromstring(row.Title)
     return html.tostring(tree, encoding='unicode', method='text')
 
-def kullback_leibler(q, p):
+def kullback_leibler(q: dict[str, float], p: dict[str, float]) -> float:
+    """
+    Measures distance between two word distributions.
+
+    Args:
+      p: Original word distribution.
+      q: Candidate word distribution.
+
+    Returns:
+        Kullback-Leibler divergence.
+    """
     ev_q = np.sum(list(q.values()))
     ev_p = np.sum(list(p.values()))
 
