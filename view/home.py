@@ -240,39 +240,34 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
     ).join(
         orm.items.Item.feed
     ).join(
-        orm.feeds.Feed.users
+        orm.feeds.Feed.users.and_(
+            orm.users.User.UserID == user_id,
+        )
     )
 
     # WHERE.
     q_where = [
         orm.items.Item.Published >= start,
         orm.items.Item.Published < finish,
-        orm.users.User.UserID == user_id,
     ]
 
     if last:
         q_where.append(orm.items.Item.Published < last)
 
     if langs:
-        q_lang = [
-            orm.feeds.Feed.Language == Language(e).name
-            for e in langs
-        ]
-        q_where.append(sqla.or_(*q_lang))
+        q_where.append(
+            orm.feeds.Feed.Language.in_([Language(e).name for e in langs])
+        )
 
     if tags:
         q = q.join(
-            orm.feeds.Feed.tags
-        )
-
-        q_tag = [
-            sqla.and_(
+            orm.feeds.Feed.tags.and_(
                 orm.feeds.Tag.UserID == user_id,
-                orm.feeds.Tag.Name == tag_it,
-            ) for tag_it in tags
-        ]
-
-        q_where.append(sqla.or_(*q_tag))
+            )
+        )
+        q_where.append(
+            orm.feeds.Tag.Name.in_(tags),
+        )
 
     q = q.where(sqla.and_(*q_where))
 
@@ -297,5 +292,6 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
                 .selectinload(orm.feeds.Feed.tags),
     )
 
+    print(q)
     with get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
