@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from collections import OrderedDict
+import collections
 import json
 import logging
 import numpy as np
@@ -9,6 +9,8 @@ import pickle
 import sklearn
 import sqlalchemy as sqla
 import sys
+
+from util import is_up_to_date, mkdir_p
 
 par_path = os.path.join(
     os.path.dirname(__file__),
@@ -22,8 +24,6 @@ import model
 from model import recent
 from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
 from model.schema import feeds as schema_feeds, items as schema_items
-
-from util import is_up_to_date, mkdir_p
 
 logger = log.Logger(__name__, logging.INFO)
 
@@ -116,7 +116,7 @@ def do_words(pipeline: sklearn.pipeline.Pipeline) -> dict[str, float]:
     coeffs = pipeline.predict_proba(words)[:, 1]
     table = zip(words, coeffs)
     table = sorted(table, key=lambda x: x[1])
-    table = OrderedDict(table)
+    table = collections.OrderedDict(table)
 
     return table
 
@@ -191,7 +191,7 @@ if __name__ == "__main__":
         )
         mkdir_p(user_path)
 
-        datetime_like = model.recent.last_liked(user_it.UserID)
+        datetime_like = recent.last_liked(user_it.UserID)
 
         for lang_it in liked_languages(user_it.UserID):
             file_path = os.path.join(
