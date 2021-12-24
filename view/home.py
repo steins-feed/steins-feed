@@ -254,9 +254,8 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         q_where.append(orm.items.Item.Published < last)
     if langs:
         q_lang = [
-            orm.items.Item.feed.has(
-                orm.feeds.Feed.Language == Language(e).name
-            ) for e in langs
+            orm.feeds.Feed.Language == Language(e).name
+            for e in langs
         ]
         q_where.append(sqla.or_(*q_lang))
     if tags:
