@@ -41,10 +41,9 @@ def reset_magic(
     magic = model.get_table('Magic')
 
     q = magic.delete()
-    q_where = []
 
     if user_id:
-        q_where.append(magic.c.UserID == user_id)
+        q = q.where(magic.c.UserID == user_id)
 
     if lang:
         if user_id:
@@ -66,9 +65,8 @@ def reset_magic(
                 feeds.c.Language == lang.name,
             ).distinct()
 
-        q_where.append(magic.c.ItemID.in_(q_cte))
+        q = q.where(magic.c.ItemID.in_(q_cte))
 
-    q = q.where(sqla.and_(*q_where))
     with model.get_connection() as conn:
         conn.execute(q)
 
