@@ -21,84 +21,11 @@ sys.path.append(par_path)
 import log
 import magic
 import model
-from model import recent
+from model import liked, recent
 from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
 from model.schema import feeds as schema_feeds, items as schema_items
 
 logger = log.Logger(__name__, logging.INFO)
-
-def liked_languages(user_id: int) -> list[schema_feeds.Language]:
-    """
-    Languages with training data.
-
-    Args:
-      user_id: User ID.
-
-    Returns:
-      List of Language objects.
-    """
-    q = sqla.select(
-        orm_feeds.Feed.Language,
-    ).select_from(
-        orm_items.Like,
-    ).join(
-        orm_items.Like.item
-    ).join(
-        orm_items.Item.feed
-    ).where(
-        orm_items.Like.UserID == user_id,
-        orm_items.Like.Score != schema_items.Like.MEH.name,
-    ).distinct()
-
-    with model.get_session() as session:
-        return [schema_feeds.Language[e["Language"]] for e in session.execute(q)]
-
-def liked_items(
-    user_id: int,
-    lang: schema_feeds.Language,
-    score: schema_items.Like = schema_items.Like.UP,
-) -> list[orm_items.Item]:
-    """
-    Training data.
-
-    Args:
-      user_id: User ID.
-      lang: Language.
-      score: Like value.
-
-    Returns:
-      List of liked items.
-    """
-    q = sqla.select(
-        orm_items.Item,
-    ).join(
-        orm_items.Item.feed
-    ).join(
-        orm_items.Item.likes
-    ).where(
-        orm_feeds.Feed.Language == lang.name,
-        orm_items.Like.UserID == user_id,
-        orm_items.Like.Score == score.name,
-    )
-
-    with model.get_session() as session:
-        return [e[0] for e in session.execute(q)]
-
-def disliked_items(
-    user_id: int,
-    lang: schema_feeds.Language,
-) -> list[orm_items.Item]:
-    """
-    Training data.
-
-    Args:
-      user_id: User ID.
-      lang: Language.
-
-    Returns:
-      List of disliked items.
-    """
-    return liked_items(user_id, lang, schema_items.Like.DOWN)
 
 def do_words(pipeline: sklearn.pipeline.Pipeline) -> dict[str, float]:
     """
@@ -193,7 +120,7 @@ if __name__ == "__main__":
 
         datetime_like = recent.last_liked(user_it.UserID)
 
-        for lang_it in liked_languages(user_it.UserID):
+        for lang_it in liked.liked_languages(user_it.UserID):
             file_path = os.path.join(
                 user_path,
                 lang_it.name + ".pickle",
@@ -204,8 +131,8 @@ if __name__ == "__main__":
             else:
                 logger.info(f"Learn {lang_it.name} about {user_it.Name}.")
 
-                likes = liked_items(user_it.UserID, lang_it)
-                dislikes = disliked_items(user_it.UserID, lang_it)
+                likes = liked.liked_items(user_it.UserID, lang_it)
+                dislikes = liked.disliked_items(user_it.UserID, lang_it)
                 clf = magic.train_classifier(user_it.UserID, lang_it, likes, dislikes)
 
                 reset_magic(user_it.UserID, lang_it)
