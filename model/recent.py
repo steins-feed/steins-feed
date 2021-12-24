@@ -18,7 +18,7 @@ def last_updated(user_id=None) -> datetime.datetime:
         if res is None:
             raise IndexError
     except IndexError:
-        res = datetime.utcfromtimestamp(0)
+        res = datetime.datetime.utcfromtimestamp(0)
 
     return res
 
@@ -34,6 +34,6 @@ def last_liked(user_id=None) -> datetime.datetime:
         if res is None:
             raise IndexError
     except IndexError:
-        res = datetime.utcfromtimestamp(0)
+        res = datetime.datetime.utcfromtimestamp(0)
 
     return res

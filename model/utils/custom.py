@@ -179,39 +179,6 @@ def insert_feeds_untagged(tag_id, untagged):
         conn.execute(q, rows)
 
 # Magic.
-def reset_magic(user_id=None, lang=None):
-    feeds = get_table('Feeds')
-    items = get_table('Items')
-    magic = get_table('Magic')
-
-    q = magic.delete()
-    q_where = []
-    if user_id:
-        q_where.append(magic.c.UserID == user_id)
-    if lang:
-        if user_id:
-            q_cte = sql.select([
-                items.c.ItemID
-            ]).select_from(
-                items.join(feeds)
-            ).where(
-                feeds.c.Language == lang.name
-            ).distinct()
-        else:
-            q_cte = sql.select([
-                items.c.ItemID
-            ]).select_from(
-                items.join(feeds)
-                     .join(magic)
-            ).where(sql.and_(
-                feeds.c.Language == lang.name,
-                magic.c.UserID == user_id
-            )).distinct()
-        q_where.append(magic.c.ItemID.in_(q_cte))
-    q = q.where(sql.and_(*q_where))
-    with get_connection() as conn:
-        conn.execute(q)
-
 def upsert_magic(user_id, items, scores):
     if len(items) != len(scores):
         raise IndexError()
