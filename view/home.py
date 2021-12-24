@@ -280,23 +280,26 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         orm.feeds.Feed.Title == sqla.func.min(orm.feeds.Feed.Title),
     )
 
-    if magic:
-        q = q.join(orm.items.Magic).order_by(sqla.desc(orm.items.Magic.Score))
-    else:
-        q = q.order_by(sqla.desc(orm.items.Item.Published))
-
     q = q.options(
         sqla.orm.joinedload(orm.items.Item.likes.and_(
             orm.items.Like.UserID == user_id,
-        )),
-        sqla.orm.joinedload(orm.items.Item.magic.and_(
-            orm.items.Magic.UserID == user_id,
         )),
         sqla.orm.contains_eager(orm.items.Item.feed)
                 .selectinload(orm.feeds.Feed.tags.and_(
             orm.feeds.Tag.UserID == user_id,
         )),
     )
+
+    if magic:
+        q = q.join(orm.items.Item.magic.and_(
+            orm.items.Magic.UserID == user_id,
+        ))
+        q = q.order_by(sqla.desc(orm.items.Magic.Score))
+        q = q.options(
+            sqla.orm.contains_eager(orm.items.Item.magic),
+        )
+    else:
+        q = q.order_by(sqla.desc(orm.items.Item.Published))
 
     with get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
