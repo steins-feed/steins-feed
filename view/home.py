@@ -241,33 +241,42 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         orm.items.Item.feed
     ).join(
         orm.feeds.Feed.users
-    ).join(
-        orm.feeds.Feed.tags
     )
 
+    # WHERE.
     q_where = [
         orm.items.Item.Published >= start,
         orm.items.Item.Published < finish,
         orm.users.User.UserID == user_id,
     ]
+
     if last:
         q_where.append(orm.items.Item.Published < last)
+
     if langs:
         q_lang = [
             orm.feeds.Feed.Language == Language(e).name
             for e in langs
         ]
         q_where.append(sqla.or_(*q_lang))
+
     if tags:
+        q = q.join(
+            orm.feeds.Feed.tags
+        )
+
         q_tag = [
             sqla.and_(
                 orm.feeds.Tag.UserID == user_id,
                 orm.feeds.Tag.Name == tag_it,
             ) for tag_it in tags
         ]
+
         q_where.append(sqla.or_(*q_tag))
+
     q = q.where(sqla.and_(*q_where))
 
+    # GROUP BY.
     q = q.group_by(
         orm.items.Item.Title,
         orm.items.Item.Published,
@@ -284,8 +293,8 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
     q = q.options(
         sqla.orm.joinedload(orm.items.Item.likes),
         sqla.orm.joinedload(orm.items.Item.magic),
-        sqla.orm.joinedload(orm.items.Item.feed)
-                .joinedload(orm.feeds.Feed.tags),
+        sqla.orm.contains_eager(orm.items.Item.feed)
+                .selectinload(orm.feeds.Feed.tags),
     )
 
     with get_session() as session:
