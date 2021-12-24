@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Retrains classifiers."""
+
 import collections
 import logging
 import os
