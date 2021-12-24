@@ -32,11 +32,20 @@ dir_path = os.path.join(
 )
 mkdir_p(dir_path)
 
-def liked_languages(user_id):
+def liked_languages(user_id: int) -> list[Language]:
+    """
+    Languages with training data.
+
+    Args:
+      user_id: User ID.
+
+    Returns:
+      List of Language objects.
+    """
     q = sqla.select(
-        orm_feeds.Feed.Language
+        orm_feeds.Feed.Language,
     ).select_from(
-        orm_items.Like
+        orm_items.Like,
     ).join(
         orm_items.Like.item
     ).join(
@@ -49,23 +58,51 @@ def liked_languages(user_id):
     with get_session() as session:
         return [Language[e["Language"]] for e in session.execute(q)]
 
-def liked_items(user_id, lang, score=Like.UP):
+def liked_items(
+    user_id: int,
+    lang: Language,
+    score: Like = Like.UP,
+) -> list[orm_items.Item]:
+    """
+    Training data.
+
+    Args:
+      user_id: User ID.
+      lang: Language.
+      score: Like value.
+
+    Returns:
+      List of liked items.
+    """
     q = sqla.select(
-        orm_items.Item
+        orm_items.Item,
+    ).join(
+        orm_items.Item.feed
+    ).join(
+        orm_items.Item.likes
     ).where(
-        orm_items.Item.feed.has(
-            orm_feeds.Feed.Language == lang.name
-        ),
-        orm_items.Item.likes.any(sqla.and_(
-            orm_items.Like.UserID == user_id,
-            orm_items.Like.Score == score.name,
-        )),
+        orm_feeds.Feed.Language == lang.name,
+        orm_items.Like.UserID == user_id,
+        orm_items.Like.Score == score.name,
     )
 
     with get_session() as session:
         return [e[0] for e in session.execute(q)]
 
-def disliked_items(user_id, lang):
+def disliked_items(
+    user_id: int,
+    lang: Language,
+) -> list[orm_items.Item]:
+    """
+    Training data.
+
+    Args:
+      user_id: User ID.
+      lang: Language.
+
+    Returns:
+      List of disliked items.
+    """
     return liked_items(user_id, lang, Like.DOWN)
 
 def do_words(pipeline):
