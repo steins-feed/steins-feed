@@ -241,6 +241,8 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         orm.items.Item.feed
     ).join(
         orm.feeds.Feed.users
+    ).join(
+        orm.feeds.Feed.tags
     )
 
     q_where = [
@@ -259,11 +261,9 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
         q_where.append(sqla.or_(*q_lang))
     if tags:
         q_tag = [
-            orm.items.Item.feed.has(
-                orm.feeds.Feed.tags.any(sqla.and_(
-                    orm.feeds.Tag.UserID == user_id,
-                    orm.feeds.Tag.Name == tag_it,
-                ))
+            sqla.and_(
+                orm.feeds.Tag.UserID == user_id,
+                orm.feeds.Tag.Name == tag_it,
             ) for tag_it in tags
         ]
         q_where.append(sqla.or_(*q_tag))
