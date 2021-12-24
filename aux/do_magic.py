@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
 import collections
-import json
 import logging
-import numpy as np
 import os
 import pickle
 import sklearn
@@ -22,8 +20,7 @@ import log
 import magic
 import model
 from model import liked, recent
-from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
-from model.schema import feeds as schema_feeds, items as schema_items
+from model.orm import users as orm_users
 
 logger = log.Logger(__name__, logging.INFO)
 
