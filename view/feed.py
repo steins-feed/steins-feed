@@ -7,6 +7,7 @@ import sqlalchemy as sqla
 from .req import base_context
 from model import get_session
 from model.orm.feeds import Feed, Tag
+from model.orm.users import User
 from model.schema.feeds import Language
 from model.utils.custom import upsert_feed, upsert_display
 from model.utils.custom import delete_tags_tagged, insert_tags_untagged
@@ -19,8 +20,15 @@ def feed(feed_id=None):
     if not feed_id:
         feed_id = request.args.get('feed_id', type=int)
     with get_session() as session:
-        feed_row = session.get(Feed, feed_id)
-        feed_row.Displayed = any([user_it.UserID == current_user.UserID for user_it in feed_row.users])
+        feed_row = session.get(
+            Feed,
+            feed_id,
+            options=[
+                sqla.orm.selectinload(Feed.users.and_(
+                    User.UserID == current_user.UserID,
+                )),
+            ],
+        )
 
     return render_template("feed.html",
         **base_context(),
