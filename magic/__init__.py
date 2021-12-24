@@ -97,7 +97,22 @@ def train_classifier(
     text_clf.fit(titles, targets)
     return text_clf
 
-def compute_score(user_id, lang, items):
+def compute_score(
+    user_id: int,
+    lang: schema_feeds.Language,
+    items: list[orm_items.Item],
+) -> list[float]:
+    """
+    Computes item score using classifier.
+
+    Args:
+      user_id: User ID.
+      lang: Language.
+      items: List of item objects.
+
+    Returns:
+      List of scores between -1.0 and +1.0.
+    """
     clf_path = os.path.join(
         dir_path,
         str(user_id),
@@ -112,14 +127,21 @@ def compute_score(user_id, lang, items):
 
     return scores
 
-def trained_languages(user_id):
+def trained_languages(user_id: int) -> list[schema_feeds.Language]:
+    """
+    Extracts languages from trained classifiers.
+
+    Args:
+      user_id: UserID
+
+    Returns:
+      List of languages with classifiers.
+    """
     user_path = os.path.join(dir_path, str(user_id))
     clf_path = os.path.join(user_path, "*.pickle")
     clf_paths = glob.glob(clf_path)
 
-    extract_lang = lambda x: re.search(
-        rf"(?<=^{user_path + os.sep})\w+(?=\.pickle$)",
-        x,
-    ).group()
+    prog = re.compile(rf"(?<=^{user_path + os.sep})\w+(?=\.pickle$)")
+    extract_lang = lambda x: prog.search(x).group()
 
     return [schema_feeds.Language[extract_lang(e)] for e in clf_paths]
