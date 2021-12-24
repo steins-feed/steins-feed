@@ -9,19 +9,11 @@ import pickle
 import sqlalchemy as sqla
 import sys
 
-def mkdir_p(s):
-    try:
-        os.mkdir(s)
-    except FileExistsError:
-        pass
-
-par_path = os.path.normpath(os.path.join(
+par_path = os.path.join(
     os.path.dirname(__file__),
-    os.pardir
-))
+    os.pardir,
+)
 sys.path.append(par_path)
-dir_path = os.path.join(par_path, "clf.d")
-mkdir_p(dir_path)
 
 from magic import train_classifier
 from model import get_connection, get_table
@@ -31,6 +23,14 @@ from model.schema.feeds import Language
 from model.schema.items import Like
 from model.utils import last_updated, last_liked
 from model.utils.custom import reset_magic
+
+from util import mkdir_p
+
+dir_path = os.path.join(
+    par_path,
+    "clf.d",
+)
+mkdir_p(dir_path)
 
 def liked_languages(user_id):
     q = sqla.select(
