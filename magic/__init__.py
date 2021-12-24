@@ -10,8 +10,8 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
-from model.schema.feeds import Language
 from model.orm import items as orm_items
+from model.schema import feeds as schema_feeds
 
 dir_path = os.path.join(
     os.path.dirname(__file__),
@@ -54,7 +54,24 @@ def kullback_leibler(q: dict[str, float], p: dict[str, float]) -> float:
 
     return res
 
-def train_classifier(user_id, lang, likes, dislikes):
+def train_classifier(
+    user_id: int,
+    lang: schema_feeds.Language,
+    likes: list[orm_items.Item],
+    dislikes: list[orm_items.Item],
+) -> Pipeline:
+    """
+    Trains classifier from likes and dislikes.
+
+    Args:
+      user_id: UserID.
+      lang: Language.
+      likes: List of liked items.
+      dislikes: List of disliked items.
+
+    Returns:
+      Trained pipeline.
+    """
     if not likes:
         raise ValueError("No likes.")
 
@@ -105,4 +122,4 @@ def trained_languages(user_id):
         x,
     ).group()
 
-    return [Language[extract_lang(e)] for e in clf_paths]
+    return [schema_feeds.Language[extract_lang(e)] for e in clf_paths]
