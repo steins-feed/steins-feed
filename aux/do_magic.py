@@ -6,6 +6,7 @@ import json
 import numpy as np
 import os
 import pickle
+import sklearn
 import sqlalchemy as sqla
 import sys
 
@@ -105,7 +106,16 @@ def disliked_items(
     """
     return liked_items(user_id, lang, Like.DOWN)
 
-def do_words(pipeline):
+def do_words(pipeline: sklearn.pipeline.Pipeline) -> dict[str, float]:
+    """
+    Likelihoods of liking words.
+
+    Args:
+      pipeline: Scikit-learn pipeline.
+
+    Returns:
+      Words and their scores.
+    """
     count_vect = pipeline.named_steps['vect']
 
     words = list(count_vect.vocabulary_nltk.values())
@@ -116,7 +126,16 @@ def do_words(pipeline):
 
     return table
 
-def do_cookies(pipeline):
+def do_cookies(pipeline: sklearn.pipeline.Pipeline) -> dict[str, float]:
+    """
+    Likelihoods of liking words.
+
+    Args:
+      pipeline: Scikit-learn pipeline.
+
+    Returns:
+      Words and their scores.
+    """
     count_vect = pipeline.named_steps['vect']
 
     words = list(count_vect.vocabulary_nltk.keys())
