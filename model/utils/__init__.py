@@ -19,35 +19,3 @@ def all_langs_feeds():
 
     with get_session() as session:
         return [Language[e["Language"]] for e in session.execute(q)]
-
-def last_updated(user_id=None):
-    try:
-        q = sqla.select(sqla.func.min(Feed.Updated))
-        if user_id:
-            q = q.where(Feed.users.any(User.UserID == user_id))
-
-        with get_session() as session:
-            res = session.execute(q).fetchone()[0]
-
-        if res is None:
-            raise IndexError
-    except IndexError:
-        res = datetime.utcfromtimestamp(0)
-
-    return res
-
-def last_liked(user_id=None):
-    try:
-        q = sqla.select([sqla.func.max(Like.Updated)])
-        if user_id:
-            q = q.where(Like.UserID == user_id)
-
-        with get_session() as session:
-            res = session.execute(q).fetchone()[0]
-
-        if res is None:
-            raise IndexError
-    except IndexError:
-        res = datetime.utcfromtimestamp(0)
-
-    return res

@@ -19,10 +19,9 @@ sys.path.append(par_path)
 import log
 import magic
 import model
+from model import recent
 from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
 from model.schema import feeds as schema_feeds, items as schema_items
-from model.utils import last_updated, last_liked
-from model.utils.custom import reset_magic
 
 from util import is_up_to_date, mkdir_p
 
@@ -192,7 +191,7 @@ if __name__ == "__main__":
         )
         mkdir_p(user_path)
 
-        datetime_like = last_liked(user_it.UserID)
+        datetime_like = model.recent.last_liked(user_it.UserID)
 
         for lang_it in liked_languages(user_it.UserID):
             file_path = os.path.join(
