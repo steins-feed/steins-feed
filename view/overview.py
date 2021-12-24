@@ -85,18 +85,19 @@ def delete_tag():
 def likes_lang(user_id, score=LikeEnum.UP.name):
     q = sqla.select(
         Item
-    ).where(
-        Item.likes.any(sqla.and_(
+    ).join(
+        Item.feed
+    ).join(
+        Item.likes.and_(
             Like.UserID == user_id,
-            Like.Score == score,
-        )),
-        Item.feed.has(
-            Feed.Language == sqla.bindparam("lang"),
-        ),
+        )
+    ).where(
+        Like.Score == score,
+        Feed.Language == sqla.bindparam("lang"),
     ).order_by(
         sqla.desc(Item.Published),
     ).options(
-        sqla.orm.joinedload(Item.feed),
+        sqla.orm.contains_eager(Item.feed),
     )
 
     res = dict()
