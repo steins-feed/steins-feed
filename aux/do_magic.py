@@ -9,8 +9,6 @@ import sklearn
 import sqlalchemy as sqla
 import sys
 
-from util import is_up_to_date, mkdir_p
-
 par_path = os.path.join(
     os.path.dirname(__file__),
     os.pardir,
@@ -21,7 +19,7 @@ import log
 import magic
 from magic import io as magic_io
 import model
-from model import liked, recent
+from model import liked
 from model.orm import users as orm_users
 from model.schema import feeds as schema_feeds
 
@@ -147,30 +145,12 @@ def do_cookies(pipeline: sklearn.pipeline.Pipeline) -> dict[str, float]:
 #    return table
 
 if __name__ == "__main__":
-    dir_path = os.path.join(
-        par_path,
-        "clf.d",
-    )
-    mkdir_p(dir_path)
-
     with model.get_session() as session:
         users = [e[0] for e in session.execute(sqla.select(orm_users.User))]
 
     for user_it in users:
-        user_path = os.path.join(
-            dir_path,
-            str(user_it.UserID),
-        )
-        mkdir_p(user_path)
-
-        datetime_like = recent.last_liked(user_it.UserID)
-
         for lang_it in liked.liked_languages(user_it.UserID):
-            file_path = os.path.join(
-                user_path,
-                lang_it.name + ".pickle",
-            )
-            if is_up_to_date(file_path, datetime_like):
+            if magic_io.is_up_to_date(user_it, lang_it):
                 clf = magic_io.read_classifier(user_it, lang_it)
             else:
                 logger.info(f"Learn {lang_it.name} about {user_it.Name}.")
@@ -179,8 +159,8 @@ if __name__ == "__main__":
                 dislikes = liked.disliked_items(user_it.UserID, lang_it)
                 clf = magic.train_classifier(user_it.UserID, lang_it, likes, dislikes)
 
-                reset_magic(user_it.UserID, lang_it)
                 magic_io.write_classifier(clf, user_it, lang_it)
+                reset_magic(user_it.UserID, lang_it)
 
         #for lang_it in clfs:
         #    # Words.

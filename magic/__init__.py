@@ -15,12 +15,6 @@ from model.schema import feeds as schema_feeds
 
 from . import io
 
-dir_path = os.path.join(
-    os.path.dirname(__file__),
-    os.pardir,
-    "clf.d",
-)
-
 def build_feature(row: orm_items.Item) -> str:
     """
     Build feature from item.
@@ -135,11 +129,12 @@ def trained_languages(user_id: int) -> list[schema_feeds.Language]:
     Returns:
       List of languages with classifiers.
     """
-    user_path = os.path.join(dir_path, str(user_id))
-    clf_path = os.path.join(user_path, "*.pickle")
+    with model.get_session() as session:
+        user = session.get(orm_users.User, user_id)
+    clf_path = io.classifier_path(user)
     clf_paths = glob.glob(clf_path)
 
-    prog = re.compile(rf"(?<=^{user_path + os.sep})\w+(?=\.pickle$)")
+    prog = re.compile(rf"(?<=^{os.path.dirname(clf_path) + os.sep})\w+(?=\.pickle$)")
     extract_lang = lambda x: prog.search(x).group()
 
     return [schema_feeds.Language[extract_lang(e)] for e in clf_paths]
