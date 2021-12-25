@@ -96,8 +96,7 @@ def is_up_to_date(
         return False
 
     if dt is None:
-        #dt = recent.last_liked(user, lang)
-        dt = recent.last_liked(user.UserID)
+        dt = recent.last_liked(user.UserID, lang)
 
     return file_datetime > dt
 
