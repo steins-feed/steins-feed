@@ -3,41 +3,6 @@
 from sqlalchemy import sql
 
 from .. import get_connection, get_table
-from ..schema.items import Like
-
-def upsert_like(user_id, item_id, like_val):
-    like = get_table('Like')
-
-    q = sql.select([
-            like
-    ]).where(sql.and_(
-            like.c.UserID == user_id,
-            like.c.ItemID == item_id
-    ))
-    with get_connection() as conn:
-        res = conn.execute(q).fetchone()
-
-    if res:
-        score = Like[res['Score']]
-        q = like.update().values(
-               Score=sql.bindparam("score")
-        ).where(sql.and_(
-               like.c.UserID == user_id,
-               like.c.ItemID == item_id
-        ))
-    else:
-        score = Like.MEH
-        q = like.insert().values(
-                UserID=user_id,
-                ItemID=item_id,
-                Score=sql.bindparam("score")
-        )
-
-    with get_connection() as conn:
-        if score == like_val:
-            conn.execute(q, score=Like.MEH.name)
-        else:
-            conn.execute(q, score=like_val.name)
 
 # Feed.
 def upsert_feed(feed_id, title, link, lang):

@@ -9,6 +9,7 @@ from flask import Blueprint, request, render_template, redirect, url_for
 from flask_security import auth_required, current_user
 import sqlalchemy as sqla
 
+from . import db
 from ..req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from ..req import Feed, Timeunit
 from ..req import base_context
@@ -20,7 +21,7 @@ from model.recent import last_updated
 from model.schema.feeds import Language
 from model.schema.items import Like
 from model.utils.all import unscored_items
-from model.utils.custom import upsert_like, upsert_magic
+from model.utils.custom import upsert_magic
 
 bp = Blueprint("home", __name__, url_prefix="/home")
 
@@ -103,7 +104,7 @@ def home():
 @bp.route("/like", methods=['POST'])
 @auth_required()
 def like(like_val = Like.UP):
-    upsert_like(current_user.UserID, int(request.form.get('id')), like_val)
+    db.upsert_like(current_user.UserID, int(request.form.get('id')), like_val)
     return ("", 200)
 
 @bp.route("/dislike", methods=['POST'])
