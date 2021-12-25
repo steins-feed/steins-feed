@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from html import unescape
 from lxml import etree, html
 import os
-import pickle
 
 from flask import Blueprint, request, render_template, redirect, url_for
 from flask_security import auth_required, current_user

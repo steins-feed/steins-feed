@@ -4,7 +4,8 @@ import os
 import pickle
 import sklearn
 
-from model.orm import feeds as orm_feeds
+from model.orm import users as orm_users
+from model.schema import feeds as schema_feeds
 
 dir_path = os.path.join(
     os.path.dirname(__file__),
@@ -13,12 +14,12 @@ dir_path = os.path.join(
 )
 
 def read_classifier(
-    user_id: int,
-    lang: orm_feeds.Language,
+    user: orm_users.User,
+    lang: schema_feeds.Language,
 ) -> sklearn.pipeline.Pipeline:
     clf_path = os.path.join(
         dir_path,
-        str(user_id),
+        str(user.UserID),
         lang.name + ".pickle",
     )
     with open(clf_path, "rb") as f:
@@ -26,12 +27,12 @@ def read_classifier(
 
 def write_classifier(
     clf: sklearn.pipeline.Pipeline,
-    user_id: int,
-    lang: orm_feeds.Language,
+    user_id: orm_users.User,
+    lang: schema_feeds.Language,
 ):
     clf_path = os.path.join(
         dir_path,
-        str(user_id),
+        str(user.UserID),
         lang.name + ".pickle",
     )
     with open(clf_path, "wb") as f:
