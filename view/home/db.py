@@ -72,6 +72,7 @@ def updated_items(
     finish: datetime.datetime,
     last: datetime.datetime = None,
     magic: bool = False,
+    unscored: bool = False,
 ):
     q = sqla.select(
         orm_items.Item,
@@ -96,7 +97,7 @@ def updated_items(
 
     if langs:
         q = q.where(
-            orm_feeds.Feed.Language.in_([Language(e).name for e in langs]),
+            orm_feeds.Feed.Language.in_([schema_feeds.Language(e).name for e in langs]),
         )
 
     if tags:
@@ -128,7 +129,19 @@ def updated_items(
         )),
     )
 
-    if magic:
+    if unscored:
+        q = q.join(orm_items.Item.magic.and_(
+            orm_items.Magic.UserID == user_id,
+        ))
+        q = q.where(
+            orm_items.Item.magic.any(
+                orm_items.Magic.UserID == user_id
+            )
+        )
+        q = q.options(
+            sqla.orm.contains_eager(orm_items.Item.magic),
+        )
+    elif magic:
         q = q.join(orm_items.Item.magic.and_(
             orm_items.Magic.UserID == user_id,
         ))
@@ -141,6 +154,16 @@ def updated_items(
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
+
+def unscored_items(
+    user_id: int,
+    lang: schema_feeds.Language,
+    tags: typing.List[str],
+    start: datetime.datetime,
+    finish: datetime.datetime,
+    last: datetime.datetime = None,
+):
+    return updated_items(user_id, [lang], tags, start, finish, last, unscored=True)
 
 def upsert_like(
     user_id: int,
@@ -193,7 +216,7 @@ def upsert_magic(
     for i in range(len(items)):
         rows.append({
             "UserID": user_id,
-            "ItemID": items[i]["ItemID"],
+            "ItemID": items[i].ItemID,
             "Score": scores[i]
         })
 

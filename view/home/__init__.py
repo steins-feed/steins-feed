@@ -13,7 +13,6 @@ import magic
 from magic.io import trained_languages
 from model.recent import last_updated
 from model.schema.items import Like
-from model.utils.all import unscored_items
 
 from . import db
 from ..req import get_feed, get_langs, get_page, get_tags, get_timeunit
@@ -65,7 +64,7 @@ def home():
 
     if r_feed == Feed.MAGIC:
         for lang_it in trained_languages(current_user):
-            new_items = unscored_items(
+            new_items = db.unscored_items(
                 current_user.UserID,
                 lang_it,
                 r_tags,
