@@ -46,7 +46,7 @@ def home():
     else:
         raise ValueError
 
-    page_dates = updated_dates(current_user.UserID, date_keys, last_hour, r_page + 2)
+    page_dates = db.updated_dates(current_user.UserID, date_keys, last_hour, r_page + 2)
     if len(page_dates) == 0:
         return redirect(url_for("overview.settings"))
     elif len(page_dates) == r_page + 2:
@@ -180,60 +180,6 @@ def empty_leaves(e, tags=[]):
 
     if len(e) == 0 and not e.text and not e.tail and (len(tags) == 0 or e.tag in tags):
         e.drop_tree()
-
-def updated_dates(user_id, keys, last=None, limit=None):
-    q = sqla.select(
-        [sqla.extract(e.lower(), orm.items.Item.Published).label(e) for e in keys]
-    ).join(
-        orm.items.Item.feed
-    ).join(
-        orm.feeds.Feed.users
-    )
-
-    q_where = [
-        orm.users.User.UserID == user_id,
-    ]
-    if last:
-        q_where.append(orm.items.Item.Published < last)
-    q = q.where(sqla.and_(*q_where))
-
-    q = q.order_by(*[sqla.desc(e) for e in keys])
-    if limit:
-        q = q.limit(limit)
-    q = q.distinct()
-
-    date_string, format_string = keys2strings(keys)
-    tuple2datetime = lambda x: datetime.strptime(
-            date_string.format(*x),
-            format_string
-    )
-
-    with get_session() as session:
-        return [tuple2datetime(e) for e in session.execute(q)]
-
-def keys2strings(keys):
-    date_string = "{}"
-    format_string = "%Y"
-
-    for key_it in keys[1:]:
-        if key_it == "Month":
-            date_string += "-{}"
-            format_string += "-%m"
-        elif key_it == "Week":
-            date_string += "-{}"
-            format_string += "-%W"
-        elif key_it == "Day":
-            date_string += "-{}"
-            format_string += "-%d"
-
-    if keys[-1] == "Month":
-        date_string += "-1"
-        format_string += "-%d"
-    elif keys[-1] == "Week":
-        date_string += "-1"
-        format_string += "-%w"
-
-    return date_string, format_string
 
 def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
     q = sqla.select(

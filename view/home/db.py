@@ -1,11 +1,68 @@
 #!/usr/bin/env python3
 
+import datetime
 import sqlalchemy as sqla
 import typing
 
 import model
-from model.orm import items as orm_items
+from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
 from model.schema import items as schema_items
+
+def updated_dates(
+    user_id: int,
+    keys: typing.List[str],
+    last: datetime.datetime = None,
+    limit: int = None,
+):
+    q = sqla.select(
+        [sqla.extract(e.lower(), orm_items.Item.Published).label(e) for e in keys]
+    ).join(
+        orm_items.Item.feed
+    ).join(
+        orm_feeds.Feed.users
+    )
+
+    q = q.where(orm_users.User.UserID == user_id)
+    if last:
+        q = q.where(orm_items.Item.Published < last)
+
+    q = q.order_by(*[sqla.desc(e) for e in keys])
+    if limit:
+        q = q.limit(limit)
+    q = q.distinct()
+
+    date_string, format_string = keys2strings(keys)
+    tuple2datetime = lambda x: datetime.datetime.strptime(
+            date_string.format(*x),
+            format_string
+    )
+
+    with model.get_session() as session:
+        return [tuple2datetime(e) for e in session.execute(q)]
+
+def keys2strings(keys):
+    date_string = "{}"
+    format_string = "%Y"
+
+    for key_it in keys[1:]:
+        if key_it == "Month":
+            date_string += "-{}"
+            format_string += "-%m"
+        elif key_it == "Week":
+            date_string += "-{}"
+            format_string += "-%W"
+        elif key_it == "Day":
+            date_string += "-{}"
+            format_string += "-%d"
+
+    if keys[-1] == "Month":
+        date_string += "-1"
+        format_string += "-%d"
+    elif keys[-1] == "Week":
+        date_string += "-1"
+        format_string += "-%w"
+
+    return date_string, format_string
 
 def upsert_like(
     user_id: int,
