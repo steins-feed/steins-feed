@@ -7,7 +7,7 @@ from . import Logger
 def log_time(name):
     logger = Logger(name, logging.INFO)
 
-    def log_time(f):
+    def decorator(f):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
             tic = time.time()
@@ -18,5 +18,5 @@ def log_time(name):
 
         return wrapper
 
-    return log_time
+    return decorator
 
