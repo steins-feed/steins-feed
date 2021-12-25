@@ -13,7 +13,7 @@ def updated_dates(
     keys: typing.List[str],
     last: datetime.datetime = None,
     limit: int = None,
-):
+) -> typing.List[datetime.datetime]:
     q = sqla.select(
         [sqla.extract(e.lower(), orm_items.Item.Published).label(e) for e in keys]
     ).join(
@@ -40,7 +40,7 @@ def updated_dates(
     with model.get_session() as session:
         return [tuple2datetime(e) for e in session.execute(q)]
 
-def keys2strings(keys):
+def keys2strings(keys: typing.List[str]) -> typing.Tuple[str, str]:
     date_string = "{}"
     format_string = "%Y"
 
