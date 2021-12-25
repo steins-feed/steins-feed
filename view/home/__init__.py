@@ -9,9 +9,9 @@ from flask import Blueprint, request, render_template, redirect, url_for
 from flask_security import auth_required, current_user
 import sqlalchemy as sqla
 
-from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
-from .req import Feed, Timeunit
-from .req import base_context
+from ..req import get_feed, get_langs, get_page, get_tags, get_timeunit
+from ..req import Feed, Timeunit
+from ..req import base_context
 from magic import build_feature, compute_score
 from magic.io import trained_languages
 from model import orm
