@@ -67,6 +67,52 @@ def keys2strings(keys: typing.List[str]) -> typing.Tuple[str, str]:
     return date_string, format_string
 
 @log_time.log_time(__name__)
+def updated_dates_(
+    user_id: int,
+    langs: typing.List[schema_feeds.Language],
+    tags: typing.List[str],
+    last: datetime.datetime = None,
+):
+    # Maximum datetime.
+    q = sqla.select(
+        sqla.func.max(orm_items.Item.Published),
+    ).join(
+        orm_items.Item.feed
+    ).join(
+        orm_feeds.Feed.users.and_(
+            orm_users.User.UserID == user_id,
+        )
+    )
+
+    q = filter_dates(q, last=last)
+    q = filter_languages(q, langs)
+    q = filter_tags(q, tags, user_id)
+    q = q.order_by(sqla.desc(orm_items.Item.Published))
+
+    with model.get_session() as session:
+        dt_max = session.execute(q).fetchone()[0]
+
+    # Minimum datetime.
+    q = sqla.select(
+        sqla.func.min(orm_items.Item.Published),
+    ).join(
+        orm_items.Item.feed
+    ).join(
+        orm_feeds.Feed.users.and_(
+            orm_users.User.UserID == user_id,
+        )
+    )
+
+    q = filter_languages(q, langs)
+    q = filter_tags(q, tags, user_id)
+    q = q.order_by(sqla.desc(orm_items.Item.Published))
+
+    with model.get_session() as session:
+        dt_min = session.execute(q).fetchone()[0]
+
+    return dt_min, dt_max
+
+@log_time.log_time(__name__)
 def updated_items(
     user_id: int,
     langs: typing.List[schema_feeds.Language],
