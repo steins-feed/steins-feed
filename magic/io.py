@@ -13,24 +13,13 @@ import typing
 from model import recent
 from model.orm import users as orm_users
 from model.schema import feeds as schema_feeds
+from util import io as util_io
 
 dir_path = os.path.join(
     os.path.dirname(__file__),
     os.pardir,
     "clf.d",
 )
-
-def mkdir_p(dir_path: str):
-    """
-    Make directory if non-existent.
-
-    Args:
-      s: Absolute path of new directory.
-    """
-    try:
-        os.mkdir(dir_path)
-    except FileExistsError:
-        pass
 
 def classifier_path(
     user: orm_users.User = None,
@@ -55,9 +44,9 @@ def classifier_path(
         lang_name + ".pickle",
     )
 
-    mkdir_p(dir_path)
+    util_io.mkdir_p(dir_path)
     if user:
-        mkdir_p(user_path)
+        util_io.mkdir_p(user_path)
 
     return clf_path
 

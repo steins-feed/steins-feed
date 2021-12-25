@@ -3,7 +3,7 @@
 import logging
 from logging import handlers
 import os
-
+from util import io as util_io
 
 class Formatter(logging.Formatter):
     instance = None
@@ -19,7 +19,6 @@ class Formatter(logging.Formatter):
         cls.instance = formatter
         return formatter
 
-
 class Handler(logging.Handler):
     instance = None
 
@@ -28,11 +27,7 @@ class Handler(logging.Handler):
         os.pardir,
         "log.d",
     )
-
-    try:
-        os.mkdir(dir_path)
-    except FileExistsError:
-        pass
+    util_io.mkdir_p(dir_path)
 
     file_path = os.path.join(
         dir_path,
@@ -56,11 +51,10 @@ class Handler(logging.Handler):
         cls.instance = handler
         return handler
 
-
 class Logger(logging.Logger):
     instances = {}
 
-    def __new__(cls, name="root", level=logging.WARNING):
+    def __new__(cls, name="root", level=logging.DEBUG):
         if name in cls.instances:
             return cls.instances[name]
 
@@ -72,3 +66,4 @@ class Logger(logging.Logger):
 
         cls.instances[name] = logger
         return logger
+
