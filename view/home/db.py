@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sqlalchemy as sqla
+import typing
 
 import model
 from model.schema import items as schema_items
@@ -10,7 +11,7 @@ def upsert_like(
     item_id: int,
     like_val: schema_items.Like,
 ):
-    like = model.get_table('Like')
+    like = model.get_table("Like")
 
     q = sqla.select(
         like,
@@ -22,7 +23,7 @@ def upsert_like(
         res = conn.execute(q).fetchone()
 
     if res:
-        score = schema_items.Like[res['Score']]
+        score = schema_items.Like[res["Score"]]
         q = like.update().values(
             Score=sqla.bindparam("score")
         ).where(
@@ -43,21 +44,24 @@ def upsert_like(
         else:
             conn.execute(q, score=like_val.name)
 
-def upsert_magic(user_id, items, scores):
-    if len(items) != len(scores):
-        raise IndexError()
+def upsert_magic(
+    user_id: int,
+    items: typing.List[orm_items.Item],
+    scores: typing.List[float],
+):
+    assert len(items) == len(scores)
 
-    magic = model.get_table('Magic')
+    magic = model.get_table("Magic")
 
     rows = []
     for i in range(len(items)):
         rows.append({
-            'UserID': user_id,
-            'ItemID': items[i]['ItemID'],
-            'Score': scores[i]
+            "UserID": user_id,
+            "ItemID": items[i]["ItemID"],
+            "Score": scores[i]
         })
 
     q = magic.insert()
-    q = q.prefix_with("OR IGNORE", dialect='sqlite')
+    q = q.prefix_with("OR IGNORE", dialect="sqlite")
     with model.get_connection() as conn:
         conn.execute(q, rows)
