@@ -9,11 +9,7 @@ from flask import Blueprint, request, render_template, redirect, url_for
 from flask_security import auth_required, current_user
 import sqlalchemy as sqla
 
-from . import db
-from ..req import get_feed, get_langs, get_page, get_tags, get_timeunit
-from ..req import Feed, Timeunit
-from ..req import base_context
-from magic import build_feature, compute_score
+import magic
 from magic.io import trained_languages
 from model import orm
 from model import get_session
@@ -21,6 +17,11 @@ from model.recent import last_updated
 from model.schema.feeds import Language
 from model.schema.items import Like
 from model.utils.all import unscored_items
+
+from . import db
+from ..req import get_feed, get_langs, get_page, get_tags, get_timeunit
+from ..req import Feed, Timeunit
+from ..req import base_context
 
 bp = Blueprint("home", __name__, url_prefix="/home")
 
@@ -78,7 +79,7 @@ def home():
             if len(new_items) == 0:
                 continue
 
-            new_scores = compute_score(current_user.UserID, lang_it, new_items)
+            new_scores = magic.compute_score(current_user.UserID, lang_it, new_items)
             db.upsert_magic(current_user.UserID, new_items, new_scores)
 
     page_items = updated_items(
@@ -303,3 +304,4 @@ def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
 
     with get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
+

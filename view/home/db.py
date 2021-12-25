@@ -4,6 +4,7 @@ import sqlalchemy as sqla
 import typing
 
 import model
+from model.orm import items as orm_items
 from model.schema import items as schema_items
 
 def upsert_like(
@@ -65,3 +66,4 @@ def upsert_magic(
     q = q.prefix_with("OR IGNORE", dialect="sqlite")
     with model.get_connection() as conn:
         conn.execute(q, rows)
+
