@@ -23,7 +23,8 @@ def updated_items(
 ):
     q = sqla.select(orm_items.Item)
     q = items_filter.filter_display(q, user_id)
-    q = filter_dates(q, start, finish, last)
+    q = items_filter.filter_dates(q, start, finish)
+    q = items_filter.filter_dates(q, finish=last)
     q = filter_languages(q, langs)
     q = filter_tags(q, tags, user_id)
     q = deduplicate_items(q)
@@ -50,24 +51,6 @@ def updated_items(
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
-
-def filter_dates(q, start=None, finish=None, last=None):
-    if start:
-        q = q.where(
-            orm_items.Item.Published >= start,
-        )
-
-    if finish:
-        q = q.where(
-            orm_items.Item.Published < finish,
-        )
-
-    if last:
-        q = q.where(
-            orm_items.Item.Published < last,
-        )
-
-    return q
 
 def filter_languages(q, langs):
     if langs:
