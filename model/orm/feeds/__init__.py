@@ -2,9 +2,9 @@
 
 import sqlalchemy as sqla
 
-from .. import get_table
-from .. import Base
-from .users import User
+from model import get_table
+from model import Base
+from model.orm.users import User
 
 t_display = get_table("Display")
 t_tags2feeds = get_table("Tags2Feeds")

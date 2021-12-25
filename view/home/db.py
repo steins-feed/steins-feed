@@ -7,6 +7,7 @@ import typing
 from log import time as log_time
 import model
 from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
+from model.orm.items import filter as items_filter
 from model.schema import feeds as schema_feeds, items as schema_items
 
 @log_time.log_time(__name__)
@@ -21,7 +22,7 @@ def updated_items(
     unscored: bool = False,
 ):
     q = sqla.select(orm_items.Item)
-    q = filter_display(q, user_id)
+    q = items_filter.filter_display(q, user_id)
     q = filter_dates(q, start, finish, last)
     q = filter_languages(q, langs)
     q = filter_tags(q, tags, user_id)
@@ -49,17 +50,6 @@ def updated_items(
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
-
-def filter_display(q, user_id):
-    q = q.join(
-        orm_items.Item.feed
-    ).join(
-        orm_feeds.Feed.users.and_(
-            orm_users.User.UserID == user_id,
-        )
-    )
-
-    return q
 
 def filter_dates(q, start=None, finish=None, last=None):
     if start:

@@ -2,10 +2,10 @@
 
 import sqlalchemy as sqla
 
-from .. import get_table
-from .. import Base
-from .feeds import Feed
-from .users import User
+from model import get_table
+from model import Base
+from model.orm.feeds import Feed
+from model.orm.users import User
 
 t_like = get_table("Like")
 t_magic = get_table("Magic")
