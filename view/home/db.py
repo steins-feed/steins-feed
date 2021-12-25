@@ -20,30 +20,14 @@ def updated_items(
     magic: bool = False,
     unscored: bool = False,
 ):
-    q = sqla.select(
-        orm_items.Item,
-    ).join(
-        orm_items.Item.feed
-    ).join(
-        orm_feeds.Feed.users.and_(
-            orm_users.User.UserID == user_id,
-        )
-    )
-
+    q = sqla.select(orm_items.Item)
+    q = filter_display(q, user_id)
     q = filter_dates(q, start, finish, last)
     q = filter_languages(q, langs)
     q = filter_tags(q, tags, user_id)
     q = deduplicate_items(q)
-
-    q = q.options(
-        sqla.orm.joinedload(orm_items.Item.likes.and_(
-            orm_items.Like.UserID == user_id,
-        )),
-        sqla.orm.contains_eager(orm_items.Item.feed)
-                .selectinload(orm_feeds.Feed.tags.and_(
-            orm_feeds.Tag.UserID == user_id,
-        )),
-    )
+    q = load_like(q, user_id)
+    q = load_tags(q, user_id, feed_joined=True)
 
     if unscored:
         q = q.join(orm_items.Item.magic.and_(
@@ -58,18 +42,24 @@ def updated_items(
             sqla.orm.contains_eager(orm_items.Item.magic),
         )
     elif magic:
-        q = q.join(orm_items.Item.magic.and_(
-            orm_items.Magic.UserID == user_id,
-        ))
-        q = q.order_by(sqla.desc(orm_items.Magic.Score))
-        q = q.options(
-            sqla.orm.contains_eager(orm_items.Item.magic),
-        )
+        q = order_magic(q, user_id)
+        q = load_magic(q, user_id, magic_joined=True)
     else:
         q = q.order_by(sqla.desc(orm_items.Item.Published))
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
+
+def filter_display(q, user_id):
+    q = q.join(
+        orm_items.Item.feed
+    ).join(
+        orm_feeds.Feed.users.and_(
+            orm_users.User.UserID == user_id,
+        )
+    )
+
+    return q
 
 def filter_dates(q, start=None, finish=None, last=None):
     if start:
@@ -118,6 +108,68 @@ def deduplicate_items(q):
     q = q.having(
         orm_feeds.Feed.Title == sqla.func.min(orm_feeds.Feed.Title),
     )
+    return q
+
+def order_magic(q, user_id, desc=True):
+    item_magic = orm_items.Item.magic.and_(
+        orm_items.Magic.UserID == user_id,
+    )
+
+    q = q.join(item_magic)
+
+    magic_score = orm_items.Magic.Score
+    if desc:
+        magic_score = sqla.desc(magic_score)
+
+    q = q.order_by(magic_score)
+    return q
+
+def load_like(q, user_id, like_joined=False):
+    item_likes = orm_items.Item.likes.and_(
+        orm_items.Like.UserID == user_id,
+    )
+
+    if like_joined:
+        load_like = sqla.orm.contains_eager(item_likes)
+    else:
+        load_like = sqla.orm.selectinload(item_likes)
+
+    q = q.options(load_like)
+    return q
+
+def load_tags(q, user_id, feed_joined=False, tags_joined=False):
+    assert feed_joined or not tags_joined
+
+    item_feed = orm_items.Item.feed
+
+    if feed_joined:
+        load_feed = sqla.orm.contains_eager(item_feed)
+    else:
+        load_feed = sqla.orm.selectinload(item_feed)
+
+    feed_tags = orm_feeds.Feed.tags.and_(
+        orm_feeds.Tag.UserID == user_id,
+    )
+
+    if tags_joined:
+        load_feed_tags = load_feed.contains_eager(feed_tags)
+    else:
+        load_feed_tags = load_feed.selectinload(feed_tags)
+
+    q = q.options(load_feed_tags)
+    return q
+
+def load_magic(q, user_id, magic_joined=False):
+    item_magic = orm_items.Item.magic.and_(
+        orm_items.Magic.UserID == user_id,
+    )
+
+    if magic_joined:
+        load_magic = sqla.orm.contains_eager(item_magic)
+    else:
+        load_magic = sqla.orm.selectinload(item_magic)
+
+    q = q.options(load_magic)
     return q
 
 @log_time.log_time(__name__)
