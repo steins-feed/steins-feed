@@ -11,10 +11,7 @@ import sqlalchemy as sqla
 
 import magic
 from magic.io import trained_languages
-from model import orm
-from model import get_session
 from model.recent import last_updated
-from model.schema.feeds import Language
 from model.schema.items import Like
 from model.utils.all import unscored_items
 
@@ -82,7 +79,7 @@ def home():
             new_scores = magic.compute_score(current_user.UserID, lang_it, new_items)
             db.upsert_magic(current_user.UserID, new_items, new_scores)
 
-    page_items = updated_items(
+    page_items = db.updated_items(
         current_user.UserID,
         r_langs,
         r_tags,
@@ -180,74 +177,4 @@ def empty_leaves(e, tags=[]):
 
     if len(e) == 0 and not e.text and not e.tail and (len(tags) == 0 or e.tag in tags):
         e.drop_tree()
-
-def updated_items(user_id, langs, tags, start, finish, last=None, magic=False):
-    q = sqla.select(
-        orm.items.Item,
-    ).join(
-        orm.items.Item.feed
-    ).join(
-        orm.feeds.Feed.users.and_(
-            orm.users.User.UserID == user_id,
-        )
-    )
-
-    # WHERE.
-    q_where = [
-        orm.items.Item.Published >= start,
-        orm.items.Item.Published < finish,
-    ]
-
-    if last:
-        q_where.append(orm.items.Item.Published < last)
-
-    if langs:
-        q_where.append(
-            orm.feeds.Feed.Language.in_([Language(e).name for e in langs])
-        )
-
-    if tags:
-        q = q.join(
-            orm.feeds.Feed.tags.and_(
-                orm.feeds.Tag.UserID == user_id,
-            )
-        )
-        q_where.append(
-            orm.feeds.Tag.Name.in_(tags),
-        )
-
-    q = q.where(sqla.and_(*q_where))
-
-    # GROUP BY.
-    q = q.group_by(
-        orm.items.Item.Title,
-        orm.items.Item.Published,
-    )
-    q = q.having(
-        orm.feeds.Feed.Title == sqla.func.min(orm.feeds.Feed.Title),
-    )
-
-    q = q.options(
-        sqla.orm.joinedload(orm.items.Item.likes.and_(
-            orm.items.Like.UserID == user_id,
-        )),
-        sqla.orm.contains_eager(orm.items.Item.feed)
-                .selectinload(orm.feeds.Feed.tags.and_(
-            orm.feeds.Tag.UserID == user_id,
-        )),
-    )
-
-    if magic:
-        q = q.join(orm.items.Item.magic.and_(
-            orm.items.Magic.UserID == user_id,
-        ))
-        q = q.order_by(sqla.desc(orm.items.Magic.Score))
-        q = q.options(
-            sqla.orm.contains_eager(orm.items.Item.magic),
-        )
-    else:
-        q = q.order_by(sqla.desc(orm.items.Item.Published))
-
-    with get_session() as session:
-        return [e[0] for e in session.execute(q).unique()]
 

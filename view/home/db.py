@@ -6,7 +6,7 @@ import typing
 
 import model
 from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
-from model.schema import items as schema_items
+from model.schema import feeds as schema_feeds, items as schema_items
 
 def updated_dates(
     user_id: int,
@@ -63,6 +63,84 @@ def keys2strings(keys: typing.List[str]) -> typing.Tuple[str, str]:
         format_string += "-%w"
 
     return date_string, format_string
+
+def updated_items(
+    user_id: int,
+    langs: typing.List[schema_feeds.Language],
+    tags: typing.List[str],
+    start: datetime.datetime,
+    finish: datetime.datetime,
+    last: datetime.datetime = None,
+    magic: bool = False,
+):
+    q = sqla.select(
+        orm_items.Item,
+    ).join(
+        orm_items.Item.feed
+    ).join(
+        orm_feeds.Feed.users.and_(
+            orm_users.User.UserID == user_id,
+        )
+    )
+
+    # WHERE.
+    q = q.where(
+        orm_items.Item.Published >= start,
+        orm_items.Item.Published < finish,
+    )
+
+    if last:
+        q = q.where(
+            orm_items.Item.Published < last,
+        )
+
+    if langs:
+        q = q.where(
+            orm_feeds.Feed.Language.in_([Language(e).name for e in langs]),
+        )
+
+    if tags:
+        q = q.join(
+            orm_feeds.Feed.tags.and_(
+                orm_feeds.Tag.UserID == user_id,
+            )
+        )
+        q = q.where(
+            orm_feeds.Tag.Name.in_(tags),
+        )
+
+    # GROUP BY.
+    q = q.group_by(
+        orm_items.Item.Title,
+        orm_items.Item.Published,
+    )
+    q = q.having(
+        orm_feeds.Feed.Title == sqla.func.min(orm_feeds.Feed.Title),
+    )
+
+    q = q.options(
+        sqla.orm.joinedload(orm_items.Item.likes.and_(
+            orm_items.Like.UserID == user_id,
+        )),
+        sqla.orm.contains_eager(orm_items.Item.feed)
+                .selectinload(orm_feeds.Feed.tags.and_(
+            orm_feeds.Tag.UserID == user_id,
+        )),
+    )
+
+    if magic:
+        q = q.join(orm_items.Item.magic.and_(
+            orm_items.Magic.UserID == user_id,
+        ))
+        q = q.order_by(sqla.desc(orm_items.Magic.Score))
+        q = q.options(
+            sqla.orm.contains_eager(orm_items.Item.magic),
+        )
+    else:
+        q = q.order_by(sqla.desc(orm_items.Item.Published))
+
+    with model.get_session() as session:
+        return [e[0] for e in session.execute(q).unique()]
 
 def upsert_like(
     user_id: int,
