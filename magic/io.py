@@ -8,6 +8,7 @@ import os
 import pickle
 import re
 import sklearn
+import typing
 
 from model import recent
 from model.orm import users as orm_users
@@ -102,7 +103,7 @@ def is_up_to_date(
 
     return file_datetime > dt
 
-def trained_languages(user: orm_users.User) -> list[schema_feeds.Language]:
+def trained_languages(user: orm_users.User) -> typing.List[schema_feeds.Language]:
     """
     Extracts languages from trained classifiers.
 

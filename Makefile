@@ -3,6 +3,8 @@ README.pdf: README.md
 
 .PHONY: requirements
 requirements: requirements.txt
+	python3 -m pip install --upgrade pip wheel
+	python3 -m pip install pyOpenSSL
 	python3 -m pip install --upgrade -r requirements.txt
 
 .env:
@@ -38,8 +40,8 @@ test:
 .PHONY: clean
 clean:
 	-rm README.pdf
-	-rm -r __pycache__/
-	-rm *.pyc
+	-rm -r clf.d/
+	-rm -r log.d/
 
 .PHONY: distclean
 distclean:
@@ -47,7 +49,3 @@ distclean:
 	-rm steins.db
 	-rm steins.db.?
 	-rm steins.db-journal
-	-rm steins.log
-	-rm steins.log.?
-	-rm steins_feed.log
-	-rm steins_magic.log
