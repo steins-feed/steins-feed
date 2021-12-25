@@ -17,58 +17,12 @@ sys.path.append(par_path)
 
 import log
 import magic
-from magic import io as magic_io
+from magic import db as magic_db, io as magic_io
 import model
 from model import liked
 from model.orm import users as orm_users
-from model.schema import feeds as schema_feeds
 
 logger = log.Logger(__name__, logging.INFO)
-
-def reset_magic(
-    user_id: int = None,
-    lang: schema_feeds.Language = None,
-):
-    """
-    Resets magic.
-
-    Args:
-      user_id: User ID.
-      lang: Language.
-    """
-    feeds = model.get_table('Feeds')
-    items = model.get_table('Items')
-    magic = model.get_table('Magic')
-
-    q = magic.delete()
-
-    if user_id:
-        q = q.where(magic.c.UserID == user_id)
-
-    if lang:
-        if user_id:
-            q_cte = sqla.select(
-                items.c.ItemID,
-            ).select_from(
-                items.join(feeds)
-                     .join(magic)
-            ).where(
-                feeds.c.Language == lang.name,
-                magic.c.UserID == user_id,
-            ).distinct()
-        else:
-            q_cte = sqla.select(
-                items.c.ItemID,
-            ).select_from(
-                items.join(feeds)
-            ).where(
-                feeds.c.Language == lang.name,
-            ).distinct()
-
-        q = q.where(magic.c.ItemID.in_(q_cte))
-
-    with model.get_connection() as conn:
-        conn.execute(q)
 
 def do_words(pipeline: sklearn.pipeline.Pipeline) -> dict[str, float]:
     """
@@ -160,7 +114,7 @@ if __name__ == "__main__":
                 clf = magic.train_classifier(user_it.UserID, lang_it, likes, dislikes)
 
                 magic_io.write_classifier(clf, user_it, lang_it)
-                reset_magic(user_it.UserID, lang_it)
+                magic_db.reset_magic(user_it.UserID, lang_it)
 
         #for lang_it in clfs:
         #    # Words.
