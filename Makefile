@@ -3,6 +3,8 @@ README.pdf: README.md
 
 .PHONY: requirements
 requirements: requirements.txt
+	python3 -m pip install --upgrade pip wheel
+	python3 -m pip install pyOpenSSL
 	python3 -m pip install --upgrade -r requirements.txt
 
 .env:
