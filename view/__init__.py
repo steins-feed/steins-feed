@@ -5,7 +5,7 @@ import os
 
 from .auth import get_security
 from .feed import bp as feed_bp
-from .home import bp as home_bp, clean_summary
+from .home import bp as home_bp
 from .overview import bp as over_bp
 from .tag import bp as tag_bp
 
@@ -30,7 +30,6 @@ security = get_security(app)
 
 # Jinja2.
 app.jinja_env.line_statement_prefix = '#'
-app.jinja_env.filters['clean'] = clean_summary
 app.jinja_env.filters['contains'] = lambda a, b: set(a) >= set(b)
 app.jinja_env.filters['day'] = lambda x: x.strftime("%a, %d %b %Y")
 

@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 from datetime import datetime, timedelta
-from html import unescape
-from lxml import etree, html
 import os
 
 from flask import Blueprint, request, render_template, redirect, url_for
@@ -15,11 +13,13 @@ from model.recent import last_updated
 from model.schema.items import Like
 
 from . import db
+from . import util
 from ..req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from ..req import Feed, Timeunit
 from ..req import base_context
 
 bp = Blueprint("home", __name__, url_prefix="/home")
+bp.add_app_template_filter(util.clean_summary, "clean")
 
 @bp.route("")
 @auth_required()
@@ -135,45 +135,4 @@ def get_topnav_title(page_date, timeunit):
         raise ValueError
 
     return topnav_title
-
-def clean_summary(s):
-    try:
-        tree = html.fromstring(s)
-    except etree.ParserError:
-        return ""
-    except etree.XMLSyntaxError:
-        return ""
-
-    # Penalize if full document.
-    tags = ['h' + str(e + 1) for e in range(6)];
-    for tag_it in tags:
-        elems = tree.xpath("//{}".format(tag_it))
-        if len(elems) > 0:
-            return ""
-
-    # Strip tags and content.
-    tags = ['figure', 'img']
-    if tree.tag in tags:
-        return ""
-    etree.strip_elements(tree, *tags, with_tail=False)
-
-    # Strip classes and content.
-    classes = ['instagram', 'tiktok', 'twitter']
-    for class_it in classes:
-        elems = tree.xpath("//*[contains(@class, '" + class_it + "')]")
-        for elem_it in reversed(elems):
-            elem_it.drop_tree()
-
-    # Strip empty tags.
-    tags = ['div', 'p', 'span']
-    empty_leaves(tree, tags)
-
-    return unescape(html.tostring(tree, encoding='unicode', method='html'))
-
-def empty_leaves(e, tags=[]):
-    for e_it in reversed(list(e)):
-        empty_leaves(e_it)
-
-    if len(e) == 0 and not e.text and not e.tail and (len(tags) == 0 or e.tag in tags):
-        e.drop_tree()
 
