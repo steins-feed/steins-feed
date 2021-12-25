@@ -7,6 +7,7 @@ import typing
 from log import time as log_time
 import model
 from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
+from model.orm.feeds import filter as feeds_filter
 from model.orm.items import filter as items_filter
 from model.schema import feeds as schema_feeds, items as schema_items
 
@@ -25,8 +26,10 @@ def updated_items(
     q = items_filter.filter_display(q, user_id)
     q = items_filter.filter_dates(q, start, finish)
     q = items_filter.filter_dates(q, finish=last)
-    q = filter_languages(q, langs)
-    q = filter_tags(q, tags, user_id)
+    if langs:
+        q = feeds_filter.filter_languages(q, langs)
+    if tags:
+        q = feeds_filter.filter_tags(q, tags, user_id)
     q = deduplicate_items(q)
     q = load_like(q, user_id)
     q = load_tags(q, user_id, feed_joined=True)
@@ -51,27 +54,6 @@ def updated_items(
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
-
-def filter_languages(q, langs):
-    if langs:
-        q = q.where(
-            orm_feeds.Feed.Language.in_([schema_feeds.Language(e).name for e in langs]),
-        )
-
-    return q
-
-def filter_tags(q, tags, user_id):
-    if tags:
-        q = q.join(
-            orm_feeds.Feed.tags.and_(
-                orm_feeds.Tag.UserID == user_id,
-            )
-        )
-        q = q.where(
-            orm_feeds.Tag.Name.in_(tags),
-        )
-
-    return q
 
 def deduplicate_items(q):
     q = q.group_by(
