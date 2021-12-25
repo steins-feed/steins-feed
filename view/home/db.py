@@ -132,9 +132,9 @@ def updated_items(
     if unscored:
         q = q.join(orm_items.Item.magic.and_(
             orm_items.Magic.UserID == user_id,
-        ))
+        ), isouter=True)
         q = q.where(
-            orm_items.Item.magic.any(
+            ~orm_items.Item.magic.any(
                 orm_items.Magic.UserID == user_id
             )
         )
