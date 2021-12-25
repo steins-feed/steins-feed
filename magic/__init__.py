@@ -2,7 +2,6 @@
 
 import glob
 import os
-import pickle
 import re
 
 from lxml import html
@@ -10,8 +9,11 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
-from model.orm import items as orm_items
+import model
+from model.orm import items as orm_items, users as orm_users
 from model.schema import feeds as schema_feeds
+
+from . import io
 
 dir_path = os.path.join(
     os.path.dirname(__file__),
@@ -113,13 +115,9 @@ def compute_score(
     Returns:
       List of scores between -1.0 and +1.0.
     """
-    clf_path = os.path.join(
-        dir_path,
-        str(user_id),
-        lang.name + ".pickle",
-    )
-    with open(clf_path, 'rb') as f:
-        clf = pickle.load(f)
+    with model.get_session() as session:
+        user = session.get(orm_users.User, user_id)
+    clf = io.read_classifier(user, lang)
 
     titles = [build_feature(row_it) for row_it in items]
     targets = clf.predict_proba(titles)

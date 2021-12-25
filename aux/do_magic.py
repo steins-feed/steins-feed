@@ -5,7 +5,6 @@
 import collections
 import logging
 import os
-import pickle
 import sklearn
 import sqlalchemy as sqla
 import sys
@@ -20,6 +19,7 @@ sys.path.append(par_path)
 
 import log
 import magic
+from magic import io as magic_io
 import model
 from model import liked, recent
 from model.orm import users as orm_users
@@ -171,8 +171,7 @@ if __name__ == "__main__":
                 lang_it.name + ".pickle",
             )
             if is_up_to_date(file_path, datetime_like):
-                with open(file_path, 'rb') as f:
-                    clf = pickle.load(f)
+                clf = magic_io.read_classifier(user_it, lang_it)
             else:
                 logger.info(f"Learn {lang_it.name} about {user_it.Name}.")
 
@@ -181,8 +180,7 @@ if __name__ == "__main__":
                 clf = magic.train_classifier(user_it.UserID, lang_it, likes, dislikes)
 
                 reset_magic(user_it.UserID, lang_it)
-                with open(file_path, 'wb') as f:
-                    pickle.dump(clf, f)
+                magic_io.write_classifier(clf, user_it, lang_it)
 
         #for lang_it in clfs:
         #    # Words.
