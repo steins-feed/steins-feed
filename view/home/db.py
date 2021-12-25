@@ -10,70 +10,14 @@ from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
 from model.schema import feeds as schema_feeds, items as schema_items
 
 from .util import round_to
+from .. import req
 
 @log_time.log_time(__name__)
 def updated_dates(
     user_id: int,
-    keys: typing.List[str],
-    last: datetime.datetime = None,
-    limit: int = None,
-) -> typing.List[datetime.datetime]:
-    q = sqla.select(
-        [sqla.extract(e.lower(), orm_items.Item.Published).label(e) for e in keys]
-    ).join(
-        orm_items.Item.feed
-    ).join(
-        orm_feeds.Feed.users
-    )
-
-    q = q.where(orm_users.User.UserID == user_id)
-    if last:
-        q = q.where(orm_items.Item.Published < last)
-
-    q = q.order_by(*[sqla.desc(e) for e in keys])
-    if limit:
-        q = q.limit(limit)
-    q = q.distinct()
-
-    date_string, format_string = keys2strings(keys)
-    tuple2datetime = lambda x: datetime.datetime.strptime(
-            date_string.format(*x),
-            format_string
-    )
-
-    with model.get_session() as session:
-        return [tuple2datetime(e) for e in session.execute(q)]
-
-def keys2strings(keys: typing.List[str]) -> typing.Tuple[str, str]:
-    date_string = "{}"
-    format_string = "%Y"
-
-    for key_it in keys[1:]:
-        if key_it == "Month":
-            date_string += "-{}"
-            format_string += "-%m"
-        elif key_it == "Week":
-            date_string += "-{}"
-            format_string += "-%W"
-        elif key_it == "Day":
-            date_string += "-{}"
-            format_string += "-%d"
-
-    if keys[-1] == "Month":
-        date_string += "-1"
-        format_string += "-%d"
-    elif keys[-1] == "Week":
-        date_string += "-1"
-        format_string += "-%w"
-
-    return date_string, format_string
-
-@log_time.log_time(__name__)
-def updated_dates_(
-    user_id: int,
     langs: typing.List[schema_feeds.Language],
     tags: typing.List[str],
-    r_timeunit,
+    timeunit: req.Timeunit,
     last: datetime.datetime = None,
 ):
     # Maximum datetime.
@@ -95,7 +39,7 @@ def updated_dates_(
     with model.get_session() as session:
         dt_max = round_to(
             session.execute(q).fetchone()[0],
-            r_timeunit,
+            timeunit,
         )
 
     # Minimum datetime.
@@ -117,7 +61,7 @@ def updated_dates_(
     with model.get_session() as session:
         dt_min = round_to(
             session.execute(q).fetchone()[0],
-            r_timeunit,
+            timeunit,
         )
 
     res = []

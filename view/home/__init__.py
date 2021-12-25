@@ -40,8 +40,9 @@ def home():
     else:
         raise ValueError
 
-    page_dates = db.updated_dates_(current_user.UserID, r_langs, r_tags, r_timeunit, last_hour)
+    page_dates = db.updated_dates(current_user.UserID, r_langs, r_tags, r_timeunit, last_hour)
     page_date = page_dates[r_page]
+    print(r_page, page_date)
 
     start_time = page_date
     finish_time = start_time
