@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import datetime
 import enum
 import os
 
@@ -32,10 +33,15 @@ def get_langs():
     return res
 
 def get_page():
+    current_time = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     if get_timeunit_new() == get_timeunit_old():
-        return request.args.get('page', default=0, type=int)
+        s = request.args.get('page', default=None, type=str)
+        if s:
+            return datetime.datetime.fromisoformat(s)
+        else:
+            return current_time
     else:
-        return 0
+        return current_time
 
 def get_tags():
     return request.args.getlist('tag')
@@ -56,6 +62,8 @@ def base_context():
     context['feed'] = get_feed()
     context['timeunit'] = get_timeunit()
     context['page'] = get_page()
+    context['prev_page'] = get_page() - datetime.timedelta(days=1)
+    context['next_page'] = get_page() + datetime.timedelta(days=1)
     context['langs'] = get_langs()
     context['tags'] = get_tags()
 

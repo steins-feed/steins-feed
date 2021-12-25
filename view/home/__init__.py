@@ -40,11 +40,7 @@ def home():
     else:
         raise ValueError
 
-    page_dates = db.updated_dates(current_user.UserID, r_langs, r_tags, r_timeunit, last_hour)
-    page_date = page_dates[r_page]
-    print(r_page, page_date)
-
-    start_time = page_date
+    start_time = r_page
     finish_time = start_time
     if r_timeunit == req.Timeunit.DAY:
         finish_time += timedelta(days=1)
@@ -84,9 +80,8 @@ def home():
 
     return render_template("index.html",
             **req.base_context(),
-            topnav_title=util.format_date(page_date, r_timeunit),
+            topnav_title=util.format_date(r_page, r_timeunit),
             last_updated=last_hour,
-            dates=page_dates,
             items=page_items,
             enum_like=Like
     )

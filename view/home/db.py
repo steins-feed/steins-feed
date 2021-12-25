@@ -9,68 +9,6 @@ import model
 from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
 from model.schema import feeds as schema_feeds, items as schema_items
 
-from .util import round_to
-from .. import req
-
-@log_time.log_time(__name__)
-def updated_dates(
-    user_id: int,
-    langs: typing.List[schema_feeds.Language],
-    tags: typing.List[str],
-    timeunit: req.Timeunit,
-    last: datetime.datetime = None,
-):
-    # Maximum datetime.
-    q = sqla.select(
-        sqla.func.max(orm_items.Item.Published),
-    ).join(
-        orm_items.Item.feed
-    ).join(
-        orm_feeds.Feed.users.and_(
-            orm_users.User.UserID == user_id,
-        )
-    )
-
-    q = filter_dates(q, last=last)
-    q = filter_languages(q, langs)
-    q = filter_tags(q, tags, user_id)
-    q = q.order_by(sqla.desc(orm_items.Item.Published))
-
-    with model.get_session() as session:
-        dt_max = round_to(
-            session.execute(q).fetchone()[0],
-            timeunit,
-        )
-
-    # Minimum datetime.
-    q = sqla.select(
-        sqla.func.min(orm_items.Item.Published),
-    ).join(
-        orm_items.Item.feed
-    ).join(
-        orm_feeds.Feed.users.and_(
-            orm_users.User.UserID == user_id,
-        )
-    )
-
-    q = filter_dates(q, last=last)
-    q = filter_languages(q, langs)
-    q = filter_tags(q, tags, user_id)
-    q = q.order_by(sqla.desc(orm_items.Item.Published))
-
-    with model.get_session() as session:
-        dt_min = round_to(
-            session.execute(q).fetchone()[0],
-            timeunit,
-        )
-
-    res = []
-    while dt_max >= dt_min:
-        res.append(dt_max)
-        dt_max -= datetime.timedelta(days=1)
-
-    return res
-
 @log_time.log_time(__name__)
 def updated_items(
     user_id: int,
