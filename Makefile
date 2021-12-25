@@ -38,8 +38,8 @@ test:
 .PHONY: clean
 clean:
 	-rm README.pdf
-	-rm -r __pycache__/
-	-rm *.pyc
+	-rm -r clf.d/
+	-rm -r log.d/
 
 .PHONY: distclean
 distclean:
@@ -47,7 +47,3 @@ distclean:
 	-rm steins.db
 	-rm steins.db.?
 	-rm steins.db-journal
-	-rm steins.log
-	-rm steins.log.?
-	-rm steins_feed.log
-	-rm steins_magic.log

@@ -1,18 +1,7 @@
-.env
-.python-version
-.venv/
-
-clf.d/
-feedparser
-log.d/
 README.pdf
 steins.db
 steins.db.?
 steins.db-journal
-steins.log
-steins.log.?
-steins_feed.log
-steins_magic.log
 
-__pycache__/
-*.pyc
+clf.d/
+log.d/
