@@ -4,6 +4,7 @@ from lxml import html
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
+import typing
 
 import model
 from model.orm import items as orm_items, users as orm_users
@@ -24,7 +25,7 @@ def build_feature(row: orm_items.Item) -> str:
     tree = html.fromstring(row.Title)
     return html.tostring(tree, encoding='unicode', method='text')
 
-def kullback_leibler(q: dict[str, float], p: dict[str, float]) -> float:
+def kullback_leibler(q: typing.Dict[str, float], p: typing.Dict[str, float]) -> float:
     """
     Measures distance between two word distributions.
 
@@ -49,8 +50,8 @@ def kullback_leibler(q: dict[str, float], p: dict[str, float]) -> float:
 def train_classifier(
     user_id: int,
     lang: schema_feeds.Language,
-    likes: list[orm_items.Item],
-    dislikes: list[orm_items.Item],
+    likes: typing.List[orm_items.Item],
+    dislikes: typing.List[orm_items.Item],
 ) -> Pipeline:
     """
     Trains classifier from likes and dislikes.
@@ -92,8 +93,8 @@ def train_classifier(
 def compute_score(
     user_id: int,
     lang: schema_feeds.Language,
-    items: list[orm_items.Item],
-) -> list[float]:
+    items: typing.List[orm_items.Item],
+) -> typing.List[float]:
     """
     Computes item score using classifier.
 
