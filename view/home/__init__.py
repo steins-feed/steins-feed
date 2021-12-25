@@ -14,7 +14,7 @@ from model.schema.items import Like
 
 from . import db
 from . import util
-from ..req import get_feed, get_langs, get_page, get_tags, get_timeunit
+from .. import req
 from ..req import Feed, Timeunit
 from ..req import base_context
 
@@ -24,11 +24,11 @@ bp.add_app_template_filter(util.clean_summary, "clean")
 @bp.route("")
 @auth_required()
 def home():
-    r_feed = get_feed()
-    r_langs = get_langs()
-    r_page = get_page()
-    r_tags = get_tags()
-    r_timeunit = get_timeunit()
+    r_feed = req.get_feed()
+    r_langs = req.get_langs()
+    r_page = req.get_page()
+    r_tags = req.get_tags()
+    r_timeunit = req.get_timeunit()
 
     last_hour = last_updated().replace(
             minute=0, second=0, microsecond=0
