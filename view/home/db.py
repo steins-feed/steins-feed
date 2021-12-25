@@ -109,6 +109,7 @@ def updated_dates_(
         )
     )
 
+    q = filter_dates(q, last=last)
     q = filter_languages(q, langs)
     q = filter_tags(q, tags, user_id)
     q = q.order_by(sqla.desc(orm_items.Item.Published))
@@ -119,7 +120,12 @@ def updated_dates_(
             r_timeunit,
         )
 
-    return dt_min, dt_max
+    res = []
+    while dt_max >= dt_min:
+        res.append(dt_max)
+        dt_max -= datetime.timedelta(days=1)
+
+    return res
 
 @log_time.log_time(__name__)
 def updated_items(

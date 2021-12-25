@@ -40,13 +40,8 @@ def home():
     else:
         raise ValueError
 
-    page_dates = db.updated_dates(current_user.UserID, date_keys, last_hour, r_page + 2)
-    if len(page_dates) == 0:
-        return redirect(url_for("overview.settings"))
-    elif len(page_dates) == r_page + 2:
-        page_date = page_dates[-2]
-    else:
-        page_date = page_dates[-1]
+    page_dates = db.updated_dates_(current_user.UserID, r_langs, r_tags, r_timeunit, last_hour)
+    page_date = page_dates[r_page]
 
     start_time = page_date
     finish_time = start_time
