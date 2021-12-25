@@ -87,40 +87,10 @@ def updated_items(
         )
     )
 
-    # WHERE.
-    q = q.where(
-        orm_items.Item.Published >= start,
-        orm_items.Item.Published < finish,
-    )
-
-    if last:
-        q = q.where(
-            orm_items.Item.Published < last,
-        )
-
-    if langs:
-        q = q.where(
-            orm_feeds.Feed.Language.in_([schema_feeds.Language(e).name for e in langs]),
-        )
-
-    if tags:
-        q = q.join(
-            orm_feeds.Feed.tags.and_(
-                orm_feeds.Tag.UserID == user_id,
-            )
-        )
-        q = q.where(
-            orm_feeds.Tag.Name.in_(tags),
-        )
-
-    # GROUP BY.
-    q = q.group_by(
-        orm_items.Item.Title,
-        orm_items.Item.Published,
-    )
-    q = q.having(
-        orm_feeds.Feed.Title == sqla.func.min(orm_feeds.Feed.Title),
-    )
+    q = filter_dates(q, start, finish, last)
+    q = filter_languages(q, langs)
+    q = filter_tags(q, tags, user_id)
+    q = deduplicate_items(q)
 
     q = q.options(
         sqla.orm.joinedload(orm_items.Item.likes.and_(
@@ -157,6 +127,50 @@ def updated_items(
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
+
+def filter_dates(q, start, finish, last):
+    q = q.where(
+        orm_items.Item.Published >= start,
+        orm_items.Item.Published < finish,
+    )
+
+    if last:
+        q = q.where(
+            orm_items.Item.Published < last,
+        )
+
+    return q
+
+def filter_languages(q, langs):
+    if langs:
+        q = q.where(
+            orm_feeds.Feed.Language.in_([schema_feeds.Language(e).name for e in langs]),
+        )
+
+    return q
+
+def filter_tags(q, tags, user_id):
+    if tags:
+        q = q.join(
+            orm_feeds.Feed.tags.and_(
+                orm_feeds.Tag.UserID == user_id,
+            )
+        )
+        q = q.where(
+            orm_feeds.Tag.Name.in_(tags),
+        )
+
+    return q
+
+def deduplicate_items(q):
+    q = q.group_by(
+        orm_items.Item.Title,
+        orm_items.Item.Published,
+    )
+    q = q.having(
+        orm_feeds.Feed.Title == sqla.func.min(orm_feeds.Feed.Title),
+    )
+    return q
 
 @log_time.log_time(__name__)
 def unscored_items(
