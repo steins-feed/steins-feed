@@ -1,13 +1,16 @@
 import functools
 import logging
 import time
+import typing
 
 from . import Logger
 
-def log_time(name):
+def log_time(
+    name: str,
+) -> typing.Callable[[typing.Callable], typing.Callable]:
     logger = Logger(name, logging.INFO)
 
-    def decorator(f):
+    def decorator(f: typing.Callable) -> typing.Callable:
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
             tic = time.time()
