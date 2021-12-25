@@ -42,3 +42,22 @@ def upsert_like(
             conn.execute(q, score=schema_items.Like.MEH.name)
         else:
             conn.execute(q, score=like_val.name)
+
+def upsert_magic(user_id, items, scores):
+    if len(items) != len(scores):
+        raise IndexError()
+
+    magic = model.get_table('Magic')
+
+    rows = []
+    for i in range(len(items)):
+        rows.append({
+            'UserID': user_id,
+            'ItemID': items[i]['ItemID'],
+            'Score': scores[i]
+        })
+
+    q = magic.insert()
+    q = q.prefix_with("OR IGNORE", dialect='sqlite')
+    with model.get_connection() as conn:
+        conn.execute(q, rows)

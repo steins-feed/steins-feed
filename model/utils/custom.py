@@ -142,23 +142,3 @@ def insert_feeds_untagged(tag_id, untagged):
     q = q.prefix_with("OR IGNORE", dialect='sqlite')
     with get_connection() as conn:
         conn.execute(q, rows)
-
-# Magic.
-def upsert_magic(user_id, items, scores):
-    if len(items) != len(scores):
-        raise IndexError()
-
-    magic = get_table('Magic')
-
-    rows = []
-    for i in range(len(items)):
-        rows.append({
-            'UserID': user_id,
-            'ItemID': items[i]['ItemID'],
-            'Score': scores[i]
-        })
-
-    q = magic.insert()
-    q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    with get_connection() as conn:
-        conn.execute(q, rows)

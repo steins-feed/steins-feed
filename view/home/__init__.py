@@ -21,7 +21,6 @@ from model.recent import last_updated
 from model.schema.feeds import Language
 from model.schema.items import Like
 from model.utils.all import unscored_items
-from model.utils.custom import upsert_magic
 
 bp = Blueprint("home", __name__, url_prefix="/home")
 
@@ -80,7 +79,7 @@ def home():
                 continue
 
             new_scores = compute_score(current_user.UserID, lang_it, new_items)
-            upsert_magic(current_user.UserID, new_items, new_scores)
+            db.upsert_magic(current_user.UserID, new_items, new_scores)
 
     page_items = updated_items(
         current_user.UserID,
