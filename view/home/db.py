@@ -4,10 +4,12 @@ import datetime
 import sqlalchemy as sqla
 import typing
 
+from log import time as log_time
 import model
 from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
 from model.schema import feeds as schema_feeds, items as schema_items
 
+@log_time.log_time(__name__)
 def updated_dates(
     user_id: int,
     keys: typing.List[str],
@@ -64,6 +66,7 @@ def keys2strings(keys: typing.List[str]) -> typing.Tuple[str, str]:
 
     return date_string, format_string
 
+@log_time.log_time(__name__)
 def updated_items(
     user_id: int,
     langs: typing.List[schema_feeds.Language],
@@ -155,6 +158,7 @@ def updated_items(
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
 
+@log_time.log_time(__name__)
 def unscored_items(
     user_id: int,
     lang: schema_feeds.Language,
@@ -165,6 +169,7 @@ def unscored_items(
 ):
     return updated_items(user_id, [lang], tags, start, finish, last, unscored=True)
 
+@log_time.log_time(__name__)
 def upsert_like(
     user_id: int,
     item_id: int,
@@ -203,6 +208,7 @@ def upsert_like(
         else:
             conn.execute(q, score=like_val.name)
 
+@log_time.log_time(__name__)
 def upsert_magic(
     user_id: int,
     items: typing.List[orm_items.Item],
