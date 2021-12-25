@@ -128,11 +128,16 @@ def updated_items(
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
 
-def filter_dates(q, start, finish, last):
-    q = q.where(
-        orm_items.Item.Published >= start,
-        orm_items.Item.Published < finish,
-    )
+def filter_dates(q, start=None, finish=None, last=None):
+    if start:
+        q = q.where(
+            orm_items.Item.Published >= start,
+        )
+
+    if finish:
+        q = q.where(
+            orm_items.Item.Published < finish,
+        )
 
     if last:
         q = q.where(
