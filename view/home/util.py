@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
+import datetime
 import html
 import lxml
 import typing
+
+from .. import req
 
 def clean_summary(s: str) -> str:
     try:
@@ -51,4 +54,37 @@ def empty_leaves(
         tags is None or e.tag in tags
     ):
         e.drop_tree()
+
+def format_date(page_date, timeunit):
+    current_date = datetime.datetime.now()
+
+    ONE_DAY = datetime.timedelta(days=1)
+    ONE_WEEK = datetime.timedelta(days=7)
+    ONE_MONTH = datetime.timedelta(days=31)
+
+    if timeunit == req.Timeunit.DAY:
+        if current_date >= page_date and current_date < page_date + ONE_DAY:
+            topnav_title = "Today"
+        elif current_date - ONE_DAY >= page_date and current_date - ONE_DAY < page_date + ONE_DAY:
+            topnav_title = "Yesterday"
+        else:
+            topnav_title = page_date.strftime("%a, %d %b %Y")
+    elif timeunit == timeunit.WEEK:
+        if current_date >= page_date and current_date < page_date + ONE_WEEK:
+            topnav_title = "This week"
+        elif current_date - ONE_WEEK >= page_date and current_date - ONE_WEEK < page_date + ONE_WEEK:
+            topnav_title = "Last week"
+        else:
+            topnav_title = page_date.strftime("Week %U, %Y")
+    elif timeunit == timeunit.MONTH:
+        if current_date >= page_date and current_date < (page_date + ONE_MONTH).replace(day=1):
+            topnav_title = "This month"
+        elif (current_date - ONE_MONTH).replace(day=1) >= page_date and (current_date - ONE_MONTH).replace(day=1) < (page_date + ONE_MONTH).replace(day=1):
+            topnav_title = "Last month"
+        else:
+            topnav_title = page_date.strftime("%B %Y")
+    else:
+        raise ValueError
+
+    return topnav_title
 

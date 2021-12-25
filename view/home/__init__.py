@@ -15,8 +15,6 @@ from model.schema.items import Like
 from . import db
 from . import util
 from .. import req
-from ..req import Feed, Timeunit
-from ..req import base_context
 
 bp = Blueprint("home", __name__, url_prefix="/home")
 bp.add_app_template_filter(util.clean_summary, "clean")
@@ -33,11 +31,11 @@ def home():
     last_hour = last_updated().replace(
             minute=0, second=0, microsecond=0
     )
-    if r_timeunit == Timeunit.DAY:
+    if r_timeunit == req.Timeunit.DAY:
         date_keys = ["Year", "Month", "Day"]
-    elif r_timeunit == Timeunit.WEEK:
+    elif r_timeunit == req.Timeunit.WEEK:
         date_keys = ["Year", "Week"]
-    elif r_timeunit == Timeunit.MONTH:
+    elif r_timeunit == req.Timeunit.MONTH:
         date_keys = ["Year", "Month"]
     else:
         raise ValueError
@@ -52,17 +50,17 @@ def home():
 
     start_time = page_date
     finish_time = start_time
-    if r_timeunit == Timeunit.DAY:
+    if r_timeunit == req.Timeunit.DAY:
         finish_time += timedelta(days=1)
-    elif r_timeunit == Timeunit.WEEK:
+    elif r_timeunit == req.Timeunit.WEEK:
         finish_time += timedelta(days=7)
-    elif r_timeunit == Timeunit.MONTH:
+    elif r_timeunit == req.Timeunit.MONTH:
         finish_time += timedelta(days=31)
         finish_time = finish_time.replace(day=1)
     else:
         raise ValueError
 
-    if r_feed == Feed.MAGIC:
+    if r_feed == req.Feed.MAGIC:
         for lang_it in trained_languages(current_user):
             new_items = db.unscored_items(
                 current_user.UserID,
@@ -85,12 +83,12 @@ def home():
         start_time,
         finish_time,
         last_hour,
-        r_feed == Feed.MAGIC
+        r_feed == req.Feed.MAGIC
     )
 
     return render_template("index.html",
-            **base_context(),
-            topnav_title=get_topnav_title(page_date, r_timeunit),
+            **req.base_context(),
+            topnav_title=util.format_date(page_date, r_timeunit),
             last_updated=last_hour,
             dates=page_dates,
             items=page_items,
@@ -107,32 +105,4 @@ def like(like_val = Like.UP):
 @auth_required()
 def dislike():
     return like(Like.DOWN)
-
-def get_topnav_title(page_date, timeunit):
-    current_date = datetime.now()
-    if timeunit == Timeunit.DAY:
-        if current_date >= page_date and current_date < page_date + timedelta(days=1):
-            topnav_title = "Today"
-        elif current_date - timedelta(days=1) >= page_date and current_date - timedelta(days=1) < page_date + timedelta(days=1):
-            topnav_title = "Yesterday"
-        else:
-            topnav_title = page_date.strftime("%a, %d %b %Y")
-    elif timeunit == timeunit.WEEK:
-        if current_date >= page_date and current_date < page_date + timedelta(days=7):
-            topnav_title = "This week"
-        elif current_date - timedelta(days=7) >= page_date and current_date - timedelta(days=7) < page_date + timedelta(days=7):
-            topnav_title = "Last week"
-        else:
-            topnav_title = page_date.strftime("Week %U, %Y")
-    elif timeunit == timeunit.MONTH:
-        if current_date >= page_date and current_date < (page_date + timedelta(days=31)).replace(day=1):
-            topnav_title = "This month"
-        elif (current_date - timedelta(days=31)).replace(day=1) >= page_date and (current_date - timedelta(days=31)).replace(day=1) < (page_date + timedelta(days=31)).replace(day=1):
-            topnav_title = "Last month"
-        else:
-            topnav_title = page_date.strftime("%B %Y")
-    else:
-        raise ValueError
-
-    return topnav_title
 
