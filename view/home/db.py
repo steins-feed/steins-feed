@@ -9,6 +9,8 @@ import model
 from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
 from model.schema import feeds as schema_feeds, items as schema_items
 
+from .util import round_to
+
 @log_time.log_time(__name__)
 def updated_dates(
     user_id: int,
@@ -71,6 +73,7 @@ def updated_dates_(
     user_id: int,
     langs: typing.List[schema_feeds.Language],
     tags: typing.List[str],
+    r_timeunit,
     last: datetime.datetime = None,
 ):
     # Maximum datetime.
@@ -90,7 +93,10 @@ def updated_dates_(
     q = q.order_by(sqla.desc(orm_items.Item.Published))
 
     with model.get_session() as session:
-        dt_max = session.execute(q).fetchone()[0]
+        dt_max = round_to(
+            session.execute(q).fetchone()[0],
+            r_timeunit,
+        )
 
     # Minimum datetime.
     q = sqla.select(
@@ -108,7 +114,10 @@ def updated_dates_(
     q = q.order_by(sqla.desc(orm_items.Item.Published))
 
     with model.get_session() as session:
-        dt_min = session.execute(q).fetchone()[0]
+        dt_min = round_to(
+            session.execute(q).fetchone()[0],
+            r_timeunit,
+        )
 
     return dt_min, dt_max
 

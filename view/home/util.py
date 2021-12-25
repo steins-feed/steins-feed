@@ -55,6 +55,18 @@ def empty_leaves(
     ):
         e.drop_tree()
 
+def round_to(dt, timeunit):
+    if timeunit == req.Timeunit.DAY:
+        dt = dt.replace(hour=0, minute=0, second=0, microsecond=0)
+    elif timeunit == req.Timeunit.WEEK:
+        dt = dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        while dt.weekday() != 0:
+            dt -= datetime.timedelta(days=1)
+    elif timeunit == req.Timeunit.MONTH:
+        dt = dt.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    return dt
+
 def format_date(page_date, timeunit):
     current_date = datetime.datetime.now()
 
