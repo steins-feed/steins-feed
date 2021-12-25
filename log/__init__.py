@@ -54,7 +54,7 @@ class Handler(logging.Handler):
 class Logger(logging.Logger):
     instances = {}
 
-    def __new__(cls, name="root", level=logging.WARNING):
+    def __new__(cls, name="root", level=logging.DEBUG):
         if name in cls.instances:
             return cls.instances[name]
 
