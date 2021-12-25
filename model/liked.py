@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 import sqlalchemy as sqla
+import typing
 
 from . import get_session
 from .orm import feeds as orm_feeds, items as orm_items
 from .schema import feeds as schema_feeds, items as schema_items
 
-def liked_languages(user_id: int) -> list[schema_feeds.Language]:
+def liked_languages(user_id: int) -> typing.List[schema_feeds.Language]:
     """
     Languages with training data.
 
@@ -36,7 +37,7 @@ def liked_items(
     user_id: int,
     lang: schema_feeds.Language,
     score: schema_items.Like = schema_items.Like.UP,
-) -> list[orm_items.Item]:
+) -> typing.List[orm_items.Item]:
     """
     Training data.
 
@@ -66,7 +67,7 @@ def liked_items(
 def disliked_items(
     user_id: int,
     lang: schema_feeds.Language,
-) -> list[orm_items.Item]:
+) -> typing.List[orm_items.Item]:
     """
     Training data.
 

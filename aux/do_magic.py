@@ -8,6 +8,7 @@ import os
 import sklearn
 import sqlalchemy as sqla
 import sys
+import typing
 
 par_path = os.path.join(
     os.path.dirname(__file__),
@@ -24,7 +25,7 @@ from model.orm import users as orm_users
 
 logger = log.Logger(__name__, logging.INFO)
 
-def do_words(pipeline: sklearn.pipeline.Pipeline) -> dict[str, float]:
+def do_words(pipeline: sklearn.pipeline.Pipeline) -> typing.Dict[str, float]:
     """
     Likelihoods of liking words.
 
@@ -44,7 +45,7 @@ def do_words(pipeline: sklearn.pipeline.Pipeline) -> dict[str, float]:
 
     return table
 
-def do_cookies(pipeline: sklearn.pipeline.Pipeline) -> dict[str, float]:
+def do_cookies(pipeline: sklearn.pipeline.Pipeline) -> typing.Dict[str, float]:
     """
     Likelihoods of liking words.
 
