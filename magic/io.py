@@ -3,8 +3,10 @@
 """Interaction with file system."""
 
 import datetime
+import glob
 import os
 import pickle
+import re
 import sklearn
 
 from model import recent
@@ -99,4 +101,22 @@ def is_up_to_date(
         dt = recent.last_liked(user.UserID, lang)
 
     return file_datetime > dt
+
+def trained_languages(user: orm_users.User) -> list[schema_feeds.Language]:
+    """
+    Extracts languages from trained classifiers.
+
+    Args:
+      user_id: UserID
+
+    Returns:
+      List of languages with classifiers.
+    """
+    clf_path = classifier_path(user)
+    clf_paths = glob.glob(clf_path)
+
+    prog = re.compile(rf"(?<=^{os.path.dirname(clf_path) + os.sep})\w+(?=\.pickle$)")
+    extract_lang = lambda x: prog.search(x).group()
+
+    return [schema_feeds.Language[extract_lang(e)] for e in clf_paths]
 

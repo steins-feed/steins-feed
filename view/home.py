@@ -12,7 +12,8 @@ import sqlalchemy as sqla
 from .req import get_feed, get_langs, get_page, get_tags, get_timeunit
 from .req import Feed, Timeunit
 from .req import base_context
-from magic import build_feature, compute_score, trained_languages
+from magic import build_feature, compute_score
+from magic.io import trained_languages
 from model import orm
 from model import get_session
 from model.recent import last_updated
@@ -65,7 +66,7 @@ def home():
         raise ValueError
 
     if r_feed == Feed.MAGIC:
-        for lang_it in trained_languages(current_user.UserID):
+        for lang_it in trained_languages(current_user):
             new_items = unscored_items(
                 current_user.UserID,
                 lang_it,

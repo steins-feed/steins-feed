@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
 
-import glob
-import os
-import re
-
 from lxml import html
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
@@ -118,23 +114,3 @@ def compute_score(
     scores = 2. * targets[:, 1] - 1.
 
     return scores
-
-def trained_languages(user_id: int) -> list[schema_feeds.Language]:
-    """
-    Extracts languages from trained classifiers.
-
-    Args:
-      user_id: UserID
-
-    Returns:
-      List of languages with classifiers.
-    """
-    with model.get_session() as session:
-        user = session.get(orm_users.User, user_id)
-    clf_path = io.classifier_path(user)
-    clf_paths = glob.glob(clf_path)
-
-    prog = re.compile(rf"(?<=^{os.path.dirname(clf_path) + os.sep})\w+(?=\.pickle$)")
-    extract_lang = lambda x: prog.search(x).group()
-
-    return [schema_feeds.Language[extract_lang(e)] for e in clf_paths]
