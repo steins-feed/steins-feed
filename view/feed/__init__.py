@@ -94,8 +94,8 @@ def toggle_tags() -> flask.Response:
             ) for tag_id in untagged
         ]
 
-    db.delete_tags_tagged(feed, tagged)
-    db.insert_tags_untagged(feed, untagged)
+    db.detach_tags(feed, *tagged)
+    db.attach_tags(feed, *untagged)
 
     return "", 200
 

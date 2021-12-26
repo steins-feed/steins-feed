@@ -110,9 +110,9 @@ def upsert_display(
         session.commit()
 
 @log_time.log_time(__name__)
-def delete_tags_tagged(
+def detach_tags(
     feed: orm_feeds.Feed,
-    tagged: typing.List[orm_feeds.Tag],
+    *tags: orm_feeds.Tag,
 ):
     with model.get_session() as session:
         feed = session.get(
@@ -120,7 +120,7 @@ def delete_tags_tagged(
             feed.FeedID,
         )
 
-        for tag_it in tagged:
+        for tag_it in tags:
             tag_it = session.get(
                 orm_feeds.Tag,
                 tag_it.TagID,
@@ -134,9 +134,9 @@ def delete_tags_tagged(
         session.commit()
 
 @log_time.log_time(__name__)
-def insert_tags_untagged(
+def attach_tags(
     feed: orm_feeds.Feed,
-    tagged: typing.List[orm_feeds.Tag],
+    *tags: orm_feeds.Tag,
 ):
     with model.get_session() as session:
         feed = session.get(
@@ -144,7 +144,7 @@ def insert_tags_untagged(
             feed.FeedID,
         )
 
-        for tag_it in tagged:
+        for tag_it in tags:
             tag_it = session.get(
                 orm_feeds.Tag,
                 tag_it.TagID,
