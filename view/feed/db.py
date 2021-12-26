@@ -55,7 +55,7 @@ def update_feed(
 @log_time.log_time(__name__)
 def upsert_display(
     user: orm_users.User,
-    feed: orm_feeds.Feed,
+    *feeds: orm_feeds.Feed,
     displayed: bool = True,
 ):
     with model.get_session() as session:
@@ -63,18 +63,20 @@ def upsert_display(
             orm_users.User,
             user.UserID,
         )
-        feed = session.get(
-            orm_feeds.Feed,
-            feed.FeedID,
-        )
 
-        if displayed:
-            feed.users.append(user)
-        else:
-            try:
-                feed.users.remove(user)
-            except ValueError:
-                pass
+        for feed_it in feeds:
+            feed_it = session.get(
+                orm_feeds.Feed,
+                feed_it.FeedID,
+            )
+
+            if displayed:
+                feed_it.users.append(user)
+            else:
+                try:
+                    feed_it.users.remove(user)
+                except ValueError:
+                    pass
 
         session.commit()
 

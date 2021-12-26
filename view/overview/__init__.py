@@ -3,6 +3,8 @@
 import flask
 import flask_security
 
+import model
+from model.orm import feeds as orm_feeds
 from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
 from model.utils.custom import delete_feeds
@@ -10,12 +12,13 @@ from model.utils.custom import upsert_tag, delete_tags
 
 from . import db
 from .. import req
+from ..feed import db as feed_db
 
 bp = flask.Blueprint("overview", __name__)
 
 @bp.route("/statistics")
 @flask_security.auth_required()
-def statistics():
+def statistics() -> flask.Response:
     user = flask_security.current_user
 
     return flask.render_template(
@@ -28,7 +31,7 @@ def statistics():
 
 @bp.route("/settings")
 @flask_security.auth_required()
-def settings():
+def settings() -> flask.Response:
     user = flask_security.current_user
 
     return flask.render_template("settings.html",
@@ -42,17 +45,31 @@ def settings():
 
 @bp.route("/settings/toggle_display", methods=['POST'])
 @flask_security.auth_required()
-def toggle_display():
+def toggle_display() -> flask.Response:
     user = flask_security.current_user
     tagged = flask.request.form.getlist('displayed', type=int)
     untagged = flask.request.form.getlist('hidden', type=int)
 
-    if tagged:
-        upsert_display(user.UserID, tagged, 0)
-    if untagged:
-        upsert_display(user.UserID, untagged, 1)
+    with model.get_session() as session:
+        tagged = [
+            session.get(
+                orm_feeds.Feed,
+                feed_id,
+            ) for feed_id in tagged
+        ]
+        untagged = [
+            session.get(
+                orm_feeds.Feed,
+                feed_id,
+            ) for feed_id in untagged
+        ]
 
-    return ("", 200)
+    if tagged:
+        feed_db.upsert_display(user, *tagged, displayed=False)
+    if untagged:
+        feed_db.upsert_display(user, *untagged, displayed=True)
+
+    return "", 200
 
 @bp.route("/settings/add_feed", methods=['POST'])
 @flask_security.auth_required()
