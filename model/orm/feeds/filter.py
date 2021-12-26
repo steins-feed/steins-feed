@@ -30,7 +30,7 @@ def filter_languages(
 
 def filter_tags(
     q: sqla.sql.Select,
-    tags: typing.List[str],
+    tags: typing.List[orm_feeds.Tag],
     user: orm_users.User,
 ) -> sqla.sql.Select:
     feed_tags = orm_feeds.Feed.tags.and_(
@@ -38,7 +38,11 @@ def filter_tags(
     )
     q = q.join(feed_tags)
 
-    q = q.where(orm_feeds.Tag.Name.in_(tags))
+    q = q.where(
+        orm_feeds.Tag.Name.in_(
+            [tag_it.Name for tag_it in tags]
+        )
+    )
 
     return q
 

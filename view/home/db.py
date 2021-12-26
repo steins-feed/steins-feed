@@ -21,7 +21,7 @@ from . import wall
 def updated_items(
     user: orm_users.User,
     langs: typing.List[schema_feeds.Language],
-    tags: typing.List[str],
+    tags: typing.List[orm_feeds.Tag],
     start: datetime.datetime,
     finish: datetime.datetime,
     last: datetime.datetime = None,
@@ -47,7 +47,7 @@ def updated_items(
 def unscored_items(
     user: orm_users.User,
     lang: schema_feeds.Language,
-    tags: typing.List[str],
+    tags: typing.List[orm_feeds.Tag],
     start: datetime.datetime,
     finish: datetime.datetime,
     last: datetime.datetime = None,

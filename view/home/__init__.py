@@ -65,12 +65,13 @@ def home():
         r_wall,
     )
 
-    return flask.render_template("index.html",
+    return flask.render_template(
+        "index.html",
         **req.base_context(),
-        topnav_title=unit.format_to(r_page, r_timeunit),
-        last_updated=last_hour,
-        items=page_items,
-        enum_like=schema_items.Like,
+        topnav_title = unit.format_to(r_page, r_timeunit),
+        last_updated = last_hour,
+        items = page_items,
+        enum_like = schema_items.Like,
     )
 
 @bp.route("/like", methods=["POST"])

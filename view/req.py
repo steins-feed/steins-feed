@@ -42,7 +42,17 @@ def get_page():
         return current_time
 
 def get_tags():
-    return request.args.getlist('tag')
+    tags_name = request.args.getlist("tag")
+
+    q = sqla.select(
+        orm_feeds.Tag,
+    ).where(
+        orm_feeds.Tag.UserID == current_user.UserID,
+        orm_feeds.Tag.Name.in_(tags_name),
+    )
+
+    with get_session() as session:
+        return [e[0] for e in session.execute(q)]
 
 def get_timeunit(old: bool=False):
     if old:
