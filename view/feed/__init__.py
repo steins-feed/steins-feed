@@ -4,10 +4,10 @@ import flask
 import flask_security
 import sqlalchemy as sqla
 
-from model import get_session
-from model.orm.feeds import Feed, Tag
-from model.orm.users import User
-from model.schema.feeds import Language
+import model
+from model.orm import feeds as orm_feeds
+from model.orm import users as orm_users
+from model.schema import feeds as schema_feeds
 from model.utils.custom import upsert_feed, upsert_display
 from model.utils.custom import delete_tags_tagged, insert_tags_untagged
 
@@ -23,13 +23,13 @@ def feed(feed_id=None):
 
     user = flask_security.current_user
 
-    with get_session() as session:
+    with model.get_session() as session:
         feed_row = session.get(
-            Feed,
+            orm_feeds.Feed,
             feed_id,
             options=[
-                sqla.orm.selectinload(Feed.users.and_(
-                    User.UserID == user.UserID,
+                sqla.orm.selectinload(orm_feeds.Feed.users.and_(
+                    orm_users.User.UserID == user.UserID,
                 )),
             ],
         )
@@ -38,8 +38,8 @@ def feed(feed_id=None):
         **base_context(),
         topnav_title=feed_row.Title,
         feed_row=feed_row,
-        langs_all=[e for e in Language],
-        lang_default=Language.ENGLISH,
+        langs_all=[e for e in schema_feeds.Language],
+        lang_default=schema_feeds.Language.ENGLISH,
         feed_tags=feed_tags(user.UserID, feed_id),
         feed_tags_not=feed_tags(user.UserID, feed_id, False),
     )
@@ -50,7 +50,7 @@ def update_feed():
     feed_id = flask.request.form.get("feed", type=int)
     title = flask.request.form.get("title")
     link = flask.request.form.get("link")
-    lang = Language[flask.request.form.get("lang")]
+    lang = schema_feeds.Language[flask.request.form.get("lang")]
     display = flask.request.form.get("display", type=int)
 
     user = flask_security.current_user
@@ -74,16 +74,16 @@ def toggle_tags():
 
 def feed_tags(user_id, feed_id, flag=True):
     q = sqla.select(
-        Tag
+        orm_feeds.Tag
     ).where(
-        Tag.UserID == user_id
+        orm_feeds.Tag.UserID == user_id
     ).order_by(
-        sqla.collate(Tag.Name, "NOCASE")
+        sqla.collate(orm_feeds.Tag.Name, "NOCASE")
     )
     if flag:
-        q = q.where(Tag.feeds.any(Feed.FeedID == feed_id))
+        q = q.where(orm_feeds.Tag.feeds.any(orm_feeds.Feed.FeedID == feed_id))
     else:
-        q = q.where(~Tag.feeds.any(Feed.FeedID == feed_id))
+        q = q.where(~orm_feeds.Tag.feeds.any(orm_feeds.Feed.FeedID == feed_id))
 
-    with get_session() as session:
+    with model.get_session() as session:
         return [e[0] for e in session.execute(q)]
