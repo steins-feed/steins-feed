@@ -34,6 +34,25 @@ def feed_tags(
         return [e[0] for e in session.execute(q)]
 
 @log_time.log_time(__name__)
+def insert_feed(
+    title: str,
+    link: str,
+    lang: schema_feeds.Language,
+) -> orm_feeds.Feed:
+    with model.get_session() as session:
+        feed = orm_feeds.Feed(
+            Title = title,
+            Link = link,
+            Language = lang.name,
+        )
+        session.add(feed)
+
+        session.commit()
+        session.refresh(feed)
+
+    return feed
+
+@log_time.log_time(__name__)
 def update_feed(
     feed: orm_feeds.Feed,
     title: str,
@@ -53,9 +72,19 @@ def update_feed(
         session.commit()
 
 @log_time.log_time(__name__)
+def delete_feeds(
+    *feeds: orm_feeds.Feed,
+):
+    with model.get_session() as session:
+        for feed_it in feeds:
+            session.delete(feed_it)
+
+        session.commit()
+
+@log_time.log_time(__name__)
 def upsert_display(
     user: orm_users.User,
-    feed: orm_feeds.Feed,
+    *feeds: orm_feeds.Feed,
     displayed: bool = True,
 ):
     with model.get_session() as session:
@@ -63,18 +92,20 @@ def upsert_display(
             orm_users.User,
             user.UserID,
         )
-        feed = session.get(
-            orm_feeds.Feed,
-            feed.FeedID,
-        )
 
-        if displayed:
-            feed.users.append(user)
-        else:
-            try:
-                feed.users.remove(user)
-            except ValueError:
-                pass
+        for feed_it in feeds:
+            feed_it = session.get(
+                orm_feeds.Feed,
+                feed_it.FeedID,
+            )
+
+            if displayed:
+                feed_it.users.append(user)
+            else:
+                try:
+                    feed_it.users.remove(user)
+                except ValueError:
+                    pass
 
         session.commit()
 

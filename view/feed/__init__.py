@@ -65,7 +65,7 @@ def update_feed() -> flask.Response:
         )
 
     db.update_feed(feed, title, link, lang)
-    db.upsert_display(user, feed, display)
+    db.upsert_display(user, feed, displayed=display)
 
     return flask.redirect(flask.url_for("feed.feed", feed_id=feed_id))
 
@@ -97,5 +97,5 @@ def toggle_tags() -> flask.Response:
     db.delete_tags_tagged(feed, tagged)
     db.insert_tags_untagged(feed, untagged)
 
-    return ("", 200)
+    return "", 200
 

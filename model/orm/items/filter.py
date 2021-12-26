@@ -46,7 +46,7 @@ def filter_lang(
 
     q = q.join(item_feed)
 
-    q = q.where(orm_feeds.Feed.Language == lang)
+    q = feeds_filter.filter_languages(q, [lang])
 
     return q
 

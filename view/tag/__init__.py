@@ -53,5 +53,5 @@ def toggle_feeds() -> flask.Response:
     db.delete_feeds_tagged(tag, tagged)
     db.insert_feeds_untagged(tag, untagged)
 
-    return ("", 200)
+    return "", 200
 
