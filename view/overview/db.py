@@ -8,6 +8,7 @@ from model.orm import items as orm_items
 from model.orm import feeds as orm_feeds
 from model.orm import users as orm_users
 from model.orm.items import filter as items_filter
+from model.orm.items import load as items_load
 from model.orm.items import order as items_order
 from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
@@ -17,14 +18,11 @@ def likes_lang(
     user: orm_users.User,
     score: schema_items.Like = schema_items.Like.UP,
 ) -> typing.Dict[schema_feeds.Language, typing.List[orm_items.Item]]:
-    q = sqla.select(
-        orm_items.Item
-    ).options(
-        sqla.orm.contains_eager(orm_items.Item.feed),
-    )
+    q = sqla.select(orm_items.Item)
     q = items_filter.filter_lang(q, sqla.bindparam("lang"))
     q = items_filter.filter_like(q, score, user)
     q = items_order.order_date(q)
+    q = items_load.load_feed(q, feed_joined=True)
 
     res = dict()
     with model.get_session() as session:
