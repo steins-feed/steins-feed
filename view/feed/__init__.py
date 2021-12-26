@@ -10,7 +10,7 @@ from model.orm import users as orm_users
 from model.schema import feeds as schema_feeds
 
 from . import db
-from ..req import base_context
+from .. import req
 
 bp = flask.Blueprint("feed", __name__, url_prefix="/feed")
 
@@ -25,24 +25,27 @@ def feed(
     user = flask_security.current_user
 
     with model.get_session() as session:
-        feed_row = session.get(
+        feed = session.get(
             orm_feeds.Feed,
             feed_id,
             options=[
-                sqla.orm.selectinload(orm_feeds.Feed.users.and_(
-                    orm_users.User.UserID == user.UserID,
-                )),
+                sqla.orm.selectinload(
+                    orm_feeds.Feed.users.and_(
+                        orm_users.User.UserID == user.UserID,
+                    )
+                ),
             ],
         )
 
-    return flask.render_template("feed.html",
-        **base_context(),
-        topnav_title=feed_row.Title,
-        feed_row=feed_row,
-        langs_all=[e for e in schema_feeds.Language],
-        lang_default=schema_feeds.Language.ENGLISH,
-        feed_tags=db.feed_tags(user, feed_row),
-        feed_tags_not=db.feed_tags(user, feed_row, False),
+    return flask.render_template(
+        "feed.html",
+        **req.base_context(),
+        topnav_title = feed.Title,
+        feed_row = feed,
+        langs_all = schema_feeds.Language,
+        lang_default = schema_feeds.Language.ENGLISH,
+        feed_tags = db.feed_tags(user, feed),
+        feed_tags_not = db.feed_tags(user, feed, False),
     )
 
 @bp.route("/update_feed", methods=["POST"])
