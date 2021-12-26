@@ -30,7 +30,7 @@ def get_langs():
 
 def get_page():
     current_time = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-    if get_timeunit_new() == get_timeunit_old():
+    if get_timeunit() == get_timeunit(old=True):
         s = request.args.get('page', default=None, type=str)
         if s:
             return datetime.datetime.fromisoformat(s)
@@ -42,23 +42,20 @@ def get_page():
 def get_tags():
     return request.args.getlist('tag')
 
-def get_timeunit():
-    return get_timeunit_new()
+def get_timeunit(old: bool=False):
+    if old:
+        k = "timeunit"
+        v = home_unit.UnitMode.DAY.name
+    else:
+        k = "timeunit_new"
+        v = get_timeunit(old=True).name
 
-def get_timeunit_old():
     unit_name = request.args.get(
-        "timeunit",
-        default = home_unit.UnitMode.DAY.name,
+        k,
+        default = v,
         type=str,
     )
-    return home_unit.UnitMode[unit_name]
 
-def get_timeunit_new():
-    unit_name = request.args.get(
-        "timeunit_new",
-        default = get_timeunit_old().name,
-        type=str,
-    )
     return home_unit.UnitMode[unit_name]
 
 def base_context():
