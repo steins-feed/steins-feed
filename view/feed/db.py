@@ -65,22 +65,28 @@ def upsert_feed(feed_id, title, link, lang):
         return res['FeedID']
 
 @log_time.log_time(__name__)
-def upsert_display(user_id, feed_ids, disp):
-    display = model.get_table('Display')
+def upsert_display(
+    user: orm_users.User,
+    feed: orm_feeds.Feed,
+    displayed: bool = True,
+):
+    with model.get_session() as session:
+        user = session.get(
+            orm_users.User,
+            user.UserID,
+        )
+        feed = session.get(
+            orm_feeds.Feed,
+            feed.FeedID,
+        )
 
-    if disp == 0:
-        q = display.delete().where(sqla.and_(
-                display.c.UserID == user_id,
-                display.c.FeedID.in_(feed_ids)
-        ))
-        with model.get_connection() as conn:
-            conn.execute(q)
-    else:
-        row_keys = ['UserID', 'FeedID']
-        rows = [dict(zip(row_keys, (user_id, e))) for e in feed_ids]
+        if displayed:
+            feed.users.append(user)
+        else:
+            try:
+                feed.users.remove(user)
+            except ValueError:
+                pass
 
-        q = display.insert()
-        q = q.prefix_with("OR IGNORE", dialect='sqlite')
-        with model.get_connection() as conn:
-            conn.execute(q, rows)
+        session.commit()
 

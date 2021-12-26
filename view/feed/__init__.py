@@ -53,12 +53,17 @@ def update_feed():
     title = flask.request.form.get("title")
     link = flask.request.form.get("link")
     lang = schema_feeds.Language[flask.request.form.get("lang")]
-    display = flask.request.form.get("display", type=int)
+    display = bool(flask.request.form.get("display", type=int))
 
     user = flask_security.current_user
+    with model.get_session() as session:
+        feed_row = session.get(
+            orm_feeds.Feed,
+            feed_id,
+        )
 
     db.upsert_feed(feed_id, title, link, lang)
-    db.upsert_display(user.UserID, [feed_id], display)
+    db.upsert_display(user, feed_row, display)
 
     return flask.redirect(flask.url_for("feed.feed", feed_id=feed_id))
 
