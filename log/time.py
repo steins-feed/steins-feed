@@ -16,7 +16,7 @@ def log_time(
             tic = time.time()
             res = f(*args, **kwargs)
             toc = time.time()
-            logger.info(f"Function {f.__name__} took {toc - tic} seconds.")
+            logger.info(f"Function {f.__name__}() took {toc - tic} seconds.")
             return res
 
         return wrapper
