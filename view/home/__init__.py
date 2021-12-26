@@ -37,16 +37,7 @@ def home():
     )
 
     start_time = r_page
-    finish_time = start_time
-    if r_timeunit == unit.Timeunit.DAY:
-        finish_time += timedelta(days=1)
-    elif r_timeunit == unit.Timeunit.WEEK:
-        finish_time += timedelta(days=7)
-    elif r_timeunit == unit.Timeunit.MONTH:
-        finish_time += timedelta(days=31)
-        finish_time = finish_time.replace(day=1)
-    else:
-        raise ValueError
+    finish_time = unit.increment_to(start_time, r_timeunit)
 
     if r_wall == wall.WallMode.MAGIC:
         for lang_it in magic_io.trained_languages(current_user):
@@ -76,7 +67,7 @@ def home():
 
     return render_template("index.html",
         **req.base_context(),
-        topnav_title=util.format_date(r_page, r_timeunit),
+        topnav_title=unit.format_to(r_page, r_timeunit),
         last_updated=last_hour,
         items=page_items,
         enum_like=schema_items.Like,

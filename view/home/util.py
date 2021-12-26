@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 
-import datetime
 import html
 import lxml
 import typing
-
-from . import unit
-from .. import req
 
 def clean_summary(s: str) -> str:
     try:
@@ -55,31 +51,4 @@ def empty_leaves(
         tags is None or e.tag in tags
     ):
         e.drop_tree()
-
-def round_to(dt, timeunit):
-    if timeunit == unit.Timeunit.DAY:
-        dt = dt.replace(hour=0, minute=0, second=0, microsecond=0)
-    elif timeunit == unit.Timeunit.WEEK:
-        dt = dt.replace(hour=0, minute=0, second=0, microsecond=0)
-        while dt.weekday() != 0:
-            dt -= datetime.timedelta(days=1)
-    elif timeunit == unit.Timeunit.MONTH:
-        dt = dt.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-
-    return dt
-
-def format_date(
-    dt: datetime.datetime,
-    timeunit: unit.Timeunit,
-) -> str:
-    if timeunit == unit.Timeunit.DAY:
-        fmt = "%a, %d %b %Y"
-    elif timeunit == timeunit.WEEK:
-        fmt = "Week %U, %Y"
-    elif timeunit == timeunit.MONTH:
-        fmt = "%B %Y"
-    else:
-        raise ValueError
-
-    return dt.strftime(fmt)
 

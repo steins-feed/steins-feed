@@ -15,7 +15,6 @@ from model.orm.items import load as items_load
 from model.orm.items import order as items_order
 from model.schema import feeds as schema_feeds, items as schema_items
 
-from . import unit
 from . import wall
 
 @log_time.log_time(__name__)

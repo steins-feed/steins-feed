@@ -48,10 +48,10 @@ def get_timeunit():
 def get_timeunit_old():
     unit_name = request.args.get(
         "timeunit",
-        default = home_unit.Timeunit.DAY.name,
+        default = home_unit.UnitMode.DAY.name,
         type=str,
     )
-    return home_unit.Timeunit[unit_name]
+    return home_unit.UnitMode[unit_name]
 
 def get_timeunit_new():
     unit_name = request.args.get(
@@ -59,7 +59,7 @@ def get_timeunit_new():
         default = get_timeunit_old().name,
         type=str,
     )
-    return home_unit.Timeunit[unit_name]
+    return home_unit.UnitMode[unit_name]
 
 def base_context():
     context = dict()
@@ -92,7 +92,7 @@ def base_context():
 
     # sidenav.html.
     context['enum_feed'] = home_wall.WallMode
-    context['enum_timeunit'] = home_unit.Timeunit
+    context['enum_timeunit'] = home_unit.UnitMode
 
     return context
 
