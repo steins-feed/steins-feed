@@ -75,11 +75,11 @@ def home():
     )
 
     return render_template("index.html",
-            **req.base_context(),
-            topnav_title=util.format_date(r_page, r_timeunit),
-            last_updated=last_hour,
-            items=page_items,
-            enum_like=schema_items.Like
+        **req.base_context(),
+        topnav_title=util.format_date(r_page, r_timeunit),
+        last_updated=last_hour,
+        items=page_items,
+        enum_like=schema_items.Like,
     )
 
 @bp.route("/like", methods=['POST'])

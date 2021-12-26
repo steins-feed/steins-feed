@@ -39,12 +39,7 @@ def updated_items(
     q = items_filter.deduplicate_items(q)
     q = items_load.load_like(q, user_id)
     q = items_load.load_tags(q, user_id, feed_joined=True)
-
-    if wall_mode == wall.WallMode.MAGIC:
-        q = items_order.order_magic(q, user_id)
-        q = items_load.load_magic(q, user_id, magic_joined=True)
-    else:
-        q = items_order.order_date(q)
+    q = wall.order_wall(q, wall_mode, user_id)
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
