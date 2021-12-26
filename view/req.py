@@ -29,7 +29,9 @@ def get_langs():
     return res
 
 def get_page():
-    current_time = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    current_time = datetime.datetime.now()
+    current_time = home_unit.round_to(current_time, get_timeunit())
+
     if get_timeunit() == get_timeunit(old=True):
         s = request.args.get('page', default=None, type=str)
         if s:
@@ -65,8 +67,8 @@ def base_context():
     context['feed'] = get_wall()
     context['timeunit'] = get_timeunit()
     context['page'] = get_page()
-    context['prev_page'] = get_page() - datetime.timedelta(days=1)
-    context['next_page'] = get_page() + datetime.timedelta(days=1)
+    context['prev_page'] = home_unit.decrement_to(get_page(), get_timeunit())
+    context['next_page'] = home_unit.increment_to(get_page(), get_timeunit())
     context['langs'] = get_langs()
     context['tags'] = get_tags()
 

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-from datetime import timedelta
-
 from flask import Blueprint, request, render_template
 from flask_security import auth_required, current_user
 import sqlalchemy as sqla

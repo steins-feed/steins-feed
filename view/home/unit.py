@@ -17,7 +17,7 @@ def round_to(
     elif unit_mode == UnitMode.WEEK:
         dt = round_to(dt, UnitMode.DAY)
         while dt.weekday() != 0:
-            dt -= datetime.datetime.timedelta(days=1)
+            dt -= datetime.timedelta(days=1)
     elif unit_mode == UnitMode.MONTH:
         dt = dt.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     else:
