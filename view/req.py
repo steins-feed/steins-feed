@@ -14,6 +14,7 @@ from model.schema.feeds import Language
 from view.feed import db as feed_db
 from view.home import unit as home_unit
 from view.home import wall as home_wall
+from view.tag import db as tag_db
 
 def get_wall():
     wall_name = request.args.get(
@@ -88,7 +89,7 @@ def base_context():
     context['tags_disp'] = displayed_tags(current_user.UserID)
 
     # sidenav.html.
-    context['feeds_all']=all_feeds()
+    context['feeds_all']=tag_db.all_feeds()
     context['tags_all']=feed_db.all_tags(current_user)
 
     # sidenav.html.
@@ -105,16 +106,6 @@ def base_context():
     context['enum_timeunit'] = home_unit.UnitMode
 
     return context
-
-def all_feeds():
-    q = sqla.select(
-        orm_feeds.Feed
-    ).order_by(
-        sqla.collate(orm_feeds.Feed.Title, "NOCASE")
-    )
-
-    with get_session() as session:
-        return [e[0] for e in session.execute(q)]
 
 def displayed_languages(user_id):
     q = sqla.select(
