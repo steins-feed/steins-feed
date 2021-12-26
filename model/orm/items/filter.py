@@ -36,3 +36,15 @@ def filter_dates(
 
     return q
 
+def deduplicate_items(
+    q: sqla.sql.Select,
+) -> sqla.sql.Select:
+    q = q.group_by(
+        orm_items.Item.Title,
+        orm_items.Item.Published,
+    )
+    q = q.having(
+        orm_feeds.Feed.Title == sqla.func.min(orm_feeds.Feed.Title),
+    )
+    return q
+

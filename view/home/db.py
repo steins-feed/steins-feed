@@ -34,7 +34,7 @@ def updated_items(
         q = feeds_filter.filter_languages(q, langs)
     if tags:
         q = feeds_filter.filter_tags(q, tags, user_id)
-    q = deduplicate_items(q)
+    q = items_filter.deduplicate_items(q)
     q = items_load.load_like(q, user_id)
     q = items_load.load_tags(q, user_id, feed_joined=True)
 
@@ -58,16 +58,6 @@ def updated_items(
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
-
-def deduplicate_items(q):
-    q = q.group_by(
-        orm_items.Item.Title,
-        orm_items.Item.Published,
-    )
-    q = q.having(
-        orm_feeds.Feed.Title == sqla.func.min(orm_feeds.Feed.Title),
-    )
-    return q
 
 @log_time.log_time(__name__)
 def unscored_items(
