@@ -7,7 +7,6 @@ import model
 from model.orm import feeds as orm_feeds
 from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
-from model.utils.custom import delete_feeds
 from model.utils.custom import upsert_tag, delete_tags
 
 from . import db
@@ -87,8 +86,16 @@ def add_feed() -> flask.Response:
 
 @bp.route("/settings/delete_feed", methods=["POST"])
 @flask_security.auth_required()
-def delete_feed():
-    delete_feeds([flask.request.form.get("feed", type=int)])
+def delete_feed() -> flask.Response:
+    feed_id = flask.request.form.get("feed", type=int)
+    with model.get_session() as session:
+        feed = session.get(
+            orm_feeds.Feed,
+            feed_id,
+        )
+
+    feed_db.delete_feeds(feed)
+
     return flask.redirect(flask.url_for("overview.settings"))
 
 @bp.route("/settings/add_tag", methods=["POST"])

@@ -72,6 +72,16 @@ def update_feed(
         session.commit()
 
 @log_time.log_time(__name__)
+def delete_feeds(
+    *feeds: orm_feeds.Feed,
+):
+    with model.get_session() as session:
+        for feed_it in feeds:
+            session.delete(feed_it)
+
+        session.commit()
+
+@log_time.log_time(__name__)
 def upsert_display(
     user: orm_users.User,
     *feeds: orm_feeds.Feed,

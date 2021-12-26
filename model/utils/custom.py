@@ -4,13 +4,6 @@ from sqlalchemy import sql
 
 from .. import get_connection, get_table
 
-def delete_feeds(feed_ids):
-    feeds = get_table('Feeds')
-
-    q = feeds.delete().where(feeds.c.FeedID.in_(feed_ids))
-    with get_connection() as conn:
-        conn.execute(q)
-
 # Tag.
 def upsert_tag(tag_id, user_id, name):
     tags = get_table('Tags')
