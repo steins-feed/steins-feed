@@ -39,29 +39,32 @@ def delete_tags(
         session.commit()
 
 @log_time.log_time(__name__)
-def feeds_lang(
-    tag: orm_feeds.Tag,
+def all_feeds(
+    lang: schema_feeds.Language = None,
+    tag: orm_feeds.Tag = None,
     flag: bool = True,
 ) -> typing.Dict[schema_feeds.Language, typing.List[orm_feeds.Feed]]:
-    res = dict()
+    q = sqla.select(
+        orm_feeds.Feed,
+    ).order_by(
+        sqla.collate(orm_feeds.Feed.Title, "NOCASE"),
+    )
 
-    for lang_it in overview_db.all_langs_feeds():
-        q = sqla.select(
-            orm_feeds.Feed
-        ).where(
-            orm_feeds.Feed.Language == lang_it.name,
-        ).order_by(
-            sqla.collate(orm_feeds.Feed.Title, 'NOCASE')
+    if lang:
+        q = q.where(orm_feeds.Feed.Language == lang.name)
+
+    if tag:
+        q_where = orm_feeds.Feed.tags.any(
+            orm_feeds.Tag.TagID == tag.TagID,
         )
-        if flag:
-            q = q.where(orm_feeds.Feed.tags.any(orm_feeds.Tag.TagID == tag.TagID))
-        else:
-            q = q.where(~orm_feeds.Feed.tags.any(orm_feeds.Tag.TagID == tag.TagID))
 
-        with model.get_session() as session:
-            res[lang_it] = [e[0] for e in session.execute(q)]
+        if not flag:
+            q_where = ~q_where
 
-    return res
+        q = q.where(q_where)
+
+    with model.get_session() as session:
+        return [e[0] for e in session.execute(q)]
 
 @log_time.log_time(__name__)
 def untag_feeds(

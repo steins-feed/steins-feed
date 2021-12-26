@@ -9,6 +9,8 @@ from model.orm import feeds as orm_feeds
 
 from . import db
 from .. import req
+from ..overview import db as overview_db
+from ..tag import db as tag_db
 
 bp = flask.Blueprint("tag", __name__, url_prefix="/tag")
 
@@ -19,13 +21,27 @@ def tag() -> flask.Response:
     with model.get_session() as session:
         tag = session.get(orm_feeds.Tag, tag_id)
 
+    feeds_lang = {}
+    feeds_lang_not = {}
+
+    for lang_it in overview_db.all_langs_feeds():
+        feeds_lang[lang_it] = tag_db.all_feeds(
+            tag=tag,
+            lang=lang_it,
+        )
+        feeds_lang_not[lang_it] = tag_db.all_feeds(
+            tag=tag,
+            lang=lang_it,
+            flag=False,
+        )
+
     return flask.render_template(
         "tag.html",
         **req.base_context(),
         topnav_title = tag.Name,
         tag_row = tag,
-        feeds_lang = db.feeds_lang(tag),
-        feeds_lang_not = db.feeds_lang(tag, False),
+        feeds_lang = feeds_lang,
+        feeds_lang_not = feeds_lang_not,
     )
 
 @bp.route("/toggle_feeds", methods=['POST'])
