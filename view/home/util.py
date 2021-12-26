@@ -67,7 +67,10 @@ def round_to(dt, timeunit):
 
     return dt
 
-def format_date(page_date, timeunit):
+def format_date(
+    dt: datetime.datetime,
+    timeunit: req.Timeunit,
+) -> str:
     if timeunit == req.Timeunit.DAY:
         fmt = "%a, %d %b %Y"
     elif timeunit == timeunit.WEEK:
@@ -77,5 +80,5 @@ def format_date(page_date, timeunit):
     else:
         raise ValueError
 
-    return page_date.strftime(fmt)
+    return dt.strftime(fmt)
 
