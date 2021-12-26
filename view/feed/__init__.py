@@ -8,7 +8,6 @@ import model
 from model.orm import feeds as orm_feeds
 from model.orm import users as orm_users
 from model.schema import feeds as schema_feeds
-from model.utils.custom import upsert_feed, upsert_display
 from model.utils.custom import delete_tags_tagged, insert_tags_untagged
 
 from . import db
@@ -58,8 +57,8 @@ def update_feed():
 
     user = flask_security.current_user
 
-    upsert_feed(feed_id, title, link, lang)
-    upsert_display(user.UserID, [feed_id], display)
+    db.upsert_feed(feed_id, title, link, lang)
+    db.upsert_display(user.UserID, [feed_id], display)
 
     return flask.redirect(flask.url_for("feed.feed", feed_id=feed_id))
 

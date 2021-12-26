@@ -4,7 +4,6 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from flask_security import auth_required, current_user
 import sqlalchemy as sqla
 
-from .req import base_context
 from model import get_session
 from model.orm.feeds import Feed
 from model.orm.items import Item, Like
@@ -12,8 +11,11 @@ from model.orm.users import User
 from model.schema.feeds import Language
 from model.schema.items import Like as LikeEnum
 from model.utils import all_langs_feeds
-from model.utils.custom import upsert_feed, upsert_display, delete_feeds
+from model.utils.custom import delete_feeds
 from model.utils.custom import upsert_tag, delete_tags
+
+from .req import base_context
+from .feed.db import upsert_feed, upsert_display
 
 bp = Blueprint("overview", __name__)
 
