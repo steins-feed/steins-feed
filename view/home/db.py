@@ -6,9 +6,13 @@ import typing
 
 from log import time as log_time
 import model
-from model.orm import feeds as orm_feeds, items as orm_items, users as orm_users
+from model.orm import feeds as orm_feeds
+from model.orm import items as orm_items
+from model.orm import users as orm_users
 from model.orm.feeds import filter as feeds_filter
+from model.orm.feeds import load as feeds_load
 from model.orm.items import filter as items_filter
+from model.orm.items import load as items_load
 from model.schema import feeds as schema_feeds, items as schema_items
 
 @log_time.log_time(__name__)
@@ -32,7 +36,7 @@ def updated_items(
         q = feeds_filter.filter_tags(q, tags, user_id)
     q = deduplicate_items(q)
     q = load_like(q, user_id)
-    q = load_tags(q, user_id, feed_joined=True)
+    q = items_load.load_tags(q, user_id, feed_joined=True)
 
     if unscored:
         q = q.join(orm_items.Item.magic.and_(
@@ -90,28 +94,6 @@ def load_like(q, user_id, like_joined=False):
         load_like = sqla.orm.selectinload(item_likes)
 
     q = q.options(load_like)
-    return q
-
-def load_tags(q, user_id, feed_joined=False, tags_joined=False):
-    assert feed_joined or not tags_joined
-
-    item_feed = orm_items.Item.feed
-
-    if feed_joined:
-        load_feed = sqla.orm.contains_eager(item_feed)
-    else:
-        load_feed = sqla.orm.selectinload(item_feed)
-
-    feed_tags = orm_feeds.Feed.tags.and_(
-        orm_feeds.Tag.UserID == user_id,
-    )
-
-    if tags_joined:
-        load_feed_tags = load_feed.contains_eager(feed_tags)
-    else:
-        load_feed_tags = load_feed.selectinload(feed_tags)
-
-    q = q.options(load_feed_tags)
     return q
 
 def load_magic(q, user_id, magic_joined=False):

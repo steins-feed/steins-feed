@@ -12,8 +12,11 @@ def filter_display(
     q: sqla.sql.Select,
     user_id: int,
 ) -> sqla.sql.Select:
-    q = q.join(orm_items.Item.feed)
+    item_feed = orm_items.Item.feed
+    q = q.join(item_feed)
+
     q = feeds_filter.filter_display(q, user_id)
+
     return q
 
 def filter_dates(
