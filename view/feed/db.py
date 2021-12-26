@@ -34,6 +34,25 @@ def feed_tags(
         return [e[0] for e in session.execute(q)]
 
 @log_time.log_time(__name__)
+def insert_feed(
+    title: str,
+    link: str,
+    lang: schema_feeds.Language,
+) -> orm_feeds.Feed:
+    with model.get_session() as session:
+        feed = orm_feeds.Feed(
+            Title = title,
+            Link = link,
+            Language = lang.name,
+        )
+        session.add(feed)
+
+        session.commit()
+        session.refresh(feed)
+
+    return feed
+
+@log_time.log_time(__name__)
 def update_feed(
     feed: orm_feeds.Feed,
     title: str,

@@ -43,12 +43,12 @@ def settings() -> flask.Response:
             feeds_lang_not = db.feeds_lang_disp(user, False),
     )
 
-@bp.route("/settings/toggle_display", methods=['POST'])
+@bp.route("/settings/toggle_display", methods=["POST"])
 @flask_security.auth_required()
 def toggle_display() -> flask.Response:
     user = flask_security.current_user
-    tagged = flask.request.form.getlist('displayed', type=int)
-    untagged = flask.request.form.getlist('hidden', type=int)
+    tagged = flask.request.form.getlist("displayed", type=int)
+    untagged = flask.request.form.getlist("hidden", type=int)
 
     with model.get_session() as session:
         tagged = [
@@ -71,36 +71,36 @@ def toggle_display() -> flask.Response:
 
     return "", 200
 
-@bp.route("/settings/add_feed", methods=['POST'])
+@bp.route("/settings/add_feed", methods=["POST"])
 @flask_security.auth_required()
-def add_feed():
+def add_feed() -> flask.Response:
     user = flask_security.current_user
 
-    title = flask.request.form.get('title')
-    link = flask.request.form.get('link')
-    lang = schema_feeds.Language[flask.request.form.get('lang')]
+    title = flask.request.form.get("title")
+    link = flask.request.form.get("link")
+    lang = schema_feeds.Language[flask.request.form.get("lang")]
 
-    feed_id = upsert_feed(None, title, link, lang)
-    upsert_display(user.UserID, [feed_id], 1)
+    feed = feed_db.insert_feed(title, link, lang)
+    feed_db.upsert_display(user, feed, displayed=True)
 
     return flask.redirect(flask.url_for("overview.settings"))
 
-@bp.route("/settings/delete_feed", methods=['POST'])
+@bp.route("/settings/delete_feed", methods=["POST"])
 @flask_security.auth_required()
 def delete_feed():
-    delete_feeds([flask.request.form.get('feed', type=int)])
+    delete_feeds([flask.request.form.get("feed", type=int)])
     return flask.redirect(flask.url_for("overview.settings"))
 
-@bp.route("/settings/add_tag", methods=['POST'])
+@bp.route("/settings/add_tag", methods=["POST"])
 @flask_security.auth_required()
 def add_tag():
     user = flask_security.current_user
-    upsert_tag(None, user.UserID, flask.request.form.get('tag'))
+    upsert_tag(None, user.UserID, flask.request.form.get("tag"))
     return flask.redirect(flask.url_for("overview.settings"))
 
-@bp.route("/settings/delete_tag", methods=['POST'])
+@bp.route("/settings/delete_tag", methods=["POST"])
 @flask_security.auth_required()
 def delete_tag():
-    delete_tags([flask.request.form.get('tag', type=int)])
+    delete_tags([flask.request.form.get("tag", type=int)])
     return flask.redirect(flask.url_for("overview.settings"))
 
