@@ -7,6 +7,7 @@ from model.orm import feeds as orm_feeds
 from model.orm import items as orm_items
 from model.orm import users as orm_users
 from model.orm.feeds import filter as feeds_filter
+from model.schema import items as schema_items
 
 def filter_display(
     q: sqla.sql.Select,
@@ -33,6 +34,21 @@ def filter_dates(
         q = q.where(
             orm_items.Item.Published < finish,
         )
+
+    return q
+
+def filter_like(
+    q: sqla.sql.Select,
+    score: schema_items.Like,
+    user: orm_users.User,
+) -> sqla.sql.Select:
+    item_likes = orm_items.Item.likes.and_(
+        orm_items.Like.UserID == user.UserID,
+    )
+
+    q = q.join(item_likes)
+
+    q = q.where(orm_items.Like.Score == score.name)
 
     return q
 
