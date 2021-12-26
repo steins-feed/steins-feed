@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 
-from datetime import datetime, timedelta
-import os
+from datetime import timedelta
 
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, request, render_template
 from flask_security import auth_required, current_user
 import sqlalchemy as sqla
 
 import magic
-from magic.io import trained_languages
-from model.recent import last_updated
-from model.schema.items import Like
+from magic import io as magic_io
+from model import recent
+from model.schema import items as schema_items
 
 from . import db
 from . import util
@@ -28,17 +27,12 @@ def home():
     r_tags = req.get_tags()
     r_timeunit = req.get_timeunit()
 
-    last_hour = last_updated().replace(
-            minute=0, second=0, microsecond=0
+    last_hour = recent.last_updated()
+    last_hour = last_hour.replace(
+        minute=0,
+        second=0,
+        microsecond=0,
     )
-    if r_timeunit == req.Timeunit.DAY:
-        date_keys = ["Year", "Month", "Day"]
-    elif r_timeunit == req.Timeunit.WEEK:
-        date_keys = ["Year", "Week"]
-    elif r_timeunit == req.Timeunit.MONTH:
-        date_keys = ["Year", "Month"]
-    else:
-        raise ValueError
 
     start_time = r_page
     finish_time = start_time
@@ -53,14 +47,14 @@ def home():
         raise ValueError
 
     if r_feed == req.Feed.MAGIC:
-        for lang_it in trained_languages(current_user):
+        for lang_it in magic_io.trained_languages(current_user):
             new_items = db.unscored_items(
                 current_user.UserID,
                 lang_it,
                 r_tags,
                 start_time,
                 finish_time,
-                last_hour
+                last_hour,
             )
             if len(new_items) == 0:
                 continue
@@ -75,7 +69,7 @@ def home():
         start_time,
         finish_time,
         last_hour,
-        r_feed == req.Feed.MAGIC
+        r_feed == req.Feed.MAGIC,
     )
 
     return render_template("index.html",
@@ -83,17 +77,17 @@ def home():
             topnav_title=util.format_date(r_page, r_timeunit),
             last_updated=last_hour,
             items=page_items,
-            enum_like=Like
+            enum_like=schema_items.Like
     )
 
 @bp.route("/like", methods=['POST'])
 @auth_required()
-def like(like_val = Like.UP):
+def like(like_val = schema_items.Like.UP):
     db.upsert_like(current_user.UserID, int(request.form.get('id')), like_val)
     return ("", 200)
 
 @bp.route("/dislike", methods=['POST'])
 @auth_required()
 def dislike():
-    return like(Like.DOWN)
+    return like(schema_items.Like.DOWN)
 
