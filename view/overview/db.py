@@ -18,15 +18,12 @@ def likes_lang(
 ) -> typing.Dict[schema_feeds.Language, typing.List[orm_items.Item]]:
     q = sqla.select(
         orm_items.Item
-    ).join(
-        orm_items.Item.feed
-    ).where(
-        orm_feeds.Feed.Language == sqla.bindparam("lang"),
     ).order_by(
         sqla.desc(orm_items.Item.Published),
     ).options(
         sqla.orm.contains_eager(orm_items.Item.feed),
     )
+    q = items_filter.filter_lang(q, sqla.bindparam("lang"))
     q = items_filter.filter_like(q, score, user)
 
     res = dict()

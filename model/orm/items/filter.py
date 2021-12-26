@@ -7,6 +7,7 @@ from model.orm import feeds as orm_feeds
 from model.orm import items as orm_items
 from model.orm import users as orm_users
 from model.orm.feeds import filter as feeds_filter
+from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
 
 def filter_display(
@@ -34,6 +35,18 @@ def filter_dates(
         q = q.where(
             orm_items.Item.Published < finish,
         )
+
+    return q
+
+def filter_lang(
+    q: sqla.sql.Select,
+    lang: schema_feeds.Language,
+) -> sqla.sql.Select:
+    item_feed = orm_items.Item.feed
+
+    q = q.join(item_feed)
+
+    q = q.where(orm_feeds.Feed.Language == lang)
 
     return q
 
