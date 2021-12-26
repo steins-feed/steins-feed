@@ -50,7 +50,7 @@ def feed(
 
 @bp.route("/update_feed", methods=["POST"])
 @flask_security.auth_required()
-def update_feed():
+def update_feed() -> flask.Response:
     feed_id = flask.request.form.get("feed", type=int)
     title = flask.request.form.get("title")
     link = flask.request.form.get("link")
@@ -59,25 +59,25 @@ def update_feed():
 
     user = flask_security.current_user
     with model.get_session() as session:
-        feed_row = session.get(
+        feed = session.get(
             orm_feeds.Feed,
             feed_id,
         )
 
-    db.update_feed(feed_row, title, link, lang)
-    db.upsert_display(user, feed_row, display)
+    db.update_feed(feed, title, link, lang)
+    db.upsert_display(user, feed, display)
 
     return flask.redirect(flask.url_for("feed.feed", feed_id=feed_id))
 
 @bp.route("/toggle_tags", methods=["POST"])
 @flask_security.auth_required()
-def toggle_tags():
+def toggle_tags() -> flask.Response:
     feed_id = flask.request.form.get("feed_id", type=int)
     tagged = flask.request.form.getlist("tagged", type=int)
     untagged = flask.request.form.getlist("untagged", type=int)
 
     with model.get_session() as session:
-        feed_row = session.get(
+        feed = session.get(
             orm_feeds.Feed,
             feed_id,
         )
@@ -94,8 +94,8 @@ def toggle_tags():
             ) for tag_id in untagged
         ]
 
-    db.delete_tags_tagged(feed_row, tagged)
-    db.insert_tags_untagged(feed_row, untagged)
+    db.delete_tags_tagged(feed, tagged)
+    db.insert_tags_untagged(feed, untagged)
 
     return ("", 200)
 
