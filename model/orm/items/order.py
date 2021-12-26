@@ -4,11 +4,23 @@ import sqlalchemy as sqla
 
 from model.orm import items as orm_items
 
+def order_date(
+    q: sqla.sql.Select,
+    desc: bool = True,
+) -> sqla.sql.Select:
+    item_published = orm_items.Item.Published
+    if desc:
+        item_published = sqla.desc(item_published)
+
+    q = q.order_by(item_published)
+
+    return q
+
 def order_magic(
     q: sqla.sql.Select,
     user_id: int,
     desc: bool = True,
-):
+) -> sqla.sql.Select:
     item_magic = orm_items.Item.magic.and_(
         orm_items.Magic.UserID == user_id,
     )

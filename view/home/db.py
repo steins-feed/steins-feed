@@ -54,7 +54,7 @@ def updated_items(
         q = items_order.order_magic(q, user_id)
         q = items_load.load_magic(q, user_id, magic_joined=True)
     else:
-        q = q.order_by(sqla.desc(orm_items.Item.Published))
+        q = items_order.order_date(q)
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
