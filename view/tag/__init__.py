@@ -4,12 +4,13 @@ from flask import Blueprint, request, render_template
 from flask_security import auth_required
 import sqlalchemy as sqla
 
-from .req import base_context
 from model import get_session
 from model.orm.feeds import Feed, Tag
 from model.schema.feeds import Language
 from model.utils import all_langs_feeds
 from model.utils.custom import delete_feeds_tagged, insert_feeds_untagged
+
+from ..req import base_context
 
 bp = Blueprint("tag", __name__, url_prefix="/tag")
 
