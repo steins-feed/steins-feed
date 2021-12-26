@@ -10,12 +10,12 @@ from model.orm.feeds import filter as feeds_filter
 
 def filter_display(
     q: sqla.sql.Select,
-    user_id: int,
+    user: orm_users.User,
 ) -> sqla.sql.Select:
     item_feed = orm_items.Item.feed
     q = q.join(item_feed)
 
-    q = feeds_filter.filter_display(q, user_id)
+    q = feeds_filter.filter_display(q, user)
 
     return q
 
@@ -38,17 +38,17 @@ def filter_dates(
 
 def filter_magic(
     q: sqla.sql.Select,
-    user_id: int,
+    user: orm_users.User,
     unscored: bool = True,
 ) -> sqla.sql.Select:
     item_magic = orm_items.Item.magic.and_(
-        orm_items.Magic.UserID == user_id,
+        orm_items.Magic.UserID == user.UserID,
     )
 
     q = q.join(item_magic, isouter=True)
 
     q_where = orm_items.Item.magic.any(
-        orm_items.Magic.UserID == user_id
+        orm_items.Magic.UserID == user.UserID
     )
     if unscored:
         q_where = ~q_where

@@ -40,7 +40,7 @@ def home():
     if r_wall == wall.WallMode.MAGIC:
         for lang_it in magic_io.trained_languages(user):
             new_items = db.unscored_items(
-                user.UserID,
+                user,
                 lang_it,
                 r_tags,
                 start_time,
@@ -54,7 +54,7 @@ def home():
             db.upsert_magic(user.UserID, new_items, new_scores)
 
     page_items = db.updated_items(
-        user.UserID,
+        user,
         r_langs,
         r_tags,
         start_time,

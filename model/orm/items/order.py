@@ -3,6 +3,7 @@
 import sqlalchemy as sqla
 
 from model.orm import items as orm_items
+from model.orm import users as orm_users
 
 def order_date(
     q: sqla.sql.Select,
@@ -18,11 +19,11 @@ def order_date(
 
 def order_magic(
     q: sqla.sql.Select,
-    user_id: int,
+    user: orm_users.User,
     desc: bool = True,
 ) -> sqla.sql.Select:
     item_magic = orm_items.Item.magic.and_(
-        orm_items.Magic.UserID == user_id,
+        orm_items.Magic.UserID == user.UserID,
     )
 
     q = q.join(item_magic, isouter=True)

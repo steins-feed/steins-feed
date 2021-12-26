@@ -19,7 +19,7 @@ from . import wall
 
 @log_time.log_time(__name__)
 def updated_items(
-    user_id: int,
+    user: orm_users.User,
     langs: typing.List[schema_feeds.Language],
     tags: typing.List[str],
     start: datetime.datetime,
@@ -28,24 +28,24 @@ def updated_items(
     wall_mode: wall.WallMode = wall.WallMode.CLASSIC,
 ):
     q = sqla.select(orm_items.Item)
-    q = items_filter.filter_display(q, user_id)
+    q = items_filter.filter_display(q, user)
     q = items_filter.filter_dates(q, start, finish)
     q = items_filter.filter_dates(q, finish=last)
     if langs:
         q = feeds_filter.filter_languages(q, langs)
     if tags:
-        q = feeds_filter.filter_tags(q, tags, user_id)
+        q = feeds_filter.filter_tags(q, tags, user)
     q = items_filter.deduplicate_items(q)
-    q = items_load.load_like(q, user_id)
-    q = items_load.load_tags(q, user_id, feed_joined=True)
-    q = wall.order_wall(q, wall_mode, user_id)
+    q = items_load.load_like(q, user)
+    q = items_load.load_tags(q, user, feed_joined=True)
+    q = wall.order_wall(q, wall_mode, user)
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]
 
 @log_time.log_time(__name__)
 def unscored_items(
-    user_id: int,
+    user: orm_users.User,
     lang: schema_feeds.Language,
     tags: typing.List[str],
     start: datetime.datetime,
@@ -53,13 +53,13 @@ def unscored_items(
     last: datetime.datetime = None,
 ):
     q = sqla.select(orm_items.Item)
-    q = items_filter.filter_display(q, user_id)
+    q = items_filter.filter_display(q, user)
     q = items_filter.filter_dates(q, start, finish)
     q = items_filter.filter_dates(q, finish=last)
     q = feeds_filter.filter_languages(q, [lang])
     if tags:
-        q = feeds_filter.filter_tags(q, tags, user_id)
-    q = items_filter.filter_magic(q, user_id)
+        q = feeds_filter.filter_tags(q, tags, user)
+    q = items_filter.filter_magic(q, user)
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q).unique()]

@@ -10,10 +10,10 @@ from model.schema import feeds as schema_feeds
 
 def filter_display(
     q: sqla.sql.Select,
-    user_id: int,
+    user: orm_users.User,
 ) -> sqla.sql.Select:
     feed_users = orm_feeds.Feed.users.and_(
-        orm_users.User.UserID == user_id,
+        orm_users.User.UserID == user.UserID,
     )
     q = q.join(feed_users)
 
@@ -31,10 +31,10 @@ def filter_languages(
 def filter_tags(
     q: sqla.sql.Select,
     tags: typing.List[str],
-    user_id: int,
+    user: orm_users.User,
 ) -> sqla.sql.Select:
     feed_tags = orm_feeds.Feed.tags.and_(
-        orm_feeds.Tag.UserID == user_id,
+        orm_feeds.Tag.UserID == user.UserID,
     )
     q = q.join(feed_tags)
 
