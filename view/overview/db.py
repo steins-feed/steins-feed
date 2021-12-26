@@ -17,12 +17,17 @@ from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
 
 @log_time.log_time(__name__)
-def all_langs():
+def all_langs(
+    user: orm_users.User = None,
+) -> typing.List[schema_feeds.Language]:
     q = sqla.select(
         orm_feeds.Feed.Language,
     ).order_by(
         sqla.collate(orm_feeds.Feed.Language, "NOCASE"),
     ).distinct()
+
+    if user:
+        q = feeds_filter.filter_display(q, user)
 
     with model.get_session() as session:
         return [schema_feeds.Language[e["Language"]] for e in session.execute(q)]

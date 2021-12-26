@@ -14,6 +14,7 @@ from model.schema.feeds import Language
 from view.feed import db as feed_db
 from view.home import unit as home_unit
 from view.home import wall as home_wall
+from view.overview import db as overview_db
 from view.tag import db as tag_db
 
 def get_wall():
@@ -26,7 +27,7 @@ def get_wall():
 
 def get_langs():
     res = [Language[e] for e in request.args.getlist('lang')]
-    if set(displayed_languages(current_user.UserID)) <= set(res):
+    if set(overview_db.all_langs(current_user)) <= set(res):
         res = []
     return res
 
@@ -85,7 +86,7 @@ def base_context():
     context['tags'] = get_tags()
 
     # sidenav.html.
-    context['langs_disp'] = displayed_languages(current_user.UserID)
+    context['langs_disp'] = overview_db.all_langs(current_user)
     context['tags_disp'] = displayed_tags(current_user.UserID)
 
     # sidenav.html.
@@ -107,20 +108,6 @@ def base_context():
 
     return context
 
-def displayed_languages(user_id):
-    q = sqla.select(
-        orm_feeds.Feed.Language,
-    ).join(
-        orm_feeds.Feed.users
-    ).where(
-        orm_users.User.UserID == user_id,
-    ).order_by(
-        orm_feeds.Feed.Language,
-    ).distinct()
-
-    with get_session() as session:
-        return [Language[e.Language] for e in session.execute(q)]
-
 def displayed_tags(user_id):
     q = sqla.select(
         orm_feeds.Tag.Name,
@@ -137,3 +124,4 @@ def displayed_tags(user_id):
 
     with get_session() as session:
         return [e.Name for e in session.execute(q)]
+
