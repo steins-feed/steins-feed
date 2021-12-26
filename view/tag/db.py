@@ -40,8 +40,8 @@ def delete_tags(
 
 @log_time.log_time(__name__)
 def all_feeds(
-    lang: schema_feeds.Language = None,
-    tag: orm_feeds.Tag = None,
+    langs: typing.List[schema_feeds.Language] = None,
+    tags: typing.List[orm_feeds.Tag] = None,
     flag: bool = True,
 ) -> typing.Dict[schema_feeds.Language, typing.List[orm_feeds.Feed]]:
     q = sqla.select(
@@ -50,12 +50,18 @@ def all_feeds(
         sqla.collate(orm_feeds.Feed.Title, "NOCASE"),
     )
 
-    if lang:
-        q = q.where(orm_feeds.Feed.Language == lang.name)
+    if langs:
+        q = q.where(
+            orm_feeds.Feed.Language.in_(
+                [lang_it.name for lang_it in langs]
+            )
+        )
 
-    if tag:
+    if tags:
         q_where = orm_feeds.Feed.tags.any(
-            orm_feeds.Tag.TagID == tag.TagID,
+            orm_feeds.Tag.TagID.in_(
+                [tag_it.TagID for tag_it in tags]
+            ),
         )
 
         if not flag:
