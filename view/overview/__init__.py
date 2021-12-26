@@ -41,8 +41,8 @@ def settings():
             topnav_title=user.Name,
             langs_all=schema_feeds.Language,
             lang_default=schema_feeds.Language.ENGLISH,
-            feeds_lang=feeds_lang_disp(user.UserID),
-            feeds_lang_not=feeds_lang_disp(user.UserID, False),
+            feeds_lang=db.feeds_lang_disp(user.UserID),
+            feeds_lang_not=db.feeds_lang_disp(user.UserID, False),
     )
 
 @bp.route("/settings/toggle_display", methods=['POST'])
@@ -91,25 +91,4 @@ def add_tag():
 def delete_tag():
     delete_tags([flask.request.form.get('tag', type=int)])
     return flask.redirect(flask.url_for("overview.settings"))
-
-def feeds_lang_disp(user_id, flag=True):
-    res = dict()
-
-    for lang_it in all_langs_feeds():
-        q = sqla.select(
-            Feed
-        ).where(
-            Feed.Language == lang_it.name
-        ).order_by(
-            sqla.collate(Feed.Title, 'NOCASE')
-        )
-        if flag:
-            q = q.where(Feed.users.any(User.UserID == user_id))
-        else:
-            q = q.where(~Feed.users.any(User.UserID == user_id))
-
-        with get_session() as session:
-            res[lang_it] = [e[0] for e in session.execute(q)]
-
-    return res
 

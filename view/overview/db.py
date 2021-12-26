@@ -3,6 +3,7 @@
 import sqlalchemy as sqla
 import typing
 
+from log import time as log_time
 import model
 from model.orm import items as orm_items
 from model.orm import feeds as orm_feeds
@@ -14,6 +15,7 @@ from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
 from model.utils import all_langs_feeds
 
+@log_time.log_time(__name__)
 def likes_lang(
     user: orm_users.User,
     score: schema_items.Like = schema_items.Like.UP,
@@ -30,6 +32,27 @@ def likes_lang(
             res[lang_it] = [
                 e[0] for e in session.execute(q, {"lang": lang_it.name})
             ]
+
+    return res
+
+def feeds_lang_disp(user_id, flag=True):
+    res = dict()
+
+    for lang_it in all_langs_feeds():
+        q = sqla.select(
+            orm_feeds.Feed
+        ).where(
+            orm_feeds.Feed.Language == lang_it.name
+        ).order_by(
+            sqla.collate(orm_feeds.Feed.Title, 'NOCASE')
+        )
+        if flag:
+            q = q.where(orm_feeds.Feed.users.any(orm_users.User.UserID == user_id))
+        else:
+            q = q.where(~orm_feeds.Feed.users.any(orm_users.User.UserID == user_id))
+
+        with model.get_session() as session:
+            res[lang_it] = [e[0] for e in session.execute(q)]
 
     return res
 
