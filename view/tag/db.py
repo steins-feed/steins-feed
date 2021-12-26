@@ -64,9 +64,9 @@ def feeds_lang(
     return res
 
 @log_time.log_time(__name__)
-def delete_feeds_tagged(
+def untag_feeds(
     tag: orm_feeds.Tag,
-    tagged: typing.List[orm_feeds.Feed],
+    *feeds: orm_feeds.Feed,
 ):
     with model.get_session() as session:
         tag = session.get(
@@ -74,7 +74,7 @@ def delete_feeds_tagged(
             tag.TagID,
         )
 
-        for feed_it in tagged:
+        for feed_it in feeds:
             feed_it = session.get(
                 orm_feeds.Feed,
                 feed_it.FeedID,
@@ -88,9 +88,9 @@ def delete_feeds_tagged(
         session.commit()
 
 @log_time.log_time(__name__)
-def insert_feeds_untagged(
+def tag_feeds(
     tag: orm_feeds.Tag,
-    tagged: typing.List[orm_feeds.Feed],
+    *feeds: orm_feeds.Feed,
 ):
     with model.get_session() as session:
         tag = session.get(
@@ -98,7 +98,7 @@ def insert_feeds_untagged(
             tag.TagID,
         )
 
-        for feed_it in tagged:
+        for feed_it in feeds:
             feed_it = session.get(
                 orm_feeds.Feed,
                 feed_it.FeedID,
