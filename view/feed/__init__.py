@@ -11,13 +11,16 @@ from model.schema import feeds as schema_feeds
 from model.utils.custom import upsert_feed, upsert_display
 from model.utils.custom import delete_tags_tagged, insert_tags_untagged
 
+from . import db
 from ..req import base_context
 
 bp = flask.Blueprint("feed", __name__, url_prefix="/feed")
 
 @bp.route("")
 @flask_security.auth_required()
-def feed(feed_id=None):
+def feed(
+    feed_id: int = None,
+) -> flask.Response:
     if not feed_id:
         feed_id = flask.request.args.get("feed_id", type=int)
 
@@ -40,8 +43,8 @@ def feed(feed_id=None):
         feed_row=feed_row,
         langs_all=[e for e in schema_feeds.Language],
         lang_default=schema_feeds.Language.ENGLISH,
-        feed_tags=feed_tags(user.UserID, feed_id),
-        feed_tags_not=feed_tags(user.UserID, feed_id, False),
+        feed_tags=db.feed_tags(user, feed_row),
+        feed_tags_not=db.feed_tags(user, feed_row, False),
     )
 
 @bp.route("/update_feed", methods=["POST"])
@@ -72,18 +75,3 @@ def toggle_tags():
 
     return ("", 200)
 
-def feed_tags(user_id, feed_id, flag=True):
-    q = sqla.select(
-        orm_feeds.Tag
-    ).where(
-        orm_feeds.Tag.UserID == user_id
-    ).order_by(
-        sqla.collate(orm_feeds.Tag.Name, "NOCASE")
-    )
-    if flag:
-        q = q.where(orm_feeds.Tag.feeds.any(orm_feeds.Feed.FeedID == feed_id))
-    else:
-        q = q.where(~orm_feeds.Tag.feeds.any(orm_feeds.Feed.FeedID == feed_id))
-
-    with model.get_session() as session:
-        return [e[0] for e in session.execute(q)]
