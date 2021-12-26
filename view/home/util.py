@@ -68,35 +68,14 @@ def round_to(dt, timeunit):
     return dt
 
 def format_date(page_date, timeunit):
-    current_date = datetime.datetime.now()
-
-    ONE_DAY = datetime.timedelta(days=1)
-    ONE_WEEK = datetime.timedelta(days=7)
-    ONE_MONTH = datetime.timedelta(days=31)
-
     if timeunit == req.Timeunit.DAY:
-        if current_date >= page_date:
-            topnav_title = "Today"
-        elif current_date - ONE_DAY >= page_date:
-            topnav_title = "Yesterday"
-        else:
-            topnav_title = page_date.strftime("%a, %d %b %Y")
+        fmt = "%a, %d %b %Y"
     elif timeunit == timeunit.WEEK:
-        if current_date >= page_date:
-            topnav_title = "This week"
-        elif current_date - ONE_WEEK >= page_date:
-            topnav_title = "Last week"
-        else:
-            topnav_title = page_date.strftime("Week %U, %Y")
+        fmt = "Week %U, %Y"
     elif timeunit == timeunit.MONTH:
-        if current_date >= page_date:
-            topnav_title = "This month"
-        elif (current_date - ONE_MONTH).replace(day=1) >= page_date:
-            topnav_title = "Last month"
-        else:
-            topnav_title = page_date.strftime("%B %Y")
+        fmt = "%B %Y"
     else:
         raise ValueError
 
-    return topnav_title
+    return page_date.strftime(fmt)
 
