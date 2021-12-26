@@ -7,6 +7,7 @@ from log import time as log_time
 import model
 from model.orm import feeds as orm_feeds
 from model.orm import users as orm_users
+from model.schema import feeds as schema_feeds
 
 @log_time.log_time(__name__)
 def feed_tags(
@@ -33,36 +34,23 @@ def feed_tags(
         return [e[0] for e in session.execute(q)]
 
 @log_time.log_time(__name__)
-def upsert_feed(feed_id, title, link, lang):
-    feeds = model.get_table('Feeds')
-
-    if feed_id:
-        q = feeds.update().values(
-                Title = title,
-                Link = link,
-                Language = lang.name
-        ).where(feeds.c.FeedID == feed_id)
-    else:
-        q = feeds.insert().values(
-                Title = title,
-                Link = link,
-                Language = lang.name
+def update_feed(
+    feed: orm_feeds.Feed,
+    title: str,
+    link: str,
+    lang: schema_feeds.Language,
+):
+    with model.get_session() as session:
+        feed = session.get(
+            orm_feeds.Feed,
+            feed.FeedID,
         )
-        q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    with model.get_connection() as conn:
-        conn.execute(q)
 
-    if not feed_id:
-        q = sqla.select([
-                feeds.c.FeedID
-        ]).where(sqla.and_(
-                feeds.c.Title == title,
-                feeds.c.Link == link,
-                feeds.c.Language == lang.name
-        ))
-        with model.get_connection() as conn:
-            res = conn.execute(q).fetchone()
-        return res['FeedID']
+        feed.Title = title
+        feed.Link = link
+        feed.Language = lang.name
+
+        session.commit()
 
 @log_time.log_time(__name__)
 def upsert_display(

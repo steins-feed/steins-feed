@@ -62,7 +62,7 @@ def update_feed():
             feed_id,
         )
 
-    db.upsert_feed(feed_id, title, link, lang)
+    db.update_feed(feed_row, title, link, lang)
     db.upsert_display(user, feed_row, display)
 
     return flask.redirect(flask.url_for("feed.feed", feed_id=feed_id))

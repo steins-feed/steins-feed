@@ -15,7 +15,6 @@ from model.utils.custom import delete_feeds
 from model.utils.custom import upsert_tag, delete_tags
 
 from .req import base_context
-from .feed.db import upsert_feed, upsert_display
 
 bp = Blueprint("overview", __name__)
 
