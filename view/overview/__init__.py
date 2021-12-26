@@ -25,8 +25,8 @@ def statistics():
     return render_template("statistics.html",
             **base_context(),
             topnav_title=current_user.Name,
-            likes_lang=db.likes_lang(current_user.UserID),
-            dislikes_lang=db.likes_lang(current_user.UserID, LikeEnum.DOWN.name),
+            likes_lang=db.likes_lang(current_user),
+            dislikes_lang=db.likes_lang(current_user, LikeEnum.DOWN),
     )
 
 @bp.route("/settings")
