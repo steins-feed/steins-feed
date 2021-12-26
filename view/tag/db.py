@@ -28,14 +28,14 @@ def insert_tag(
     return tag
 
 @log_time.log_time(__name__)
-def delete_tags(tag_ids):
-    tags = get_table('Tags')
+def delete_tags(
+    *tags: orm_feeds.Tag,
+):
+    with model.get_session() as session:
+        for tag_it in tags:
+            session.delete(tag_it)
 
-    q = tags.delete().where(
-            tags.c.TagID.in_(tag_ids)
-    )
-    with get_connection() as conn:
-        conn.execute(q)
+        session.commit()
 
 @log_time.log_time(__name__)
 def feeds_lang(

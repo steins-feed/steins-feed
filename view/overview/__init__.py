@@ -109,7 +109,15 @@ def add_tag() -> flask.Response:
 
 @bp.route("/settings/delete_tag", methods=["POST"])
 @flask_security.auth_required()
-def delete_tag():
-    delete_tags([flask.request.form.get("tag", type=int)])
+def delete_tag() -> flask.Response:
+    tag_id = flask.request.form.get("tag", type=int)
+    with model.get_session() as session:
+        tag = session.get(
+            orm_feeds.Tag,
+            tag_id,
+        )
+
+    tag_db.delete_tags(tag)
+
     return flask.redirect(flask.url_for("overview.settings"))
 
