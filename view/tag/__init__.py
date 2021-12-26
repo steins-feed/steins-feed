@@ -19,14 +19,14 @@ bp = Blueprint("tag", __name__, url_prefix="/tag")
 def tag():
     tag_id = request.args.get('tag', type=int)
     with get_session() as session:
-        tag_row = session.get(Tag, tag_id)
+        tag = session.get(Tag, tag_id)
 
     return render_template("tag.html",
             **base_context(),
-            topnav_title=tag_row.Name,
-            tag_row=tag_row,
-            feeds_lang=db.feeds_lang(tag_id),
-            feeds_lang_not=db.feeds_lang(tag_id, False),
+            topnav_title=tag.Name,
+            tag_row=tag,
+            feeds_lang=db.feeds_lang(tag),
+            feeds_lang_not=db.feeds_lang(tag, False),
     )
 
 @bp.route("/toggle_feeds", methods=['POST'])
