@@ -105,7 +105,7 @@ def upsert_like(
 
 @log_time.log_time(__name__)
 def upsert_magic(
-    user_id: int,
+    user: orm_users.User,
     items: typing.List[orm_items.Item],
     scores: typing.List[float],
 ):
@@ -116,7 +116,7 @@ def upsert_magic(
     rows = []
     for i in range(len(items)):
         rows.append({
-            "UserID": user_id,
+            "UserID": user.UserID,
             "ItemID": items[i].ItemID,
             "Score": scores[i]
         })

@@ -51,7 +51,7 @@ def home():
                 continue
 
             new_scores = magic.compute_score(user.UserID, lang_it, new_items)
-            db.upsert_magic(user.UserID, new_items, new_scores)
+            db.upsert_magic(user, new_items, new_scores)
 
     page_items = db.updated_items(
         user,
