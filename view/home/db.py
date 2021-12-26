@@ -15,6 +15,9 @@ from model.orm.items import load as items_load
 from model.orm.items import order as items_order
 from model.schema import feeds as schema_feeds, items as schema_items
 
+from . import unit
+from . import wall
+
 @log_time.log_time(__name__)
 def updated_items(
     user_id: int,
@@ -23,7 +26,7 @@ def updated_items(
     start: datetime.datetime,
     finish: datetime.datetime,
     last: datetime.datetime = None,
-    magic: bool = False,
+    wall_mode: wall.WallMode = wall.WallMode.CLASSIC,
 ):
     q = sqla.select(orm_items.Item)
     q = items_filter.filter_display(q, user_id)
@@ -37,7 +40,7 @@ def updated_items(
     q = items_load.load_like(q, user_id)
     q = items_load.load_tags(q, user_id, feed_joined=True)
 
-    if magic:
+    if wall_mode == wall.WallMode.MAGIC:
         q = items_order.order_magic(q, user_id)
         q = items_load.load_magic(q, user_id, magic_joined=True)
     else:

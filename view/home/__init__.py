@@ -71,7 +71,7 @@ def home():
         start_time,
         finish_time,
         last_hour,
-        r_wall == wall.WallMode.MAGIC,
+        r_wall,
     )
 
     return render_template("index.html",
