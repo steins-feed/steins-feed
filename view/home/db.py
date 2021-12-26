@@ -66,42 +66,29 @@ def unscored_items(
 
 @log_time.log_time(__name__)
 def upsert_like(
-    user_id: int,
-    item_id: int,
+    user: orm_users.User,
+    item: orm_items.Item,
     like_val: schema_items.Like,
 ):
-    like = model.get_table("Like")
+    with model.get_session() as session:
+        like = session.get(orm_items.Like, {
+            "UserID": user.UserID,
+            "ItemID": item.ItemID,
+        })
+        if like is None:
+            like = orm_items.Like(
+                UserID = user.UserID,
+                ItemID = item.ItemID,
+                Score = schema_items.Like.MEH.name,
+            )
+            session.add(like)
 
-    q = sqla.select(
-        like,
-    ).where(
-        like.c.UserID == user_id,
-        like.c.ItemID == item_id,
-    )
-    with model.get_connection() as conn:
-        res = conn.execute(q).fetchone()
-
-    if res:
-        score = schema_items.Like[res["Score"]]
-        q = like.update().values(
-            Score=sqla.bindparam("score")
-        ).where(
-            like.c.UserID == user_id,
-            like.c.ItemID == item_id,
-        )
-    else:
-        score = schema_items.Like.MEH
-        q = like.insert().values(
-            UserID=user_id,
-            ItemID=item_id,
-            Score=sqla.bindparam("score"),
-        )
-
-    with model.get_connection() as conn:
-        if score == like_val:
-            conn.execute(q, score=schema_items.Like.MEH.name)
+        if like.Score == like_val.name:
+            like.Score = schema_items.Like.MEH.name
         else:
-            conn.execute(q, score=like_val.name)
+            like.Score = like_val.name
+
+        session.commit()
 
 @log_time.log_time(__name__)
 def upsert_magic(

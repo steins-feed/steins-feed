@@ -5,7 +5,9 @@ import flask_security
 
 import magic
 from magic import io as magic_io
+import model
 from model import recent
+from model.orm import items as orm_items
 from model.schema import items as schema_items
 
 from . import db
@@ -78,8 +80,10 @@ def like(
 ) -> flask.Response:
     user = flask_security.current_user
     item_id = flask.request.form.get("id", type=int)
+    with model.get_session() as session:
+        item = session.get(orm_items.Item, item_id)
 
-    db.upsert_like(user.UserID, item_id, like_val)
+    db.upsert_like(user, item, like_val)
 
     return "", 200
 
