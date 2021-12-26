@@ -13,6 +13,8 @@ from model.schema import items as schema_items
 
 from . import db
 from . import util
+from . import unit
+from . import wall
 from .. import req
 
 bp = Blueprint("home", __name__, url_prefix="/home")
@@ -21,7 +23,7 @@ bp.add_app_template_filter(util.clean_summary, "clean")
 @bp.route("")
 @auth_required()
 def home():
-    r_feed = req.get_feed()
+    r_wall = req.get_wall()
     r_langs = req.get_langs()
     r_page = req.get_page()
     r_tags = req.get_tags()
@@ -36,17 +38,17 @@ def home():
 
     start_time = r_page
     finish_time = start_time
-    if r_timeunit == req.Timeunit.DAY:
+    if r_timeunit == unit.Timeunit.DAY:
         finish_time += timedelta(days=1)
-    elif r_timeunit == req.Timeunit.WEEK:
+    elif r_timeunit == unit.Timeunit.WEEK:
         finish_time += timedelta(days=7)
-    elif r_timeunit == req.Timeunit.MONTH:
+    elif r_timeunit == unit.Timeunit.MONTH:
         finish_time += timedelta(days=31)
         finish_time = finish_time.replace(day=1)
     else:
         raise ValueError
 
-    if r_feed == req.Feed.MAGIC:
+    if r_wall == wall.WallMode.MAGIC:
         for lang_it in magic_io.trained_languages(current_user):
             new_items = db.unscored_items(
                 current_user.UserID,
@@ -69,7 +71,7 @@ def home():
         start_time,
         finish_time,
         last_hour,
-        r_feed == req.Feed.MAGIC,
+        r_wall == wall.WallMode.MAGIC,
     )
 
     return render_template("index.html",
