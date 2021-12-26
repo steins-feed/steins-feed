@@ -15,7 +15,17 @@ from model.orm.items import load as items_load
 from model.orm.items import order as items_order
 from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
-from model.utils import all_langs_feeds
+
+@log_time.log_time(__name__)
+def all_langs_feeds():
+    q = sqla.select(
+        orm_feeds.Feed.Language,
+    ).order_by(
+        sqla.collate(orm_feeds.Feed.Language, "NOCASE"),
+    ).distinct()
+
+    with model.get_session() as session:
+        return [schema_feeds.Language[e["Language"]] for e in session.execute(q)]
 
 @log_time.log_time(__name__)
 def likes_lang(
