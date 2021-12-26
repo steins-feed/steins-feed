@@ -36,6 +36,27 @@ def filter_dates(
 
     return q
 
+def filter_magic(
+    q: sqla.sql.Select,
+    user_id: int,
+    unscored: bool = True,
+) -> sqla.sql.Select:
+    item_magic = orm_items.Item.magic.and_(
+        orm_items.Magic.UserID == user_id,
+    )
+
+    q = q.join(item_magic, isouter=True)
+
+    q_where = orm_items.Item.magic.any(
+        orm_items.Magic.UserID == user_id
+    )
+    if unscored:
+        q_where = ~q_where
+
+    q = q.where(q_where)
+
+    return q
+
 def deduplicate_items(
     q: sqla.sql.Select,
 ) -> sqla.sql.Select:

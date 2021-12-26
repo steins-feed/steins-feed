@@ -24,7 +24,6 @@ def updated_items(
     finish: datetime.datetime,
     last: datetime.datetime = None,
     magic: bool = False,
-    unscored: bool = False,
 ):
     q = sqla.select(orm_items.Item)
     q = items_filter.filter_display(q, user_id)
@@ -38,19 +37,7 @@ def updated_items(
     q = items_load.load_like(q, user_id)
     q = items_load.load_tags(q, user_id, feed_joined=True)
 
-    if unscored:
-        q = q.join(orm_items.Item.magic.and_(
-            orm_items.Magic.UserID == user_id,
-        ), isouter=True)
-        q = q.where(
-            ~orm_items.Item.magic.any(
-                orm_items.Magic.UserID == user_id
-            )
-        )
-        q = q.options(
-            sqla.orm.contains_eager(orm_items.Item.magic),
-        )
-    elif magic:
+    if magic:
         q = items_order.order_magic(q, user_id)
         q = items_load.load_magic(q, user_id, magic_joined=True)
     else:
@@ -68,7 +55,17 @@ def unscored_items(
     finish: datetime.datetime,
     last: datetime.datetime = None,
 ):
-    return updated_items(user_id, [lang], tags, start, finish, last, unscored=True)
+    q = sqla.select(orm_items.Item)
+    q = items_filter.filter_display(q, user_id)
+    q = items_filter.filter_dates(q, start, finish)
+    q = items_filter.filter_dates(q, finish=last)
+    q = feeds_filter.filter_languages(q, [lang])
+    if tags:
+        q = feeds_filter.filter_tags(q, tags, user_id)
+    q = items_filter.filter_magic(q, user_id)
+
+    with model.get_session() as session:
+        return [e[0] for e in session.execute(q).unique()]
 
 @log_time.log_time(__name__)
 def upsert_like(
