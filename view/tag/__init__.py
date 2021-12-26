@@ -24,7 +24,7 @@ def tag() -> flask.Response:
     feeds_lang = {}
     feeds_lang_not = {}
 
-    for lang_it in overview_db.all_langs_feeds():
+    for lang_it in overview_db.all_langs():
         feeds_lang[lang_it] = tag_db.all_feeds(
             tags=[tag],
             langs=[lang_it],

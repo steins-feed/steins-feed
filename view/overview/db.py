@@ -17,7 +17,7 @@ from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
 
 @log_time.log_time(__name__)
-def all_langs_feeds():
+def all_langs():
     q = sqla.select(
         orm_feeds.Feed.Language,
     ).order_by(
@@ -40,7 +40,7 @@ def likes_lang(
 
     res = dict()
     with model.get_session() as session:
-        for lang_it in all_langs_feeds():
+        for lang_it in all_langs():
             res[lang_it] = [
                 e[0] for e in session.execute(q, {"lang": lang_it.name})
             ]
@@ -54,7 +54,7 @@ def feeds_lang_disp(
 ) -> typing.List[orm_feeds.Feed]:
     res = dict()
 
-    for lang_it in all_langs_feeds():
+    for lang_it in all_langs():
         q = sqla.select(orm_feeds.Feed)
         q = feeds_filter.filter_languages(q, [lang_it])
         q = feeds_order.order_title(q)
