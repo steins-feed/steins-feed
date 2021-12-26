@@ -47,13 +47,27 @@ def statistics() -> flask.Response:
 def settings() -> flask.Response:
     user = flask_security.current_user
 
+    feeds_lang = {}
+    feeds_lang_not = {}
+
+    for lang_it in db.all_langs():
+        feeds_lang[lang_it] = tag_db.all_feeds(
+            langs = [lang_it],
+            users = [user],
+        )
+        feeds_lang_not[lang_it] = tag_db.all_feeds(
+            langs = [lang_it],
+            users = [user],
+            users_flag = False,
+        )
+
     return flask.render_template("settings.html",
             **req.base_context(),
             topnav_title = user.Name,
             langs_all = schema_feeds.Language,
             lang_default = schema_feeds.Language.ENGLISH,
-            feeds_lang = db.feeds_lang_disp(user),
-            feeds_lang_not = db.feeds_lang_disp(user, False),
+            feeds_lang = feeds_lang,
+            feeds_lang_not = feeds_lang_not,
     )
 
 @bp.route("/settings/toggle_display", methods=["POST"])

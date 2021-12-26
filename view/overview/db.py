@@ -39,33 +39,6 @@ def all_likes(
     q = items_order.order_date(q)
     q = items_load.load_feed(q, feed_joined=True)
 
-    res = dict()
     with model.get_session() as session:
         return [e[0] for e in session.execute(q)]
-
-@log_time.log_time(__name__)
-def feeds_lang_disp(
-    user: orm_users.User,
-    flag: bool = True,
-) -> typing.List[orm_feeds.Feed]:
-    res = dict()
-
-    for lang_it in all_langs():
-        q = sqla.select(orm_feeds.Feed)
-        q = feeds_filter.filter_languages(q, [lang_it])
-        q = feeds_order.order_title(q)
-
-        q_where = orm_feeds.Feed.users.any(
-            orm_users.User.UserID == user.UserID,
-        )
-
-        if not flag:
-            q_where = ~q_where
-
-        q = q.where(q_where)
-
-        with model.get_session() as session:
-            res[lang_it] = [e[0] for e in session.execute(q)]
-
-    return res
 

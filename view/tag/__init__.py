@@ -26,13 +26,13 @@ def tag() -> flask.Response:
 
     for lang_it in overview_db.all_langs():
         feeds_lang[lang_it] = tag_db.all_feeds(
-            tags=[tag],
             langs=[lang_it],
+            tags=[tag],
         )
         feeds_lang_not[lang_it] = tag_db.all_feeds(
-            tags=[tag],
             langs=[lang_it],
-            flag=False,
+            tags=[tag],
+            tags_flag=False,
         )
 
     return flask.render_template(

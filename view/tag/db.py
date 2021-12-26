@@ -7,6 +7,8 @@ from log import time as log_time
 import model
 from model.orm import feeds as orm_feeds
 from model.orm import users as orm_users
+from model.orm.feeds import filter as feeds_filter
+from model.orm.feeds import order as feeds_order
 from model.schema import feeds as schema_feeds
 
 from ..overview import db as overview_db
@@ -42,20 +44,15 @@ def delete_tags(
 def all_feeds(
     langs: typing.List[schema_feeds.Language] = None,
     tags: typing.List[orm_feeds.Tag] = None,
-    flag: bool = True,
+    tags_flag: bool = True,
+    users: orm_users.User = None,
+    users_flag: bool = True
 ) -> typing.Dict[schema_feeds.Language, typing.List[orm_feeds.Feed]]:
-    q = sqla.select(
-        orm_feeds.Feed,
-    ).order_by(
-        sqla.collate(orm_feeds.Feed.Title, "NOCASE"),
-    )
+    q = sqla.select(orm_feeds.Feed)
+    q = feeds_order.order_title(q)
 
     if langs:
-        q = q.where(
-            orm_feeds.Feed.Language.in_(
-                [lang_it.name for lang_it in langs]
-            )
-        )
+        q = feeds_filter.filter_languages(q, langs)
 
     if tags:
         q_where = orm_feeds.Feed.tags.any(
@@ -64,7 +61,19 @@ def all_feeds(
             ),
         )
 
-        if not flag:
+        if not tags_flag:
+            q_where = ~q_where
+
+        q = q.where(q_where)
+
+    if users:
+        q_where = orm_feeds.Feed.users.any(
+            orm_users.User.UserID.in_(
+                [user_it.UserID for user_it in users]
+            ),
+        )
+
+        if not users_flag:
             q_where = ~q_where
 
         q = q.where(q_where)
