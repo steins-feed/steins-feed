@@ -8,6 +8,8 @@ import model
 from model.orm import items as orm_items
 from model.orm import feeds as orm_feeds
 from model.orm import users as orm_users
+from model.orm.feeds import filter as feeds_filter
+from model.orm.feeds import order as feeds_order
 from model.orm.items import filter as items_filter
 from model.orm.items import load as items_load
 from model.orm.items import order as items_order
@@ -43,13 +45,9 @@ def feeds_lang_disp(
     res = dict()
 
     for lang_it in all_langs_feeds():
-        q = sqla.select(
-            orm_feeds.Feed,
-        ).where(
-            orm_feeds.Feed.Language == lang_it.name,
-        ).order_by(
-            sqla.collate(orm_feeds.Feed.Title, 'NOCASE'),
-        )
+        q = sqla.select(orm_feeds.Feed)
+        q = feeds_filter.filter_languages(q, [lang_it])
+        q = feeds_order.order_title(q)
 
         q_where = orm_feeds.Feed.users.any(
             orm_users.User.UserID == user.UserID,
