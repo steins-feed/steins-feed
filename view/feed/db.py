@@ -3,10 +3,12 @@
 import sqlalchemy as sqla
 import typing
 
+from log import time as log_time
 import model
 from model.orm import feeds as orm_feeds
 from model.orm import users as orm_users
 
+@log_time.log_time(__name__)
 def feed_tags(
     user: orm_users.User,
     feed: orm_feeds.Feed,
@@ -30,6 +32,7 @@ def feed_tags(
     with model.get_session() as session:
         return [e[0] for e in session.execute(q)]
 
+@log_time.log_time(__name__)
 def upsert_feed(feed_id, title, link, lang):
     feeds = model.get_table('Feeds')
 
@@ -61,6 +64,7 @@ def upsert_feed(feed_id, title, link, lang):
             res = conn.execute(q).fetchone()
         return res['FeedID']
 
+@log_time.log_time(__name__)
 def upsert_display(user_id, feed_ids, disp):
     display = model.get_table('Display')
 
