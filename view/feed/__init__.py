@@ -8,7 +8,6 @@ import model
 from model.orm import feeds as orm_feeds
 from model.orm import users as orm_users
 from model.schema import feeds as schema_feeds
-from model.utils.custom import delete_tags_tagged, insert_tags_untagged
 
 from . import db
 from ..req import base_context
@@ -74,8 +73,26 @@ def toggle_tags():
     tagged = flask.request.form.getlist("tagged", type=int)
     untagged = flask.request.form.getlist("untagged", type=int)
 
-    delete_tags_tagged(feed_id, tagged)
-    insert_tags_untagged(feed_id, untagged)
+    with model.get_session() as session:
+        feed_row = session.get(
+            orm_feeds.Feed,
+            feed_id,
+        )
+        tagged = [
+            session.get(
+                orm_feeds.Tag,
+                tag_id,
+            ) for tag_id in tagged
+        ]
+        untagged = [
+            session.get(
+                orm_feeds.Tag,
+                tag_id,
+            ) for tag_id in untagged
+        ]
+
+    db.delete_tags_tagged(feed_row, tagged)
+    db.insert_tags_untagged(feed_row, untagged)
 
     return ("", 200)
 

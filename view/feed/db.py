@@ -78,3 +78,48 @@ def upsert_display(
 
         session.commit()
 
+@log_time.log_time(__name__)
+def delete_tags_tagged(
+    feed: orm_feeds.Feed,
+    tagged: typing.List[orm_feeds.Tag],
+):
+    with model.get_session() as session:
+        feed = session.get(
+            orm_feeds.Feed,
+            feed.FeedID,
+        )
+
+        for tag_it in tagged:
+            tag_it = session.get(
+                orm_feeds.Tag,
+                tag_it.TagID,
+            )
+
+            try:
+                feed.tags.remove(tag_it)
+            except ValueError:
+                pass
+
+        session.commit()
+
+@log_time.log_time(__name__)
+def insert_tags_untagged(
+    feed: orm_feeds.Feed,
+    tagged: typing.List[orm_feeds.Tag],
+):
+    with model.get_session() as session:
+        feed = session.get(
+            orm_feeds.Feed,
+            feed.FeedID,
+        )
+
+        for tag_it in tagged:
+            tag_it = session.get(
+                orm_feeds.Tag,
+                tag_it.TagID,
+            )
+
+            feed.tags.append(tag_it)
+
+        session.commit()
+

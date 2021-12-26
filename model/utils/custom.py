@@ -11,27 +11,6 @@ def delete_feeds(feed_ids):
     with get_connection() as conn:
         conn.execute(q)
 
-def delete_tags_tagged(feed_id, tagged):
-    tags2feeds = get_table('Tags2Feeds')
-
-    q = tags2feeds.delete().where(sql.and_(
-        tags2feeds.c.TagID.in_(tagged),
-        tags2feeds.c.FeedID == feed_id
-    ))
-    with get_connection() as conn:
-        conn.execute(q)
-
-def insert_tags_untagged(feed_id, untagged):
-    tags2feeds = get_table('Tags2Feeds')
-
-    row_keys = ("TagID", "FeedID")
-    rows = [dict(zip(row_keys, (e, feed_id))) for e in untagged]
-
-    q = tags2feeds.insert()
-    q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    with get_connection() as conn:
-        conn.execute(q, rows)
-
 # Tag.
 def upsert_tag(tag_id, user_id, name):
     tags = get_table('Tags')
