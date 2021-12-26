@@ -20,12 +20,26 @@ bp = flask.Blueprint("overview", __name__)
 def statistics() -> flask.Response:
     user = flask_security.current_user
 
+    likes_lang = {}
+    dislikes_lang = {}
+
+    for lang_it in db.all_langs():
+        likes_lang[lang_it] = db.all_likes(
+            user,
+            lang_it,
+        )
+        dislikes_lang[lang_it] = db.all_likes(
+            user,
+            lang_it,
+            schema_items.Like.DOWN,
+        )
+
     return flask.render_template(
         "statistics.html",
         **req.base_context(),
         topnav_title = user.Name,
-        likes_lang = db.likes_lang(user),
-        dislikes_lang = db.likes_lang(user, schema_items.Like.DOWN),
+        likes_lang = likes_lang,
+        dislikes_lang = dislikes_lang,
     )
 
 @bp.route("/settings")

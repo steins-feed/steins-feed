@@ -28,24 +28,20 @@ def all_langs():
         return [schema_feeds.Language[e["Language"]] for e in session.execute(q)]
 
 @log_time.log_time(__name__)
-def likes_lang(
+def all_likes(
     user: orm_users.User,
+    lang: schema_feeds.Language,
     score: schema_items.Like = schema_items.Like.UP,
 ) -> typing.Dict[schema_feeds.Language, typing.List[orm_items.Item]]:
     q = sqla.select(orm_items.Item)
-    q = items_filter.filter_lang(q, sqla.bindparam("lang"))
+    q = items_filter.filter_lang(q, lang)
     q = items_filter.filter_like(q, score, user)
     q = items_order.order_date(q)
     q = items_load.load_feed(q, feed_joined=True)
 
     res = dict()
     with model.get_session() as session:
-        for lang_it in all_langs():
-            res[lang_it] = [
-                e[0] for e in session.execute(q, {"lang": lang_it.name})
-            ]
-
-    return res
+        return [e[0] for e in session.execute(q)]
 
 @log_time.log_time(__name__)
 def feeds_lang_disp(
