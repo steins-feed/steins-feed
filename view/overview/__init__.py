@@ -2,19 +2,14 @@
 
 import flask
 import flask_security
-import sqlalchemy as sqla
 
-from model import get_session
-from model.orm.feeds import Feed
-from model.orm.users import User
 from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
-from model.utils import all_langs_feeds
 from model.utils.custom import delete_feeds
 from model.utils.custom import upsert_tag, delete_tags
 
 from . import db
-from ..req import base_context
+from .. import req
 
 bp = flask.Blueprint("overview", __name__)
 
@@ -25,7 +20,7 @@ def statistics():
 
     return flask.render_template(
         "statistics.html",
-        **base_context(),
+        **req.base_context(),
         topnav_title = user.Name,
         likes_lang = db.likes_lang(user),
         dislikes_lang = db.likes_lang(user, schema_items.Like.DOWN),
@@ -37,12 +32,12 @@ def settings():
     user = flask_security.current_user
 
     return flask.render_template("settings.html",
-            **base_context(),
-            topnav_title=user.Name,
-            langs_all=schema_feeds.Language,
-            lang_default=schema_feeds.Language.ENGLISH,
-            feeds_lang=db.feeds_lang_disp(user),
-            feeds_lang_not=db.feeds_lang_disp(user, False),
+            **req.base_context(),
+            topnav_title = user.Name,
+            langs_all = schema_feeds.Language,
+            lang_default = schema_feeds.Language.ENGLISH,
+            feeds_lang = db.feeds_lang_disp(user),
+            feeds_lang_not = db.feeds_lang_disp(user, False),
     )
 
 @bp.route("/settings/toggle_display", methods=['POST'])
