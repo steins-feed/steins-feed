@@ -1,27 +1,26 @@
 #!/usr/bin/env python3
 
-from flask import Blueprint, request, render_template
-from flask_security import auth_required
+import flask
+import flask_security
 import sqlalchemy as sqla
 
-from model import get_session
+import model
 from model.orm import feeds as orm_feeds
-from model.orm.feeds import Feed, Tag
 
 from . import db
-from ..req import base_context
+from .. import req
 
-bp = Blueprint("tag", __name__, url_prefix="/tag")
+bp = flask.Blueprint("tag", __name__, url_prefix="/tag")
 
 @bp.route("")
-@auth_required()
+@flask_security.auth_required()
 def tag():
-    tag_id = request.args.get('tag', type=int)
-    with get_session() as session:
-        tag = session.get(Tag, tag_id)
+    tag_id = flask.request.args.get('tag', type=int)
+    with model.get_session() as session:
+        tag = session.get(orm_feeds.Tag, tag_id)
 
-    return render_template("tag.html",
-            **base_context(),
+    return flask.render_template("tag.html",
+            **req.base_context(),
             topnav_title=tag.Name,
             tag_row=tag,
             feeds_lang=db.feeds_lang(tag),
@@ -29,14 +28,14 @@ def tag():
     )
 
 @bp.route("/toggle_feeds", methods=['POST'])
-@auth_required()
+@flask_security.auth_required()
 def toggle_feeds():
-    tag_id = request.form.get('tag_id', type=int)
-    tagged = request.form.getlist('tagged', type=int)
-    untagged = request.form.getlist('untagged', type=int)
+    tag_id = flask.request.form.get('tag_id', type=int)
+    tagged = flask.request.form.getlist('tagged', type=int)
+    untagged = flask.request.form.getlist('untagged', type=int)
 
-    with get_session() as session:
-        tag = session.get(Tag, tag_id)
+    with model.get_session() as session:
+        tag = session.get(orm_feeds.Tag, tag_id)
         tagged = [
             session.get(
                 orm_feeds.Feed,
