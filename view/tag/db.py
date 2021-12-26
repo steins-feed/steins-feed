@@ -34,3 +34,48 @@ def feeds_lang(
 
     return res
 
+@log_time.log_time(__name__)
+def delete_feeds_tagged(
+    tag: orm_feeds.Tag,
+    tagged: typing.List[orm_feeds.Feed],
+):
+    with model.get_session() as session:
+        tag = session.get(
+            orm_feeds.Tag,
+            tag.TagID,
+        )
+
+        for feed_it in tagged:
+            feed_it = session.get(
+                orm_feeds.Feed,
+                feed_it.FeedID,
+            )
+
+            try:
+                tag.feeds.remove(feed_it)
+            except ValueError:
+                pass
+
+        session.commit()
+
+@log_time.log_time(__name__)
+def insert_feeds_untagged(
+    tag: orm_feeds.Tag,
+    tagged: typing.List[orm_feeds.Feed],
+):
+    with model.get_session() as session:
+        tag = session.get(
+            orm_feeds.Tag,
+            tag.TagID,
+        )
+
+        for feed_it in tagged:
+            feed_it = session.get(
+                orm_feeds.Feed,
+                feed_it.FeedID,
+            )
+
+            tag.feeds.append(feed_it)
+
+        session.commit()
+

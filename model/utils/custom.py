@@ -49,24 +49,3 @@ def delete_tags(tag_ids):
     )
     with get_connection() as conn:
         conn.execute(q)
-
-def delete_feeds_tagged(tag_id, tagged):
-    tags2feeds = get_table('Tags2Feeds')
-
-    q = tags2feeds.delete().where(sql.and_(
-        tags2feeds.c.TagID == tag_id,
-        tags2feeds.c.FeedID.in_(tagged)
-    ))
-    with get_connection() as conn:
-        conn.execute(q)
-
-def insert_feeds_untagged(tag_id, untagged):
-    tags2feeds = get_table('Tags2Feeds')
-
-    row_keys = ("TagID", "FeedID")
-    rows = [dict(zip(row_keys, (tag_id, e))) for e in untagged]
-
-    q = tags2feeds.insert()
-    q = q.prefix_with("OR IGNORE", dialect='sqlite')
-    with get_connection() as conn:
-        conn.execute(q, rows)

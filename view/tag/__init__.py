@@ -5,9 +5,8 @@ from flask_security import auth_required
 import sqlalchemy as sqla
 
 from model import get_session
+from model.orm import feeds as orm_feeds
 from model.orm.feeds import Feed, Tag
-from model.schema.feeds import Language
-from model.utils.custom import delete_feeds_tagged, insert_feeds_untagged
 
 from . import db
 from ..req import base_context
@@ -36,8 +35,23 @@ def toggle_feeds():
     tagged = request.form.getlist('tagged', type=int)
     untagged = request.form.getlist('untagged', type=int)
 
-    delete_feeds_tagged(tag_id, tagged)
-    insert_feeds_untagged(tag_id, untagged)
+    with get_session() as session:
+        tag = session.get(Tag, tag_id)
+        tagged = [
+            session.get(
+                orm_feeds.Feed,
+                feed_id,
+            ) for feed_id in tagged
+        ]
+        untagged = [
+            session.get(
+                orm_feeds.Feed,
+                feed_id,
+            ) for feed_id in untagged
+        ]
+
+    db.delete_feeds_tagged(tag, tagged)
+    db.insert_feeds_untagged(tag, untagged)
 
     return ("", 200)
 
