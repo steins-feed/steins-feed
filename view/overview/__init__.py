@@ -7,11 +7,11 @@ import model
 from model.orm import feeds as orm_feeds
 from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
-from model.utils.custom import upsert_tag, delete_tags
 
 from . import db
 from .. import req
 from ..feed import db as feed_db
+from ..tag import db as tag_db
 
 bp = flask.Blueprint("overview", __name__)
 
@@ -100,9 +100,11 @@ def delete_feed() -> flask.Response:
 
 @bp.route("/settings/add_tag", methods=["POST"])
 @flask_security.auth_required()
-def add_tag():
+def add_tag() -> flask.Response:
     user = flask_security.current_user
-    upsert_tag(None, user.UserID, flask.request.form.get("tag"))
+    tag_name = flask.request.form.get("tag")
+    tag_db.insert_tag(user, tag_name)
+
     return flask.redirect(flask.url_for("overview.settings"))
 
 @bp.route("/settings/delete_tag", methods=["POST"])

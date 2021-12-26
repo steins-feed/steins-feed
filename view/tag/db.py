@@ -6,8 +6,36 @@ import typing
 from log import time as log_time
 import model
 from model.orm import feeds as orm_feeds
+from model.orm import users as orm_users
 from model.schema import feeds as schema_feeds
 from model.utils import all_langs_feeds
+
+@log_time.log_time(__name__)
+def insert_tag(
+    user: orm_users.User,
+    name: str,
+) -> orm_feeds.Tag:
+    with model.get_session() as session:
+        tag = orm_feeds.Tag(
+            UserID = user.UserID,
+            Name = name,
+        )
+        session.add(tag)
+
+        session.commit()
+        session.refresh(tag)
+
+    return tag
+
+@log_time.log_time(__name__)
+def delete_tags(tag_ids):
+    tags = get_table('Tags')
+
+    q = tags.delete().where(
+            tags.c.TagID.in_(tag_ids)
+    )
+    with get_connection() as conn:
+        conn.execute(q)
 
 @log_time.log_time(__name__)
 def feeds_lang(
