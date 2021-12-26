@@ -6,6 +6,21 @@ from model.orm import items as orm_items
 from model.orm import users as orm_users
 from model.orm.feeds import load as feeds_load
 
+def load_feed(
+    q: sqla.sql.Select,
+    feed_joined: bool = False,
+) -> sqla.sql.Select:
+    item_feed = orm_items.Item.feed
+
+    if feed_joined:
+        load_feed = sqla.orm.contains_eager(item_feed)
+    else:
+        load_feed = sqla.orm.selectinload(item_feed)
+
+    q = q.options(load_feed)
+
+    return q
+
 def load_like(
     q: sqla.sql.Select,
     user: orm_users.User,
