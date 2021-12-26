@@ -27,7 +27,6 @@ def likes_lang(
     res = dict()
     with model.get_session() as session:
         for lang_it in all_langs_feeds():
-            lang_it = schema_feeds.Language(lang_it)
             res[lang_it] = [
                 e[0] for e in session.execute(q, {"lang": lang_it.name})
             ]

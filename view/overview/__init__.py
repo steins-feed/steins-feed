@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 
-from flask import Blueprint, render_template, request, redirect, url_for
-from flask_security import auth_required, current_user
+import flask
+import flask_security
 import sqlalchemy as sqla
 
 from model import get_session
 from model.orm.feeds import Feed
-from model.orm.items import Item, Like
 from model.orm.users import User
-from model.schema.feeds import Language
-from model.schema.items import Like as LikeEnum
+from model.schema import feeds as schema_feeds
+from model.schema import items as schema_items
 from model.utils import all_langs_feeds
 from model.utils.custom import delete_feeds
 from model.utils.custom import upsert_tag, delete_tags
@@ -17,79 +16,86 @@ from model.utils.custom import upsert_tag, delete_tags
 from . import db
 from ..req import base_context
 
-bp = Blueprint("overview", __name__)
+bp = flask.Blueprint("overview", __name__)
 
 @bp.route("/statistics")
-@auth_required()
+@flask_security.auth_required()
 def statistics():
-    return render_template("statistics.html",
-            **base_context(),
-            topnav_title=current_user.Name,
-            likes_lang=db.likes_lang(current_user),
-            dislikes_lang=db.likes_lang(current_user, LikeEnum.DOWN),
+    user = flask_security.current_user
+
+    return flask.render_template(
+        "statistics.html",
+        **base_context(),
+        topnav_title = user.Name,
+        likes_lang = db.likes_lang(user),
+        dislikes_lang = db.likes_lang(user, schema_items.Like.DOWN),
     )
 
 @bp.route("/settings")
-@auth_required()
+@flask_security.auth_required()
 def settings():
-    return render_template("settings.html",
+    user = flask_security.current_user
+
+    return flask.render_template("settings.html",
             **base_context(),
-            topnav_title=current_user.Name,
-            langs_all=[e for e in Language],
-            lang_default=Language.ENGLISH,
-            feeds_lang=feeds_lang_disp(current_user.UserID),
-            feeds_lang_not=feeds_lang_disp(current_user.UserID, False),
+            topnav_title=user.Name,
+            langs_all=schema_feeds.Language,
+            lang_default=schema_feeds.Language.ENGLISH,
+            feeds_lang=feeds_lang_disp(user.UserID),
+            feeds_lang_not=feeds_lang_disp(user.UserID, False),
     )
 
 @bp.route("/settings/toggle_display", methods=['POST'])
-@auth_required()
+@flask_security.auth_required()
 def toggle_display():
-    tagged = request.form.getlist('displayed', type=int)
-    untagged = request.form.getlist('hidden', type=int)
+    user = flask_security.current_user
+    tagged = flask.request.form.getlist('displayed', type=int)
+    untagged = flask.request.form.getlist('hidden', type=int)
 
     if tagged:
-        upsert_display(current_user.UserID, tagged, 0)
+        upsert_display(user.UserID, tagged, 0)
     if untagged:
-        upsert_display(current_user.UserID, untagged, 1)
+        upsert_display(user.UserID, untagged, 1)
 
     return ("", 200)
 
 @bp.route("/settings/add_feed", methods=['POST'])
-@auth_required()
+@flask_security.auth_required()
 def add_feed():
-    title = request.form.get('title')
-    link = request.form.get('link')
-    lang = Language[request.form.get('lang')]
+    user = flask_security.current_user
+
+    title = flask.request.form.get('title')
+    link = flask.request.form.get('link')
+    lang = schema_feeds.Language[flask.request.form.get('lang')]
 
     feed_id = upsert_feed(None, title, link, lang)
-    upsert_display(current_user.UserID, [feed_id], 1)
+    upsert_display(user.UserID, [feed_id], 1)
 
-    return redirect(url_for("overview.settings"))
+    return flask.redirect(flask.url_for("overview.settings"))
 
 @bp.route("/settings/delete_feed", methods=['POST'])
-@auth_required()
+@flask_security.auth_required()
 def delete_feed():
-    delete_feeds([request.form.get('feed', type=int)])
-    return redirect(url_for("overview.settings"))
+    delete_feeds([flask.request.form.get('feed', type=int)])
+    return flask.redirect(flask.url_for("overview.settings"))
 
 @bp.route("/settings/add_tag", methods=['POST'])
-@auth_required()
+@flask_security.auth_required()
 def add_tag():
-    upsert_tag(None, current_user.UserID, request.form.get('tag'))
-    return redirect(url_for("overview.settings"))
+    user = flask_security.current_user
+    upsert_tag(None, user.UserID, flask.request.form.get('tag'))
+    return flask.redirect(flask.url_for("overview.settings"))
 
 @bp.route("/settings/delete_tag", methods=['POST'])
-@auth_required()
+@flask_security.auth_required()
 def delete_tag():
-    delete_tags([request.form.get('tag', type=int)])
-    return redirect(url_for("overview.settings"))
+    delete_tags([flask.request.form.get('tag', type=int)])
+    return flask.redirect(flask.url_for("overview.settings"))
 
 def feeds_lang_disp(user_id, flag=True):
     res = dict()
 
     for lang_it in all_langs_feeds():
-        lang_it = Language(lang_it)
-
         q = sqla.select(
             Feed
         ).where(
