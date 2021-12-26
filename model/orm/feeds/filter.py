@@ -21,9 +21,9 @@ def filter_display(
 
 def filter_languages(
     q: sqla.sql.Select,
-    langs: typing.List[str],
+    langs: typing.List[schema_feeds.Language],
 ) -> sqla.sql.Select:
-    langs_name = [schema_feeds.Language(e).name for e in langs]
+    langs_name = [e.name for e in langs]
     q = q.where(orm_feeds.Feed.Language.in_(langs_name))
 
     return q
