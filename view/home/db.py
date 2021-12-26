@@ -10,9 +10,9 @@ from model.orm import feeds as orm_feeds
 from model.orm import items as orm_items
 from model.orm import users as orm_users
 from model.orm.feeds import filter as feeds_filter
-from model.orm.feeds import load as feeds_load
 from model.orm.items import filter as items_filter
 from model.orm.items import load as items_load
+from model.orm.items import order as items_order
 from model.schema import feeds as schema_feeds, items as schema_items
 
 @log_time.log_time(__name__)
@@ -35,7 +35,7 @@ def updated_items(
     if tags:
         q = feeds_filter.filter_tags(q, tags, user_id)
     q = deduplicate_items(q)
-    q = load_like(q, user_id)
+    q = items_load.load_like(q, user_id)
     q = items_load.load_tags(q, user_id, feed_joined=True)
 
     if unscored:
@@ -51,8 +51,8 @@ def updated_items(
             sqla.orm.contains_eager(orm_items.Item.magic),
         )
     elif magic:
-        q = order_magic(q, user_id)
-        q = load_magic(q, user_id, magic_joined=True)
+        q = items_order.order_magic(q, user_id)
+        q = items_load.load_magic(q, user_id, magic_joined=True)
     else:
         q = q.order_by(sqla.desc(orm_items.Item.Published))
 
@@ -67,46 +67,6 @@ def deduplicate_items(q):
     q = q.having(
         orm_feeds.Feed.Title == sqla.func.min(orm_feeds.Feed.Title),
     )
-    return q
-
-def order_magic(q, user_id, desc=True):
-    item_magic = orm_items.Item.magic.and_(
-        orm_items.Magic.UserID == user_id,
-    )
-
-    q = q.join(item_magic)
-
-    magic_score = orm_items.Magic.Score
-    if desc:
-        magic_score = sqla.desc(magic_score)
-
-    q = q.order_by(magic_score)
-    return q
-
-def load_like(q, user_id, like_joined=False):
-    item_likes = orm_items.Item.likes.and_(
-        orm_items.Like.UserID == user_id,
-    )
-
-    if like_joined:
-        load_like = sqla.orm.contains_eager(item_likes)
-    else:
-        load_like = sqla.orm.selectinload(item_likes)
-
-    q = q.options(load_like)
-    return q
-
-def load_magic(q, user_id, magic_joined=False):
-    item_magic = orm_items.Item.magic.and_(
-        orm_items.Magic.UserID == user_id,
-    )
-
-    if magic_joined:
-        load_magic = sqla.orm.contains_eager(item_magic)
-    else:
-        load_magic = sqla.orm.selectinload(item_magic)
-
-    q = q.options(load_magic)
     return q
 
 @log_time.log_time(__name__)

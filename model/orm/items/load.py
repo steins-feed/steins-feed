@@ -5,6 +5,42 @@ import sqlalchemy as sqla
 from model.orm import items as orm_items
 from model.orm.feeds import load as feeds_load
 
+def load_like(
+    q: sqla.sql.Select,
+    user_id: int,
+    like_joined: bool = False,
+) -> sqla.sql.Select:
+    item_likes = orm_items.Item.likes.and_(
+        orm_items.Like.UserID == user_id,
+    )
+
+    if like_joined:
+        load_like = sqla.orm.contains_eager(item_likes)
+    else:
+        load_like = sqla.orm.selectinload(item_likes)
+
+    q = q.options(load_like)
+
+    return q
+
+def load_magic(
+    q: sqla.sql.Select,
+    user_id: int,
+    magic_joined: bool = False,
+) -> sqla.sql.Select:
+    item_magic = orm_items.Item.magic.and_(
+        orm_items.Magic.UserID == user_id,
+    )
+
+    if magic_joined:
+        load_magic = sqla.orm.contains_eager(item_magic)
+    else:
+        load_magic = sqla.orm.selectinload(item_magic)
+
+    q = q.options(load_magic)
+
+    return q
+
 def load_tags(
     q: sqla.sql.Select,
     user_id: int,
