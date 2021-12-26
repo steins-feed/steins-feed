@@ -10,25 +10,29 @@ from model.orm import users as orm_users
 from model.schema import feeds as schema_feeds
 
 @log_time.log_time(__name__)
-def feed_tags(
-    user: orm_users.User,
-    feed: orm_feeds.Feed,
+def all_tags(
+    user: orm_users.User = None,
+    feed: orm_feeds.Feed = None,
     flag: bool = True,
 ) -> typing.List[orm_feeds.Tag]:
     q = sqla.select(
         orm_feeds.Tag,
-    ).where(
-        orm_feeds.Tag.UserID == user.UserID,
     ).order_by(
         sqla.collate(orm_feeds.Tag.Name, "NOCASE"),
     )
 
-    q_where = orm_feeds.Tag.feeds.any(
-        orm_feeds.Feed.FeedID == feed.FeedID,
-    )
-    if not flag:
-        q_where = ~q_where
-    q = q.where(q_where)
+    if user:
+        q = q.where(orm_feeds.Tag.UserID == user.UserID)
+
+    if feed:
+        q_where = orm_feeds.Tag.feeds.any(
+            orm_feeds.Feed.FeedID == feed.FeedID,
+        )
+
+        if not flag:
+            q_where = ~q_where
+
+        q = q.where(q_where)
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q)]

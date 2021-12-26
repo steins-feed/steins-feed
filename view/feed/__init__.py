@@ -44,8 +44,8 @@ def feed(
         feed_row = feed,
         langs_all = schema_feeds.Language,
         lang_default = schema_feeds.Language.ENGLISH,
-        feed_tags = db.feed_tags(user, feed),
-        feed_tags_not = db.feed_tags(user, feed, False),
+        feed_tags = db.all_tags(user, feed),
+        feed_tags_not = db.all_tags(user, feed, False),
     )
 
 @bp.route("/update_feed", methods=["POST"])
