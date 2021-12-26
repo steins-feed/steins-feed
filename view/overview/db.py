@@ -35,21 +35,30 @@ def likes_lang(
 
     return res
 
-def feeds_lang_disp(user_id, flag=True):
+@log_time.log_time(__name__)
+def feeds_lang_disp(
+    user: orm_users.User,
+    flag: bool = True,
+) -> typing.List[orm_feeds.Feed]:
     res = dict()
 
     for lang_it in all_langs_feeds():
         q = sqla.select(
-            orm_feeds.Feed
+            orm_feeds.Feed,
         ).where(
-            orm_feeds.Feed.Language == lang_it.name
+            orm_feeds.Feed.Language == lang_it.name,
         ).order_by(
-            sqla.collate(orm_feeds.Feed.Title, 'NOCASE')
+            sqla.collate(orm_feeds.Feed.Title, 'NOCASE'),
         )
-        if flag:
-            q = q.where(orm_feeds.Feed.users.any(orm_users.User.UserID == user_id))
-        else:
-            q = q.where(~orm_feeds.Feed.users.any(orm_users.User.UserID == user_id))
+
+        q_where = orm_feeds.Feed.users.any(
+            orm_users.User.UserID == user.UserID,
+        )
+
+        if not flag:
+            q_where = ~q_where
+
+        q = q.where(q_where)
 
         with model.get_session() as session:
             res[lang_it] = [e[0] for e in session.execute(q)]

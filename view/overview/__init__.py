@@ -41,8 +41,8 @@ def settings():
             topnav_title=user.Name,
             langs_all=schema_feeds.Language,
             lang_default=schema_feeds.Language.ENGLISH,
-            feeds_lang=db.feeds_lang_disp(user.UserID),
-            feeds_lang_not=db.feeds_lang_disp(user.UserID, False),
+            feeds_lang=db.feeds_lang_disp(user),
+            feeds_lang_not=db.feeds_lang_disp(user, False),
     )
 
 @bp.route("/settings/toggle_display", methods=['POST'])
