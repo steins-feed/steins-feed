@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import enum
+import datetime
 import os
 
 from flask import request
@@ -11,19 +11,16 @@ from model import get_session
 from model.orm import feeds as orm_feeds
 from model.orm import users as orm_users
 from model.schema.feeds import Language
+from view.home import unit as home_unit
+from view.home import wall as home_wall
 
-class Feed(enum.Enum):
-    FULL = "Full"
-    MAGIC = "Magic"
-    SURPRISE = "Surprise"
-
-class Timeunit(enum.Enum):
-    DAY = "Day"
-    WEEK = "Week"
-    MONTH = "Month"
-
-def get_feed():
-    return Feed[request.args.get('feed', default=Feed.FULL.name)]
+def get_wall():
+    wall_name = request.args.get(
+        "feed",
+        default = home_wall.WallMode.CLASSIC.name,
+        type=str,
+    )
+    return home_wall.WallMode[wall_name]
 
 def get_langs():
     res = [Language[e] for e in request.args.getlist('lang')]
@@ -32,30 +29,46 @@ def get_langs():
     return res
 
 def get_page():
-    if get_timeunit_new() == get_timeunit_old():
-        return request.args.get('page', default=0, type=int)
+    current_time = datetime.datetime.now()
+    current_time = home_unit.round_to(current_time, get_timeunit())
+
+    if get_timeunit() == get_timeunit(old=True):
+        s = request.args.get('page', default=None, type=str)
+        if s:
+            return datetime.datetime.fromisoformat(s)
+        else:
+            return current_time
     else:
-        return 0
+        return current_time
 
 def get_tags():
     return request.args.getlist('tag')
 
-def get_timeunit():
-    return get_timeunit_new()
+def get_timeunit(old: bool=False):
+    if old:
+        k = "timeunit"
+        v = home_unit.UnitMode.DAY.name
+    else:
+        k = "timeunit_new"
+        v = get_timeunit(old=True).name
 
-def get_timeunit_old():
-    return Timeunit[request.args.get('timeunit', default=Timeunit.DAY.name)]
+    unit_name = request.args.get(
+        k,
+        default = v,
+        type=str,
+    )
 
-def get_timeunit_new():
-    return Timeunit[request.args.get('timeunit_new', default=get_timeunit_old().name)]
+    return home_unit.UnitMode[unit_name]
 
 def base_context():
     context = dict()
 
     # topnav.html.
-    context['feed'] = get_feed()
+    context['feed'] = get_wall()
     context['timeunit'] = get_timeunit()
     context['page'] = get_page()
+    context['prev_page'] = home_unit.decrement_to(get_page(), get_timeunit())
+    context['next_page'] = home_unit.increment_to(get_page(), get_timeunit())
     context['langs'] = get_langs()
     context['tags'] = get_tags()
 
@@ -77,8 +90,8 @@ def base_context():
     context['magic_exists'] = os.path.isdir(dir_path)
 
     # sidenav.html.
-    context['enum_feed'] = Feed
-    context['enum_timeunit'] = Timeunit
+    context['enum_feed'] = home_wall.WallMode
+    context['enum_timeunit'] = home_unit.UnitMode
 
     return context
 

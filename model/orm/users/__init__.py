@@ -2,8 +2,8 @@
 
 import sqlalchemy as sqla
 
-from .. import get_table
-from .. import Base
+from model import get_table
+from model import Base
 
 t_users2roles = get_table("Users2Roles")
 

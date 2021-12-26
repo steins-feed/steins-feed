@@ -2,11 +2,7 @@
 <nav class="topnav">
 <script src="{{ url_for('static', filename='js/menu.js') }}" defer></script>
 <span class="left">
-# if page > 0
-<a href="{{ get_home(feed, page - 1, timeunit, langs, tags) }}" accesskey="h"><i class="material-icons">fast_rewind</i></a>
-# else
-<i class="material-icons dead_link">fast_rewind</i>
-# endif
+<a href="{{ get_home(feed, next_page, timeunit, langs, tags) }}" accesskey="h"><i class="material-icons">fast_rewind</i></a>
 # if items|count != 0
 <i onclick="next_item()" class="material-icons" accesskey="j">expand_more</i>
 <i onclick="prev_item()" class="material-icons" accesskey="k">expand_less</i>
@@ -14,16 +10,12 @@
 <i class="material-icons dead_link">expand_more</i>
 <i class="material-icons dead_link">expand_less</i>
 # endif
-# if page < dates|count - 1
-<a href="{{ get_home(feed, page + 1, timeunit, langs, tags) }}" accesskey="l"><i class="material-icons">fast_forward</i></a>
-# else
-<i class="material-icons dead_link">fast_forward</i>
-# endif
+<a href="{{ get_home(feed, prev_page, timeunit, langs, tags) }}" accesskey="l"><i class="material-icons">fast_forward</i></a>
 </span>
 <span class="right">
-<a href="{{ get_home(feed, 0, timeunit, langs, tags) }}"><i class="material-icons">home</i></a>
-<a href="{{ get_statistics(feed, 0, timeunit, langs, tags) }}" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
-<a href="{{ get_settings(feed, 0, timeunit, langs, tags) }}" target="_blank"><i class="material-icons">settings</i></a>
+<a href="{{ get_home(feed, page, timeunit, langs, tags) }}"><i class="material-icons">home</i></a>
+<a href="{{ get_statistics(feed, page, timeunit, langs, tags) }}" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
+<a href="{{ get_settings(feed, page, timeunit, langs, tags) }}" target="_blank"><i class="material-icons">settings</i></a>
 <i onclick="open_menu()" class="material-icons">
 menu
 </i>
