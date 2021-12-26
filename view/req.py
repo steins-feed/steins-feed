@@ -11,6 +11,7 @@ from model import get_session
 from model.orm import feeds as orm_feeds
 from model.orm import users as orm_users
 from model.schema.feeds import Language
+from view.feed import db as feed_db
 from view.home import unit as home_unit
 from view.home import wall as home_wall
 
@@ -88,7 +89,7 @@ def base_context():
 
     # sidenav.html.
     context['feeds_all']=all_feeds()
-    context['tags_all']=all_tags(current_user.UserID)
+    context['tags_all']=feed_db.all_tags(current_user)
 
     # sidenav.html.
     dir_path = os.path.normpath(os.path.join(
@@ -110,18 +111,6 @@ def all_feeds():
         orm_feeds.Feed
     ).order_by(
         sqla.collate(orm_feeds.Feed.Title, "NOCASE")
-    )
-
-    with get_session() as session:
-        return [e[0] for e in session.execute(q)]
-
-def all_tags(user_id):
-    q = sqla.select(
-        orm_feeds.Tag
-    ).where(
-        orm_feeds.Tag.UserID == user_id
-    ).order_by(
-        sqla.collate(orm_feeds.Tag.Name, "NOCASE")
     )
 
     with get_session() as session:
