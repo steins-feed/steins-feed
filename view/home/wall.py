@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import enum
+import numpy as np
 import random
+import scipy as sp
 import sqlalchemy as sqla
 import typing
 
@@ -71,5 +73,16 @@ def choices(
 def compute_weights(
     items: typing.List[orm_items.Item],
 ) -> typing.List[float]:
-    return [item_it.magic[0].Score for item_it in items]
+    x = [item_it.magic[0].Score for item_it in items]
+    x = np.array(x)
+    x = logit(x)
+    x /= std(x)
+
+    return sp.stats.norm.pdf(x)
+
+def logit(x: float) -> float:
+    return np.log(1.0 + x) - np.log(1.0 - x)
+
+def std(x: float) -> float:
+    return np.sqrt(sum(x**2) / len(x))
 
