@@ -64,7 +64,9 @@ def get_tags() -> typing.List[orm_feeds.Tag]:
     with model.get_session() as session:
         return [e[0] for e in session.execute(q)]
 
-def get_timeunit(old: bool=False):
+def get_timeunit(
+    old: bool=False,
+) -> home_unit.UnitMode:
     if old:
         k = "timeunit"
         v = home_unit.UnitMode.DAY.name
