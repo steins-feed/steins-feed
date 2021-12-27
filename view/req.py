@@ -3,18 +3,15 @@
 import datetime
 import flask
 import flask_security
-import os
 import sqlalchemy as sqla
 import typing
 
 import model
 from model.orm import feeds as orm_feeds
 from model.schema import feeds as schema_feeds
-from view.feed import db as feed_db
 from view.home import unit as home_unit
 from view.home import wall as home_wall
 from view.overview import db as overview_db
-from view.tag import db as tag_db
 
 def get_wall() -> home_wall.WallMode:
     wall_name = flask.request.args.get(

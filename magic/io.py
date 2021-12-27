@@ -110,3 +110,13 @@ def trained_languages(user: orm_users.User) -> typing.List[schema_feeds.Language
 
     return [schema_feeds.Language[extract_lang(e)] for e in clf_paths]
 
+def magic_exists(
+    user: orm_users.User,
+) -> bool:
+    user_path = os.path.join(
+        dir_path,
+        str(user.UserID),
+    )
+
+    return os.path.isdir(user_path)
+
