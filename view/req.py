@@ -110,7 +110,7 @@ def base_context():
 
 def displayed_tags(user_id):
     q = sqla.select(
-        orm_feeds.Tag.Name,
+        orm_feeds.Tag,
     ).join(
         orm_feeds.Tag.feeds
     ).join(
@@ -123,5 +123,5 @@ def displayed_tags(user_id):
     ).distinct()
 
     with get_session() as session:
-        return [e.Name for e in session.execute(q)]
+        return [e[0] for e in session.execute(q)]
 
