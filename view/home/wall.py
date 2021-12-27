@@ -43,7 +43,7 @@ def sample_wall(
     if wall_mode == WallMode.RANDOM:
         new_items = choices(items, 10)
     elif wall_mode == WallMode.SURPRISE:
-        w = [item_it.magic[0].Score for item_it in items]
+        w = compute_weights(items)
         new_items = choices(items, 10, w)
 
     return new_items
@@ -67,4 +67,9 @@ def choices(
         keys |= set(new_keys)
 
     return [items[key_it] for key_it in sorted(keys)]
+
+def compute_weights(
+    items: typing.List[orm_items.Item],
+) -> typing.List[float]:
+    return [item_it.magic[0].Score for item_it in items]
 
