@@ -87,7 +87,7 @@ def base_context():
 
     # sidenav.html.
     context['langs_disp'] = overview_db.all_langs(current_user)
-    context['tags_disp'] = displayed_tags(current_user.UserID)
+    context['tags_disp'] = feed_db.all_tags(current_user, display=True)
 
     # sidenav.html.
     context['feeds_all']=tag_db.all_feeds()
@@ -107,21 +107,4 @@ def base_context():
     context['enum_timeunit'] = home_unit.UnitMode
 
     return context
-
-def displayed_tags(user_id):
-    q = sqla.select(
-        orm_feeds.Tag,
-    ).join(
-        orm_feeds.Tag.feeds
-    ).join(
-        orm_feeds.Feed.users
-    ).where(
-        orm_feeds.Tag.UserID == user_id,
-        orm_users.User.UserID == user_id,
-    ).order_by(
-        orm_feeds.Tag.Name,
-    ).distinct()
-
-    with get_session() as session:
-        return [e[0] for e in session.execute(q)]
 

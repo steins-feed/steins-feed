@@ -14,6 +14,7 @@ def all_tags(
     user: orm_users.User = None,
     feed: orm_feeds.Feed = None,
     flag: bool = True,
+    display: bool = True,
 ) -> typing.List[orm_feeds.Tag]:
     q = sqla.select(
         orm_feeds.Tag,
@@ -33,6 +34,15 @@ def all_tags(
             q_where = ~q_where
 
         q = q.where(q_where)
+
+    if display:
+        q = q.join(
+            orm_feeds.Tag.feeds
+        ).join(
+            orm_feeds.Feed.users.and_(
+                orm_users.User.UserID == user.UserID,
+            )
+        ).distinct()
 
     with model.get_session() as session:
         return [e[0] for e in session.execute(q)]
