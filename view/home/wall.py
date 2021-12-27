@@ -80,9 +80,12 @@ def compute_weights(
 
     return sp.stats.norm.pdf(x)
 
-def logit(x: float) -> float:
-    return np.log(1.0 + x) - np.log(1.0 - x)
+def logit(x: np.ndarray) -> np.ndarray:
+    return sp.special.logit(score2prob(x))
 
-def std(x: float) -> float:
-    return np.sqrt(sum(x**2) / len(x))
+def score2prob(x: np.ndarray) -> np.ndarray:
+    return 0.5 * (1.0 + x)
+
+def std(x: np.ndarray) -> float:
+    return np.sqrt(np.var(x) + np.mean(x)**2)
 
