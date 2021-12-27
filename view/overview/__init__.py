@@ -9,7 +9,7 @@ from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
 
 from . import db
-from .. import req
+from .. import context
 from ..feed import db as feed_db
 from ..tag import db as tag_db
 
@@ -20,12 +20,26 @@ bp = flask.Blueprint("overview", __name__)
 def statistics() -> flask.Response:
     user = flask_security.current_user
 
+    likes_lang = {}
+    dislikes_lang = {}
+
+    for lang_it in db.all_langs():
+        likes_lang[lang_it] = db.all_likes(
+            user,
+            lang_it,
+        )
+        dislikes_lang[lang_it] = db.all_likes(
+            user,
+            lang_it,
+            schema_items.Like.DOWN,
+        )
+
     return flask.render_template(
         "statistics.html",
-        **req.base_context(),
+        **context.base_context(),
         topnav_title = user.Name,
-        likes_lang = db.likes_lang(user),
-        dislikes_lang = db.likes_lang(user, schema_items.Like.DOWN),
+        likes_lang = likes_lang,
+        dislikes_lang = dislikes_lang,
     )
 
 @bp.route("/settings")
@@ -33,13 +47,27 @@ def statistics() -> flask.Response:
 def settings() -> flask.Response:
     user = flask_security.current_user
 
+    feeds_lang = {}
+    feeds_lang_not = {}
+
+    for lang_it in db.all_langs():
+        feeds_lang[lang_it] = tag_db.all_feeds(
+            langs = [lang_it],
+            users = [user],
+        )
+        feeds_lang_not[lang_it] = tag_db.all_feeds(
+            langs = [lang_it],
+            users = [user],
+            users_flag = False,
+        )
+
     return flask.render_template("settings.html",
-            **req.base_context(),
+            **context.base_context(),
             topnav_title = user.Name,
             langs_all = schema_feeds.Language,
             lang_default = schema_feeds.Language.ENGLISH,
-            feeds_lang = db.feeds_lang_disp(user),
-            feeds_lang_not = db.feeds_lang_disp(user, False),
+            feeds_lang = feeds_lang,
+            feeds_lang_not = feeds_lang_not,
     )
 
 @bp.route("/settings/toggle_display", methods=["POST"])

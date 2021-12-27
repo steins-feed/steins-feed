@@ -10,7 +10,7 @@ from model.orm import users as orm_users
 from model.schema import feeds as schema_feeds
 
 from . import db
-from .. import req
+from .. import context
 
 bp = flask.Blueprint("feed", __name__, url_prefix="/feed")
 
@@ -39,13 +39,13 @@ def feed(
 
     return flask.render_template(
         "feed.html",
-        **req.base_context(),
+        **context.base_context(),
         topnav_title = feed.Title,
         feed_row = feed,
         langs_all = schema_feeds.Language,
         lang_default = schema_feeds.Language.ENGLISH,
-        feed_tags = db.feed_tags(user, feed),
-        feed_tags_not = db.feed_tags(user, feed, False),
+        feed_tags = db.all_tags(user, feed),
+        feed_tags_not = db.all_tags(user, feed, False),
     )
 
 @bp.route("/update_feed", methods=["POST"])
@@ -94,8 +94,8 @@ def toggle_tags() -> flask.Response:
             ) for tag_id in untagged
         ]
 
-    db.delete_tags_tagged(feed, tagged)
-    db.insert_tags_untagged(feed, untagged)
+    db.detach_tags(feed, *tagged)
+    db.attach_tags(feed, *untagged)
 
     return "", 200
 

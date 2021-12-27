@@ -24,8 +24,8 @@ ALL TAGS
 </label>
 # for tag_it in tags_disp
 <label>
-<input name="tag" onclick="prove_checkbox('input_tag')" value="{{ tag_it }}" type="checkbox"{{" checked" if tag_it in tags}}>
-{{ tag_it }}
+<input name="tag" onclick="prove_checkbox('input_tag')" value="{{ tag_it.Name }}" type="checkbox"{{" checked" if tag_it.TagID in tags|map(attribute="TagID")}}>
+{{ tag_it.Name }}
 </label>
 <br>
 # endfor

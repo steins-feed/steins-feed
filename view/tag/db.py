@@ -7,6 +7,8 @@ from log import time as log_time
 import model
 from model.orm import feeds as orm_feeds
 from model.orm import users as orm_users
+from model.orm.feeds import filter as feeds_filter
+from model.orm.feeds import order as feeds_order
 from model.schema import feeds as schema_feeds
 
 from ..overview import db as overview_db
@@ -39,34 +41,50 @@ def delete_tags(
         session.commit()
 
 @log_time.log_time(__name__)
-def feeds_lang(
-    tag: orm_feeds.Tag,
-    flag: bool = True,
+def all_feeds(
+    langs: typing.List[schema_feeds.Language] = None,
+    tags: typing.List[orm_feeds.Tag] = None,
+    tags_flag: bool = True,
+    users: orm_users.User = None,
+    users_flag: bool = True
 ) -> typing.Dict[schema_feeds.Language, typing.List[orm_feeds.Feed]]:
-    res = dict()
+    q = sqla.select(orm_feeds.Feed)
+    q = feeds_order.order_title(q)
 
-    for lang_it in overview_db.all_langs_feeds():
-        q = sqla.select(
-            orm_feeds.Feed
-        ).where(
-            orm_feeds.Feed.Language == lang_it.name,
-        ).order_by(
-            sqla.collate(orm_feeds.Feed.Title, 'NOCASE')
+    if langs:
+        q = feeds_filter.filter_languages(q, langs)
+
+    if tags:
+        q_where = orm_feeds.Feed.tags.any(
+            orm_feeds.Tag.TagID.in_(
+                [tag_it.TagID for tag_it in tags]
+            ),
         )
-        if flag:
-            q = q.where(orm_feeds.Feed.tags.any(orm_feeds.Tag.TagID == tag.TagID))
-        else:
-            q = q.where(~orm_feeds.Feed.tags.any(orm_feeds.Tag.TagID == tag.TagID))
 
-        with model.get_session() as session:
-            res[lang_it] = [e[0] for e in session.execute(q)]
+        if not tags_flag:
+            q_where = ~q_where
 
-    return res
+        q = q.where(q_where)
+
+    if users:
+        q_where = orm_feeds.Feed.users.any(
+            orm_users.User.UserID.in_(
+                [user_it.UserID for user_it in users]
+            ),
+        )
+
+        if not users_flag:
+            q_where = ~q_where
+
+        q = q.where(q_where)
+
+    with model.get_session() as session:
+        return [e[0] for e in session.execute(q)]
 
 @log_time.log_time(__name__)
-def delete_feeds_tagged(
+def untag_feeds(
     tag: orm_feeds.Tag,
-    tagged: typing.List[orm_feeds.Feed],
+    *feeds: orm_feeds.Feed,
 ):
     with model.get_session() as session:
         tag = session.get(
@@ -74,7 +92,7 @@ def delete_feeds_tagged(
             tag.TagID,
         )
 
-        for feed_it in tagged:
+        for feed_it in feeds:
             feed_it = session.get(
                 orm_feeds.Feed,
                 feed_it.FeedID,
@@ -88,9 +106,9 @@ def delete_feeds_tagged(
         session.commit()
 
 @log_time.log_time(__name__)
-def insert_feeds_untagged(
+def tag_feeds(
     tag: orm_feeds.Tag,
-    tagged: typing.List[orm_feeds.Feed],
+    *feeds: orm_feeds.Feed,
 ):
     with model.get_session() as session:
         tag = session.get(
@@ -98,7 +116,7 @@ def insert_feeds_untagged(
             tag.TagID,
         )
 
-        for feed_it in tagged:
+        for feed_it in feeds:
             feed_it = session.get(
                 orm_feeds.Feed,
                 feed_it.FeedID,

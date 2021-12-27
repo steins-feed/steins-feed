@@ -39,8 +39,8 @@ def filter_tags(
     q = q.join(feed_tags)
 
     q = q.where(
-        orm_feeds.Tag.Name.in_(
-            [tag_it.Name for tag_it in tags]
+        orm_feeds.Tag.TagID.in_(
+            [tag_it.TagID for tag_it in tags]
         )
     )
 
