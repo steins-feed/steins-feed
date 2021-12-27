@@ -40,7 +40,7 @@ def home():
     start_time = r_page
     finish_time = unit.increment_to(start_time, r_timeunit)
 
-    if r_wall == wall.WallMode.MAGIC:
+    if r_wall in {wall.WallMode.MAGIC, wall.WallMode.SURPRISE}:
         for lang_it in magic_io.trained_languages(user):
             new_items = db.unscored_items(
                 user,
