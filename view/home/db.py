@@ -41,7 +41,11 @@ def updated_items(
     q = wall.order_wall(q, wall_mode, user)
 
     with model.get_session() as session:
-        return [e[0] for e in session.execute(q).unique()]
+        res = [e[0] for e in session.execute(q).unique()]
+
+    res = wall.sample_wall(res, wall_mode)
+
+    return res
 
 @log_time.log_time(__name__)
 def unscored_items(

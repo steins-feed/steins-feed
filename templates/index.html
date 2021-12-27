@@ -51,7 +51,7 @@ Tags:
 # endfor
 .
 # endif
-# if feed != enum_feed.CLASSIC
+# if feed == enum_feed.MAGIC or feed == enum_feed.SURPRISE
 # for magic_it in item_it.magic
 Score: {{ "{:.02f}".format(magic_it.Score) }}.
 # endfor
