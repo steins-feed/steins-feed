@@ -14,6 +14,7 @@ from . import db
 from . import util
 from . import unit
 from . import wall
+from .. import context
 from .. import req
 
 bp = flask.Blueprint("home", __name__, url_prefix="/home")
@@ -67,7 +68,7 @@ def home():
 
     return flask.render_template(
         "index.html",
-        **req.base_context(),
+        **context.base_context(),
         topnav_title = unit.format_to(r_page, r_timeunit),
         last_updated = last_hour,
         items = page_items,

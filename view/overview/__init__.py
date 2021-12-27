@@ -9,7 +9,7 @@ from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
 
 from . import db
-from .. import req
+from .. import context
 from ..feed import db as feed_db
 from ..tag import db as tag_db
 
@@ -36,7 +36,7 @@ def statistics() -> flask.Response:
 
     return flask.render_template(
         "statistics.html",
-        **req.base_context(),
+        **context.base_context(),
         topnav_title = user.Name,
         likes_lang = likes_lang,
         dislikes_lang = dislikes_lang,
@@ -62,7 +62,7 @@ def settings() -> flask.Response:
         )
 
     return flask.render_template("settings.html",
-            **req.base_context(),
+            **context.base_context(),
             topnav_title = user.Name,
             langs_all = schema_feeds.Language,
             lang_default = schema_feeds.Language.ENGLISH,

@@ -8,7 +8,7 @@ import model
 from model.orm import feeds as orm_feeds
 
 from . import db
-from .. import req
+from .. import context
 from ..overview import db as overview_db
 from ..tag import db as tag_db
 
@@ -37,7 +37,7 @@ def tag() -> flask.Response:
 
     return flask.render_template(
         "tag.html",
-        **req.base_context(),
+        **context.base_context(),
         topnav_title = tag.Name,
         tag_row = tag,
         feeds_lang = feeds_lang,

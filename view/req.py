@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 import datetime
 import flask
 import flask_security
@@ -76,42 +75,6 @@ def get_timeunit(old: bool=False):
         k = "timeunit_new"
         v = get_timeunit(old=True).name
 
-    unit_name = flask.request.args.get(k, default = v)
+    unit_name = flask.request.args.get(k, default=v)
     return home_unit.UnitMode[unit_name]
-
-def base_context():
-    user = flask_security.current_user
-    context = dict()
-
-    # topnav.html.
-    context["feed"] = get_wall()
-    context["timeunit"] = get_timeunit()
-    context["page"] = get_page()
-    context["prev_page"] = home_unit.decrement_to(get_page(), get_timeunit())
-    context["next_page"] = home_unit.increment_to(get_page(), get_timeunit())
-    context["langs"] = get_langs()
-    context["tags"] = get_tags()
-
-    # sidenav.html.
-    context["langs_disp"] = overview_db.all_langs(user)
-    context["tags_disp"] = feed_db.all_tags(user, display=True)
-
-    # sidenav.html.
-    context["feeds_all"]=tag_db.all_feeds()
-    context["tags_all"]=feed_db.all_tags(user)
-
-    # sidenav.html.
-    dir_path = os.path.normpath(os.path.join(
-        os.path.dirname(__file__),
-        os.pardir,
-        "clf.d",
-        str(user.UserID)
-    ))
-    context["magic_exists"] = os.path.isdir(dir_path)
-
-    # sidenav.html.
-    context["enum_feed"] = home_wall.WallMode
-    context["enum_timeunit"] = home_unit.UnitMode
-
-    return context
 

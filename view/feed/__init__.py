@@ -10,7 +10,7 @@ from model.orm import users as orm_users
 from model.schema import feeds as schema_feeds
 
 from . import db
-from .. import req
+from .. import context
 
 bp = flask.Blueprint("feed", __name__, url_prefix="/feed")
 
@@ -39,7 +39,7 @@ def feed(
 
     return flask.render_template(
         "feed.html",
-        **req.base_context(),
+        **context.base_context(),
         topnav_title = feed.Title,
         feed_row = feed,
         langs_all = schema_feeds.Language,
