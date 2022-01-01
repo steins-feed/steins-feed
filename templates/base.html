@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<!-- Character encoding -->
+<!-- https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML#specifying_your_documents_character_encoding -->
+<meta charset="utf-8">
+<!-- Virtual viewport -->
+<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Author & description -->
+<!-- https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML#adding_an_author_and_description -->
+<meta name="author" content="Hans Yu">
+<meta name="description" content="RSS reader.">
+<!-- Favorites icon -->
+<!-- https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML#adding_custom_icons_to_your_site -->
+<link href="{{ url_for('static', filename='favicon.ico') }}" rel="icon" type="image/x-icon">
+
+<!-- CSS -->
 <link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ url_for('static', filename='css/topnav.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ url_for('static', filename='css/sidenav.css') }}" rel="stylesheet" type="text/css">
-<link href="{{ url_for('static', filename='favicon.ico') }}" rel="shortcut icon" type="image/png">
+
+<!-- Material icons -->
+<!-- https://developers.google.com/fonts/docs/material_icons -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<!-- Title -->
+<!-- https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML#adding_a_title -->
 <title>Stein's Feed</title>
+
 <script>
 var home_ep = "{{ url_for('home.home') }}"
 var feed_ep = "{{ url_for('feed.feed') }}"
@@ -18,6 +37,7 @@ var tag_ep = "{{ url_for('tag.tag') }}"
 </script>
 {% block scripts %}{% endblock %}
 </head>
+
 <body>
 {% include 'topnav.html' %}
 {% include 'sidenav.html' %}
