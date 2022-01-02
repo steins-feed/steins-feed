@@ -1,6 +1,6 @@
 <!-- Navigation keys -->
 <span class="left">
-<a href="{{ get_home(feed, next_page, timeunit, langs, tags) }}" accesskey="h"><i class="material-icons">fast_rewind</i></a>
+<a href="{{ get_home(feed, next_page, unit, langs, tags) }}" accesskey="h"><i class="material-icons">fast_rewind</i></a>
 
 # if items|count != 0
 <i onclick="next_item()" class="material-icons" accesskey="j">expand_more</i>
@@ -10,5 +10,5 @@
 <i class="material-icons dead_link">expand_less</i>
 # endif
 
-<a href="{{ get_home(feed, prev_page, timeunit, langs, tags) }}" accesskey="l"><i class="material-icons">fast_forward</i></a>
+<a href="{{ get_home(feed, prev_page, unit, langs, tags) }}" accesskey="l"><i class="material-icons">fast_forward</i></a>
 </span>

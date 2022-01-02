@@ -50,7 +50,7 @@ ALL LANGUAGES
 <p>
 <fieldset>
 <legend>Wall</legend>
-# for feed_it in enum_feed
+# for feed_it in WallMode
 <label>
 <input name="feed" value="{{feed_it.name}}" type="radio"{{" checked" if feed_it == feed}}{{" disabled" if not magic_exists}}>
 {{ feed_it.value }}
@@ -64,10 +64,10 @@ ALL LANGUAGES
 <p>
 <fieldset>
 <input name="page" value="{{ page }}" type="hidden">
-<input name="timeunit" value="{{ timeunit.name }}" type="hidden">
-# for tu_it in enum_timeunit
-<button name="timeunit_new" value="{{ tu_it.name }}" type="submit">
-{{ tu_it.value }}
+<input name="unit" value="{{ unit.name }}" type="hidden">
+# for unit_it in UnitMode
+<button name="unit_new" value="{{ unit_it.name }}" type="submit">
+{{ unit_it.value }}
 </button>
 # endfor
 </fieldset>
@@ -84,7 +84,7 @@ ALL LANGUAGES
 <p>
 <fieldset>
 <legend>Feed</legend>
-<select name="feed_id">
+<select name="feed">
 # for feed_it in feeds_all
 <option value="{{ feed_it.FeedID }}">{{ feed_it.Title }}</option>
 # endfor
@@ -110,5 +110,4 @@ ALL LANGUAGES
 </p>
 </form>
 # endif
-
 </aside>
