@@ -72,7 +72,7 @@ def home():
         topnav_title = unit.format_to(r_page, r_unit),
         last_updated = last_hour,
         items = page_items,
-        enum_like = schema_items.Like,
+        Like = schema_items.Like,
     )
 
 @bp.route("/like", methods=["POST"])
