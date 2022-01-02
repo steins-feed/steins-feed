@@ -24,15 +24,20 @@ def statistics() -> flask.Response:
     dislikes_lang = {}
 
     for lang_it in db.all_langs():
-        likes_lang[lang_it] = db.all_likes(
+        likes_it = db.all_likes(
             user,
             lang_it,
         )
-        dislikes_lang[lang_it] = db.all_likes(
+        if len(likes_it) > 0:
+            likes_lang[lang_it] = likes_it
+
+        dislikes_it = db.all_likes(
             user,
             lang_it,
             schema_items.Like.DOWN,
         )
+        if len(dislikes_it) > 0:
+            dislikes_lang[lang_it] = dislikes_it
 
     return flask.render_template(
         "statistics.html",

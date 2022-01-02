@@ -1,14 +1,21 @@
 {% extends "base.html" %}
 
+{% block header %}
+{{ [likes_lang|count, dislikes_lang|count]|max }} languages.
+{% endblock %}
+
 {% block body %}
-<hr>
 # for lang_it in likes_lang
-# if likes_lang[lang_it]|count and dislikes_lang[lang_it]|count
+<hr class="article-hr">
+
+<section>
 <h2>{{ lang_it.value }}</h2>
-# if likes_lang[lang_it]|count
-<p>{{ likes_lang[lang_it]|count }} likes:</p>
+
+# if likes_lang.get(lang_it)|count
+<p>{{ likes_lang.get(lang_it)|count }} likes:</p>
+
 <ul>
-# for row_it in likes_lang[lang_it]
+# for row_it in likes_lang.get(lang_it)
 <li>
 {{ row_it.feed.Title }}:
 <a href="{{ row_it.Link }}">{{ row_it.Title|safe }}</a>
@@ -17,10 +24,12 @@
 # endfor
 </ul>
 # endif
-# if dislikes_lang[lang_it]|count
-<p>{{ dislikes_lang[lang_it]|count }} dislikes:</p>
+
+# if dislikes_lang.get(lang_it)|count
+<p>{{ dislikes_lang.get(lang_it)|count }} dislikes:</p>
+
 <ul>
-# for row_it in dislikes_lang[lang_it]
+# for row_it in dislikes_lang.get(lang_it)
 <li>
 {{ row_it.feed.Title }}:
 <a href="{{ row_it.Link }}">{{ row_it.Title|safe }}</a>
@@ -29,6 +38,8 @@
 # endfor
 </ul>
 # endif
-# endif
+</section>
 # endfor
+
+<hr>
 {% endblock %}
