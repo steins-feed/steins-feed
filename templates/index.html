@@ -34,8 +34,8 @@ Last updated: {{ last_updated }} GMT.
 
 <!-- block body -->
 {% block body %}
-<hr>
 {% for item_it in items %}
+<hr class="article-hr">
 <article id="article_{{ item_it.ItemID }}">
 <h2>
 <a href="{{ item_it.Link }}" target="_blank">
@@ -89,6 +89,6 @@ Score: {{ "{:.02f}".format(item_it.magic[0].Score) }}.
 # endif
 </p>
 </article>
-<hr>
 {% endfor %}
+<hr>
 {% endblock %}
