@@ -1,3 +1,4 @@
+<!-- Navigation links -->
 <span class="right">
 <!-- Home view -->
 <a href="{{ get_home(feed, page, timeunit, langs, tags) }}">
@@ -15,5 +16,5 @@
 </a>
 
 <!-- Sidebar -->
-<i onclick="open_menu()" class="material-icons">menu</i>
+{% block sidebar %}{% endblock %}
 </span>
