@@ -38,7 +38,7 @@ ALL LANGUAGES
 </label>
 # for lang_it in langs_disp
 <label>
-<input name="lang" onclick="prove_checkbox('input_lang')" value="{{ lang_it.name }}" type="checkbox"{{" checked" if langs|count == 0 or lang_it in langs}}>
+<input type="checkbox" name="lang" value="{{ lang_it.name }}" onclick="prove_checkbox('input_lang')"{{" checked" if langs|count == 0 or lang_it in langs}}>
 {{ lang_it.value }}
 </label>
 <br>
@@ -52,7 +52,7 @@ ALL LANGUAGES
 <legend>Wall</legend>
 # for wall_it in WallMode
 <label>
-<input name="wall" value="{{wall_it.name}}" type="radio"{{" checked" if wall_it == wall}}{{" disabled" if not magic_exists}}>
+<input type="radio" name="wall" value="{{wall_it.name}}"{{" checked" if wall_it == wall}}{{" disabled" if not magic_exists}}>
 {{ wall_it.value }}
 </label>
 <br>
@@ -63,10 +63,10 @@ ALL LANGUAGES
 <!-- Submission -->
 <p>
 <fieldset>
-<input name="page" value="{{ page }}" type="hidden">
-<input name="unit" value="{{ unit.name }}" type="hidden">
+<input type="hidden" name="page" value="{{ page }}">
+<input type="hidden" name="unit" value="{{ unit.name }}">
 # for unit_it in UnitMode
-<button name="unit_new" value="{{ unit_it.name }}" type="submit">
+<button type="submit" name="unit_new" value="{{ unit_it.name }}">
 {{ unit_it.value }}
 </button>
 # endfor
