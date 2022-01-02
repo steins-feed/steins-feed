@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+<!-- block scripts -->
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="{{ url_for('static', filename='js/highlight.js') }}" defer></script>
@@ -23,6 +24,7 @@ $(document).ready(function() {
 # endif
 {% endblock %}
 
+<!-- block header -->
 {% block header %}
 <p>
 {{ items|count }} articles.
@@ -30,20 +32,24 @@ Last updated: {{ last_updated }} GMT.
 </p>
 {% endblock %}
 
+<!-- block body -->
 {% block body %}
 {% for item_it in items %}
+<hr class="article-hr">
 <article id="article_{{ item_it.ItemID }}">
-<hr>
 <h2>
-<a href="{{ item_it.Link }}" rel="noopener noreferrer" target="_blank">
+<a href="{{ item_it.Link }}" target="_blank">
 <span id="title_{{ item_it.ItemID }}">
 {{ item_it.Title|safe }}
 </span>
 </a>
 </h2>
+
 <p>
 Source: <a href="{{ url_for('feed.feed') }}?feed={{ item_it.FeedID }}">{{ item_it.feed.Title }}</a>.
+
 Published: {{ item_it.Published }} GMT.
+
 # if item_it.feed.tags:
 Tags:
 # for tag_it in item_it.feed.tags:
@@ -51,48 +57,38 @@ Tags:
 # endfor
 .
 # endif
+
 # if wall == WallMode.MAGIC or wall == WallMode.SURPRISE
-# for magic_it in item_it.magic
-Score: {{ "{:.02f}".format(magic_it.Score) }}.
-# endfor
+Score: {{ "{:.02f}".format(item_it.magic[0].Score) }}.
 # endif
 </p>
+
 <div id="summary_{{ item_it.ItemID }}">
 {{ item_it.Summary|clean|safe }}
 </div>
+
 <p>
-# set like_ns = namespace(like="like", dislike="dislike")
-# for like_it in item_it.likes
-#     if like_it.Score == enum_like.UP.name
-#         set like_ns.like = "liked"
-#     elif like_it.Score == enum_like.DOWN.name
-#         set like_ns.dislike = "disliked"
-#     endif
-# endfor
-<button onclick="like({{ item_it.ItemID }})" type="button">
-<span id="like_{{ item_it.ItemID }}" class="{{ like_ns.like }}">
-<i class="material-icons">
-thumb_up
-</i>
+<button type="button" onclick="like({{ item_it.ItemID }})">
+<span id="like_{{ item_it.ItemID }}" class="{{ 'liked' if item_it.likes|count > 0 and item_it.likes[0].Score == Like.UP.name else 'like' }}">
+<i class="material-icons">thumb_up</i>
 </span>
 </button>
-<button onclick="dislike({{ item_it.ItemID }})" type="button">
-<span id="dislike_{{ item_it.ItemID }}" class="{{ like_ns.dislike }}">
-<i class="material-icons">
-thumb_down
-</i>
+
+<button type="button" onclick="dislike({{ item_it.ItemID }})">
+<span id="dislike_{{ item_it.ItemID }}" class="{{ 'disliked' if item_it.likes|count > 0 and item_it.likes[0].Score == Like.DOWN.name else 'dislike' }}">
+<i class="material-icons">thumb_down</i>
 </span>
 </button>
-# if wall != WallMode.CLASSIC
-<button onclick="highlight({{ item_it.ItemID }}, '{{ item_it.Language }}')" type="button">
+
+# if wall == WallMode.MAGIC or wall == WallMode.SURPRISE
+<button type="button" onclick="highlight({{ item_it.ItemID }}, '{{ item_it.Language }}')">
 <span id="highlight_{{ item_it.ItemID }}" class="highlight">
-<i class="material-icons">
-lightbulb_outline
-</i>
+<i class="material-icons">lightbulb_outline</i>
 </span>
 </button>
 # endif
 </p>
 </article>
 {% endfor %}
+<hr>
 {% endblock %}

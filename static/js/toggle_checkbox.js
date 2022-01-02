@@ -1,6 +1,7 @@
 function toggle_checkbox(fieldset_id) {
-    var stat = document.getElementById(fieldset_id);
-    var inputs = stat.getElementsByTagName("input");
+    const stat = document.getElementById(fieldset_id);
+    const inputs = stat.getElementsByTagName("input");
+
     if (inputs[0].checked) {
         for (let input_it of inputs) {
             input_it.checked = true;
@@ -13,13 +14,15 @@ function toggle_checkbox(fieldset_id) {
 }
 
 function prove_checkbox(fieldset_id) {
-    var stat = document.getElementById(fieldset_id);
-    var inputs = stat.getElementsByTagName("input");
+    const stat = document.getElementById(fieldset_id);
+    const inputs = stat.getElementsByTagName("input");
+
     for (let input_ct = 1; input_ct < inputs.length; input_ct++) {
         if (!inputs[input_ct].checked) {
             inputs[0].checked = false;
             return;
         }
     }
+
     inputs[0].checked = true;
 }
