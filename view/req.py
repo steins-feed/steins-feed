@@ -15,7 +15,7 @@ from view.overview import db as overview_db
 
 def get_wall() -> home_wall.WallMode:
     wall_name = flask.request.args.get(
-        "feed",
+        "wall",
         default = home_wall.WallMode.CLASSIC.name,
     )
     return home_wall.WallMode[wall_name]

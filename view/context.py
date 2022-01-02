@@ -25,10 +25,10 @@ def base_context():
 def topnav_context() -> typing.Dict[str, typing.Any]:
     context = {}
 
-    context["feed"] = req.get_wall()
     context["langs"] = req.get_langs()
     context["tags"] = req.get_tags()
     context["unit"] = req.get_unit()
+    context["wall"] = req.get_wall()
 
     context["page"] = req.get_page()
     context["prev_page"] = home_unit.decrement_to(

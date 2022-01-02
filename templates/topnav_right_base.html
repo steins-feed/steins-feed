@@ -1,13 +1,13 @@
 <!-- Navigation links -->
 <span class="right">
 <!-- Home view -->
-<a href="{{ get_home(feed, page, unit, langs, tags) }}"><i class="material-icons">home</i></a>
+<a href="{{ get_home(wall, page, unit, langs, tags) }}"><i class="material-icons">home</i></a>
 
 <!-- Statistics view -->
-<a href="{{ get_statistics(feed, page, unit, langs, tags) }}" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
+<a href="{{ get_statistics(wall, page, unit, langs, tags) }}" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
 
 <!-- Settings view -->
-<a href="{{ get_settings(feed, page, unit, langs, tags) }}" target="_blank"><i class="material-icons">settings</i></a>
+<a href="{{ get_settings(wall, page, unit, langs, tags) }}" target="_blank"><i class="material-icons">settings</i></a>
 
 <!-- Sidebar -->
 {% block sidebar %}{% endblock %}

@@ -50,10 +50,10 @@ ALL LANGUAGES
 <p>
 <fieldset>
 <legend>Wall</legend>
-# for feed_it in WallMode
+# for wall_it in WallMode
 <label>
-<input name="feed" value="{{feed_it.name}}" type="radio"{{" checked" if feed_it == feed}}{{" disabled" if not magic_exists}}>
-{{ feed_it.value }}
+<input name="wall" value="{{wall_it.name}}" type="radio"{{" checked" if wall_it == wall}}{{" disabled" if not magic_exists}}>
+{{ wall_it.value }}
 </label>
 <br>
 # endfor

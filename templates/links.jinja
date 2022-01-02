@@ -1,6 +1,6 @@
-# macro get_home(feed, page, unit, langs, tags)
+# macro get_home(wall, page, unit, langs, tags)
 {{- url_for('home.home') -}}
-?feed={{- feed.name -}}
+?wall={{- wall.name -}}
 &page={{- page -}}
 &unit={{- unit.name -}}
 #     for lang_it in langs
@@ -11,9 +11,9 @@
 #     endfor
 # endmacro
 
-# macro get_settings(feed, page, unit, langs, tags)
+# macro get_settings(wall, page, unit, langs, tags)
 {{- url_for('overview.settings') -}}
-?feed={{- feed.name -}}
+?wall={{- wall.name -}}
 &page={{- page -}}
 &unit={{- unit.name -}}
 #     for lang_it in langs
@@ -24,9 +24,9 @@
 #     endfor
 # endmacro
 
-# macro get_statistics(feed, page, unit, langs, tags)
+# macro get_statistics(wall, page, unit, langs, tags)
 {{- url_for('overview.statistics') -}}
-?feed={{- feed.name -}}
+?wall={{- wall.name -}}
 &page={{- page -}}
 &unit={{- unit.name -}}
 #     for lang_it in langs
