@@ -19,7 +19,7 @@ function like(button_id) {
     const fd = new FormData();
     fd.append("id", button_id);
 
-    xmlhttp.open("POST", "/home/like");
+    xmlhttp.open("POST", home_ep + "/like");
     xmlhttp.send(fd);
 }
 
@@ -44,6 +44,6 @@ function dislike(button_id) {
     const fd = new FormData();
     fd.append("id", button_id);
 
-    xmlhttp.open("POST", "/home/dislike");
+    xmlhttp.open("POST", home_ep + "/dislike");
     xmlhttp.send(fd);
 }
