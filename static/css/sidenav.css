@@ -1,20 +1,17 @@
 aside.sidenav {
     position: fixed;
+    display: none;
+
     top: 0;
     right: 0;
-    z-index: 2;
     height: 100%;
     padding: 0 8px 0 8px;
-    display: none;
+
+    z-index: 2;
     background-color: lightgrey;
+
     overflow: auto;
-
     scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-aside.sidenav::-webkit-scrollbar {
-    display: none;
 }
 
 aside.sidenav select {
