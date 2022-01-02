@@ -20,7 +20,7 @@ def feed(
     feed_id: int = None,
 ) -> flask.Response:
     if not feed_id:
-        feed_id = flask.request.args.get("feed_id", type=int)
+        feed_id = flask.request.args.get("feed", type=int)
 
     user = flask_security.current_user
 

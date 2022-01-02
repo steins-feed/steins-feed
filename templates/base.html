@@ -5,7 +5,7 @@
 <!-- https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML#specifying_your_documents_character_encoding -->
 <meta charset="utf-8">
 <!-- Virtual viewport -->
-<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag -->
+<!-- https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Responsive_Design#the_viewport_meta_tag -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Author & description -->
 <!-- https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML#adding_an_author_and_description -->
@@ -35,16 +35,17 @@ var settings_ep = "{{ url_for('overview.settings') }}"
 var statistics_ep = "{{ url_for('overview.statistics') }}"
 var tag_ep = "{{ url_for('tag.tag') }}"
 </script>
+
+<script src="{{ url_for('static', filename='js/menu.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/toggle_checkbox.js') }}" defer></script>
+
 {% block scripts %}{% endblock %}
 </head>
 
 <!-- Document and website structure -->
 <!-- https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Document_and_website_structure#basic_sections_of_a_document -->
 <body>
-<!-- Navigation bar -->
 {% include 'topnav.html' %}
-
-<!-- Sidebar -->
 {% include 'sidenav.html' %}
 
 <!-- Header -->

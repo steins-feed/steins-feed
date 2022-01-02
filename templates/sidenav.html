@@ -1,18 +1,12 @@
 # from 'links.jinja' import get_home, get_settings, get_statistics
 <aside id="sidenav" class="sidenav">
 <nav class="topnav">
-<span class="right">
-<a href="{{ get_home(feed, page, timeunit, langs, tags) }}"><i class="material-icons">home</i></a>
-<a href="{{ get_statistics(feed, page, timeunit, langs, tags) }}" target="_blank"><i class="material-icons">insert_chart_outlined</i></a>
-<a href="{{ get_settings(feed, page, timeunit, langs, tags) }}" target="_blank"><i class="material-icons">settings</i></a>
-<i onclick="close_menu()" class="material-icons">
-close
-</i>
-</span>
+{% include 'topnav_right_close.html' %}
 </nav>
-<script src="{{ url_for('static', filename='js/toggle_checkbox.js') }}" defer></script>
+
 <section>
 <form action="{{ url_for('home.home') }}" method="get">
+<!-- Tags -->
 # if tags_disp|count > 0
 <p>
 <fieldset id="input_tag">
@@ -24,7 +18,7 @@ ALL TAGS
 </label>
 # for tag_it in tags_disp
 <label>
-<input name="tag" onclick="prove_checkbox('input_tag')" value="{{ tag_it.Name }}" type="checkbox"{{" checked" if tag_it.TagID in tags|map(attribute="TagID")}}>
+<input type="checkbox" name="tag" value="{{ tag_it.Name }}" onclick="prove_checkbox('input_tag')"{{" checked" if tag_it.TagID in tags|map(attribute="TagID")}}>
 {{ tag_it.Name }}
 </label>
 <br>
@@ -32,6 +26,8 @@ ALL TAGS
 </fieldset>
 </p>
 # endif
+
+<!-- Languages -->
 <p>
 <fieldset id="input_lang">
 <legend>Languages</legend>
@@ -42,47 +38,53 @@ ALL LANGUAGES
 </label>
 # for lang_it in langs_disp
 <label>
-<input name="lang" onclick="prove_checkbox('input_lang')" value="{{ lang_it.name }}" type="checkbox"{{" checked" if langs|count == 0 or lang_it in langs}}>
+<input type="checkbox" name="lang" value="{{ lang_it.name }}" onclick="prove_checkbox('input_lang')"{{" checked" if langs|count == 0 or lang_it in langs}}>
 {{ lang_it.value }}
 </label>
 <br>
 # endfor
 </fieldset>
 </p>
+
+<!-- Wall -->
 <p>
 <fieldset>
-<legend>Feed</legend>
-# for feed_it in enum_feed
+<legend>Wall</legend>
+# for wall_it in WallMode
 <label>
-<input name="feed" value="{{feed_it.name}}" type="radio"{{" checked" if feed_it == feed}}{{" disabled" if not magic_exists}}>
-{{ feed_it.value }}
+<input type="radio" name="wall" value="{{wall_it.name}}"{{" checked" if wall_it == wall}}{{" disabled" if not magic_exists}}>
+{{ wall_it.value }}
 </label>
 <br>
 # endfor
 </fieldset>
 </p>
+
+<!-- Submission -->
 <p>
 <fieldset>
-<input name="page" value="{{ page }}" type="hidden">
-<input name="timeunit" value="{{ timeunit.name }}" type="hidden">
-# for tu_it in enum_timeunit
-<button name="timeunit_new" value="{{ tu_it.name }}" type="submit">
-{{ tu_it.value }}
+<input type="hidden" name="page" value="{{ page }}">
+<input type="hidden" name="unit" value="{{ unit.name }}">
+# for unit_it in UnitMode
+<button type="submit" name="unit_new" value="{{ unit_it.name }}">
+{{ unit_it.value }}
 </button>
 # endfor
 </fieldset>
 </p>
 </form>
 </section>
+
 # if feeds_all|count > 0 or tags_all|count > 0
 <hr>
 # endif
+
 # if feeds_all|count > 0
 <form action="{{ url_for('feed.feed') }}" method="get">
 <p>
 <fieldset>
 <legend>Feed</legend>
-<select name="feed_id">
+<select name="feed">
 # for feed_it in feeds_all
 <option value="{{ feed_it.FeedID }}">{{ feed_it.Title }}</option>
 # endfor
@@ -92,6 +94,7 @@ ALL LANGUAGES
 </p>
 </form>
 # endif
+
 # if tags_all|count > 0
 <form action="{{ url_for('tag.tag') }}" method="get">
 <p>

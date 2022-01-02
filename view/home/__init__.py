@@ -27,7 +27,7 @@ def home():
     r_langs = req.get_langs()
     r_page = req.get_page()
     r_tags = req.get_tags()
-    r_timeunit = req.get_timeunit()
+    r_unit = req.get_unit()
 
     user = flask_security.current_user
     last_hour = recent.last_updated()
@@ -38,7 +38,7 @@ def home():
     )
 
     start_time = r_page
-    finish_time = unit.increment_to(start_time, r_timeunit)
+    finish_time = unit.increment_to(start_time, r_unit)
 
     if r_wall in {wall.WallMode.MAGIC, wall.WallMode.SURPRISE}:
         for lang_it in magic_io.trained_languages(user):
@@ -69,7 +69,7 @@ def home():
     return flask.render_template(
         "index.html",
         **context.base_context(),
-        topnav_title = unit.format_to(r_page, r_timeunit),
+        topnav_title = unit.format_to(r_page, r_unit),
         last_updated = last_hour,
         items = page_items,
         enum_like = schema_items.Like,

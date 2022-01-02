@@ -5,7 +5,7 @@
 <script src="{{ url_for('static', filename='js/highlight.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/like.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/next_item.js') }}" defer></script>
-# if feed != enum_feed.CLASSIC
+# if wall != WallMode.CLASSIC
 <script>
 {% for lang_it in langs %}
 var {{ lang_it|lower }}_words;
@@ -42,7 +42,7 @@ Last updated: {{ last_updated }} GMT.
 </a>
 </h2>
 <p>
-Source: <a href="{{ url_for('feed.feed') }}?feed_id={{ item_it.FeedID }}">{{ item_it.feed.Title }}</a>.
+Source: <a href="{{ url_for('feed.feed') }}?feed={{ item_it.FeedID }}">{{ item_it.feed.Title }}</a>.
 Published: {{ item_it.Published }} GMT.
 # if item_it.feed.tags:
 Tags:
@@ -51,7 +51,7 @@ Tags:
 # endfor
 .
 # endif
-# if feed == enum_feed.MAGIC or feed == enum_feed.SURPRISE
+# if wall == WallMode.MAGIC or wall == WallMode.SURPRISE
 # for magic_it in item_it.magic
 Score: {{ "{:.02f}".format(magic_it.Score) }}.
 # endfor
@@ -83,7 +83,7 @@ thumb_down
 </i>
 </span>
 </button>
-# if feed != enum_feed.CLASSIC
+# if wall != WallMode.CLASSIC
 <button onclick="highlight({{ item_it.ItemID }}, '{{ item_it.Language }}')" type="button">
 <span id="highlight_{{ item_it.ItemID }}" class="highlight">
 <i class="material-icons">

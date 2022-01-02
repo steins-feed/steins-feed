@@ -1,11 +1,14 @@
 nav.topnav {
     position: sticky;
+
     top: 0;
     right: 0;
-    z-index: 1;
     width: 100%;
-    min-height: 1em;
+
+    z-index: 1;
     background-color: inherit;
+
+    min-height: 1em;
     font-size: 2em;
 }
 

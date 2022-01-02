@@ -15,7 +15,7 @@ from view.overview import db as overview_db
 
 def get_wall() -> home_wall.WallMode:
     wall_name = flask.request.args.get(
-        "feed",
+        "wall",
         default = home_wall.WallMode.CLASSIC.name,
     )
     return home_wall.WallMode[wall_name]
@@ -34,13 +34,13 @@ def get_langs() -> typing.List[schema_feeds.Language]:
     return res
 
 def get_page() -> datetime.datetime:
-    timeunit = get_timeunit()
-    timeunit_old = get_timeunit(old=True)
+    unit_mode = get_unit()
+    unit_mode_old = get_unit(old=True)
 
     current_time = datetime.datetime.now()
-    current_time = home_unit.round_to(current_time, timeunit)
+    current_time = home_unit.round_to(current_time, unit_mode)
 
-    if timeunit == timeunit_old:
+    if unit_mode == unit_mode_old:
         s = flask.request.args.get("page", default=None)
         if s:
             return datetime.datetime.fromisoformat(s)
@@ -64,15 +64,15 @@ def get_tags() -> typing.List[orm_feeds.Tag]:
     with model.get_session() as session:
         return [e[0] for e in session.execute(q)]
 
-def get_timeunit(
-    old: bool=False,
+def get_unit(
+    old: bool = False,
 ) -> home_unit.UnitMode:
     if old:
-        k = "timeunit"
+        k = "unit"
         v = home_unit.UnitMode.DAY.name
     else:
-        k = "timeunit_new"
-        v = get_timeunit(old=True).name
+        k = "unit_new"
+        v = get_unit(old=True).name
 
     unit_name = flask.request.args.get(k, default=v)
     return home_unit.UnitMode[unit_name]
