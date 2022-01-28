@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from lxml import html
+from lxml import etree, html
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
@@ -22,7 +22,10 @@ def build_feature(row: orm_items.Item) -> str:
     Returns:
       Feature string.
     """
-    tree = html.fromstring(row.Title)
+    try:
+        tree = html.fromstring(row.Title)
+    except etree.ParserError as e:
+        return ""
     return html.tostring(tree, encoding='unicode', method='text')
 
 def kullback_leibler(q: typing.Dict[str, float], p: typing.Dict[str, float]) -> float:
