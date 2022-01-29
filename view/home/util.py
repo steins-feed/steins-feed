@@ -4,6 +4,10 @@ import html
 import lxml
 import typing
 
+import magic
+from magic import io as magic_io
+from model.orm import items as orm_items
+from model.orm import users as orm_users
 from model.schema import feeds as schema_feeds
 
 def clean_summary(s: str) -> str:
@@ -55,9 +59,22 @@ def empty_leaves(
         e.drop_tree()
 
 def highlight(
-    user: int,
-    summary: str,
+    user: orm_users.User,
+    item: orm_items.Item,
     lang: schema_feeds.Language,
 ) -> str:
-    return summary
+    title = magic.build_feature(item)
+    pipeline = magic_io.read_classifier(user, lang)
+
+    words = set(title.split())
+    coeffs = pipeline.predict_proba(words)[:, 1]
+    table = dict(zip(words, coeffs))
+
+    for word_it in table:
+        title = title.replace(
+            word_it,
+            f"<span class=\"tooltip\"><mark>{word_it}</mark><span class=\"tooltiptext\">{table[word_it]}</span></span>",
+        )
+
+    return title
 

@@ -8,6 +8,7 @@ from magic import io as magic_io
 import model
 from model import recent
 from model.orm import items as orm_items
+from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
 
 from . import db
@@ -105,8 +106,8 @@ def highlight() -> flask.Response:
 
     res = util.highlight(
         user,
-        item.Summary,
-        feed.Language,
+        item,
+        schema_feeds.Language[feed.Language],
     )
 
     return res, 200
