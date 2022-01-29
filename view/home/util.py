@@ -65,11 +65,12 @@ def highlight(
     user: orm_users.User,
     item: orm_items.Item,
     lang: schema_feeds.Language,
-) -> str:
+) -> typing.Tuple[str, str]:
     title = item.Title
+    summary = item.Summary
     pipeline = magic_io.read_classifier(user, lang)
 
-    words = extract_words(item.Title)
+    words = extract_words(item.Title, item.Summary)
     coeffs = pipeline.predict_proba(words)
     scores = 2. * coeffs[:, 1] - 1.
 
@@ -77,16 +78,17 @@ def highlight(
         if abs(score_it) < 0.5:
             continue
 
-        title = re.sub(
-            token_pattern.format(word_it),
-            wrap_tooltip(word_it, score_it),
-            title,
-        )
+        word_pattern = token_pattern.format(word_it)
+        word_tooltip = wrap_tooltip(word_it, score_it)
 
-    return title
+        prog = re.compile(word_pattern)
+        title = prog.sub(word_tooltip, title)
+        summary = prog.sub(word_tooltip, summary)
 
-def extract_words(s: str) -> typing.Set[str]:
-    return set(magic.to_string(s).split())
+    return title, summary
+
+def extract_words(*s: str) -> typing.Set[str]:
+    return set(e for s_it in s for e in magic.to_string(s_it).split())
 
 def wrap_tooltip(word: str, score: float) -> str:
     marked_word = f"<mark>{word}</mark>"

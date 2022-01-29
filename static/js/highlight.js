@@ -7,8 +7,8 @@ function highlight(button_id) {
 
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            title.innerHTML = this.response;
-            //summary.innerHTML = this.response;
+            title.innerHTML = this.response.title;
+            summary.innerHTML = this.response.summary;
 
             if (stat.className == 'highlight') {
                 stat.className = 'highlit';
@@ -27,6 +27,7 @@ function highlight(button_id) {
         xmlhttp.open("POST", home_ep + "/unhighlight");
     }
 
+    xmlhttp.responseType = "json";
     xmlhttp.send(fd);
 }
 
