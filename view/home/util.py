@@ -66,10 +66,10 @@ def highlight(
     item: orm_items.Item,
     lang: schema_feeds.Language,
 ) -> str:
-    title = magic.build_feature(item)
+    title = item.Title
     pipeline = magic_io.read_classifier(user, lang)
 
-    words = set(title.split())
+    words = extract_words(item.Title)
     coeffs = pipeline.predict_proba(words)
     scores = 2. * coeffs[:, 1] - 1.
 
@@ -84,6 +84,9 @@ def highlight(
         )
 
     return title
+
+def extract_words(s: str) -> typing.Set[str]:
+    return set(magic.to_string(s).split())
 
 def wrap_tooltip(word: str, score: float) -> str:
     marked_word = f"<mark>{word}</mark>"
