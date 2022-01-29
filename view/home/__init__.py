@@ -110,7 +110,10 @@ def highlight() -> flask.Response:
         schema_feeds.Language[feed.Language],
     )
 
-    return {"title": title, "summary": summary}, 200
+    return {
+        "title": title,
+        "summary": util.clean_summary(summary),
+    }, 200
 
 @bp.route("/unhighlight", methods=["POST"])
 @flask_security.auth_required()
@@ -119,5 +122,8 @@ def unhighlight() -> flask.Response:
     with model.get_session() as session:
         item = session.get(orm_items.Item, item_id)
 
-    return {"title": item.Title, "summary": item.Summary}, 200
+    return {
+        "title": item.Title,
+        "summary": util.clean_summary(item.Summary),
+    }, 200
 
