@@ -22,7 +22,7 @@ bp.add_app_template_filter(util.clean_summary, "clean")
 
 @bp.route("")
 @flask_security.auth_required()
-def home():
+def home() -> flask.Response:
     r_wall = req.get_wall()
     r_langs = req.get_langs()
     r_page = req.get_page()
@@ -93,4 +93,20 @@ def like(
 @flask_security.auth_required()
 def dislike() -> flask.Response:
     return like(schema_items.Like.DOWN)
+
+@bp.route("/highlight", methods=["POST"])
+@flask_security.auth_required()
+def highlight() -> flask.Response:
+    user = flask_security.current_user
+    item_id = flask.request.form.get("id", type=int)
+    with model.get_session() as session:
+        item = session.get(orm_items.Item, item_id)
+
+    res = util.highlight(
+        user,
+        item.Summary,
+        item.feed.Language,
+    )
+
+    return res, 200
 

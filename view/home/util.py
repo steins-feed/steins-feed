@@ -4,6 +4,8 @@ import html
 import lxml
 import typing
 
+from model.schema import feeds as schema_feeds
+
 def clean_summary(s: str) -> str:
     try:
         tree = lxml.html.fromstring(s)
@@ -51,4 +53,11 @@ def empty_leaves(
         tags is None or e.tag in tags
     ):
         e.drop_tree()
+
+def highlight(
+    user: int,
+    summary: str,
+    lang: schema_feeds.Language,
+) -> str:
+    return summary
 
