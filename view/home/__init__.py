@@ -101,11 +101,12 @@ def highlight() -> flask.Response:
     item_id = flask.request.form.get("id", type=int)
     with model.get_session() as session:
         item = session.get(orm_items.Item, item_id)
+        feed = item.feed
 
     res = util.highlight(
         user,
         item.Summary,
-        item.feed.Language,
+        feed.Language,
     )
 
     return res, 200

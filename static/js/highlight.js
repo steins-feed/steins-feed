@@ -29,21 +29,31 @@ function highlight_off(s) {
     return s;
 }
 
-function highlight(button_id, lang) {
-    var stemmer = new window[lang + "Stemmer"]();
-    var words = window[lang.toLowerCase() + "_words"];
+function highlight(button_id) {
+    const xmlhttp = new XMLHttpRequest();
 
-    var title = document.getElementById('title_' + button_id);
-    var summary = document.getElementById('summary_' + button_id);
-    var stat = document.getElementById('highlight_' + button_id)
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            const title = document.getElementById('title_' + button_id);
+            const summary = document.getElementById('summary_' + button_id);
+            const stat = document.getElementById('highlight_' + button_id)
 
-    if (stat.className == 'highlight') {
-        title.innerHTML = highlight_on(title.innerHTML, stemmer, words);
-        summary.innerHTML = highlight_on(summary.innerHTML, stemmer, words);
-        stat.className = 'highlit';
-    } else {
-        title.innerHTML = highlight_off(title.innerHTML);
-        summary.innerHTML = highlight_off(summary.innerHTML);
-        stat.className = 'highlight';
-    }
+            if (stat.className == 'highlight') {
+                //title.innerHTML = highlight_on(title.innerHTML, stemmer, words);
+                summary.innerHTML = this.response;
+                stat.className = 'highlit';
+            } else {
+                //title.innerHTML = highlight_off(title.innerHTML);
+                summary.innerHTML = this.response;
+                stat.className = 'highlight';
+            }
+        }
+    };
+
+    const fd = new FormData();
+    fd.append("id", button_id);
+
+    xmlhttp.open("POST", home_ep + "/highlight");
+    xmlhttp.send(fd);
 }
+
