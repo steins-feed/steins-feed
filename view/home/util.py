@@ -76,8 +76,19 @@ def highlight(
 
         title = title.replace(
             word_it,
-            f"<span class=\"tooltip\"><mark>{word_it}</mark><span class=\"tooltiptext\">{score_it:.2f}</span></span>",
+            wrap_tooltip(word_it, score_it)
         )
 
     return title
+
+def wrap_tooltip(word: str, score: float) -> str:
+    marked_word = f"<mark>{word}</mark>"
+    tipped_score = f"<span class=\"tooltiptext\">{score: .2f}</span>"
+
+    return (
+        "<span class=\"tooltip\">"
+        + marked_word
+        + tipped_score
+        + "</span>"
+    )
 
