@@ -2,6 +2,7 @@
 
 import html
 import lxml
+import re
 import typing
 
 import magic
@@ -58,6 +59,8 @@ def empty_leaves(
     ):
         e.drop_tree()
 
+token_pattern = "(\\b{}\\b)(?![^<]*>)"
+
 def highlight(
     user: orm_users.User,
     item: orm_items.Item,
@@ -74,9 +77,10 @@ def highlight(
         if abs(score_it) < 0.5:
             continue
 
-        title = title.replace(
-            word_it,
-            wrap_tooltip(word_it, score_it)
+        title = re.sub(
+            token_pattern.format(word_it),
+            wrap_tooltip(word_it, score_it),
+            title,
         )
 
     return title
