@@ -8,6 +8,7 @@ from magic import io as magic_io
 import model
 from model import recent
 from model.orm import items as orm_items
+from model.schema import feeds as schema_feeds
 from model.schema import items as schema_items
 
 from . import db
@@ -22,7 +23,7 @@ bp.add_app_template_filter(util.clean_summary, "clean")
 
 @bp.route("")
 @flask_security.auth_required()
-def home():
+def home() -> flask.Response:
     r_wall = req.get_wall()
     r_langs = req.get_langs()
     r_page = req.get_page()
@@ -93,4 +94,33 @@ def like(
 @flask_security.auth_required()
 def dislike() -> flask.Response:
     return like(schema_items.Like.DOWN)
+
+@bp.route("/highlight", methods=["POST"])
+@flask_security.auth_required()
+def highlight(flag: bool=True) -> flask.Response:
+    user = flask_security.current_user
+    item_id = flask.request.form.get("id", type=int)
+    with model.get_session() as session:
+        item = session.get(orm_items.Item, item_id)
+        feed = item.feed
+
+    if flag:
+        title, summary = util.highlight(
+            user,
+            item,
+            schema_feeds.Language[feed.Language],
+        )
+    else:
+        title = item.Title
+        summary = item.Summary
+
+    return {
+        "title": title,
+        "summary": util.clean_summary(summary),
+    }, 200
+
+@bp.route("/unhighlight", methods=["POST"])
+@flask_security.auth_required()
+def unhighlight() -> flask.Response:
+    return highlight(flag=False)
 

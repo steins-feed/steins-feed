@@ -2,7 +2,14 @@
 
 import html
 import lxml
+import re
 import typing
+
+import magic
+from magic import io as magic_io
+from model.orm import items as orm_items
+from model.orm import users as orm_users
+from model.schema import feeds as schema_feeds
 
 def clean_summary(s: str) -> str:
     try:
@@ -51,4 +58,46 @@ def empty_leaves(
         tags is None or e.tag in tags
     ):
         e.drop_tree()
+
+token_pattern = "(\\b{}\\b)(?![^<]*>)"
+
+def highlight(
+    user: orm_users.User,
+    item: orm_items.Item,
+    lang: schema_feeds.Language,
+) -> typing.Tuple[str, str]:
+    title = item.Title
+    summary = item.Summary
+    pipeline = magic_io.read_classifier(user, lang)
+
+    words = extract_words(item.Title, item.Summary)
+    coeffs = pipeline.predict_proba(words)
+    scores = 2. * coeffs[:, 1] - 1.
+
+    for word_it, score_it in zip(words, scores):
+        if abs(score_it) < 0.5:
+            continue
+
+        word_pattern = token_pattern.format(word_it)
+        word_tooltip = wrap_tooltip(word_it, score_it)
+
+        prog = re.compile(word_pattern)
+        title = prog.sub(word_tooltip, title)
+        summary = prog.sub(word_tooltip, summary)
+
+    return title, summary
+
+def extract_words(*s: str) -> typing.Set[str]:
+    return set(e for s_it in s for e in magic.to_string(s_it).split())
+
+def wrap_tooltip(word: str, score: float) -> str:
+    marked_word = f"<mark>{word}</mark>"
+    tipped_score = f"<span class=\"tooltiptext\">{score: .2f}</span>"
+
+    return (
+        "<span class=\"tooltip\">"
+        + marked_word
+        + tipped_score
+        + "</span>"
+    )
 

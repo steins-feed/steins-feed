@@ -12,6 +12,15 @@ from model.schema import feeds as schema_feeds
 
 from . import io
 
+def to_string(s: str) -> str:
+    try:
+        tree = html.fromstring(s)
+        res = html.tostring(tree, encoding='unicode', method='text')
+    except etree.ParserError as e:
+        res = ""
+
+    return res
+
 def build_feature(row: orm_items.Item) -> str:
     """
     Build feature from item.
@@ -22,11 +31,7 @@ def build_feature(row: orm_items.Item) -> str:
     Returns:
       Feature string.
     """
-    try:
-        tree = html.fromstring(row.Title)
-    except etree.ParserError as e:
-        return ""
-    return html.tostring(tree, encoding='unicode', method='text')
+    return to_string(row.Title)
 
 def kullback_leibler(q: typing.Dict[str, float], p: typing.Dict[str, float]) -> float:
     """
