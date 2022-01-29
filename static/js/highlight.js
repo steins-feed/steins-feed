@@ -1,34 +1,3 @@
-var token_pattern = "(\\b\\w\\w+\\b)(?![^<]*>)";
-
-function highlight_on(s, stemmer, words) {
-    var tokens = new Set(s.match(new RegExp(token_pattern, 'g')));
-
-    for (token_it of tokens) {
-        var stemmed = stemmer.stemWord(token_it.toLowerCase());
-        var stemmed_val = 2. * words[stemmed] - 1.;
-        if (!(stemmed in words) || Math.abs(stemmed_val) < 0.5) {
-            continue;
-        }
-
-        var src = new RegExp(token_pattern.replace("\\w\\w+", token_it), 'g');
-        var dest = "<span class=\"tooltip\"><mark>" + token_it + "</mark><span class=\"tooltiptext\">" + stemmed_val.toFixed(2) + "</span></span>";
-        s = s.replace(src, dest);
-    }
-
-    return s;
-}
-
-function highlight_off(s) {
-    var tokens = new Set(s.match(new RegExp(token_pattern, 'g')));
-
-    for (token_it of tokens) {
-        var src = new RegExp("<span class=\"tooltip\"><mark>" + token_it + "</mark><span class=\"tooltiptext\">0.\\d\\d</span></span>", 'g');
-        s = s.replace(src, token_it);
-    }
-
-    return s;
-}
-
 function highlight(button_id) {
     const xmlhttp = new XMLHttpRequest();
 
