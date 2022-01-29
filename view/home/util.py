@@ -71,6 +71,9 @@ def highlight(
     scores = 2. * coeffs[:, 1] - 1.
 
     for word_it, score_it in zip(words, scores):
+        if abs(score_it) < 0.5:
+            continue
+
         title = title.replace(
             word_it,
             f"<span class=\"tooltip\"><mark>{word_it}</mark><span class=\"tooltiptext\">{score_it:.2f}</span></span>",
