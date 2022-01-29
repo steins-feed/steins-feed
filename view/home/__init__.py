@@ -97,18 +97,22 @@ def dislike() -> flask.Response:
 
 @bp.route("/highlight", methods=["POST"])
 @flask_security.auth_required()
-def highlight() -> flask.Response:
+def highlight(flag: bool=True) -> flask.Response:
     user = flask_security.current_user
     item_id = flask.request.form.get("id", type=int)
     with model.get_session() as session:
         item = session.get(orm_items.Item, item_id)
         feed = item.feed
 
-    title, summary = util.highlight(
-        user,
-        item,
-        schema_feeds.Language[feed.Language],
-    )
+    if flag:
+        title, summary = util.highlight(
+            user,
+            item,
+            schema_feeds.Language[feed.Language],
+        )
+    else:
+        title = item.Title
+        summary = item.Summary
 
     return {
         "title": title,
@@ -118,12 +122,5 @@ def highlight() -> flask.Response:
 @bp.route("/unhighlight", methods=["POST"])
 @flask_security.auth_required()
 def unhighlight() -> flask.Response:
-    item_id = flask.request.form.get("id", type=int)
-    with model.get_session() as session:
-        item = session.get(orm_items.Item, item_id)
-
-    return {
-        "title": item.Title,
-        "summary": util.clean_summary(item.Summary),
-    }, 200
+    return highlight(flag=False)
 
