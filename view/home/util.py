@@ -67,13 +67,13 @@ def highlight(
     pipeline = magic_io.read_classifier(user, lang)
 
     words = set(title.split())
-    coeffs = pipeline.predict_proba(words)[:, 1]
-    table = dict(zip(words, coeffs))
+    coeffs = pipeline.predict_proba(words)
+    scores = 2. * coeffs[:, 1] - 1.
 
-    for word_it in table:
+    for word_it, score_it in zip(words, scores):
         title = title.replace(
             word_it,
-            f"<span class=\"tooltip\"><mark>{word_it}</mark><span class=\"tooltiptext\">{table[word_it]}</span></span>",
+            f"<span class=\"tooltip\"><mark>{word_it}</mark><span class=\"tooltiptext\">{score_it}</span></span>",
         )
 
     return title
