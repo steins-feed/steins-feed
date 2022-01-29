@@ -115,17 +115,9 @@ def highlight() -> flask.Response:
 @bp.route("/unhighlight", methods=["POST"])
 @flask_security.auth_required()
 def unhighlight() -> flask.Response:
-    user = flask_security.current_user
     item_id = flask.request.form.get("id", type=int)
     with model.get_session() as session:
         item = session.get(orm_items.Item, item_id)
-        feed = item.feed
-
-    res = util.highlight(
-        user,
-        item,
-        schema_feeds.Language[feed.Language],
-    )
 
     return item.Title, 200
 
