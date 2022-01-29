@@ -73,7 +73,7 @@ def highlight(
     for word_it, score_it in zip(words, scores):
         title = title.replace(
             word_it,
-            f"<span class=\"tooltip\"><mark>{word_it}</mark><span class=\"tooltiptext\">{score_it}</span></span>",
+            f"<span class=\"tooltip\"><mark>{word_it}</mark><span class=\"tooltiptext\">{score_it:.2f}</span></span>",
         )
 
     return title
