@@ -5,22 +5,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="{{ url_for('static', filename='js/highlight.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/like.js') }}" defer></script>
-# if wall != WallMode.CLASSIC
-<script>
-{% for lang_it in langs %}
-var {{ lang_it|lower }}_words;
-$(document).ready(function() {
-    $.getJSON("/steins-feed/{{ user_id }}/{{ lang_it }}_cookie.json", function(result) {
-        {{ lang_it|lower }}_words = result;
-    });
-});
-{% endfor %}
-</script>
-<script src="{{ url_for('static', filename='snowball/base-stemmer.js') }}" defer></script>
-{% for lang_it in langs %}
-<script src="{{ url_for('static', filename='snowball/' ~ lang_it|lower ~ '-stemmer.js') }}" defer></script>
-{% endfor %}
-# endif
 {% endblock %}
 
 <!-- block header -->
