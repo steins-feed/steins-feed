@@ -39,12 +39,12 @@ function highlight(button_id) {
             const stat = document.getElementById('highlight_' + button_id)
 
             if (stat.className == 'highlight') {
-                //title.innerHTML = highlight_on(title.innerHTML, stemmer, words);
-                summary.innerHTML = this.response;
+                title.innerHTML = this.response;
+                //summary.innerHTML = this.response;
                 stat.className = 'highlit';
             } else {
-                //title.innerHTML = highlight_off(title.innerHTML);
-                summary.innerHTML = this.response;
+                title.innerHTML = this.response;
+                //summary.innerHTML = this.response;
                 stat.className = 'highlight';
             }
         }
