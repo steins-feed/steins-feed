@@ -5,7 +5,6 @@ import lxml
 import re
 import typing
 
-import magic
 from magic import io as magic_io
 from model.orm import items as orm_items
 from model.orm import users as orm_users
@@ -59,7 +58,7 @@ def empty_leaves(
     ):
         e.drop_tree()
 
-token_pattern = "(\\b{}\\b)(?![^<]*>)"
+token_pattern = r"\b{}\b(?![^<]*>)"
 
 def highlight(
     user: orm_users.User,
@@ -87,8 +86,11 @@ def highlight(
 
     return title, summary
 
+extract_pattern = token_pattern.format(r"\w+")
+extract_prog = re.compile(extract_pattern)
+
 def extract_words(*s: str) -> typing.Set[str]:
-    return set(e for s_it in s for e in magic.to_string(s_it).split())
+    return set(e for s_it in s for e in extract_prog.findall(s_it))
 
 def wrap_tooltip(word: str, score: float) -> str:
     marked_word = f"<mark>{word}</mark>"
