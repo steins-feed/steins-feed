@@ -6,9 +6,11 @@
 {% endblock %}
 
 {% block body %}
-<hr>
+<hr class="article-hr">
+
 # for lang_it in feeds_lang
 <p>{{ lang_it.value }} feeds:</p>
+
 <select name="displayed_{{ lang_it.name }}" size=10 style="width: 200px;" multiple>
 # for row_it in feeds_lang[lang_it]
 <option value={{ row_it.FeedID }}>
@@ -16,9 +18,11 @@
 </option>
 # endfor
 </select>
+
 <button onclick="toggle_display('{{ lang_it.name }}')" type="button">
 <i class="material-icons">compare_arrows</i>
 </button>
+
 <select name="hidden_{{ lang_it.name }}" size=10 style="width: 200px;" multiple>
 # for row_it in feeds_lang_not[lang_it]
 <option value={{ row_it.FeedID }}>
@@ -27,7 +31,9 @@
 # endfor
 </select>
 # endfor
-<hr>
+
+<hr class="article-hr">
+
 <form method="post" action="{{ url_for('overview.add_feed') }}">
 <p>
 Title:<br>
@@ -54,7 +60,9 @@ Full text and everything
 </p>
 <input type="submit" value="Add feed">
 </form>
-<hr>
+
+<hr class="article-hr">
+
 <form method="post" action="{{ url_for('overview.delete_feed') }}">
 <p>
 <select name="feed">
@@ -67,14 +75,18 @@ Full text and everything
 </p>
 <input type="submit" value="Delete feed">
 </form>
-<hr>
+
+<hr class="article-hr">
+
 <form method="post" action="{{ url_for('overview.add_tag') }}">
 <p>
 <input type="text" name="tag">
 <input type="submit" value="Add tag">
 </p>
 </form>
-<hr>
+
+<hr class="article-hr">
+
 <form method="post" action="{{ url_for('overview.delete_tag') }}">
 <p>
 <select name="tag">
@@ -87,4 +99,6 @@ Full text and everything
 </p>
 <input type="submit" value="Delete tag">
 </form>
+
+<hr>
 {% endblock %}
